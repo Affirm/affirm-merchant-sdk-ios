@@ -1,0 +1,221 @@
+//
+//  ViewController.m
+//  Examples
+//
+//  Created by Victor Zhu on 2019/3/5.
+//  Copyright © 2019 Affirm, Inc. All rights reserved.
+//
+
+#import "ViewController.h"
+#import <AffirmSDK/AffirmSDK.h>
+
+@interface ViewController () <UITextFieldDelegate, AffirmPrequalDelegate, AffirmCheckoutDelegate>
+
+@property (nonatomic, weak) IBOutlet UIScrollView *scrollView;
+@property (nonatomic, weak) IBOutlet AffirmPromotionalButton *promotionalButton;
+@property (nonatomic, weak) IBOutlet UITextField *amountTextField;
+@property (nonatomic, weak) IBOutlet UITextField *promoIDTextField;
+@property (nonatomic, weak) IBOutlet UITextField *publicKeyTextfield;
+
+@end
+
+@implementation ViewController
+
+#pragma mark - Life Cycle
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self configureTextField];
+    [self configurPromotionalMessage];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillChangeFrameNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)keyboardWillChangeFrame:(NSNotification *)notification
+{
+    NSValue *rectValue = notification.userInfo[UIKeyboardFrameEndUserInfoKey];
+    self.scrollView.contentInset = UIEdgeInsetsMake(0, 0, CGRectGetHeight(rectValue.CGRectValue), 0);
+}
+
+- (void)keyboardWillBeHidden:(NSNotification *)notification
+{
+    self.scrollView.contentInset = UIEdgeInsetsZero;
+}
+
+#pragma mark - Actions
+
+- (IBAction)checkout:(id)sender
+{
+    NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
+    AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item" SKU:@"test_item" unitPrice:dollarPrice quantity:1 URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
+    AffirmShippingDetail *shipping = [AffirmShippingDetail shippingDetailWithName:@"Chester Cheetah" addressWithLine1:@"633 Folsom Street" line2:@"" city:@"San Francisco" state:@"CA" zipCode:@"94107" countryCode:@"USA"];
+    AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping payoutAmount:[dollarPrice toIntegerCents]];
+    
+    AffirmCheckoutViewController *controller = [AffirmCheckoutViewController startCheckout:checkout delegate:self];
+    [self presentViewController:controller animated:YES completion:nil];
+}
+
+- (IBAction)showFailedCheckout:(id)sender
+{
+    NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
+    AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item" SKU:@"test_item" unitPrice:dollarPrice quantity:1 URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
+    AffirmShippingDetail *shipping = [AffirmShippingDetail shippingDetailWithName:@"Test Tester" email:@"testtester@test.com" phoneNumber:@"1111111111" addressWithLine1:@"633 Folsom Street" line2:@"" city:@"San Francisco" state:@"CA" zipCode:@"94107" countryCode:@"USA"];
+    AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping payoutAmount:[dollarPrice toIntegerCents]];
+    
+    AffirmCheckoutViewController *controller = [AffirmCheckoutViewController startCheckout:checkout delegate:self];
+    [self presentViewController:controller animated:YES completion:nil];
+}
+
+- (IBAction)vcnCheckout:(UIButton *)sender
+{
+    NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
+    AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item" SKU:@"test_item" unitPrice:dollarPrice quantity:1 URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
+    AffirmShippingDetail *shipping = [AffirmShippingDetail shippingDetailWithName:@"Chester Cheetah" addressWithLine1:@"633 Folsom Street" line2:@"" city:@"San Francisco" state:@"CA" zipCode:@"94107" countryCode:@"USA"];
+    AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping payoutAmount:[dollarPrice toIntegerCents]];
+    
+    AffirmCheckoutViewController *controller = [AffirmCheckoutViewController startCheckout:checkout useVCN:YES delegate:self];
+    [self presentViewController:controller animated:YES completion:nil];
+}
+
+- (IBAction)trackOrderConfirmation:(id)sender
+{
+    AffirmOrder *order = [[AffirmOrder alloc] initWithStoreName:@"Affirm Store"
+                                                     checkoutId:nil
+                                                         coupon:@"SUMMER2018"
+                                                       currency:@"USD"
+                                                       discount:NSDecimalNumber.zero
+                                                        orderId:@"T12345"
+                                                  paymentMethod:@"Visa"
+                                                        revenue:[NSDecimalNumber decimalNumberWithString:@"2920"]
+                                                       shipping:[NSDecimalNumber decimalNumberWithString:@"534"]
+                                                 shippingMethod:@"Fedex"
+                                                            tax:[NSDecimalNumber decimalNumberWithString:@"285"]
+                                                          total:[NSDecimalNumber decimalNumberWithString:@"3739"]];
+    AffirmProduct *product0 = [[AffirmProduct alloc] initWithBrand:@"Affirm"
+                                                         category:@"Apparel"
+                                                           coupon:@"SUMMER2018"
+                                                             name:@"Affirm T-Shirt"
+                                                            price:[NSDecimalNumber decimalNumberWithString:@"730"]
+                                                        productId:@"SKU-1234"
+                                                         quantity:1
+                                                          variant:@"Black"
+                                                         currency:nil];
+    AffirmProduct *product1 = [[AffirmProduct alloc] initWithBrand:@"Affirm"
+                                                         category:@"Apparel"
+                                                           coupon:@"SUMMER2018"
+                                                             name:@"Affirm Turtleneck Sweater"
+                                                            price:[NSDecimalNumber decimalNumberWithString:@"2190"]
+                                                        productId:@"SKU-5678"
+                                                         quantity:1
+                                                          variant:@"Black"
+                                                         currency:nil];
+    [AffirmOrderTrackerViewController trackOrder:order products:@[product0, product1]];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"Track successfully" preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+- (void)configurPromotionalMessage
+{
+    NSString *amountText = self.amountTextField.text;
+    [self.promotionalButton configureWithAmount:[NSDecimalNumber decimalNumberWithString:amountText]
+                                 affirmLogoType:AffirmLogoTypeName
+                                    affirmColor:AffirmColorTypeBlue
+                                    maxFontSize:15];
+}
+
+- (void)configureTextField
+{
+    [@[self.publicKeyTextfield, self.amountTextField, self.promoIDTextField] enumerateObjectsUsingBlock:^(UITextField * _Nonnull textField, NSUInteger idx, BOOL * _Nonnull stop) {
+        UIToolbar *toolbar = [UIToolbar new];
+        UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+        UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:textField action:@selector(resignFirstResponder)];
+        toolbar.items = @[flexibleItem, doneItem];
+        [toolbar sizeToFit];
+        textField.inputAccessoryView = toolbar;
+    }];
+}
+
+#pragma mark - UITextField delegate
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return YES;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    if (textField == self.publicKeyTextfield) {
+        [[AffirmConfiguration sharedInstance] configureWithPublicKey:textField.text environment:AffirmEnvironmentSandbox];
+    } else if (textField == self.promoIDTextField) {
+        self.promotionalButton.promoID = textField.text;
+    }
+    [self configurPromotionalMessage];
+}
+
+#pragma mark - Affirm prequal delegate
+
+- (void)webViewController:(nullable AffirmBaseWebViewController *)webViewController didFailWithError:(NSError *)error
+{
+    // The prequal process failed
+    NSLog(@"Prequal failed with error: %@", error.userInfo);
+    if (webViewController) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [webViewController dismissViewControllerAnimated:YES completion:nil];
+        }]];
+        [webViewController presentViewController:alertController animated:YES completion:nil];
+    }
+}
+
+#pragma mark - Affirm checkout delegate
+
+- (void)checkout:(AffirmCheckoutViewController *)checkoutViewController completedWithToken:(NSString *)checkoutToken
+{
+    // The user has completed the checkout and created a checkout token.
+    // This token should be forwarded to your server, which should then authorize it with Affirm and create a charge.
+    NSLog(@"Received token %@", checkoutToken);
+    [checkoutViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)vcnCheckout:(AffirmCheckoutViewController *)checkoutViewController completedWithCreditCard:(AffirmCreditCard *)creditCard
+{
+    // The user has completed the checkout and returned credit card details.
+    // All charge actions are done using your existing payment gateway and debit card processor
+    NSLog(@"Received credit card %@", creditCard);
+    [checkoutViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)checkoutCancelled:(AffirmCheckoutViewController *)checkoutViewController
+{
+    // The checkout process was cancelled
+    NSLog(@"Checkout was cancelled");
+    [checkoutViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)checkout:(AffirmCheckoutViewController *)checkoutViewController didFailWithError:(NSError *)error
+{
+    // The checkout process failed
+    NSLog(@"Checkout failed with error: %@", error);
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [checkoutViewController dismissViewControllerAnimated:YES completion:nil];
+    }]];
+    [checkoutViewController presentViewController:alertController animated:YES completion:nil];
+}
+
+@end

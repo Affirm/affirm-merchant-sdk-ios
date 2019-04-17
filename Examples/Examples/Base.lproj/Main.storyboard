@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Presenting View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NQB-Zw-j9f">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lfj-ab-Q3N">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="479"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="O5J-XL-g8E">
+                                                <rect key="frame" x="30" y="100" width="315" height="349"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A8K-BE-37Q" customClass="AffirmPromotionalButton">
+                                                        <rect key="frame" x="0.0" y="0.0" width="315" height="34"/>
+                                                        <state key="normal">
+                                                            <color key="titleColor" red="0.1333333333" green="0.1333333333" blue="0.1333333333" alpha="1" colorSpace="calibratedRGB"/>
+                                                        </state>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="boolean" keyPath="showCTA" value="YES"/>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="promoID" value="promo_set_ios"/>
+                                                        </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <outlet property="presentingViewController" destination="BYZ-38-t0r" id="6ff-fs-XxT"/>
+                                                        </connections>
+                                                    </button>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xeb-En-Ebk">
+                                                        <rect key="frame" x="0.0" y="49" width="315" height="30"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="PublicKey:   " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fhs-gh-iVR">
+                                                                <rect key="frame" x="0.0" y="0.0" width="93" height="30"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <nil key="textColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="2G9MNM7462PB1TAV" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="DOS-mS-mc1">
+                                                                <rect key="frame" x="93" y="0.0" width="222" height="30"/>
+                                                                <accessibility key="accessibilityConfiguration" label="public API key input"/>
+                                                                <nil key="textColor"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                                                                <connections>
+                                                                    <outlet property="delegate" destination="BYZ-38-t0r" id="ASD-Bk-y0p"/>
+                                                                </connections>
+                                                            </textField>
+                                                        </subviews>
+                                                    </stackView>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vTf-Lp-qzJ">
+                                                        <rect key="frame" x="0.0" y="94" width="315" height="30"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Amount:   " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z4I-79-lEe">
+                                                                <rect key="frame" x="0.0" y="0.0" width="93" height="30"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <nil key="textColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="500" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="FGx-aa-5AC">
+                                                                <rect key="frame" x="93" y="0.0" width="222" height="30"/>
+                                                                <accessibility key="accessibilityConfiguration" label="price input"/>
+                                                                <nil key="textColor"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                                <textInputTraits key="textInputTraits" keyboardType="decimalPad" returnKeyType="done"/>
+                                                                <connections>
+                                                                    <outlet property="delegate" destination="BYZ-38-t0r" id="ao2-IV-kIH"/>
+                                                                </connections>
+                                                            </textField>
+                                                        </subviews>
+                                                    </stackView>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="slV-y4-kjd">
+                                                        <rect key="frame" x="0.0" y="139" width="315" height="30"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PromoID:  " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i3V-Zr-5m5">
+                                                                <rect key="frame" x="0.0" y="0.0" width="93" height="30"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <nil key="textColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="promo_set_ios" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="sVt-6z-4o1">
+                                                                <rect key="frame" x="93" y="0.0" width="222" height="30"/>
+                                                                <accessibility key="accessibilityConfiguration" label="promo ID input"/>
+                                                                <nil key="textColor"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                                                                <connections>
+                                                                    <outlet property="delegate" destination="BYZ-38-t0r" id="sRq-sl-AoD"/>
+                                                                </connections>
+                                                            </textField>
+                                                        </subviews>
+                                                    </stackView>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2iM-sZ-gRl" customClass="Button">
+                                                        <rect key="frame" x="0.0" y="184" width="315" height="30"/>
+                                                        <state key="normal" title="Buy with Affirm"/>
+                                                        <connections>
+                                                            <action selector="checkout:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0Tz-uj-wzx"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cjU-mP-ECZ" customClass="Button">
+                                                        <rect key="frame" x="0.0" y="229" width="315" height="30"/>
+                                                        <state key="normal" title="Failed Checkout"/>
+                                                        <connections>
+                                                            <action selector="showFailedCheckout:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4z2-qe-b3B"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dji-SE-feF" customClass="Button">
+                                                        <rect key="frame" x="0.0" y="274" width="315" height="30"/>
+                                                        <state key="normal" title="VCN Checkout"/>
+                                                        <connections>
+                                                            <action selector="vcnCheckout:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Wqj-rg-FWy"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AV4-HU-m60" customClass="Button">
+                                                        <rect key="frame" x="0.0" y="319" width="315" height="30"/>
+                                                        <state key="normal" title="Track Order Confirmation"/>
+                                                        <connections>
+                                                            <action selector="trackOrderConfirmation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0Np-vA-TTi"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="FGx-aa-5AC" firstAttribute="leading" secondItem="DOS-mS-mc1" secondAttribute="leading" id="I6o-gM-z0j"/>
+                                                    <constraint firstItem="sVt-6z-4o1" firstAttribute="leading" secondItem="DOS-mS-mc1" secondAttribute="leading" id="IyM-yx-9eb"/>
+                                                </constraints>
+                                            </stackView>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="O5J-XL-g8E" secondAttribute="trailing" constant="30" id="N95-qc-hL4"/>
+                                            <constraint firstItem="O5J-XL-g8E" firstAttribute="leading" secondItem="Lfj-ab-Q3N" secondAttribute="leading" constant="30" id="Nco-cX-sWD"/>
+                                            <constraint firstAttribute="bottom" secondItem="O5J-XL-g8E" secondAttribute="bottom" constant="30" id="Ptn-Li-ESu"/>
+                                            <constraint firstItem="O5J-XL-g8E" firstAttribute="top" secondItem="Lfj-ab-Q3N" secondAttribute="top" constant="100" id="qRb-uw-9bb"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="Lfj-ab-Q3N" firstAttribute="top" secondItem="NQB-Zw-j9f" secondAttribute="top" id="ACa-Jn-Tvl"/>
+                                    <constraint firstAttribute="bottom" secondItem="Lfj-ab-Q3N" secondAttribute="bottom" id="L6q-da-w8F"/>
+                                    <constraint firstAttribute="trailing" secondItem="Lfj-ab-Q3N" secondAttribute="trailing" id="Wf4-OF-3iA"/>
+                                    <constraint firstItem="Lfj-ab-Q3N" firstAttribute="leading" secondItem="NQB-Zw-j9f" secondAttribute="leading" id="sEz-pa-5fa"/>
+                                    <constraint firstItem="Lfj-ab-Q3N" firstAttribute="width" secondItem="NQB-Zw-j9f" secondAttribute="width" id="vgG-1F-qrT"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="NQB-Zw-j9f" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="0Db-oE-5zJ"/>
+                            <constraint firstItem="NQB-Zw-j9f" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="7gb-2i-Ki7"/>
+                            <constraint firstItem="NQB-Zw-j9f" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="dAt-qG-2ne"/>
+                            <constraint firstItem="NQB-Zw-j9f" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="zeh-1p-GvN"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="amountTextField" destination="FGx-aa-5AC" id="Brg-uG-eU4"/>
+                        <outlet property="promoIDTextField" destination="sVt-6z-4o1" id="Ii7-NL-Su8"/>
+                        <outlet property="promotionalButton" destination="A8K-BE-37Q" id="s81-Fl-hw4"/>
+                        <outlet property="publicKeyTextfield" destination="DOS-mS-mc1" id="EwH-w4-fhu"/>
+                        <outlet property="scrollView" destination="NQB-Zw-j9f" id="Ks6-cQ-vG2"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="524" y="65.217391304347828"/>
+        </scene>
+    </scenes>
+</document>

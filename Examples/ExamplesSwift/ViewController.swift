@@ -1,0 +1,169 @@
+//
+//  ViewController.swift
+//  ExamplesSwift
+//
+//  Created by Victor Zhu on 2019/4/1.
+//  Copyright © 2019 Affirm, Inc. All rights reserved.
+//
+
+import UIKit
+import AffirmSDK
+
+class ViewController: UIViewController {
+
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var promotionalButton: AffirmPromotionalButton!
+    @IBOutlet weak var amountTextField: UITextField!
+    @IBOutlet weak var promoIDTextField: UITextField!
+    @IBOutlet weak var publicKeyTextfield: UITextField!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        configureTextField()
+        configurPromotionalMessage()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillBeHidden(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
+
+    @objc func keyboardWillChangeFrame(notification: Notification) {
+        if let rectValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+            self.scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: rectValue.height, right: 0)
+        }
+    }
+
+    @objc func keyboardWillBeHidden(notification: Notification) {
+        self.scrollView.contentInset = .zero
+    }
+
+    @IBAction func checkout(sender: Any) {
+        let dollarPrice = NSDecimalNumber(string: self.amountTextField.text)
+        let item = AffirmItem(name: "Affirm Test Item", sku: "test_item", unitPrice: dollarPrice, quantity: 1, url: URL(string: "http://sandbox.affirm.com/item")!)
+        let shipping = AffirmShippingDetail(name: "Chester Cheetah", addressWithLine1: "633 Folsom Street", line2: "", city: "San Francisco", state: "CA", zipCode: "94107", countryCode: "USA")
+        let checkout = AffirmCheckout.checkout(items: [item], shipping: shipping, payoutAmount: dollarPrice.toIntegerCents())
+
+        let controller = AffirmCheckoutViewController.start(checkout: checkout, delegate: self)
+        present(controller, animated: true, completion: nil)
+    }
+
+    @IBAction func showFailedCheckout(sender: Any) {
+        let dollarPrice = NSDecimalNumber(string: self.amountTextField.text)
+        let item = AffirmItem(name: "Affirm Test Item", sku: "test_item", unitPrice: dollarPrice, quantity: 1, url: URL(string: "http://sandbox.affirm.com/item")!)
+        let shipping = AffirmShippingDetail(name: "Test Tester", email: "testtester@test.com", phoneNumber: "1111111111", line1: "633 Folsom Street", line2: "", city: "San Francisco", state: "CA", zipCode: "94107", countryCode: "USA")
+        let checkout = AffirmCheckout.checkout(items: [item], shipping: shipping, payoutAmount: dollarPrice.toIntegerCents())
+
+        let controller = AffirmCheckoutViewController.start(checkout: checkout, delegate: self)
+        present(controller, animated: true, completion: nil)
+    }
+
+    @IBAction func vcnCheckout(sender: Any) {
+        let dollarPrice = NSDecimalNumber(string: self.amountTextField.text)
+        let item = AffirmItem(name: "Affirm Test Item", sku: "test_item", unitPrice: dollarPrice, quantity: 1, url: URL(string: "http://sandbox.affirm.com/item")!)
+        let shipping = AffirmShippingDetail(name: "Chester Cheetah", addressWithLine1: "633 Folsom Street", line2: "", city: "San Francisco", state: "CA", zipCode: "94107", countryCode: "USA")
+        let checkout = AffirmCheckout.checkout(items: [item], shipping: shipping, payoutAmount: dollarPrice.toIntegerCents())
+
+        let controller = AffirmCheckoutViewController.start(checkout: checkout, useVCN: true, delegate: self)
+        present(controller, animated: true, completion: nil)
+    }
+
+    @IBAction func trackOrderConfirmation(sender: UIButton) {
+        sender.titleLabel?.layer.backgroundColor = sender.tintColor.cgColor
+        UIView.animate(withDuration: 0.2) {
+            sender.titleLabel?.layer.backgroundColor = UIColor.clear.cgColor
+        }
+
+        let order = AffirmOrder(storeName: "Affirm Store", checkoutId: nil, coupon: "SUMMER2018", currency: "USD", discount: .zero, orderId: "T12345", paymentMethod: "Visa", revenue: NSDecimalNumber(string: "2920"), shipping: NSDecimalNumber(string: "534"), shippingMethod: "Fedex", tax: NSDecimalNumber(string: "285"), total: NSDecimalNumber(string: "3739"))
+        let product0 = AffirmProduct(brand: "Affirm", category: "Apparel", coupon: "SUMMER2018", name: "Affirm T-Shirt", price: NSDecimalNumber(string: "730"), productId: "SKU-1234", quantity: 1, variant: "Black", currency: nil)
+        let product1 = AffirmProduct(brand: "Affirm", category: "Apparel", coupon: "SUMMER2018", name: "Affirm Turtleneck Sweater", price: NSDecimalNumber(string: "2190"), productId: "SKU-5678", quantity: 1, variant: "Black", currency: nil)
+        AffirmOrderTrackerViewController.track(order: order, products: [product0, product1])
+
+        let alertController = UIAlertController(title: nil, message: "Track successfully", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .cancel))
+        present(alertController, animated: true, completion: nil)
+    }
+
+    func configureTextField() {
+        let _ = [self.publicKeyTextfield, self.amountTextField, self.promoIDTextField].map { textField in
+            let toolbar = UIToolbar()
+            let flexibleItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+            let doneItem = UIBarButtonItem(barButtonSystemItem: .done, target: textField, action: #selector(UIResponder.resignFirstResponder))
+            toolbar.items = [flexibleItem, doneItem];
+            toolbar.sizeToFit()
+            textField?.inputAccessoryView = toolbar
+        }
+    }
+
+    func configurPromotionalMessage() {
+        let amountText = self.amountTextField.text
+        self.promotionalButton.configure(amount: NSDecimalNumber(string: amountText), affirmLogoType: .name, affirmColor: .blue, maxFontSize: 15)
+    }
+}
+
+extension ViewController: UITextFieldDelegate {
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        guard let text = textField.text else {
+            return
+        }
+
+        if textField == self.publicKeyTextfield {
+            AffirmConfiguration.shared.configure(publicKey: text, environment: .sandbox)
+        } else if textField == self.promoIDTextField {
+            self.promotionalButton.promoID = text
+        }
+        configurPromotionalMessage()
+    }
+}
+
+extension ViewController: AffirmPrequalDelegate {
+
+    func webViewController(_ webViewController: AffirmBaseWebViewController?, didFailWithError error: Error!) {
+        print("Prequal failed with error: \(error.localizedDescription)")
+        if let webViewController = webViewController {
+            let alertController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+                webViewController.dismiss(animated: true, completion: nil)
+            }))
+            webViewController.present(alertController, animated: true, completion: nil)
+        }
+    }
+}
+
+extension ViewController: AffirmCheckoutDelegate {
+
+    func checkout(_ checkoutViewController: AffirmCheckoutViewController, completedWithToken checkoutToken: String) {
+        print("Received token \(checkoutToken)")
+        checkoutViewController.dismiss(animated: true, completion: nil)
+    }
+
+    func vcnCheckout(_ checkoutViewController: AffirmCheckoutViewController, completedWith creditCard: AffirmCreditCard) {
+        print("Received credit card \(creditCard)")
+        checkoutViewController.dismiss(animated: true, completion: nil)
+    }
+
+    func checkoutCancelled(_ checkoutViewController: AffirmCheckoutViewController) {
+        print("Checkout was cancelled")
+        checkoutViewController.dismiss(animated: true, completion: nil)
+    }
+
+    func checkout(_ checkoutViewController: AffirmCheckoutViewController, didFailWithError error: Error) {
+        print("Checkout failed with error: \(error.localizedDescription)")
+        let alertController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+            checkoutViewController.dismiss(animated: true, completion: nil)
+        }))
+        checkoutViewController.present(alertController, animated: true, completion: nil)
+    }
+}

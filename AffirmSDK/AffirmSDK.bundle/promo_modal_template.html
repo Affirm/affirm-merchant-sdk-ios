@@ -1,0 +1,87 @@
+<!-- Template file to load the Affirm ALA modal -->
+<!-- Swap out parameters: API Key, JavaScript URL, Amount, Data Modal ID -->
+<html>
+    <head>
+        <style>
+            @keyframes lightLoading{0%,60%{opacity:0}40%{opacity:1}}
+            .loading-wrapper {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                padding: 0;
+                width: 80px;
+                height: 40px;
+                margin: -40px 0 0 -40px;
+            }
+            .loader {
+                position: relative;
+                width: 80px;
+                height: 40px;
+                margin: 0 auto;
+            }
+            .dots {
+                box-sizing: border-box;
+            }
+            .dot {
+                width: 20px;
+                height: 20px;
+                opacity: 0;
+                background: #1292d6;
+                border-radius: 10px;
+                margin-right: 10px;
+                float: left;
+                -webkit-transform: translated3d(0,0,0);
+                transform: translate3d(0,0,0);
+                -webkit-animation: lightLoading 1.05s infinite linear;
+                animation: lightLoading 1.05s infinite linear;
+            }
+            .dot-b {
+                -webkit-animation-delay: .15s;
+                animation-delay: .15s;
+            }
+            .dot-c {
+                margin-right: 0;
+                -webkit-animation-delay: .3s;
+                animation-delay: .3s;
+            }
+        </style>
+    </head>
+    <body>
+        <meta name="viewport" content="width=400">
+        <div class="loader">
+            <div class="dots">
+                <div class="dot dot-a">a</div>
+                <div class="dot dot-b">b</div>
+                <div class="dot dot-c">c</div>
+            </div>
+        </div>
+
+        <script>
+        var _affirm_config = {
+            public_api_key: "%@", /* Use the PUBLIC API KEY Affirm sent you. */
+            script: "%@"
+        };
+        (function(l,g,m,e,a,f,b){var d,c=l[m]||{},h=document.createElement(f),n=document.getElementsByTagName(f)[0],k=function(a,b,c){return function(){a[b]._.push([c,arguments])}};c[e]=k(c,e,"set");d=c[e];c[a]={};c[a]._=[];d._=[];c[a][b]=k(c,a,b);a=0;for(b="set add save post open empty reset on off trigger ready setProduct".split(" ");a<b.length;a++)d[b[a]]=k(c,e,b[a]);a=0;for(b=["get","token","url","items"];a<b.length;a++)d[b[a]]=function(){};h.async=!0;h.src=g[f];n.parentNode.insertBefore(h,n);delete g[f];d(g);l[m]=c})(window,_affirm_config,"affirm","checkout","ui","script","ready");
+        
+        affirm.ui.ready(function(){
+            var elem = affirm.ui.openModal({"amount": "%@", "id": "%@", "isSdk": "true"});
+            var onCloseProductModal = function() {
+                window.location.href = "%@"
+            }
+            affirm.setAffirmConfig(elem, {onCloseModal: onCloseProductModal});
+        });
+        // END AFFIRM.JS EMBED CODE
+                        
+        function go() {
+            var id = setInterval(checkAffirm, 200);
+            function checkAffirm() {
+                if (affirm.ui.isReady) {
+                    clearInterval(id);
+                }
+            }
+        }
+        
+        document.onload = go();
+        </script>
+    </body>
+</html>
