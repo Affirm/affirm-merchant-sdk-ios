@@ -21,11 +21,11 @@ pod 'AffirmSDK'
 
 Add the following to your Cartfile and follow the setup instructions [here](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application).
 ```
-github "Affirm/affirm-ios-sdk"
+github "Affirm/affirm-merchant-sdk-ios"
 ```
 <strong> Manual </strong>
 
-Alternatively, if you do not want to use CocoaPods or Carthage, you may clone our [GitHub repository](https://github.com/Affirm/affirm-ios-sdk) and simply drag and drop the `AffirmSDK` folder into your XCode project.
+Alternatively, if you do not want to use CocoaPods or Carthage, you may clone our [GitHub repository](https://github.com/Affirm/affirm-merchant-sdk-ios) and simply drag and drop the `AffirmSDK` folder into your XCode project.
 
 Usage Overview
 ==============
