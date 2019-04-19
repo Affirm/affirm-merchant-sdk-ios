@@ -1,7 +1,7 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
-## Version 5.0.0 (April 19, 2019)
+## Version 5.0.1 (April 19, 2019)
 ### Changed
 - Refactor code
   - HTTP Networking
