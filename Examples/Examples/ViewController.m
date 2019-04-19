@@ -16,6 +16,7 @@
 @property (nonatomic, weak) IBOutlet UITextField *amountTextField;
 @property (nonatomic, weak) IBOutlet UITextField *promoIDTextField;
 @property (nonatomic, weak) IBOutlet UITextField *publicKeyTextfield;
+@property (nonatomic, weak) IBOutlet UILabel *resultLabel;
 
 @end
 
@@ -188,7 +189,7 @@
 {
     // The user has completed the checkout and created a checkout token.
     // This token should be forwarded to your server, which should then authorize it with Affirm and create a charge.
-    NSLog(@"Received token %@", checkoutToken);
+    self.resultLabel.text = [NSString stringWithFormat:@"Received token:\n%@", checkoutToken];
     [checkoutViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -196,7 +197,7 @@
 {
     // The user has completed the checkout and returned credit card details.
     // All charge actions are done using your existing payment gateway and debit card processor
-    NSLog(@"Received credit card %@", creditCard);
+    self.resultLabel.text = [NSString stringWithFormat:@"Received credit card:\ncredit card id: %@\ncheckout token: %@\ncard holder name: %@\nnumber:%@\ncvv: %@\nexpiration: %@\ncallback id: %@", creditCard.creditCardId, creditCard.checkoutToken, creditCard.cardholderName, creditCard.number, creditCard.cvv, creditCard.expiration, creditCard.callbackId];
     [checkoutViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
