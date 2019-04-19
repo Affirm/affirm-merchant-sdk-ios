@@ -16,6 +16,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var amountTextField: UITextField!
     @IBOutlet weak var promoIDTextField: UITextField!
     @IBOutlet weak var publicKeyTextfield: UITextField!
+    @IBOutlet weak var resultLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -144,12 +145,12 @@ extension ViewController: AffirmPrequalDelegate {
 extension ViewController: AffirmCheckoutDelegate {
 
     func checkout(_ checkoutViewController: AffirmCheckoutViewController, completedWithToken checkoutToken: String) {
-        print("Received token \(checkoutToken)")
+        resultLabel.text = "Received token:\n\(checkoutToken)"
         checkoutViewController.dismiss(animated: true, completion: nil)
     }
 
     func vcnCheckout(_ checkoutViewController: AffirmCheckoutViewController, completedWith creditCard: AffirmCreditCard) {
-        print("Received credit card \(creditCard)")
+        resultLabel.text = "Received credit card:\ncredit card id: \(creditCard.creditCardId)\ncheckout token: \(creditCard.checkoutToken)\ncard holder name: \(creditCard.cardholderName)\nnumber:\(creditCard.number)\ncvv: \(creditCard.cvv)\nexpiration: \(creditCard.expiration)\ncallback id: \(creditCard.callbackId)"
         checkoutViewController.dismiss(animated: true, completion: nil)
     }
 
