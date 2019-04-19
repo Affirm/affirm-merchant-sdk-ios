@@ -128,10 +128,10 @@ A demo app that integrates Affirm is included in the repo. To run it, run `pod i
 Upgrade
 ==============
 
-We recommand you to install the lastest version for get better features and experience. if you are using the old sdk, you can refer to this [upgrade document](https://github.com/greycats/affirm-ios-sdk-rewrite/blob/master/UPGRADE.md).
+We recommand you to install the lastest version for get better features and experience. if you are using the old sdk, you can refer to this [upgrade document](https://github.com/Affirm/affirm-merchant-sdk-ios/blob/master/UPGRADE.md).
 
 Changelog
 ==============
 
-All notable changes to this project will be documented in [changelog document](https://github.com/greycats/affirm-ios-sdk-rewrite/blob/master/CHANGELOG.md).
+All notable changes to this project will be documented in [changelog document](https://github.com/Affirm/affirm-merchant-sdk-ios/blob/master/CHANGELOG.md).
 
