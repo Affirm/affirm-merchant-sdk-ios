@@ -1,7 +1,7 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
-## Version 5.0.0 (March 26, 2019)
+## Version 5.0.0 (April 19, 2019)
 ### Changed
 - Refactor code
   - HTTP Networking
@@ -45,6 +45,10 @@ AffirmCheckoutViewController *checkoutVC = [AffirmCheckoutViewController startCh
 -  `totalAmount` was renamed to `payoutAmount` and `total` was renamed to `totalAmount` in `AffirmCheckout` Class.
 
 -  `AffirmOrderTrackerViewController` shows how to track an order confirmed, it requires `AffirmOrder` and a list of `AffirmProduct`.
+
+## Version 4.0.17 (Apr 16, 2019)
+- Updated VCN checkout
+- Bug fixes
 
 ## Version 4.0.16 (Feb 28, 2019)
 - VCN checkout
