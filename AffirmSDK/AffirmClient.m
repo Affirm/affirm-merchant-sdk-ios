@@ -97,8 +97,9 @@
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
     urlRequest.HTTPMethod = method;
 
-    for (NSString *key in request.headers) {
-        [urlRequest setValue:request.headers[key] forHTTPHeaderField:key];
+    NSDictionary *headers = request.headers;
+    for (NSString *key in headers) {
+        [urlRequest setValue:headers[key] forHTTPHeaderField:key];
     }
     if (request.parameters && [NSJSONSerialization isValidJSONObject:request.parameters] && request.method == AffirmHTTPMethodPOST) {
         urlRequest.HTTPBody = [NSJSONSerialization dataWithJSONObject:request.parameters options:NSJSONWritingPrettyPrinted error:nil];
@@ -129,15 +130,6 @@
         }
     }];
     [task resume];
-}
-
-@end
-
-@implementation AffirmAlaClient
-
-+ (NSString *)host
-{
-    return [AffirmConfiguration sharedInstance].isProductionEnvironment ? @"https://affirm.com" : @"https://sandbox.affirm.com";
 }
 
 @end

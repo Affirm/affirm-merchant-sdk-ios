@@ -16,8 +16,6 @@
 #import "AffirmLogger.h"
 
 NSString *const AFFIRM_DEFAULT_ALA_TEMPLATE = @"Buy in monthly payments with Affirm";
-NSString *const AFFIRM_PREQUAL_SANDBOX_URL = @"https://sandbox.affirm.com/apps/prequal/";
-NSString *const AFFIRM_PREQUAL_URL = @"https://sandbox.affirm.com/apps/prequal/";
 
 NSString * FormatLogoString(AffirmLogoType type)
 {
@@ -152,7 +150,7 @@ NSString * FormatAffirmColorString(AffirmColorType type)
     self.amount = amount.toIntegerCents;
     
     AffirmPromoRequest *request = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey promoId:self.promoID amount:self.amount showCTA:self.showCTA];
-    [AffirmAlaClient send:request handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nonnull error) {
+    [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nonnull error) {
         BOOL success = NO;
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
             success = YES;
@@ -203,6 +201,7 @@ NSString * FormatAffirmColorString(AffirmColorType type)
     if (!self.clickable) {
         return;
     }
+    
     if (self.showPrequal) {
         NSDictionary *params = @{
                                  @"public_api_key": [AffirmConfiguration sharedInstance].publicKey,
@@ -213,7 +212,7 @@ NSString * FormatAffirmColorString(AffirmColorType type)
                                  @"referring_url": AFFIRM_PREQUAL_REFERRING_URL
                                  };
 
-        NSString *url = [AffirmConfiguration sharedInstance].isProductionEnvironment ? AFFIRM_PREQUAL_URL : AFFIRM_PREQUAL_SANDBOX_URL;
+        NSString *url = [NSString stringWithFormat:@"%@/apps/prequal/", [AffirmCheckoutClient host]];
         NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"?%@", [params queryURLEncoding]]
                                    relativeToURL:[NSURL URLWithString:url]];
         AffirmPrequalModalViewController *viewController = [[AffirmPrequalModalViewController alloc] initWithURL:requestURL

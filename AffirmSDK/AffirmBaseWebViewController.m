@@ -43,6 +43,8 @@
     activityIndicatorView.center = self.view.center;
     [self.view addSubview:activityIndicatorView];
     self.activityIndicatorView = activityIndicatorView;
+    
+    [AffirmConfiguration deleteAffirmCookies];
 }
 
 - (void)dealloc

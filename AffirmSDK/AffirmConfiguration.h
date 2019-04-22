@@ -37,6 +37,10 @@ NS_SWIFT_NAME(configure(publicKey:environment:merchantName:));
 
 - (NSString *)environmentDescription;
 
++ (NSArray <NSHTTPCookie *> *)cookiesForAffirm;
+
++ (void)deleteAffirmCookies;
+
 @end
 
 NS_ASSUME_NONNULL_END

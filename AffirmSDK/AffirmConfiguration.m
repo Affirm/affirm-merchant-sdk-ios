@@ -9,6 +9,7 @@
 #import "AffirmConfiguration.h"
 #import "AffirmUtils.h"
 #import "AffirmLogger.h"
+#import <WebKit/WebKit.h>
 
 @interface AffirmConfiguration ()
 
@@ -53,7 +54,6 @@
     self.publicKey = [publicKey copy];
     self.environment = environment;
     self.merchantName = [merchantName copy];
-    [self deleteAffirmCookies];
 }
 
 - (BOOL)isProductionEnvironment
@@ -84,14 +84,23 @@
     }
 }
 
-- (void)deleteAffirmCookies
++ (NSArray <NSHTTPCookie *> *)cookiesForAffirm
 {
-    NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    for (NSHTTPCookie *cookie in cookieStorage.cookies) {
-        NSString *domain = cookie.domain;
-        if ([domain hasSuffix:@"affirm.com"] || [domain hasSuffix:@"affirm-stage.com"] || [domain hasSuffix:@"affirm-dev.com"]) {
-            [cookieStorage deleteCookie:cookie];
+    NSMutableArray *ownedCookies = [NSMutableArray array];
+    NSArray *cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage].cookies;
+    for (NSHTTPCookie *cookie in cookies) {
+        if ([cookie.domain rangeOfString:@"affirm.com"].location != NSNotFound) {
+            [ownedCookies addObject:cookie];
         }
+    }
+    return ownedCookies;
+}
+
++ (void)deleteAffirmCookies
+{
+    NSArray *cookies = [self cookiesForAffirm];
+    for (NSHTTPCookie *cookie in cookies) {
+        [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
     }
 }
 

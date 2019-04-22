@@ -27,8 +27,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.publicKeyTextfield.text = [AffirmConfiguration sharedInstance].publicKey;
     [self configureTextField];
-    [self configurPromotionalMessage];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -36,6 +36,7 @@
     [super viewDidAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
+    [self configurPromotionalMessage];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
