@@ -43,8 +43,8 @@ Before you can use these components, you must first set the AffirmSDK with your 
 
 Checkout creation is the process in which a customer uses Affirm to pay for a purchase in your store. This process is governed by the `AffirmCheckoutViewController` object, which requires three parameters:
 
-- An `AffirmCheckout` object which contains details about the purchase itself
-- An `useVCN` object which determines whether the checkout flow should use virtual card network to handle the checkout.
+- The `AffirmCheckout` object which contains details about the purchase itself
+- The `useVCN` object which determines whether the checkout flow should use virtual card network to handle the checkout.
 
   - if set YES, it will return card info from this delegate 
     ```
@@ -57,7 +57,7 @@ Checkout creation is the process in which a customer uses Affirm to pay for a pu
     - (void)checkout:(AffirmCheckoutViewController *)checkoutViewController completedWithToken:(NSString *)checkoutToken
     ```
 
-- An `AffirmCheckoutDelegate` object which receives messages at various stages in the checkout process
+- The `AffirmCheckoutDelegate` object which receives messages at various stages in the checkout process
 
 Once the AffirmCheckoutViewController has been constructed from the parameters above, you may present it as with any other view controller. This initiates the flow which guides the user through the Affirm checkout process. An example of how this is implemented is provided as follows:
 
