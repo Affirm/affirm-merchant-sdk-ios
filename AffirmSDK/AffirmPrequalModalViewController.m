@@ -39,29 +39,11 @@
                                                                               style:UIBarButtonItemStyleDone
                                                                              target:self
                                                                              action:@selector(dismiss)];
-    if (@available(iOS 11.0, *)) {
-        WKHTTPCookieStore *store = self.webView.configuration.websiteDataStore.httpCookieStore;
-        [store getAllCookies:^(NSArray<NSHTTPCookie *> *cookies) {
-            for (NSHTTPCookie *cookie in cookies) {
-                [store deleteCookie:cookie completionHandler:nil];
-            }
-        }];
-    }
-    [self.webView loadRequest:[NSURLRequest requestWithURL:self.requestURL
-                                               cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
-                                           timeoutInterval:30]];
-}
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-     if (@available(iOS 11.0, *)) {
-         [[WKWebsiteDataStore defaultDataStore].httpCookieStore getAllCookies:^(NSArray<NSHTTPCookie *> * cookies) {
-             for (NSHTTPCookie *cookie in cookies) {
-                 [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
-             }
-         }];
-    }
+
+    [self.webView loadRequest:[NSURLRequest requestWithURL:self.requestURL
+                                               cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                           timeoutInterval:30]];
 }
 
 #pragma mark - WKNavigationDelegate

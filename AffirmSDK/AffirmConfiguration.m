@@ -35,6 +35,7 @@
 {
     if (self = [super init]) {
         _environment = AffirmEnvironmentSandbox;
+        _pool = [WKProcessPool new];
     }
     return self;
 }

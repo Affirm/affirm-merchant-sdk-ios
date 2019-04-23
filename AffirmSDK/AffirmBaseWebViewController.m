@@ -29,6 +29,7 @@
 
     WKWebViewConfiguration *configuration = [WKWebViewConfiguration new];
     configuration.applicationNameForUserAgent = [NSString stringWithFormat:@"Affirm-iOS-SDK-%@", [AffirmConfiguration affirmSDKVersion]];
+    configuration.processPool = [AffirmConfiguration sharedInstance].pool;
     WKWebView *webView = [[WKWebView alloc] initWithFrame:self.view.bounds configuration:configuration];
     webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     webView.contentMode = UIViewContentModeScaleAspectFit;
@@ -43,8 +44,18 @@
     activityIndicatorView.center = self.view.center;
     [self.view addSubview:activityIndicatorView];
     self.activityIndicatorView = activityIndicatorView;
-    
-    [AffirmConfiguration deleteAffirmCookies];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    if (@available(iOS 11.0, *)) {
+        [[WKWebsiteDataStore defaultDataStore].httpCookieStore getAllCookies:^(NSArray<NSHTTPCookie *> * cookies) {
+            for (NSHTTPCookie *cookie in cookies) {
+                [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+            }
+        }];
+    }
 }
 
 - (void)dealloc
