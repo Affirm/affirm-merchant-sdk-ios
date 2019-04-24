@@ -125,7 +125,18 @@
                                                           variant:@"Black"
                                                          currency:nil];
     [AffirmOrderTrackerViewController trackOrder:order products:@[product0, product1]];
+
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"Track successfully" preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+- (IBAction)clearCookies:(id)sender
+{
+    [AffirmConfiguration deleteAffirmCookies];
+    [self configurPromotionalMessage];
+
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"Clear successfully" preferredStyle:UIAlertControllerStyleAlert];
     [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:alertController animated:YES completion:nil];
 }

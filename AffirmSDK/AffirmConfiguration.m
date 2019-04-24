@@ -16,6 +16,7 @@
 @property (nonatomic, copy, readwrite) NSString *publicKey;
 @property (nonatomic, readwrite) AffirmEnvironment environment;
 @property (nonatomic, copy, readwrite, nullable) NSString *merchantName;
+@property (nonatomic, strong, readwrite) WKProcessPool *pool;
 
 @end
 
@@ -35,9 +36,16 @@
 {
     if (self = [super init]) {
         _environment = AffirmEnvironmentSandbox;
-        _pool = [WKProcessPool new];
     }
     return self;
+}
+
+- (WKProcessPool *)pool
+{
+    if (!_pool) {
+        _pool = [WKProcessPool new];
+    }
+    return _pool;
 }
 
 - (void)configureWithPublicKey:(NSString *)publicKey
@@ -103,6 +111,16 @@
     for (NSHTTPCookie *cookie in cookies) {
         [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
     }
+    if (@available(iOS 11.0, *)) {
+        WKWebsiteDataStore *dataStore = [WKWebsiteDataStore defaultDataStore];
+        [dataStore fetchDataRecordsOfTypes:WKWebsiteDataStore.allWebsiteDataTypes completionHandler:^(NSArray<WKWebsiteDataRecord *> *records) {
+            for (WKWebsiteDataRecord *record in records) {
+                [dataStore removeDataOfTypes:WKWebsiteDataStore.allWebsiteDataTypes forDataRecords:@[record] completionHandler:^{
+                }];
+            }
+        }];
+    }
+    [AffirmConfiguration sharedInstance].pool = nil;
 }
 
 @end

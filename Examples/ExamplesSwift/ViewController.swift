@@ -91,6 +91,15 @@ class ViewController: UIViewController {
         present(alertController, animated: true, completion: nil)
     }
 
+    @IBAction func clearCookies(sender: UIButton) {
+        AffirmConfiguration.deleteAffirmCookies()
+        configurPromotionalMessage()
+
+        let alertController = UIAlertController(title: nil, message: "Clear successfully", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .cancel))
+        present(alertController, animated: true, completion: nil)
+    }
+
     func configureTextField() {
         let _ = [self.publicKeyTextfield, self.amountTextField, self.promoIDTextField].map { textField in
             let toolbar = UIToolbar()
