@@ -8,6 +8,8 @@
 
 @class AffirmBaseWebViewController;
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  A delegate which handles prequal flow failed event.
  */
@@ -22,3 +24,5 @@
 - (void)webViewController:(nullable AffirmBaseWebViewController *)webViewController didFailWithError:(NSError *)error;
 
 @end
+
+NS_ASSUME_NONNULL_END

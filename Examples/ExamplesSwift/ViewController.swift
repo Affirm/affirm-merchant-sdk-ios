@@ -130,7 +130,7 @@ extension ViewController: UITextFieldDelegate {
 
 extension ViewController: AffirmPrequalDelegate {
 
-    func webViewController(_ webViewController: AffirmBaseWebViewController?, didFailWithError error: Error!) {
+    func webViewController(_ webViewController: AffirmBaseWebViewController?, didFailWithError error: Error) {
         print("Prequal failed with error: \(error.localizedDescription)")
         if let webViewController = webViewController {
             let alertController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
