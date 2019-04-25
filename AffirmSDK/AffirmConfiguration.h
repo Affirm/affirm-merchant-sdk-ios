@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <WebKit/WebKit.h>
 #import "AffirmConstants.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -17,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) AffirmEnvironment environment;
 @property (nonatomic, copy, readonly, nullable) NSString *merchantName;
 @property (nonatomic, readonly) BOOL isProductionEnvironment;
+@property (nonatomic, strong, readonly) WKProcessPool *pool;
 
 @property (class, nonatomic, readonly, strong) AffirmConfiguration *sharedInstance
 NS_SWIFT_NAME(shared);
@@ -36,6 +38,10 @@ NS_SWIFT_NAME(configure(publicKey:environment:merchantName:));
 + (NSString *)affirmSDKVersion;
 
 - (NSString *)environmentDescription;
+
++ (NSArray <NSHTTPCookie *> *)cookiesForAffirm;
+
++ (void)deleteAffirmCookies;
 
 @end
 

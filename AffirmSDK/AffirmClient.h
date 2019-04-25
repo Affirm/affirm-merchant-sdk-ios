@@ -47,9 +47,6 @@ typedef void (^AffirmRequestHandler)(id <AffirmResponseProtocol> _Nullable respo
 
 @end
 
-@interface AffirmAlaClient : NSObject <AffirmClientProtocol>
-@end
-
 @interface AffirmTrackerClient : NSObject <AffirmClientProtocol>
 @end
 

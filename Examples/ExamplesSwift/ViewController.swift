@@ -20,14 +20,15 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        publicKeyTextfield.text = AffirmConfiguration.shared.publicKey
         configureTextField()
-        configurPromotionalMessage()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillBeHidden(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        configurPromotionalMessage()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -86,6 +87,15 @@ class ViewController: UIViewController {
         AffirmOrderTrackerViewController.track(order: order, products: [product0, product1])
 
         let alertController = UIAlertController(title: nil, message: "Track successfully", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .cancel))
+        present(alertController, animated: true, completion: nil)
+    }
+
+    @IBAction func clearCookies(sender: UIButton) {
+        AffirmConfiguration.deleteAffirmCookies()
+        configurPromotionalMessage()
+
+        let alertController = UIAlertController(title: nil, message: "Clear successfully", preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .cancel))
         present(alertController, animated: true, completion: nil)
     }

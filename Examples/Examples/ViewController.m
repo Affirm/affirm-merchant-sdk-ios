@@ -27,8 +27,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.publicKeyTextfield.text = [AffirmConfiguration sharedInstance].publicKey;
     [self configureTextField];
-    [self configurPromotionalMessage];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -36,6 +36,7 @@
     [super viewDidAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
+    [self configurPromotionalMessage];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -124,7 +125,18 @@
                                                           variant:@"Black"
                                                          currency:nil];
     [AffirmOrderTrackerViewController trackOrder:order products:@[product0, product1]];
+
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"Track successfully" preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+- (IBAction)clearCookies:(id)sender
+{
+    [AffirmConfiguration deleteAffirmCookies];
+    [self configurPromotionalMessage];
+
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"Clear successfully" preferredStyle:UIAlertControllerStyleAlert];
     [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:alertController animated:YES completion:nil];
 }

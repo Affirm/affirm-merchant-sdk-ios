@@ -10,6 +10,7 @@
 #import "AffirmPrequalDelegate.h"
 #import "AffirmConstants.h"
 #import "AffirmUtils.h"
+#import "AffirmConfiguration.h"
 
 @interface AffirmPrequalModalViewController ()
 
@@ -38,8 +39,10 @@
                                                                               style:UIBarButtonItemStyleDone
                                                                              target:self
                                                                              action:@selector(dismiss)];
+
+
     [self.webView loadRequest:[NSURLRequest requestWithURL:self.requestURL
-                                               cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
+                                               cachePolicy:NSURLRequestUseProtocolCachePolicy
                                            timeoutInterval:30]];
 }
 
@@ -54,11 +57,6 @@
         return;
     }
     decisionHandler(WKNavigationActionPolicyAllow);
-}
-
-- (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
-{
-    decisionHandler(WKNavigationResponsePolicyAllow);
 }
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
