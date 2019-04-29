@@ -33,11 +33,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *promoId;
 @property (nonatomic, copy, readonly) NSDecimalNumber* amount;
 @property (nonatomic, readonly) BOOL showCTA;
+@property (nonatomic, copy, readonly, nullable) NSString *pageType;
 
 - (instancetype)initWithPublicKey:(NSString *)publicKey
                           promoId:(NSString *)promoId
                            amount:(NSDecimalNumber *)amount
-                          showCTA:(BOOL)showCTA;
+                          showCTA:(BOOL)showCTA
+                         pageType:(nullable NSString *)pageType;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 

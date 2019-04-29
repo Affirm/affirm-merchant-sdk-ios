@@ -59,12 +59,14 @@
                           promoId:(NSString *)promoId
                            amount:(NSDecimalNumber *)amount
                           showCTA:(BOOL)showCTA
+                         pageType:(nullable NSString *)pageType
 {
     if (self = [super init]) {
         _publicKey = [publicKey copy];
         _promoId = [promoId copy];
         _amount = [amount copy];
         _showCTA = showCTA;
+        _pageType = [pageType copy];
     }
     return self;
 }
@@ -81,12 +83,16 @@
 
 - (NSDictionary *)parameters
 {
-    return @{@"promo_external_id": self.promoId,
-             @"is_sdk": @"true",
-             @"field": @"ala",
-             @"show_cta": self.showCTA ? @"true" : @"false",
-             @"amount": self.amount.stringValue,
-             };
+    NSMutableDictionary *_parameters = [@{@"promo_external_id": self.promoId,
+                                          @"is_sdk": @"true",
+                                          @"field": @"ala",
+                                          @"show_cta": self.showCTA ? @"true" : @"false",
+                                          @"amount": self.amount.stringValue
+                                          } mutableCopy];
+    if (self.pageType) {
+        _parameters[@"page_type"] = self.pageType;
+    }
+    return _parameters;
 }
 
 - (Class)responseClass

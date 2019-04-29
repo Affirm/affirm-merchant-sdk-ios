@@ -27,7 +27,7 @@ FOUNDATION_EXPORT NSString *const AFFIRM_JS_URL;
 FOUNDATION_EXPORT NSString *const AFFIRM_SANDBOX_JS_URL;
 
 typedef NS_ENUM(NSInteger, AffirmEnvironment) {
-    AffirmEnvironmentProduction = 0,
+    AffirmEnvironmentProduction,
     AffirmEnvironmentSandbox
 };
 
