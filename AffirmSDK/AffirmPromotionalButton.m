@@ -17,6 +17,30 @@
 
 NSString *const AFFIRM_DEFAULT_ALA_TEMPLATE = @"Buy in monthly payments with Affirm";
 
+NSString * FormatAffirmPageTypeString(AffirmPageType type)
+{
+    switch (type) {
+        case AffirmPageTypeNone:
+            return nil;
+        case AffirmPageTypeBanner:
+            return @"banner";
+        case AffirmPageTypeCart:
+            return @"cart";
+        case AffirmPageTypeCategory:
+            return @"category";
+        case AffirmPageTypeHomepage:
+            return @"homepage";
+        case AffirmPageTypeLanding:
+            return @"landing";
+        case AffirmPageTypePayment:
+            return @"payment";
+        case AffirmPageTypeProduct:
+            return @"product";
+        case AffirmPageTypeSearch:
+            return @"search";
+    }
+}
+
 NSString * FormatLogoString(AffirmLogoType type)
 {
     switch (type) {
@@ -110,16 +134,34 @@ NSString * FormatAffirmColorString(AffirmColorType type)
 
 #pragma mark - Initialize Method
 
-- (instancetype)initWithPromoID:(NSString *)promoID
+- (instancetype)initWithPromoID:(nullable NSString *)promoID
                         showCTA:(BOOL)showCTA
        presentingViewController:(UIViewController<AffirmPrequalDelegate> *)presentingViewController
                           frame:(CGRect)frame
 {
-    [AffirmValidationUtils checkNotNil:promoID name:@"promoID"];
     [AffirmValidationUtils checkNotNil:presentingViewController name:@"presentingViewController"];
 
     if (self = [super initWithFrame:frame]) {
         _promoID = promoID;
+        _pageType = AffirmPageTypeNone;
+        _presentingViewController = presentingViewController;
+        _showCTA = showCTA;
+        [self configureButton];
+    }
+    return self;
+}
+
+- (instancetype)initWithPromoID:(nullable NSString *)promoID
+                        showCTA:(BOOL)showCTA
+                       pageType:(AffirmPageType)pageType
+       presentingViewController:(UIViewController<AffirmPrequalDelegate> *)presentingViewController
+                          frame:(CGRect)frame
+{
+    [AffirmValidationUtils checkNotNil:presentingViewController name:@"presentingViewController"];
+
+    if (self = [super initWithFrame:frame]) {
+        _promoID = promoID;
+        _pageType = pageType;
         _presentingViewController = presentingViewController;
         _showCTA = showCTA;
         [self configureButton];
@@ -149,7 +191,7 @@ NSString * FormatAffirmColorString(AffirmColorType type)
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     self.amount = amount.toIntegerCents;
     
-    AffirmPromoRequest *request = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey promoId:self.promoID amount:self.amount showCTA:self.showCTA];
+    AffirmPromoRequest *request = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey promoId:self.promoID amount:self.amount showCTA:self.showCTA pageType:FormatAffirmPageTypeString(self.pageType)];
     [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nonnull error) {
         BOOL success = NO;
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {

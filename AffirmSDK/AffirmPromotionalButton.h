@@ -9,18 +9,30 @@
 #import <UIKit/UIKit.h>
 #import "AffirmPrequalDelegate.h"
 
+typedef NS_ENUM(NSInteger, AffirmPageType) {
+    AffirmPageTypeNone,
+    AffirmPageTypeBanner,
+    AffirmPageTypeCart,
+    AffirmPageTypeCategory,
+    AffirmPageTypeHomepage,
+    AffirmPageTypeLanding,
+    AffirmPageTypePayment,
+    AffirmPageTypeProduct,
+    AffirmPageTypeSearch,
+};
+
 typedef NS_ENUM(NSInteger, AffirmLogoType) {
-    AffirmLogoTypeText = 1,
-    AffirmLogoTypeName = 2,
-    AffirmLogoTypeSymbol = 3,
-    AffirmLogoTypeSymbolHollow = 4
+    AffirmLogoTypeText,
+    AffirmLogoTypeName,
+    AffirmLogoTypeSymbol,
+    AffirmLogoTypeSymbolHollow
 };
 
 typedef NS_ENUM(NSInteger, AffirmColorType) {
-    AffirmColorTypeDefault = 1,
-    AffirmColorTypeBlue = 2,
-    AffirmColorTypeBlack = 3,
-    AffirmColorTypeWhite = 4
+    AffirmColorTypeDefault,
+    AffirmColorTypeBlue,
+    AffirmColorTypeBlack,
+    AffirmColorTypeWhite
 };
 
 NS_ASSUME_NONNULL_BEGIN
@@ -30,11 +42,25 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface AffirmPromotionalButton : UIButton
 
+/**
+ The view controller which handles prequal events.
+ */
 @property (nonatomic, weak) IBOutlet UIViewController<AffirmPrequalDelegate> *presentingViewController;
 
-@property (nonatomic, copy) IBInspectable NSString *promoID;
+/**
+ Promo id. Optional
+ */
+@property (nonatomic, copy, nullable) IBInspectable NSString *promoID;
 
+/**
+ A boolean to use when getting terms.
+ */
 @property (nonatomic) IBInspectable BOOL showCTA;
+
+/**
+ Page type.
+ */
+@property (nonatomic) IBInspectable AffirmPageType pageType;
 
 /**
  Constructor that creates an promotinoal button
@@ -45,11 +71,28 @@ NS_ASSUME_NONNULL_BEGIN
  @param frame frame to initialize the button
  @return an initialized AffirmPromotionalButton
  */
-- (instancetype)initWithPromoID:(NSString *)promoID
+- (instancetype)initWithPromoID:(nullable NSString *)promoID
                         showCTA:(BOOL)showCTA
        presentingViewController:(UIViewController<AffirmPrequalDelegate> *)presentingViewController
                           frame:(CGRect)frame
-NS_SWIFT_NAME(init(promoID:showCTA:presentingViewController:frame:)) NS_DESIGNATED_INITIALIZER;
+NS_SWIFT_NAME(init(promoID:showCTA:presentingViewController:frame:));
+
+/**
+ Constructor that creates an promotinoal button
+
+ @param promoID Promo ID to use when getting terms (provided by Affirm)
+ @param showCTA A boolean to use when getting terms
+ @param pageType type of Affirm page to display
+ @param presentingViewController view controller that button is displayed on, and the view controller must follow the AffirmPrequalDelegate
+ @param frame frame to initialize the button
+ @return an initialized AffirmPromotionalButton
+ */
+- (instancetype)initWithPromoID:(nullable NSString *)promoID
+                        showCTA:(BOOL)showCTA
+                       pageType:(AffirmPageType)pageType
+       presentingViewController:(UIViewController<AffirmPrequalDelegate> *)presentingViewController
+                          frame:(CGRect)frame
+NS_SWIFT_NAME(init(promoID:showCTA:pageType:presentingViewController:frame:));
 
 /**
  Configures an AffirmPromotionalButton with the appropriate details
