@@ -34,6 +34,7 @@ AffirmCheckoutViewController *checkoutVC = [AffirmCheckoutViewController startCh
 	```
 	AffirmPromotionalButton *button = [[AffirmPromotionalButton alloc] initWithPromoID:@"promoID"
                                                                               showCTA:showCTA
+									      pageType:@"pageType"
                                                              presentingViewController:viewController
                                                                                 frame:frame];
 	```
