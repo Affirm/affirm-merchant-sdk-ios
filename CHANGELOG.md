@@ -3,6 +3,8 @@ All notable changes to the SDK will be documented in this file.
 
 ## Version 5.0.2 (April 29, 2019)
 - Added page type
+- Added session cookie
+- Added method to remove cookies
 
 ## Version 5.0.1 (April 19, 2019)
 ### Changed
