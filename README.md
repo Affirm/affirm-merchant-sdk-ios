@@ -3,7 +3,7 @@ Affirm iOS SDK
 ==============
 [![CocoaPods](https://img.shields.io/cocoapods/v/AffirmSDK.svg)](http://cocoadocs.org/docsets/AffirmSDK) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![Travis](https://travis-ci.org/Affirm/affirm-ios-sdk.svg?branch=master)](https://travis-ci.org/Affirm/affirm-ios-sdk) [![license](https://img.shields.io/cocoapods/l/AffirmSDK.svg)]()
 
-The Affirm iOS SDK allows you to accept Affirm payments in your own app.
+The Affirm iOS SDK allows you to offer Affirm monthly payments in your own app.
 
 Installation
 ============
@@ -32,7 +32,7 @@ Usage Overview
 
 An Affirm integration consists of two components: checkout and promotional messaging.
 
-Before you can use these components, you must first set the AffirmSDK with your public API key from your [Merchant Dashboard](https://sandbox.affirm.com/dashboard). You must set this key to the shared AffirmConfiguration once (preferably in your AppDelegate) as follows:
+Before you can use these components, you must first set the AffirmSDK with your public API key from your sandbox [Merchant Dashboard](https://sandbox.affirm.com/dashboard). You must set this key to the shared AffirmConfiguration once (preferably in your AppDelegate) as follows:
 ```
 [[AffirmConfiguration sharedInstance] configureWithPublicKey:@"PUBLIC_API_KEY" environment:AffirmEnvironmentSandbox];
 ```
@@ -41,25 +41,24 @@ Before you can use these components, you must first set the AffirmSDK with your 
 
 ### Checkout creation
 
-Checkout creation is the process in which a customer uses Affirm to pay for a purchase in your store. This process is governed by the `AffirmCheckoutViewController` object, which requires three parameters:
+Checkout creation is the process in which a customer uses Affirm to pay for a purchase in your app. This process is governed by the `AffirmCheckoutViewController` object, which requires three parameters:
 
-- The `AffirmCheckout` object which contains details about the purchase itself
+- The `AffirmCheckout` object which contains details about the order
 - The `useVCN` object which determines whether the checkout flow should use virtual card network to handle the checkout.
 
-  - if set YES, it will return card info from this delegate 
+  - if set YES, it will return the debit card information from this delegate 
     ```
     - (void)vcnCheckout:(AffirmCheckoutViewController *)checkoutViewController completedWithCreditCard:(AffirmCreditCard *)creditCard
     ```
 
-
-  - if set NO, it will return token from this delegate 
+  - if set NO, it will return checkout token from this delegate 
     ```
     - (void)checkout:(AffirmCheckoutViewController *)checkoutViewController completedWithToken:(NSString *)checkoutToken
     ```
 
 - The `AffirmCheckoutDelegate` object which receives messages at various stages in the checkout process
 
-Once the AffirmCheckoutViewController has been constructed from the parameters above, you may present it as with any other view controller. This initiates the flow which guides the user through the Affirm checkout process. An example of how this is implemented is provided as follows:
+Once the AffirmCheckoutViewController has been constructed from the parameters above, you may present it with any other view controller. This initiates the flow which guides the user through the Affirm checkout process. An example of how this is implemented is provided as follows:
 
 ```
 // initialize an AffirmItem with item details
@@ -85,9 +84,11 @@ The flow ends once the user has successfully confirmed the checkout or vcn check
 
 Once the checkout has been successfully confirmed by the user, the AffirmCheckoutDelegate object will receive a checkout token. This token should be forwarded to your server, which should then use the token to authorize a charge on the user's account. For more details about the server integration, see our [API documentation](https://docs.affirm.com/Integrate_Affirm/Direct_API#3._Authorize_the_charge).
 
+Note - For VCN Checkout, all actions should be done using your existing payment gateway and debit card processor using the virtual card number returned after a successful checkout.
+
 ## Promotional Messaging
 
-Affirm Promotional Messaging allows you to inform customers about the availability of installment financing. Promos consist of promotional messaging, which appears directly in your app, and a modal, which is opened when the user clicks on the promotional button.
+Affirm promotional messaging components—monthly payment messaging and educational modals—show customers how they can use Affirm to finance their purchases. Promos consist of promotional messaging, which appears directly in your app, and a modal, which which offers users an ability to prequalify.
 
 To display promotional messaging, the SDK provides the `AffirmPromotionalButton` class, only requires the developer to add to their view and configure to implement. The AffirmPromotionalButton is implemented as follows:
 
@@ -112,7 +113,7 @@ UINavigationController *nav = [[UINavigationController alloc] initWithRootViewCo
 
 ## Track Order Confirmed
 
-The trackOrderConfirmed event triggers when a customer completes their purchase. It measures the sale of one or more products. The SDK provides the  `AffirmOrderTrackerViewController` class to track it, it requires `AffirmOrder` and an array with `AffirmProduct`.
+The trackOrderConfirmed event triggers when a customer completes their purchase. The SDK provides the  `AffirmOrderTrackerViewController` class to track it, it requires `AffirmOrder` and an array with `AffirmProduct`.
 
 ```
 [AffirmOrderTrackerViewController trackOrder:order products:@[product0, product1]];
@@ -128,7 +129,7 @@ A demo app that integrates Affirm is included in the repo. To run it, run `pod i
 Upgrade
 ==============
 
-We recommend that you install the lastest version to access the most up-to-date features and experience. If you are using an older version of the SDK, you can refer to this [upgrade document](https://github.com/Affirm/affirm-merchant-sdk-ios/blob/master/UPGRADE.md).
+If you are using an older version of the SDK, you can refer to this [upgrade document](https://github.com/Affirm/affirm-merchant-sdk-ios/blob/master/UPGRADE.md). We recommend that you install the lastest version of this SDK to access the most up-to-date features and experience. 
 
 Changelog
 ==============
