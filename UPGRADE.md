@@ -3,7 +3,7 @@ How to upgrade?
 If you want to upgrade you sdk to the lastest, please check the following points:
 
 ## Version
-The latest version is `v5.0.0`, you can upgrade sdk by [CocoaPods](https://cocoapods.org/) and [Carthage](https://github.com/Carthage/Carthage).
+The latest version is `v5.0.2`, you can upgrade sdk by [CocoaPods](https://cocoapods.org/) and [Carthage](https://github.com/Carthage/Carthage).
 
 For example:
 
@@ -15,7 +15,7 @@ if you use [CocoaPods](https://cocoapods.org/), please make sure you pod repo co
 If you already use specific sdk version in Podfile, please modify the line related to affirmSDK as follows:
 
 ```
-pod 'AffirmSDK', '~> 5.0.0'
+pod 'AffirmSDK', '~> 5.0.2'
 ```
 
 Otherwise, just use `pod update AffirmSDK` in terminal to update AffirmSDK.
