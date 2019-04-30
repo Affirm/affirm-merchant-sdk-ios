@@ -95,6 +95,7 @@ To display promotional messaging, the SDK provides the `AffirmPromotionalButton`
 ```
 AffirmPromotionalButton *button = [[AffirmPromotionalButton alloc] initWithPromoID:@"promo_set_ios"
                                                                            showCTA:YES
+                                                                           pageType:@"pageType"
                                                           presentingViewController:viewController
                                                                              frame:frame];
 [self.view addSubview:button];
