@@ -144,10 +144,7 @@
 - (void)configurPromotionalMessage
 {
     NSString *amountText = self.amountTextField.text;
-    [self.promotionalButton configureWithAmount:[NSDecimalNumber decimalNumberWithString:amountText]
-                                 affirmLogoType:AffirmLogoTypeName
-                                    affirmColor:AffirmColorTypeBlue
-                                    maxFontSize:15];
+    [self.promotionalButton configureByHtmlStylingWithAmount:[NSDecimalNumber decimalNumberWithString:amountText]];
 }
 
 - (void)configureTextField

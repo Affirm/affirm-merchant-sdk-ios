@@ -158,10 +158,12 @@
 @implementation AffirmPromoResponse
 
 - (instancetype)initWithAla:(NSString *)ala
+                    htmlAla:(NSString *)htmlAla
                 showPrequal:(BOOL)showPrequal
 {
     if (self = [super init]) {
         _ala = [ala copy];
+        _htmlAla = [htmlAla copy];
         _showPrequal = showPrequal;
     }
     return self;
@@ -173,9 +175,10 @@
     id responseObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
     NSString *ala = (NSString *)[responseObject valueForKeyPath:@"promo.ala"];
     ala = [ala stringByReplacingOccurrencesOfString:@"{affirm_logo}" withString:@"Affirm"];
+    NSString *htmlAla = [responseObject valueForKeyPath:@"promo.html_ala"];
     NSString *style = [responseObject valueForKeyPath:@"promo.config.promo_style"];
     BOOL showPrequal = ![style isEqualToString:@"fast"];
-    return [[AffirmPromoResponse alloc] initWithAla:ala showPrequal:showPrequal];
+    return [[AffirmPromoResponse alloc] initWithAla:ala htmlAla:htmlAla showPrequal:showPrequal];
 }
 
 @end

@@ -18,11 +18,10 @@
 
 @implementation AffirmPromoModalViewController
 
-- (instancetype)initWithPromoId:(NSString *)promoId
+- (instancetype)initWithPromoId:(nullable NSString *)promoId
                          amount:(NSDecimalNumber *)amount
                        delegate:(id<AffirmPrequalDelegate>)delegate
 {
-    [AffirmValidationUtils checkNotNil:promoId name:@"promoId"];
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     [AffirmValidationUtils checkNotNil:delegate name:@"delegate"];
     
@@ -31,7 +30,7 @@
         NSString *filePath = [[NSBundle resourceBundle] pathForResource:@"promo_modal_template"
                                                                  ofType:@"html"];
         NSString *rawContent = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-        _htmlString = [NSString stringWithFormat:rawContent, [AffirmConfiguration sharedInstance].publicKey, jsURL, amount, promoId, AFFIRM_CHECKOUT_CANCELLATION_URL];
+        _htmlString = [NSString stringWithFormat:rawContent, [AffirmConfiguration sharedInstance].publicKey, jsURL, amount, promoId ?: @"", AFFIRM_CHECKOUT_CANCELLATION_URL];
         _delegate = delegate;
     }
     return self;

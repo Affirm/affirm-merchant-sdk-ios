@@ -61,6 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AffirmPromoResponse : NSObject <AffirmResponseProtocol>
 
+@property (nonatomic, copy, readonly) NSString *htmlAla;
 @property (nonatomic, copy, readonly) NSString *ala;
 @property (nonatomic, readonly) BOOL showPrequal;
 

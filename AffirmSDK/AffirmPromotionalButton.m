@@ -15,9 +15,9 @@
 #import "AffirmRequest.h"
 #import "AffirmLogger.h"
 
-NSString *const AFFIRM_DEFAULT_ALA_TEMPLATE = @"Buy in monthly payments with Affirm";
+static NSString *const AFFIRM_DEFAULT_ALA_TEMPLATE = @"Buy in monthly payments with Affirm";
 
-NSString * FormatAffirmPageTypeString(AffirmPageType type)
+static NSString * FormatAffirmPageTypeString(AffirmPageType type)
 {
     switch (type) {
         case AffirmPageTypeNone:
@@ -41,7 +41,7 @@ NSString * FormatAffirmPageTypeString(AffirmPageType type)
     }
 }
 
-NSString * FormatLogoString(AffirmLogoType type)
+static NSString * FormatLogoString(AffirmLogoType type)
 {
     switch (type) {
         case AffirmLogoTypeName:
@@ -55,7 +55,7 @@ NSString * FormatLogoString(AffirmLogoType type)
     }
 }
 
-NSString * FormatAffirmColorString(AffirmColorType type)
+static NSString * FormatAffirmColorString(AffirmColorType type)
 {
     switch (type) {
         case AffirmColorTypeBlue:
@@ -151,6 +151,23 @@ NSString * FormatAffirmColorString(AffirmColorType type)
     return self;
 }
 
+- (instancetype)initWithShowCTA:(BOOL)showCTA
+                       pageType:(AffirmPageType)pageType
+       presentingViewController:(UIViewController<AffirmPrequalDelegate> *)presentingViewController
+                          frame:(CGRect)frame
+{
+    [AffirmValidationUtils checkNotNil:presentingViewController name:@"presentingViewController"];
+
+    if (self = [super initWithFrame:frame]) {
+        _promoID = nil;
+        _pageType = pageType;
+        _presentingViewController = presentingViewController;
+        _showCTA = showCTA;
+        [self configureButton];
+    }
+    return self;
+}
+
 - (instancetype)initWithPromoID:(nullable NSString *)promoID
                         showCTA:(BOOL)showCTA
                        pageType:(AffirmPageType)pageType
@@ -183,6 +200,36 @@ NSString * FormatAffirmColorString(AffirmColorType type)
     [self addTarget:self action:@selector(showALAModal:) forControlEvents:UIControlEventTouchUpInside];
 }
 
+- (void)configureByHtmlStylingWithAmount:(NSDecimalNumber *)amount
+{
+    [AffirmValidationUtils checkNotNil:amount name:@"amount"];
+    self.amount = amount.toIntegerCents;
+
+    AffirmPromoRequest *request = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
+                                                                        promoId:self.promoID
+                                                                         amount:self.amount
+                                                                        showCTA:self.showCTA
+                                                                       pageType:FormatAffirmPageTypeString(self.pageType)];
+    [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
+        BOOL success = NO;
+        NSAttributedString *attributedString = nil;
+        if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
+            success = YES;
+            AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
+            self.showPrequal = promoResponse.showPrequal;
+            if (promoResponse.htmlAla != nil) {
+                NSDictionary *options = @{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType};
+                attributedString = [[NSAttributedString alloc] initWithData:[promoResponse.htmlAla dataUsingEncoding:NSUTF8StringEncoding]
+                                                                    options:options
+                                                         documentAttributes:nil
+                                                                      error:nil];
+            }
+        }
+        [self configureWithAttributedText:attributedString response:response error:error];
+        self.clickable = success;
+    }];
+}
+
 - (void)configureWithAmount:(NSDecimalNumber *)amount
              affirmLogoType:(AffirmLogoType)affirmLogoType
                 affirmColor:(AffirmColorType)affirmColor
@@ -191,9 +238,14 @@ NSString * FormatAffirmColorString(AffirmColorType type)
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     self.amount = amount.toIntegerCents;
     
-    AffirmPromoRequest *request = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey promoId:self.promoID amount:self.amount showCTA:self.showCTA pageType:FormatAffirmPageTypeString(self.pageType)];
-    [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nonnull error) {
+    AffirmPromoRequest *request = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
+                                                                        promoId:self.promoID
+                                                                         amount:self.amount
+                                                                        showCTA:self.showCTA
+                                                                       pageType:FormatAffirmPageTypeString(self.pageType)];
+    [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
         BOOL success = NO;
+        NSAttributedString *attributedString = nil;
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
             success = YES;
             NSString *template = AFFIRM_DEFAULT_ALA_TEMPLATE;
@@ -206,33 +258,38 @@ NSString * FormatAffirmColorString(AffirmColorType type)
             if (affirmLogoType != AffirmLogoTypeText) {
                 logo = [AffirmPromotionalButton getAffirmDisplayForLogoType:affirmLogoType colorType:affirmColor];
             }
-            [self setAttributedTitle:[self appendLogo:logo
-                                               toText:template
-                                                 font:maxFontSize
-                                             logoType:affirmLogoType]
-                            forState:UIControlStateNormal];
-        } else if (response && [response isKindOfClass:[AffirmErrorResponse class]]) {
-            [self setAttributedTitle:nil
-                            forState:UIControlStateNormal];
-            AffirmErrorResponse *errorResponse = (AffirmErrorResponse *)response;
-            [[AffirmLogger sharedInstance] logEvent:@"Request Promotional Message Failed"
-                                         parameters:@{@"message": errorResponse.message, @"statusCode": errorResponse.statusCode}];
-            if (self.presentingViewController && [self.presentingViewController respondsToSelector:@selector(webViewController:didFailWithError:)]) {
-                [self.presentingViewController webViewController:nil
-                                                didFailWithError:[errorResponse.dictionary convertToNSErrorWithCode:errorResponse.statusCode]];
-            }
-        } else {
-            [self setAttributedTitle:nil
-                            forState:UIControlStateNormal];
-            [[AffirmLogger sharedInstance] logEvent:@"Request Promotional Message Failed"
-                                         parameters:@{@"message": error.localizedDescription}];
-            if (self.presentingViewController && [self.presentingViewController respondsToSelector:@selector(webViewController:didFailWithError:)]) {
-                [self.presentingViewController webViewController:nil
-                                                didFailWithError:error];
-            }
+            attributedString = [self appendLogo:logo
+                                         toText:template
+                                           font:maxFontSize
+                                       logoType:affirmLogoType];
         }
+        [self configureWithAttributedText:attributedString response:response error:error];
         self.clickable = success;
     }];
+}
+
+- (void)configureWithAttributedText:(NSAttributedString *)attributedText response:(nullable id<AffirmResponseProtocol>)response error:(nullable NSError *)error
+{
+    if (attributedText) {
+        [self setAttributedTitle:attributedText forState:UIControlStateNormal];
+    } else if (response && [response isKindOfClass:[AffirmErrorResponse class]]) {
+        [self setAttributedTitle:nil forState:UIControlStateNormal];
+        AffirmErrorResponse *errorResponse = (AffirmErrorResponse *)response;
+        [[AffirmLogger sharedInstance] logEvent:@"Request Promotional Message Failed"
+                                     parameters:@{@"message": errorResponse.message, @"statusCode": errorResponse.statusCode}];
+        if (self.presentingViewController && [self.presentingViewController respondsToSelector:@selector(webViewController:didFailWithError:)]) {
+            [self.presentingViewController webViewController:nil
+                                            didFailWithError:[errorResponse.dictionary convertToNSErrorWithCode:errorResponse.statusCode]];
+        }
+    } else {
+        [self setAttributedTitle:nil forState:UIControlStateNormal];
+        [[AffirmLogger sharedInstance] logEvent:@"Request Promotional Message Failed"
+                                     parameters:@{@"message": error.localizedDescription}];
+        if (self.presentingViewController && [self.presentingViewController respondsToSelector:@selector(webViewController:didFailWithError:)]) {
+            [self.presentingViewController webViewController:nil
+                                            didFailWithError:error];
+        }
+    }
 }
 
 #pragma mark - Event Response

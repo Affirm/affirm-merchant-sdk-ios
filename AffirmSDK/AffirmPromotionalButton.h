@@ -80,6 +80,21 @@ NS_SWIFT_NAME(init(promoID:showCTA:presentingViewController:frame:));
 /**
  Constructor that creates an promotinoal button
 
+ @param showCTA A boolean to use when getting terms
+ @param pageType type of Affirm page to display
+ @param presentingViewController view controller that button is displayed on, and the view controller must follow the AffirmPrequalDelegate
+ @param frame frame to initialize the button
+ @return an initialized AffirmPromotionalButton
+ */
+- (instancetype)initWithShowCTA:(BOOL)showCTA
+                       pageType:(AffirmPageType)pageType
+       presentingViewController:(UIViewController<AffirmPrequalDelegate> *)presentingViewController
+                          frame:(CGRect)frame
+NS_SWIFT_NAME(init(showCTA:pageType:presentingViewController:frame:));
+
+/**
+ Constructor that creates an promotinoal button
+
  @param promoID Promo ID to use when getting terms (provided by Affirm)
  @param showCTA A boolean to use when getting terms
  @param pageType type of Affirm page to display
@@ -93,6 +108,14 @@ NS_SWIFT_NAME(init(promoID:showCTA:presentingViewController:frame:));
        presentingViewController:(UIViewController<AffirmPrequalDelegate> *)presentingViewController
                           frame:(CGRect)frame
 NS_SWIFT_NAME(init(promoID:showCTA:pageType:presentingViewController:frame:));
+
+/**
+ Configures an AffirmPromotionalButton based on the HTML tags
+
+ @param amount Amount of the transaction
+ */
+- (void)configureByHtmlStylingWithAmount:(NSDecimalNumber *)amount
+NS_SWIFT_NAME(configureByHtmlStyling(amount:));
 
 /**
  Configures an AffirmPromotionalButton with the appropriate details
