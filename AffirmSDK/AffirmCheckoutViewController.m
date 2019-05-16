@@ -72,7 +72,7 @@
     AffirmCheckoutRequest *request = [[AffirmCheckoutRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
                                                                              checkout:self.checkout
                                                                                useVCN:self.useVCN];
-    [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nonnull error) {
+    [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nullable error) {
         if (response && [response isKindOfClass:[AffirmCheckoutResponse class]]) {
             AffirmCheckoutResponse *checkoutResponse = (AffirmCheckoutResponse *)response;
             NSURL *redirectURL = checkoutResponse.redirectURL;

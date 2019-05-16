@@ -37,7 +37,7 @@ typedef enum : NSUInteger {
 
 @end
 
-typedef void (^AffirmRequestHandler)(id <AffirmResponseProtocol> _Nullable response, NSError * _Nonnull error);
+typedef void (^AffirmRequestHandler)(id <AffirmResponseProtocol> _Nullable response, NSError * _Nullable error);
 
 @protocol AffirmClientProtocol <NSObject>
 

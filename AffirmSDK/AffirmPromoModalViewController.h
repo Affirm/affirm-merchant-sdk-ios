@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) id<AffirmPrequalDelegate> delegate;
 
-- (instancetype)initWithPromoId:(NSString *)promoId
+- (instancetype)initWithPromoId:(nullable NSString *)promoId
                          amount:(NSDecimalNumber *)amount
                        delegate:(id<AffirmPrequalDelegate>)delegate
 NS_SWIFT_NAME(init(promoId:amount:delegate:)) NS_DESIGNATED_INITIALIZER;
