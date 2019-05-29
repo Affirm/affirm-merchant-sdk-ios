@@ -70,6 +70,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly, nullable) NSString *financingProgram;
 
 /**
+ Your internal order id. This is stored for your own future reference.
+ */
+@property (nonatomic, copy, readonly, nullable) NSString *orderId;
+
+/**
  Initializer. See properties for more details.
 
  @param items List of purchased items.
@@ -89,6 +94,29 @@ NS_ASSUME_NONNULL_BEGIN
                      metadata:(nullable NSDictionary *)metadata
              financingProgram:(nullable NSString *)financingProgram
 NS_SWIFT_NAME(init(items:shipping:taxAmount:shippingAmount:discounts:metadata:financingProgram:));
+
+/**
+ Initializer. See properties for more details.
+
+ @param items List of purchased items.
+ @param shipping Shipping contact.
+ @param taxAmount Tax amount.
+ @param shippingAmount Shipping amount.
+ @param discounts List of discounts.
+ @param metadata Additional metadata.
+ @param financingProgram Financing Program to be applied.
+ @param orderId Your internal order id.
+ @return The initialized checkout.
+ */
+- (instancetype)initWithItems:(NSArray <AffirmItem *>*)items
+                     shipping:(AffirmShippingDetail *)shipping
+                    taxAmount:(NSDecimalNumber *)taxAmount
+               shippingAmount:(NSDecimalNumber *)shippingAmount
+                    discounts:(nullable NSArray <AffirmDiscount *>*)discounts
+                     metadata:(nullable NSDictionary *)metadata
+             financingProgram:(nullable NSString *)financingProgram
+                      orderId:(nullable NSString *)orderId
+NS_SWIFT_NAME(init(items:shipping:taxAmount:shippingAmount:discounts:metadata:financingProgram:orderId:));
 
 /**
  Convenience constructor. See properties for more details.
