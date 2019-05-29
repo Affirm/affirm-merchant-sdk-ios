@@ -1,6 +1,10 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
+## Version 5.0.3 (May 29, 2019)
+- Added order_id
+- HTML support in messaging
+
 ## Version 5.0.2 (April 29, 2019)
 - Added page type
 - Added session cookie
