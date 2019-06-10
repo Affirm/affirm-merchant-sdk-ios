@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Presenting View Controller-->
+        <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="ExamplesSwift" customModuleProvider="target" sceneMemberID="viewController">
@@ -22,26 +22,13 @@
                                 <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MNk-Ie-CDh">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="559.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="510.5"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="YFz-wy-x2R">
-                                                <rect key="frame" x="30" y="100" width="315" height="429.5"/>
+                                                <rect key="frame" x="30" y="100" width="315" height="380.5"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zEr-H9-Xwi" customClass="AffirmPromotionalButton">
-                                                        <rect key="frame" x="0.0" y="0.0" width="315" height="34"/>
-                                                        <state key="normal">
-                                                            <color key="titleColor" red="0.1333333333" green="0.1333333333" blue="0.1333333333" alpha="1" colorSpace="calibratedRGB"/>
-                                                        </state>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="boolean" keyPath="showCTA" value="YES"/>
-                                                            <userDefinedRuntimeAttribute type="string" keyPath="promoID" value="promo_set_ios"/>
-                                                        </userDefinedRuntimeAttributes>
-                                                        <connections>
-                                                            <outlet property="presentingViewController" destination="BYZ-38-t0r" id="r2I-fW-AqN"/>
-                                                        </connections>
-                                                    </button>
                                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S8b-na-g2J">
-                                                        <rect key="frame" x="0.0" y="49" width="315" height="30"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="315" height="30"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="PublicKey:   " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lzb-rz-pVo">
                                                                 <rect key="frame" x="0.0" y="0.0" width="93" height="30"/>
@@ -62,7 +49,7 @@
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D2q-2c-ecD">
-                                                        <rect key="frame" x="0.0" y="94" width="315" height="30"/>
+                                                        <rect key="frame" x="0.0" y="45" width="315" height="30"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Amount:   " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MqX-ho-xgz">
                                                                 <rect key="frame" x="0.0" y="0.0" width="93" height="30"/>
@@ -83,7 +70,7 @@
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lfs-C8-RE7">
-                                                        <rect key="frame" x="0.0" y="139" width="315" height="30"/>
+                                                        <rect key="frame" x="0.0" y="90" width="315" height="30"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PromoID:  " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="abc-TF-VwV">
                                                                 <rect key="frame" x="0.0" y="0.0" width="93" height="30"/>
@@ -104,42 +91,42 @@
                                                         </subviews>
                                                     </stackView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C6u-C5-aCh">
-                                                        <rect key="frame" x="0.0" y="184" width="315" height="30"/>
+                                                        <rect key="frame" x="0.0" y="135" width="315" height="30"/>
                                                         <state key="normal" title="Buy with Affirm"/>
                                                         <connections>
                                                             <action selector="checkoutWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="80P-Ql-dz5"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JXZ-7f-sEo">
-                                                        <rect key="frame" x="0.0" y="229" width="315" height="30"/>
+                                                        <rect key="frame" x="0.0" y="180" width="315" height="30"/>
                                                         <state key="normal" title="Failed Checkout"/>
                                                         <connections>
                                                             <action selector="showFailedCheckoutWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kBU-Sj-yEI"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BCw-Ab-2LL">
-                                                        <rect key="frame" x="0.0" y="274" width="315" height="30"/>
+                                                        <rect key="frame" x="0.0" y="225" width="315" height="30"/>
                                                         <state key="normal" title="VCN Checkout"/>
                                                         <connections>
                                                             <action selector="vcnCheckoutWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="uwq-lN-GAW"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ACl-Ue-YsN">
-                                                        <rect key="frame" x="0.0" y="319" width="315" height="30"/>
+                                                        <rect key="frame" x="0.0" y="270" width="315" height="30"/>
                                                         <state key="normal" title="Track Order Confirmation"/>
                                                         <connections>
                                                             <action selector="trackOrderConfirmationWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SeX-BK-OTu"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B7c-6q-jWr">
-                                                        <rect key="frame" x="0.0" y="364" width="315" height="30"/>
+                                                        <rect key="frame" x="0.0" y="315" width="315" height="30"/>
                                                         <state key="normal" title="Clear Cookies"/>
                                                         <connections>
                                                             <action selector="clearCookiesWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="sZw-Js-AUa"/>
                                                         </connections>
                                                     </button>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Checkout result: " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rzb-hq-GBZ">
-                                                        <rect key="frame" x="0.0" y="409" width="315" height="20.5"/>
+                                                        <rect key="frame" x="0.0" y="360" width="315" height="20.5"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -181,10 +168,10 @@
                     <connections>
                         <outlet property="amountTextField" destination="oiw-1r-wLA" id="hbJ-pK-ckK"/>
                         <outlet property="promoIDTextField" destination="WH3-Yf-wCv" id="epy-I6-Alo"/>
-                        <outlet property="promotionalButton" destination="zEr-H9-Xwi" id="ThH-pe-eOR"/>
                         <outlet property="publicKeyTextfield" destination="reI-mQ-8Iu" id="0Lp-dt-7RV"/>
                         <outlet property="resultLabel" destination="rzb-hq-GBZ" id="XWw-zf-F2G"/>
                         <outlet property="scrollView" destination="YJ5-vq-etB" id="ijF-6D-OAD"/>
+                        <outlet property="stackView" destination="YFz-wy-x2R" id="7aI-Ip-Sbq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

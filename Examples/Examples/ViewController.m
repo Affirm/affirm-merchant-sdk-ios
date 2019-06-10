@@ -12,11 +12,13 @@
 @interface ViewController () <UITextFieldDelegate, AffirmPrequalDelegate, AffirmCheckoutDelegate>
 
 @property (nonatomic, weak) IBOutlet UIScrollView *scrollView;
-@property (nonatomic, weak) IBOutlet AffirmPromotionalButton *promotionalButton;
+@property (nonatomic, weak) IBOutlet UIStackView *stackView;
 @property (nonatomic, weak) IBOutlet UITextField *amountTextField;
 @property (nonatomic, weak) IBOutlet UITextField *promoIDTextField;
 @property (nonatomic, weak) IBOutlet UITextField *publicKeyTextfield;
 @property (nonatomic, weak) IBOutlet UILabel *resultLabel;
+
+@property (nonatomic, strong) AffirmPromotionalButton *promotionalButton;
 
 @end
 
@@ -27,6 +29,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.promotionalButton = [[AffirmPromotionalButton alloc] initWithPromoID:@"promo_set_ios"
+                                                                      showCTA:YES
+                                                                     pageType:AffirmPageTypeProduct
+                                                     presentingViewController:self
+                                                                        frame:CGRectMake(0, 0, 315, 34)];
+    [self.stackView insertArrangedSubview:self.promotionalButton atIndex:0];
     self.publicKeyTextfield.text = [AffirmConfiguration sharedInstance].publicKey;
     [self configureTextField];
 }
