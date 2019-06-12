@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  An AffirmPromotionalButton displays the contents of an Affirm as low as object which describes the merchant and the item.
  */
-@interface AffirmPromotionalButton : UIButton
+@interface AffirmPromotionalButton : UIView
 
 /**
  The view controller which handles prequal events.
