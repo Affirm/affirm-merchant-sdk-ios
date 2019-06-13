@@ -93,13 +93,13 @@ Affirm promotional messaging components—monthly payment messaging and educatio
 To display promotional messaging, the SDK provides the `AffirmPromotionalButton` class, only requires the developer to add to their view and configure to implement. The AffirmPromotionalButton is implemented as follows:
 
 ```
-AffirmPromotionalButton *button = [[AffirmPromotionalButton alloc] initWithPromoID:@"promo_set_ios"
-                                                                           showCTA:YES
-                                                                           pageType:@"pageType"
-                                                          presentingViewController:viewController
-                                                                             frame:frame];
-[self.view addSubview:button];
-[self.button configureWithAmount:number affirmLogoType:AffirmLogoTypeName affirmColor:AffirmColorTypeBlue maxFontSize:15];
+self.promotionalButton = [[AffirmPromotionalButton alloc] initWithPromoID:@"promo_set_ios"
+                                                                  showCTA:YES
+                                                                 pageType:AffirmPageTypeProduct
+                                                 presentingViewController:self
+                                                                    frame:CGRectMake(0, 0, 315, 34)];
+[self.stackView insertArrangedSubview:self.promotionalButton atIndex:0];
+[self.promotionalButton configureByHtmlStylingWithAmount:[NSDecimalNumber decimalNumberWithString:amountText]];
 ```
 
 Tapping on the Promotional button automatically opens a modal in an `AffirmPrequalModalViewController` with more information, including (if you have it configured) a button that prompts the user to prequalify for Affirm financing.

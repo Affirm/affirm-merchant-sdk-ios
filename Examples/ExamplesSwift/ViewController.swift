@@ -12,14 +12,18 @@ import AffirmSDK
 class ViewController: UIViewController {
 
     @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var promotionalButton: AffirmPromotionalButton!
+    @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var amountTextField: UITextField!
     @IBOutlet weak var promoIDTextField: UITextField!
     @IBOutlet weak var publicKeyTextfield: UITextField!
     @IBOutlet weak var resultLabel: UILabel!
 
+    var promotionalButton: AffirmPromotionalButton!
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        promotionalButton = AffirmPromotionalButton(promoID: "promo_set_ios", showCTA: true, pageType: .product, presentingViewController: self, frame: CGRect(x: 0, y: 0, width: 315, height: 34))
+        stackView.insertArrangedSubview(promotionalButton, at: 0)
         publicKeyTextfield.text = AffirmConfiguration.shared.publicKey
         configureTextField()
     }

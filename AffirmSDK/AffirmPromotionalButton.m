@@ -302,14 +302,17 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
     }
     
     if (self.showPrequal) {
-        NSDictionary *params = @{
-                                 @"public_api_key": [AffirmConfiguration sharedInstance].publicKey,
-                                 @"unit_price": self.amount,
-                                 @"promo_external_id": self.promoID,
-                                 @"isSDK": @"true",
-                                 @"use_promo": @"true",
-                                 @"referring_url": AFFIRM_PREQUAL_REFERRING_URL
-                                 };
+        NSMutableDictionary *params = [@{
+                                         @"public_api_key": [AffirmConfiguration sharedInstance].publicKey,
+                                         @"unit_price": self.amount,
+                                         @"promo_external_id": self.promoID,
+                                         @"isSDK": @"true",
+                                         @"use_promo": @"true",
+                                         @"referring_url": AFFIRM_PREQUAL_REFERRING_URL,
+                                         } mutableCopy];
+        if (self.pageType) {
+            params[@"page_type"] = FormatAffirmPageTypeString(self.pageType);
+        }
 
         NSString *url = [NSString stringWithFormat:@"%@/apps/prequal/", [AffirmCheckoutClient host]];
         NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"?%@", [params queryURLEncoding]]
