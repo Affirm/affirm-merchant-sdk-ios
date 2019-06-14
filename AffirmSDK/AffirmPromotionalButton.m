@@ -287,7 +287,7 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
             [self.presentingViewController webViewController:nil
                                             didFailWithError:[errorResponse.dictionary convertToNSErrorWithCode:errorResponse.statusCode]];
         }
-    } else {
+    } else if (error) {
         [self setAttributedTitle:nil forState:UIControlStateNormal];
         [[AffirmLogger sharedInstance] logEvent:@"Request Promotional Message Failed"
                                      parameters:@{@"message": error.localizedDescription}];
