@@ -152,7 +152,9 @@
 - (void)configurPromotionalMessage
 {
     NSString *amountText = self.amountTextField.text;
-    [self.promotionalButton configureByHtmlStylingWithAmount:[NSDecimalNumber decimalNumberWithString:amountText]];
+    [self.promotionalButton configureByHtmlStylingWithAmount:[NSDecimalNumber decimalNumberWithString:amountText]
+                                              affirmLogoType:AffirmLogoTypeName
+                                                 affirmColor:AffirmColorTypeBlue];
 }
 
 - (void)configureTextField

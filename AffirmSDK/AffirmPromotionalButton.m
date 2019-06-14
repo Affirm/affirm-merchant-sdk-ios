@@ -53,7 +53,7 @@ static NSString * FormatAffirmPageTypeString(AffirmPageType type)
     }
 }
 
-static NSString * FormatLogoString(AffirmLogoType type)
+static NSString * FormatAffirmLogoString(AffirmLogoType type)
 {
     switch (type) {
         case AffirmLogoTypeName:
@@ -86,7 +86,7 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
 + (UIImage *)getAffirmDisplayForLogoType:(AffirmLogoType)logoType
                                colorType:(AffirmColorType)colorType
 {
-    NSString *file = [NSString stringWithFormat:@"%@_%@-transparent_bg", FormatAffirmColorString(colorType), FormatLogoString(logoType)];
+    NSString *file = [NSString stringWithFormat:@"%@_%@-transparent_bg", FormatAffirmColorString(colorType), FormatAffirmLogoString(logoType)];
     UIImage *image = [UIImage imageNamed:file inBundle:[NSBundle resourceBundle] compatibleWithTraitCollection:nil];
     return image;
 }
@@ -245,6 +245,15 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
 
 - (void)configureByHtmlStylingWithAmount:(NSDecimalNumber *)amount
 {
+    [self configureByHtmlStylingWithAmount:amount
+                            affirmLogoType:AffirmLogoTypeName
+                               affirmColor:AffirmColorTypeBlue];
+}
+
+- (void)configureByHtmlStylingWithAmount:(NSDecimalNumber *)amount
+                          affirmLogoType:(AffirmLogoType)affirmLogoType
+                             affirmColor:(AffirmColorType)affirmColor
+{
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     self.amount = amount.toIntegerCents;
 
@@ -252,7 +261,9 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
                                                                         promoId:self.promoID
                                                                          amount:self.amount
                                                                         showCTA:self.showCTA
-                                                                       pageType:FormatAffirmPageTypeString(self.pageType)];
+                                                                       pageType:FormatAffirmPageTypeString(self.pageType)
+                                                                       logoType:FormatAffirmLogoString(affirmLogoType)
+                                                                      logoColor:FormatAffirmColorString(affirmColor)];
     [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
             AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
@@ -293,7 +304,9 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
                                                                         promoId:self.promoID
                                                                          amount:self.amount
                                                                         showCTA:self.showCTA
-                                                                       pageType:FormatAffirmPageTypeString(self.pageType)];
+                                                                       pageType:FormatAffirmPageTypeString(self.pageType)
+                                                                       logoType:FormatAffirmLogoString(affirmLogoType)
+                                                                      logoColor:FormatAffirmColorString(affirmColor)];
     [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
         NSAttributedString *attributedString = nil;
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
