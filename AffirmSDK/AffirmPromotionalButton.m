@@ -192,6 +192,12 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
     [self configureButton];
 }
 
+- (void)setClickable:(BOOL)clickable
+{
+    _clickable = clickable;
+    self.hidden = !clickable;
+}
+
 - (void)configureButton
 {
     self.clickable = NO;
@@ -214,15 +220,15 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
         BOOL success = NO;
         NSAttributedString *attributedString = nil;
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
-            success = YES;
             AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
             self.showPrequal = promoResponse.showPrequal;
-            if (promoResponse.htmlAla != nil) {
+            if (promoResponse.htmlAla != nil && promoResponse.htmlAla.length > 0) {
                 NSDictionary *options = @{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType};
                 attributedString = [[NSAttributedString alloc] initWithData:[promoResponse.htmlAla dataUsingEncoding:NSUTF8StringEncoding]
                                                                     options:options
                                                          documentAttributes:nil
                                                                       error:nil];
+                success = YES;
             }
         }
         [self configureWithAttributedText:attributedString response:response error:error];
@@ -247,11 +253,11 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
         BOOL success = NO;
         NSAttributedString *attributedString = nil;
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
-            success = YES;
             NSString *template = AFFIRM_DEFAULT_ALA_TEMPLATE;
             AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
-            if (promoResponse.ala != nil) {
+            if (promoResponse.ala != nil && promoResponse.ala.length > 0) {
                 template = promoResponse.ala;
+                success = YES;
             }
             self.showPrequal = promoResponse.showPrequal;
             UIImage *logo = nil;
@@ -281,7 +287,7 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
             [self.presentingViewController webViewController:nil
                                             didFailWithError:[errorResponse.dictionary convertToNSErrorWithCode:errorResponse.statusCode]];
         }
-    } else {
+    } else if (error) {
         [self setAttributedTitle:nil forState:UIControlStateNormal];
         [[AffirmLogger sharedInstance] logEvent:@"Request Promotional Message Failed"
                                      parameters:@{@"message": error.localizedDescription}];
