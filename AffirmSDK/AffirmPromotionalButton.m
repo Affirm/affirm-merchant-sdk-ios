@@ -280,15 +280,18 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
             AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
             self.showPrequal = promoResponse.showPrequal;
             if (promoResponse.htmlAla != nil && promoResponse.htmlAla.length > 0) {
-                NSString *jsURL = [AffirmConfiguration sharedInstance].isProductionEnvironment ? AFFIRM_JS_URL : AFFIRM_SANDBOX_JS_URL;
                 BOOL hasRemoteCss = remoteCssURL != nil;
-
                 NSMutableDictionary *matchedKeys = [@{@"{{HTML_FRAGMENT}}": promoResponse.htmlAla} mutableCopy];
+                NSURL *baseURL = nil;
+                
                 if (hasRemoteCss) {
                     matchedKeys[@"{{REMOTE_CSS_URL}}"] = remoteCssURL.absoluteString ?: @"";
+                    baseURL = remoteCssURL.isFileURL ? [NSBundle mainBundle].bundleURL : remoteCssURL.baseURL;
                 } else {
                     matchedKeys[@"{{PUBLIC_KEY}}"] = [AffirmConfiguration sharedInstance].publicKey;
+                    NSString *jsURL = [AffirmConfiguration sharedInstance].isProductionEnvironment ? AFFIRM_JS_URL : AFFIRM_SANDBOX_JS_URL;
                     matchedKeys[@"{{JS_URL}}"] = jsURL;
+                    baseURL = [NSURL URLWithString:jsURL].baseURL;
                 }
 
                 NSString *filePath = [[NSBundle resourceBundle] pathForResource:hasRemoteCss ? @"affirm_promo_css" : @"affirm_promo"
@@ -301,12 +304,7 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
                                                                            options:NSLiteralSearch
                                                                              range:[rawContent rangeOfString:key]];
                  }];
-
-                if (remoteCssURL.isFileURL) {
-                    [self.webView loadHTMLString:rawContent baseURL:[NSBundle mainBundle].bundleURL];
-                } else {
-                    [self.webView loadHTMLString:rawContent baseURL:[NSURL URLWithString:jsURL].baseURL];
-                }
+                [self.webView loadHTMLString:rawContent baseURL:baseURL];
             }
         } else {
             [self configureWithAttributedText:nil response:response error:error];
