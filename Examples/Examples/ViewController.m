@@ -152,9 +152,11 @@
 - (void)configurPromotionalMessage
 {
     NSString *amountText = self.amountTextField.text;
+    NSURL *url = [[NSBundle mainBundle] URLForResource:@"css_promo_sample" withExtension:@"css"];
     [self.promotionalButton configureByHtmlStylingWithAmount:[NSDecimalNumber decimalNumberWithString:amountText]
                                               affirmLogoType:AffirmLogoTypeName
-                                                 affirmColor:AffirmColorTypeBlue];
+                                                 affirmColor:AffirmColorTypeBlue
+                                                remoteCssURL:url];
 }
 
 - (void)configureTextField

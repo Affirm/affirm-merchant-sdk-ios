@@ -130,6 +130,20 @@ NS_SWIFT_NAME(configureByHtmlStyling(amount:));
 NS_SWIFT_NAME(configureByHtmlStyling(amount:affirmLogoType:affirmColor:));
 
 /**
+ Configures an AffirmPromotionalButton based on the HTML tags
+
+ @param amount Amount of the transaction
+ @param affirmLogoType type of Affirm logo to display (text, name, symbol)
+ @param affirmColor color of Affirm to display (blue, black, white) - only applies to logo and symbol affirmType values
+ @param remoteCssURL Use a custom css file
+ */
+- (void)configureByHtmlStylingWithAmount:(NSDecimalNumber *)amount
+                          affirmLogoType:(AffirmLogoType)affirmLogoType
+                             affirmColor:(AffirmColorType)affirmColor
+                            remoteCssURL:(nullable NSURL *)remoteCssURL
+NS_SWIFT_NAME(configureByHtmlStyling(amount:affirmLogoType:affirmColor:remoteCssURL:));
+
+/**
  Configures an AffirmPromotionalButton with the appropriate details
  
  @param amount Amount of the transaction
