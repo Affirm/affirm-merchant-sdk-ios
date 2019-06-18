@@ -99,7 +99,7 @@ self.promotionalButton = [[AffirmPromotionalButton alloc] initWithPromoID:@"prom
                                                  presentingViewController:self
                                                                     frame:CGRectMake(0, 0, 315, 34)];
 [self.stackView insertArrangedSubview:self.promotionalButton atIndex:0];
-[self.promotionalButton configureByHtmlStylingWithAmount:[NSDecimalNumber decimalNumberWithString:amountText]];
+[self.promotionalButton configureByHtmlStylingWithAmount:[NSDecimalNumber decimalNumberWithString:amountText] affirmLogoType:AffirmLogoTypeName affirmColor:AffirmColorTypeBlue];
 ```
 
 Tapping on the Promotional button automatically opens a modal in an `AffirmPrequalModalViewController` with more information, including (if you have it configured) a button that prompts the user to prequalify for Affirm financing.

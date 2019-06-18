@@ -13,7 +13,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [[AffirmConfiguration sharedInstance] configureWithPublicKey:@"F6B2V0K9D5I8033Y"
+    [[AffirmConfiguration sharedInstance] configureWithPublicKey:@"ARQBLCL7NAMBTZ7F"
                                                      environment:AffirmEnvironmentSandbox
                                                     merchantName:@"Affirm Example"];
     return YES;

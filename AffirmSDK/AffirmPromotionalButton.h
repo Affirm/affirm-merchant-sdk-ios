@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  An AffirmPromotionalButton displays the contents of an Affirm as low as object which describes the merchant and the item.
  */
-@interface AffirmPromotionalButton : UIButton
+@interface AffirmPromotionalButton : UIView
 
 /**
  The view controller which handles prequal events.
@@ -116,6 +116,18 @@ NS_SWIFT_NAME(init(promoID:showCTA:pageType:presentingViewController:frame:));
  */
 - (void)configureByHtmlStylingWithAmount:(NSDecimalNumber *)amount
 NS_SWIFT_NAME(configureByHtmlStyling(amount:));
+
+/**
+ Configures an AffirmPromotionalButton based on the HTML tags
+
+ @param amount Amount of the transaction
+ @param affirmLogoType type of Affirm logo to display (text, name, symbol)
+ @param affirmColor color of Affirm to display (blue, black, white) - only applies to logo and symbol affirmType values
+ */
+- (void)configureByHtmlStylingWithAmount:(NSDecimalNumber *)amount
+                          affirmLogoType:(AffirmLogoType)affirmLogoType
+                             affirmColor:(AffirmColorType)affirmColor
+NS_SWIFT_NAME(configureByHtmlStyling(amount:affirmLogoType:affirmColor:));
 
 /**
  Configures an AffirmPromotionalButton with the appropriate details

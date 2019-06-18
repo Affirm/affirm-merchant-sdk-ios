@@ -15,6 +15,18 @@
 #import "AffirmRequest.h"
 #import "AffirmLogger.h"
 
+@interface AffirmPromotionalButton() <WKNavigationDelegate>
+
+@property (nonatomic, strong) NSDecimalNumber *amount;
+@property (nonatomic) BOOL showPrequal;
+@property (nonatomic) BOOL clickable;
+
+@property (nonatomic, strong) UIButton *button;
+@property (nonatomic, strong) WKWebView *webView;
+@property (nonatomic, strong) NSLayoutConstraint *webViewHeightConstraint;
+
+@end
+
 static NSString *const AFFIRM_DEFAULT_ALA_TEMPLATE = @"Buy in monthly payments with Affirm";
 
 static NSString * FormatAffirmPageTypeString(AffirmPageType type)
@@ -41,7 +53,7 @@ static NSString * FormatAffirmPageTypeString(AffirmPageType type)
     }
 }
 
-static NSString * FormatLogoString(AffirmLogoType type)
+static NSString * FormatAffirmLogoString(AffirmLogoType type)
 {
     switch (type) {
         case AffirmLogoTypeName:
@@ -74,7 +86,7 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
 + (UIImage *)getAffirmDisplayForLogoType:(AffirmLogoType)logoType
                                colorType:(AffirmColorType)colorType
 {
-    NSString *file = [NSString stringWithFormat:@"%@_%@-transparent_bg", FormatAffirmColorString(colorType), FormatLogoString(logoType)];
+    NSString *file = [NSString stringWithFormat:@"%@_%@-transparent_bg", FormatAffirmColorString(colorType), FormatAffirmLogoString(logoType)];
     UIImage *image = [UIImage imageNamed:file inBundle:[NSBundle resourceBundle] compatibleWithTraitCollection:nil];
     return image;
 }
@@ -107,7 +119,7 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
     }
     NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:text];
     [attributedText addAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:fontSize],
-                                    NSForegroundColorAttributeName: self.titleLabel.textColor}
+                                    NSForegroundColorAttributeName: self.button.titleLabel.textColor}
                             range:NSMakeRange(0, attributedText.length)];
     while ([attributedText.mutableString containsString:@"Affirm"]) {
         NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
@@ -119,14 +131,6 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
     }
     return attributedText;
 }
-
-@end
-
-@interface AffirmPromotionalButton()
-
-@property (nonatomic, strong) NSDecimalNumber *amount;
-@property (nonatomic) BOOL showPrequal;
-@property (nonatomic) BOOL clickable;
 
 @end
 
@@ -146,7 +150,7 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
         _pageType = AffirmPageTypeNone;
         _presentingViewController = presentingViewController;
         _showCTA = showCTA;
-        [self configureButton];
+        [self setup];
     }
     return self;
 }
@@ -163,7 +167,7 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
         _pageType = pageType;
         _presentingViewController = presentingViewController;
         _showCTA = showCTA;
-        [self configureButton];
+        [self setup];
     }
     return self;
 }
@@ -181,7 +185,7 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
         _pageType = pageType;
         _presentingViewController = presentingViewController;
         _showCTA = showCTA;
-        [self configureButton];
+        [self setup];
     }
     return self;
 }
@@ -189,6 +193,13 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
 - (void)awakeFromNib
 {
     [super awakeFromNib];
+    [self setup];
+}
+
+- (void)setup
+{
+    self.clickable = NO;
+    [self configureWebView];
     [self configureButton];
 }
 
@@ -198,15 +209,50 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
     self.hidden = !clickable;
 }
 
+- (void)configureWebView
+{
+    WKWebViewConfiguration *configuration = [WKWebViewConfiguration new];
+    WKWebView *webView = [[WKWebView alloc] initWithFrame:self.bounds configuration:configuration];
+    webView.translatesAutoresizingMaskIntoConstraints = NO;
+    webView.navigationDelegate = self;
+    webView.hidden = YES;
+    [self addSubview:self.webView = webView];
+    NSDictionary *views = NSDictionaryOfVariableBindings(webView);
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[webView]|" options:0 metrics:nil views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[webView]|" options:0 metrics:nil views:views]];
+    self.webViewHeightConstraint = [NSLayoutConstraint constraintWithItem:webView
+                                                                attribute:NSLayoutAttributeHeight
+                                                                relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                                                   toItem:nil
+                                                                attribute:NSLayoutAttributeNotAnAttribute
+                                                               multiplier:0
+                                                                 constant:CGRectGetHeight(self.bounds)];
+    [self addConstraint:self.webViewHeightConstraint];
+}
+
 - (void)configureButton
 {
-    self.clickable = NO;
-    self.titleLabel.numberOfLines = 0;
-    self.titleLabel.adjustsFontSizeToFitWidth = YES;
-    [self addTarget:self action:@selector(showALAModal:) forControlEvents:UIControlEventTouchUpInside];
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.translatesAutoresizingMaskIntoConstraints = NO;
+    button.titleLabel.numberOfLines = 0;
+    button.titleLabel.adjustsFontSizeToFitWidth = YES;
+    [button addTarget:self action:@selector(showALAModal:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:self.button = button];
+    NSDictionary *views = NSDictionaryOfVariableBindings(button);
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[button]|" options:0 metrics:nil views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[button]|" options:0 metrics:nil views:views]];
 }
 
 - (void)configureByHtmlStylingWithAmount:(NSDecimalNumber *)amount
+{
+    [self configureByHtmlStylingWithAmount:amount
+                            affirmLogoType:AffirmLogoTypeName
+                               affirmColor:AffirmColorTypeBlue];
+}
+
+- (void)configureByHtmlStylingWithAmount:(NSDecimalNumber *)amount
+                          affirmLogoType:(AffirmLogoType)affirmLogoType
+                             affirmColor:(AffirmColorType)affirmColor
 {
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     self.amount = amount.toIntegerCents;
@@ -215,24 +261,34 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
                                                                         promoId:self.promoID
                                                                          amount:self.amount
                                                                         showCTA:self.showCTA
-                                                                       pageType:FormatAffirmPageTypeString(self.pageType)];
+                                                                       pageType:FormatAffirmPageTypeString(self.pageType)
+                                                                       logoType:FormatAffirmLogoString(affirmLogoType)
+                                                                      logoColor:FormatAffirmColorString(affirmColor)];
     [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
-        BOOL success = NO;
-        NSAttributedString *attributedString = nil;
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
             AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
             self.showPrequal = promoResponse.showPrequal;
             if (promoResponse.htmlAla != nil && promoResponse.htmlAla.length > 0) {
-                NSDictionary *options = @{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType};
-                attributedString = [[NSAttributedString alloc] initWithData:[promoResponse.htmlAla dataUsingEncoding:NSUTF8StringEncoding]
-                                                                    options:options
-                                                         documentAttributes:nil
-                                                                      error:nil];
-                success = YES;
+                NSString *jsURL = [AffirmConfiguration sharedInstance].isProductionEnvironment ? AFFIRM_JS_URL : AFFIRM_SANDBOX_JS_URL;
+                NSString *filePath = [[NSBundle resourceBundle] pathForResource:@"affirm_promo"
+                                                                         ofType:@"html"];
+                __block NSString *rawContent = [NSString stringWithContentsOfFile:filePath
+                                                                         encoding:NSUTF8StringEncoding error:nil];
+                [@{@"{{PUBLIC_KEY}}": [AffirmConfiguration sharedInstance].publicKey,
+                   @"{{JS_URL}}": jsURL,
+                   @"{{HTML_FRAGMENT}}": promoResponse.htmlAla}
+                 enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, NSString *  _Nonnull obj, BOOL * _Nonnull stop) {
+                     rawContent = [rawContent stringByReplacingOccurrencesOfString:key
+                                                                        withString:obj
+                                                                           options:NSLiteralSearch
+                                                                             range:[rawContent rangeOfString:key]];
+                 }];
+                NSString *baseUrl = [NSString stringWithFormat:@"https://%@", [NSURL URLWithString:jsURL].host];
+                [self.webView loadHTMLString:rawContent baseURL:[NSURL URLWithString:baseUrl]];
             }
+        } else {
+            [self configureWithAttributedText:nil response:response error:error];
         }
-        [self configureWithAttributedText:attributedString response:response error:error];
-        self.clickable = success;
     }];
 }
 
@@ -248,16 +304,16 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
                                                                         promoId:self.promoID
                                                                          amount:self.amount
                                                                         showCTA:self.showCTA
-                                                                       pageType:FormatAffirmPageTypeString(self.pageType)];
+                                                                       pageType:FormatAffirmPageTypeString(self.pageType)
+                                                                       logoType:FormatAffirmLogoString(affirmLogoType)
+                                                                      logoColor:FormatAffirmColorString(affirmColor)];
     [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
-        BOOL success = NO;
         NSAttributedString *attributedString = nil;
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
             NSString *template = AFFIRM_DEFAULT_ALA_TEMPLATE;
             AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
             if (promoResponse.ala != nil && promoResponse.ala.length > 0) {
                 template = promoResponse.ala;
-                success = YES;
             }
             self.showPrequal = promoResponse.showPrequal;
             UIImage *logo = nil;
@@ -270,16 +326,18 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
                                        logoType:affirmLogoType];
         }
         [self configureWithAttributedText:attributedString response:response error:error];
-        self.clickable = success;
     }];
 }
 
-- (void)configureWithAttributedText:(NSAttributedString *)attributedText response:(nullable id<AffirmResponseProtocol>)response error:(nullable NSError *)error
+- (void)configureWithAttributedText:(nullable NSAttributedString *)attributedText response:(nullable id<AffirmResponseProtocol>)response error:(nullable NSError *)error
 {
+    self.webView.hidden = YES;
+    self.clickable = NO;
     if (attributedText) {
-        [self setAttributedTitle:attributedText forState:UIControlStateNormal];
+        [self.button setAttributedTitle:attributedText forState:UIControlStateNormal];
+        self.clickable = YES;
     } else if (response && [response isKindOfClass:[AffirmErrorResponse class]]) {
-        [self setAttributedTitle:nil forState:UIControlStateNormal];
+        [self.button setAttributedTitle:nil forState:UIControlStateNormal];
         AffirmErrorResponse *errorResponse = (AffirmErrorResponse *)response;
         [[AffirmLogger sharedInstance] logEvent:@"Request Promotional Message Failed"
                                      parameters:@{@"message": errorResponse.message, @"statusCode": errorResponse.statusCode}];
@@ -287,8 +345,8 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
             [self.presentingViewController webViewController:nil
                                             didFailWithError:[errorResponse.dictionary convertToNSErrorWithCode:errorResponse.statusCode]];
         }
-    } else if (error) {
-        [self setAttributedTitle:nil forState:UIControlStateNormal];
+    } else {
+        [self.button setAttributedTitle:nil forState:UIControlStateNormal];
         [[AffirmLogger sharedInstance] logEvent:@"Request Promotional Message Failed"
                                      parameters:@{@"message": error.localizedDescription}];
         if (self.presentingViewController && [self.presentingViewController respondsToSelector:@selector(webViewController:didFailWithError:)]) {
@@ -296,6 +354,35 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
                                             didFailWithError:error];
         }
     }
+}
+
+#pragma mark - WKWebView navigation delegate
+
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
+{
+    [webView evaluateJavaScript:@"Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight)"
+              completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+                  if (!error && [result isKindOfClass:[NSNumber class]]) {
+                      NSNumber *height = result;
+                      self.webViewHeightConstraint.constant = height.floatValue;
+                      [self layoutIfNeeded];
+                  }
+              }];
+    webView.hidden = NO;
+    [self.button setAttributedTitle:nil forState:UIControlStateNormal];
+    self.clickable = YES;
+}
+
+- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
+{
+    webView.hidden = YES;
+    self.clickable = NO;
+}
+
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
+{
+    webView.hidden = YES;
+    self.clickable = NO;
 }
 
 #pragma mark - Event Response

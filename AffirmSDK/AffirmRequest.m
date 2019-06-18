@@ -60,6 +60,8 @@
                            amount:(NSDecimalNumber *)amount
                           showCTA:(BOOL)showCTA
                          pageType:(nullable NSString *)pageType
+                         logoType:(nullable NSString *)logoType
+                        logoColor:(nullable NSString *)logoColor
 {
     if (self = [super init]) {
         _publicKey = [publicKey copy];
@@ -67,6 +69,8 @@
         _amount = [amount copy];
         _showCTA = showCTA;
         _pageType = [pageType copy];
+        _logoType = [logoType copy];
+        _logoColor = [logoColor copy];
     }
     return self;
 }
@@ -91,6 +95,12 @@
                                           } mutableCopy];
     if (self.pageType) {
         _parameters[@"page_type"] = self.pageType;
+    }
+    if (self.logoType) {
+        _parameters[@"logo_type"] = self.logoType;
+    }
+    if (self.logoColor) {
+        _parameters[@"logo_color"] = self.logoColor;
     }
     return _parameters;
 }
