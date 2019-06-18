@@ -281,20 +281,18 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
             self.showPrequal = promoResponse.showPrequal;
             if (promoResponse.htmlAla != nil && promoResponse.htmlAla.length > 0) {
                 BOOL hasRemoteCss = remoteCssURL != nil;
+                NSString *jsURL = [AffirmConfiguration sharedInstance].isProductionEnvironment ? AFFIRM_JS_URL : AFFIRM_SANDBOX_JS_URL;
+                NSURL *baseURL = [NSURL URLWithString:jsURL].baseURL;
                 NSMutableDictionary *matchedKeys = [@{@"{{HTML_FRAGMENT}}": promoResponse.htmlAla} mutableCopy];
-                NSURL *baseURL = nil;
-                
-                if (hasRemoteCss) {
-                    matchedKeys[@"{{REMOTE_CSS_URL}}"] = remoteCssURL.absoluteString ?: @"";
-                    baseURL = remoteCssURL.isFileURL ? [NSBundle mainBundle].bundleURL : remoteCssURL.baseURL;
-                } else {
-                    matchedKeys[@"{{PUBLIC_KEY}}"] = [AffirmConfiguration sharedInstance].publicKey;
-                    NSString *jsURL = [AffirmConfiguration sharedInstance].isProductionEnvironment ? AFFIRM_JS_URL : AFFIRM_SANDBOX_JS_URL;
-                    matchedKeys[@"{{JS_URL}}"] = jsURL;
-                    baseURL = [NSURL URLWithString:jsURL].baseURL;
-                }
 
-                NSString *filePath = [[NSBundle resourceBundle] pathForResource:hasRemoteCss ? @"affirm_promo_css" : @"affirm_promo"
+                if (hasRemoteCss) {
+                    baseURL = remoteCssURL.isFileURL ? [NSBundle mainBundle].bundleURL : remoteCssURL.baseURL;
+                }
+                matchedKeys[@"{{REMOTE_CSS_URL}}"] = remoteCssURL.absoluteString ?: @"";
+                matchedKeys[@"{{PUBLIC_KEY}}"] = [AffirmConfiguration sharedInstance].publicKey;
+                matchedKeys[@"{{JS_URL}}"] = jsURL;
+
+                NSString *filePath = [[NSBundle resourceBundle] pathForResource:@"affirm_promo"
                                                                          ofType:@"html"];
                 __block NSString *rawContent = [NSString stringWithContentsOfFile:filePath
                                                                          encoding:NSUTF8StringEncoding error:nil];
@@ -349,7 +347,9 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
     }];
 }
 
-- (void)configureWithAttributedText:(nullable NSAttributedString *)attributedText response:(nullable id<AffirmResponseProtocol>)response error:(nullable NSError *)error
+- (void)configureWithAttributedText:(nullable NSAttributedString *)attributedText
+                           response:(nullable id<AffirmResponseProtocol>)response
+                              error:(nullable NSError *)error
 {
     self.webView.hidden = YES;
     self.clickable = NO;
