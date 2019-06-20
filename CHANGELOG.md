@@ -1,6 +1,13 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
+## Version 5.0.4 (June 20, 2019)
+- Updated modal configuration
+- Custom CSS support in ALA messaging
+- ALA messaging webviews
+- ALA messaging logo and color support
+- Updated sample controller implementation
+
 ## Version 5.0.3 (May 29, 2019)
 - Added order_id
 - HTML support in messaging
