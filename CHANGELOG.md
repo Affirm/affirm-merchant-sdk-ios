@@ -7,6 +7,7 @@ All notable changes to the SDK will be documented in this file.
 - ALA messaging webviews
 - ALA messaging logo and color support
 - Updated sample controller implementation
+- Button should be removed if ALA message is blank
 
 ## Version 5.0.3 (May 29, 2019)
 - Added order_id
