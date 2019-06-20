@@ -254,6 +254,17 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
                           affirmLogoType:(AffirmLogoType)affirmLogoType
                              affirmColor:(AffirmColorType)affirmColor
 {
+    [self configureByHtmlStylingWithAmount:amount
+                            affirmLogoType:affirmLogoType
+                               affirmColor:affirmColor
+                              remoteCssURL:nil];
+}
+
+- (void)configureByHtmlStylingWithAmount:(NSDecimalNumber *)amount
+                          affirmLogoType:(AffirmLogoType)affirmLogoType
+                             affirmColor:(AffirmColorType)affirmColor
+                            remoteCssURL:(nullable NSURL *)remoteCssURL
+{
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     self.amount = amount.toIntegerCents;
 
@@ -269,22 +280,29 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
             AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
             self.showPrequal = promoResponse.showPrequal;
             if (promoResponse.htmlAla != nil && promoResponse.htmlAla.length > 0) {
+                BOOL hasRemoteCss = remoteCssURL != nil;
                 NSString *jsURL = [AffirmConfiguration sharedInstance].isProductionEnvironment ? AFFIRM_JS_URL : AFFIRM_SANDBOX_JS_URL;
+                NSURL *baseURL = [NSURL URLWithString:jsURL].baseURL;
+                NSMutableDictionary *matchedKeys = [@{@"{{HTML_FRAGMENT}}": promoResponse.htmlAla} mutableCopy];
+
+                if (hasRemoteCss) {
+                    baseURL = remoteCssURL.isFileURL ? [NSBundle mainBundle].bundleURL : remoteCssURL.baseURL;
+                }
+                matchedKeys[@"{{REMOTE_CSS_URL}}"] = remoteCssURL.absoluteString ?: @"";
+                matchedKeys[@"{{PUBLIC_KEY}}"] = [AffirmConfiguration sharedInstance].publicKey;
+                matchedKeys[@"{{JS_URL}}"] = jsURL;
+
                 NSString *filePath = [[NSBundle resourceBundle] pathForResource:@"affirm_promo"
                                                                          ofType:@"html"];
                 __block NSString *rawContent = [NSString stringWithContentsOfFile:filePath
                                                                          encoding:NSUTF8StringEncoding error:nil];
-                [@{@"{{PUBLIC_KEY}}": [AffirmConfiguration sharedInstance].publicKey,
-                   @"{{JS_URL}}": jsURL,
-                   @"{{HTML_FRAGMENT}}": promoResponse.htmlAla}
-                 enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, NSString *  _Nonnull obj, BOOL * _Nonnull stop) {
+                [matchedKeys enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, NSString *  _Nonnull obj, BOOL * _Nonnull stop) {
                      rawContent = [rawContent stringByReplacingOccurrencesOfString:key
                                                                         withString:obj
                                                                            options:NSLiteralSearch
                                                                              range:[rawContent rangeOfString:key]];
                  }];
-                NSString *baseUrl = [NSString stringWithFormat:@"https://%@", [NSURL URLWithString:jsURL].host];
-                [self.webView loadHTMLString:rawContent baseURL:[NSURL URLWithString:baseUrl]];
+                [self.webView loadHTMLString:rawContent baseURL:baseURL];
             }
         } else {
             [self configureWithAttributedText:nil response:response error:error];
@@ -329,7 +347,9 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
     }];
 }
 
-- (void)configureWithAttributedText:(nullable NSAttributedString *)attributedText response:(nullable id<AffirmResponseProtocol>)response error:(nullable NSError *)error
+- (void)configureWithAttributedText:(nullable NSAttributedString *)attributedText
+                           response:(nullable id<AffirmResponseProtocol>)response
+                              error:(nullable NSError *)error
 {
     self.webView.hidden = YES;
     self.clickable = NO;
