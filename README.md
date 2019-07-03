@@ -125,7 +125,7 @@ The trackOrderConfirmed event triggers when a customer completes their purchase.
 Example
 =======
 
-A demo app that integrates Affirm is included in the repo. To run it, run `pod install` and then open `Examples.xcworkspace` in Xcode.
+A demo app that integrates Affirm is included in the repo. You may clone our [GitHub repository](https://github.com/Affirm/affirm-merchant-sdk-ios) into a new XCode project folder and run the Examples project.
 
 Upgrade
 ==============
