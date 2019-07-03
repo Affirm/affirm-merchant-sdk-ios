@@ -67,10 +67,10 @@ AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item" SKU:@"test_item"
 // initialize an AffirmShippingDetail with the user's shipping address
 AffirmShippingDetail *shipping = [AffirmShippingDetail shippingDetailWithName:@"Chester Cheetah" addressWithLine1:@"633 Folsom Street" line2:@"" city:@"San Francisco" state:@"CA" zipCode:@"94107" countryCode:@"USA"];
 
-// initialize an AffirmCheckout object with the item(s), shipping details, shipping amount, and tax amount
-AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping taxAmount:[NSDecimalNumber zero] shippingAmount:[NSDecimalNumber zero]];
+// initialize an AffirmCheckout object with the item(s), shipping details, tax amount, shipping amount, discounts, financing program, and order ID
+AffirmCheckout *checkout = [[AffirmCheckout alloc] initWithItems:@[item] shipping:shipping taxAmount:[NSDecimalNumber zero] shippingAmount:[NSDecimalNumber zero] discounts:nil metadata:nil financingProgram:nil orderId:@"JKLMO4321"];
 
-// alternatively, initialize the AffirmCheckout object with the item(s), shipping details, and payout Amount
+// The minimum requirements are to initialize the AffirmCheckout object with the item(s), shipping details, and payout Amount
 AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping payoutAmount:price];
 
 // initialize an AffirmCheckoutViewController with the checkout object and present it
@@ -136,4 +136,3 @@ Changelog
 ==============
 
 All notable changes to this project will be documented in [changelog document](https://github.com/Affirm/affirm-merchant-sdk-ios/blob/master/CHANGELOG.md).
-
