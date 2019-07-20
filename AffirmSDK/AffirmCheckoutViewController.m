@@ -14,6 +14,7 @@
 #import "AffirmCheckout.h"
 #import "AffirmCreditCard.h"
 #import "AffirmClient.h"
+#import "AffirmReasonCode.h"
 #import "AffirmRequest.h"
 #import "AffirmLogger.h"
 #import "AffirmConstants.h"
@@ -30,6 +31,7 @@
 - (instancetype)initWithDelegate:(id<AffirmCheckoutDelegate>)delegate
                         checkout:(AffirmCheckout *)checkout
                           useVCN:(BOOL)useVCN
+                  getReasonCodes:(BOOL)getReasonCodes
 {
     [AffirmValidationUtils checkNotNil:delegate name:@"checkout delegate"];
     [AffirmValidationUtils checkNotNil:checkout name:@"checkout"];
@@ -38,6 +40,7 @@
         _delegate = delegate;
         _checkout = [checkout copy];
         _useVCN = useVCN;
+        _getReasonCodes = getReasonCodes;
     }
     return self;
 }
@@ -47,7 +50,8 @@
 {
     return [[self alloc] initWithDelegate:delegate
                                  checkout:checkout
-                                   useVCN:NO];
+                                   useVCN:NO
+                           getReasonCodes:NO];
 }
 
 + (AffirmCheckoutViewController *)startCheckout:(AffirmCheckout *)checkout
@@ -56,7 +60,19 @@
 {
     return [[self alloc] initWithDelegate:delegate
                                  checkout:checkout
-                                   useVCN:useVCN];
+                                   useVCN:useVCN
+                                  getReasonCodes:NO];
+}
+
++ (AffirmCheckoutViewController *)startCheckout:(AffirmCheckout *)checkout
+                                         useVCN:(BOOL)useVCN
+                                        getReasonCodes:(BOOL)getReasonCodes
+                                       delegate:(nonnull id<AffirmCheckoutDelegate>)delegate
+{
+    return [[self alloc] initWithDelegate:delegate
+                                 checkout:checkout
+                                   useVCN:useVCN
+                            getReasonCodes:getReasonCodes];
 }
 
 - (void)viewDidLoad
@@ -148,13 +164,30 @@
         return;
     }
     if ([strippedURL isEqualToString:AFFIRM_CHECKOUT_CANCELLATION_URL]) {
-        [self.delegate checkoutCancelled:self];
-        [[AffirmLogger sharedInstance] trackEvent:@"Checkout cancelled" parameters:@{@"checkout_ari": self.checkoutARI}];
+
+        if (_getReasonCodes) {
+            
+            NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:URL.absoluteString];
+            for(NSURLQueryItem *item in urlComponents.queryItems) {
+                
+                if([item.name isEqualToString:@"data"]) {
+                    [self.delegate checkoutCancelled:self
+                       checkoutCanceledWithReason:[AffirmReasonCode reasonCodeWithDict:item.value.convertToDictionary]];
+                   [[AffirmLogger sharedInstance] trackEvent:@"Checkout cancelled with reason" parameters:@{@"checkout_ari": self.checkoutARI, @"checkout_canceled_reason": item.value != nil ? item.value : @"false"}];
+                    break;
+                }
+            }
+        } else {
+           [self.delegate checkoutCancelled:self];
+            [[AffirmLogger sharedInstance] trackEvent:@"Checkout cancelled" parameters:@{@"checkout_ari": self.checkoutARI}];
+        }
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
     }
     [self webView:webView checkIfURL:URL.absoluteString isPopupWithCompletion:^(BOOL isPopup) {
+  
         if (isPopup) {
+    
             AffirmPopupViewController *viewController = [[AffirmPopupViewController alloc] initWithURL:URL];
             UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
             [self presentViewController:navController animated:YES completion:nil];
@@ -162,6 +195,7 @@
             decisionHandler(WKNavigationActionPolicyCancel);
         }
         else {
+     
             decisionHandler(WKNavigationActionPolicyAllow);
         }
     }];

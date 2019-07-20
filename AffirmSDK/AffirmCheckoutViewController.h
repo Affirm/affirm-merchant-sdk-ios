@@ -32,6 +32,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL useVCN;
 
 /**
+ Get Reason Codes
+ */
+@property (nonatomic, readonly) BOOL getReasonCodes;
+
+/**
  The checkout identifier.
  */
 @property (nonatomic, copy, readonly) NSString *checkoutARI;
@@ -48,12 +53,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param delegate A delegate object which responds to the checkout events created by the view controller.
  @param checkout A checkout object which contains information about the customer and the purchase.
  @param useVCN A boolean which determines whether the checkout flow should use virtual card network to handle the checkout
+ @param getReasonCodes A boolean which determines whether to return the reason why the checkout was canceled
  @return The newly created checkout view controller.
  */
 - (instancetype)initWithDelegate:(id<AffirmCheckoutDelegate>)delegate
                         checkout:(AffirmCheckout *)checkout
                           useVCN:(BOOL)useVCN
-NS_SWIFT_NAME(init(delegate:checkout:useVCN:)) NS_DESIGNATED_INITIALIZER;
+                  getReasonCodes:(BOOL)getReasonCodes
+NS_SWIFT_NAME(init(delegate:checkout:useVCN:getReasonCodes:)) NS_DESIGNATED_INITIALIZER;
 
 /**
  Convenience constructor starts the checkout process and notifies delegate regarding checkout events, useVCN is NO as default
@@ -78,6 +85,21 @@ NS_SWIFT_NAME(start(checkout:delegate:));
                                          useVCN:(BOOL)useVCN
                                        delegate:(id<AffirmCheckoutDelegate>)delegate
 NS_SWIFT_NAME(start(checkout:useVCN:delegate:));
+
+/**
+ Convenience constructor starts the checkout process and notifies delegate regarding checkout events
+ 
+ @param checkout A checkout object which contains information about the customer and the purchase.
+ @param useVCN A boolean which determines whether the checkout flow should use virtual card network to handle the checkout
+ @param getReasonCodes A boolean which determines whether to return the reason code when a checkout is canceled
+ @param delegate A delegate object which responds to the checkout events created by the view controller.
+ @return The newly created checkout view controller.
+ */
++ (AffirmCheckoutViewController *)startCheckout:(AffirmCheckout *)checkout
+                                         useVCN:(BOOL)useVCN
+                                 getReasonCodes:(BOOL)getReasonCodes
+                                       delegate:(id<AffirmCheckoutDelegate>)delegate
+NS_SWIFT_NAME(start(checkout:useVCN:getReasonCodes:delegate:));
 
 @end
 

@@ -8,6 +8,7 @@
 
 @class AffirmCheckoutViewController;
 @class AffirmCreditCard;
+@class AffirmReasonCode;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -40,6 +41,15 @@ NS_ASSUME_NONNULL_BEGIN
  @param checkoutViewController The checkoutViewController that manages the checkout process.
  */
 - (void)checkoutCancelled:(AffirmCheckoutViewController *)checkoutViewController;
+
+/**
+ This method is called when the user has completed the vcn checkout.
+ It should use the debit card information to fill out the checkout page and submit.
+ 
+ @param checkoutViewController The checkoutViewController that manages the vcn checkout process.
+ @param reasonCode This reasonCode represents the reason why the checkout was canceled.
+ */
+- (void)checkoutCancelled:(AffirmCheckoutViewController *)checkoutViewController checkoutCanceledWithReason:(AffirmReasonCode *)reasonCode;
 
 /**
  This method is called when checkout creation has failed.
