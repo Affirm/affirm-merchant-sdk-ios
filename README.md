@@ -76,6 +76,8 @@ AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:sh
 // initialize an AffirmCheckoutViewController with the checkout object and present it
 AffirmCheckoutViewController *controller = [AffirmCheckoutViewController startCheckout:checkout delegate:self];
 [self presentViewController:controller animated:YES completion:nil];
+
+// It is recommended that you round the total in the checkout request to two decimal places. Affirm SDK converts the float total to integer cents before initiating the checkout, so may round up or down depending on the decimal places. Ensure that the rounding in your app uses the same calculation across your other backend systems, otherwise, it may cause an error of 1 cent or more in the total validation on your end. 
 ```
 
 The flow ends once the user has successfully confirmed the checkout or vcn checkout, canceled the checkout, or encountered an error in the process. In each of these cases, Affirm will send a message to the AffirmCheckoutDelegate along with additional information about the result.
