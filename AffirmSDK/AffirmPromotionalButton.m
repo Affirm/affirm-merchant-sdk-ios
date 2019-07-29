@@ -257,12 +257,26 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
     [self configureByHtmlStylingWithAmount:amount
                             affirmLogoType:affirmLogoType
                                affirmColor:affirmColor
+                             remoteFontURL:nil
                               remoteCssURL:nil];
 }
 
 - (void)configureByHtmlStylingWithAmount:(NSDecimalNumber *)amount
                           affirmLogoType:(AffirmLogoType)affirmLogoType
                              affirmColor:(AffirmColorType)affirmColor
+                            remoteCssURL:(nullable NSURL *)remoteCssURL
+{
+    [self configureByHtmlStylingWithAmount:amount
+                            affirmLogoType:affirmLogoType
+                               affirmColor:affirmColor
+                             remoteFontURL:nil
+                              remoteCssURL:remoteCssURL];
+}
+
+- (void)configureByHtmlStylingWithAmount:(NSDecimalNumber *)amount
+                          affirmLogoType:(AffirmLogoType)affirmLogoType
+                             affirmColor:(AffirmColorType)affirmColor
+                           remoteFontURL:(nullable NSURL *)remoteFontURL
                             remoteCssURL:(nullable NSURL *)remoteCssURL
 {
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
@@ -288,6 +302,7 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
                 if (hasRemoteCss) {
                     baseURL = remoteCssURL.isFileURL ? [NSBundle mainBundle].bundleURL : remoteCssURL.baseURL;
                 }
+                matchedKeys[@"{{REMOTE_FONT_URL}}"] = remoteFontURL.absoluteString ?: @"";
                 matchedKeys[@"{{REMOTE_CSS_URL}}"] = remoteCssURL.absoluteString ?: @"";
                 matchedKeys[@"{{PUBLIC_KEY}}"] = [AffirmConfiguration sharedInstance].publicKey;
                 matchedKeys[@"{{JS_URL}}"] = jsURL;
@@ -297,11 +312,11 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
                 __block NSString *rawContent = [NSString stringWithContentsOfFile:filePath
                                                                          encoding:NSUTF8StringEncoding error:nil];
                 [matchedKeys enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, NSString *  _Nonnull obj, BOOL * _Nonnull stop) {
-                     rawContent = [rawContent stringByReplacingOccurrencesOfString:key
-                                                                        withString:obj
-                                                                           options:NSLiteralSearch
-                                                                             range:[rawContent rangeOfString:key]];
-                 }];
+                    rawContent = [rawContent stringByReplacingOccurrencesOfString:key
+                                                                       withString:obj
+                                                                          options:NSLiteralSearch
+                                                                            range:[rawContent rangeOfString:key]];
+                }];
                 [self.webView loadHTMLString:rawContent baseURL:baseURL];
             }
         } else {
