@@ -96,7 +96,7 @@
     AffirmShippingDetail *shipping = [AffirmShippingDetail shippingDetailWithName:@"Chester Cheetah" addressWithLine1:@"633 Folsom Street" line2:@"" city:@"San Francisco" state:@"CA" zipCode:@"94107" countryCode:@"USA"];
     AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping payoutAmount:[dollarPrice toIntegerCents]];
     
-    AffirmCheckoutViewController *controller = [AffirmCheckoutViewController startCheckout:checkout useVCN:YES delegate:self];
+    AffirmCheckoutViewController *controller = [AffirmCheckoutViewController startCheckout:checkout useVCN:YES getReasonCodes:YES delegate:self];
     [self presentViewController:controller animated:YES completion:nil];
 }
 
@@ -226,6 +226,16 @@
 {
     // The checkout process was cancelled
     NSLog(@"Checkout was cancelled");
+    self.resultLabel.text = [NSString stringWithFormat:@"Checkout was cancelled"];
+    [checkoutViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)checkoutCancelled:(AffirmCheckoutViewController *)checkoutViewController checkoutCanceledWithReason:(AffirmReasonCode *)reasonCode
+{
+    // The user has completed the checkout and returned credit card details.
+    // All charge actions are done using your existing payment gateway and debit card processor
+    NSLog(@"Checkout canceled with a reason: %@", reasonCode.reason);
+    self.resultLabel.text = [NSString stringWithFormat:@"Checkout canceled with a reason: %@", reasonCode.reason];
     [checkoutViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
