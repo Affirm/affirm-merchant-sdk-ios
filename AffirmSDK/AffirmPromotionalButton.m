@@ -111,20 +111,21 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
 
 - (NSAttributedString *)appendLogo:(UIImage *)logo
                             toText:(NSString *)text
-                              font:(CGFloat)fontSize
+                              font:(UIFont *)font
+                         textColor:(UIColor *)textColor
                           logoType:(AffirmLogoType)logoType
 {
     if (!logo) {
         return [[NSAttributedString alloc] initWithString:text];
     }
     NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:text];
-    [attributedText addAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:fontSize],
-                                    NSForegroundColorAttributeName: self.button.titleLabel.textColor}
+    [attributedText addAttributes:@{NSFontAttributeName: font,
+                                    NSForegroundColorAttributeName: textColor}
                             range:NSMakeRange(0, attributedText.length)];
     while ([attributedText.mutableString containsString:@"Affirm"]) {
         NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
         attachment.image = logo;
-        CGSize logoSize = [self sizeForLogoType:logoType logoSize:logo.size height:fontSize];
+        CGSize logoSize = [self sizeForLogoType:logoType logoSize:logo.size height:font.pointSize];
         attachment.bounds = CGRectMake(0, -logoSize.height/5, logoSize.width, logoSize.height);
         NSAttributedString *attributedLogo = [NSAttributedString attributedStringWithAttachment:attachment];
         [attributedText replaceCharactersInRange:[attributedText.mutableString rangeOfString:@"Affirm"] withAttributedString:attributedLogo];
@@ -330,9 +331,22 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
                 affirmColor:(AffirmColorType)affirmColor
                 maxFontSize:(CGFloat)maxFontSize
 {
+    [self configureWithAmount:amount
+               affirmLogoType:affirmLogoType
+                  affirmColor:affirmColor
+                         font:[UIFont systemFontOfSize:maxFontSize]
+                    textColor:[UIColor darkTextColor]];
+}
+
+- (void)configureWithAmount:(NSDecimalNumber *)amount
+             affirmLogoType:(AffirmLogoType)affirmLogoType
+                affirmColor:(AffirmColorType)affirmColor
+                       font:(UIFont *)font
+                  textColor:(UIColor *)textColor
+{
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     self.amount = amount.toIntegerCents;
-    
+
     AffirmPromoRequest *request = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
                                                                         promoId:self.promoID
                                                                          amount:self.amount
@@ -353,10 +367,7 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
             if (affirmLogoType != AffirmLogoTypeText) {
                 logo = [AffirmPromotionalButton getAffirmDisplayForLogoType:affirmLogoType colorType:affirmColor];
             }
-            attributedString = [self appendLogo:logo
-                                         toText:template
-                                           font:maxFontSize
-                                       logoType:affirmLogoType];
+            attributedString = [self appendLogo:logo toText:template font:font textColor:textColor logoType:affirmLogoType];
         }
         [self configureWithAttributedText:attributedString response:response error:error];
     }];
