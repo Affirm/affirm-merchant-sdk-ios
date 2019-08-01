@@ -118,6 +118,24 @@ self.promotionalButton.configure(amount: NSDecimalNumber(string: amountText),
                               textColor: .gray)
 ```
 
+If you want to use local fonts, you need do following steps:
+> 1. Add the font files to your project (make sure that the files are targeted properly to your application)
+> 2. Add the font files to yourApp-Info.plist
+> 3. Use the font in your CSS file, for example
+```
+@font-face
+{
+font-family: 'OpenSansCondensed-Bold';
+src: local('OpenSansCondensed-Bold'),url('OpenSansCondensed-Bold.ttf') format('truetype');
+}
+
+body {
+font-family: 'OpenSansCondensed-Light';
+font-weight: normal;
+!important;
+}
+```
+
 Tapping on the Promotional button automatically opens a modal in an `AffirmPrequalModalViewController` with more information, including (if you have it configured) a button that prompts the user to prequalify for Affirm financing.
 
 **[Note: this integration is deprecated as of SDK version 4.0.13.]** To display the AffirmPromoModal outside of tapping on the AffirmPromotionalButton, you may initialize and display an instance of the promo modal viewController as follows
