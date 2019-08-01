@@ -17,9 +17,11 @@
 - (instancetype)initWithDict:(NSDictionary *)dict
 {
     [AffirmValidationUtils checkNotNil:dict[@"reason"] name:@"reason"];
+    [AffirmValidationUtils checkNotNil:dict[@"checkout_token"] name:@"checkout_token"];
     
     if (self = [super init]) {
         _reason = dict[@"reason"];
+        _checkout_token = dict[@"checkout_token"];
     }
     return self;
 }

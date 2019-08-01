@@ -17,6 +17,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly, nonnull) NSString *reason;
 
 /**
+  Checkout token. Required
+ */
+@property (nonatomic, copy, readonly, nonnull) NSString *checkout_token;
+/**
  Convenience constructor for a reason object with dictionary data.
  
  @param dict Data dictionary.

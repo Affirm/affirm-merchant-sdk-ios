@@ -235,7 +235,7 @@
     // The user has completed the checkout and returned credit card details.
     // All charge actions are done using your existing payment gateway and debit card processor
     NSLog(@"Checkout canceled with a reason: %@", reasonCode.reason);
-    self.resultLabel.text = [NSString stringWithFormat:@"Checkout canceled with a reason: %@", reasonCode.reason];
+    self.resultLabel.text = [NSString stringWithFormat:@"Checkout canceled \n reason: %@, \n checkout_token: %@", reasonCode.reason, reasonCode.checkout_token];
     [checkoutViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
