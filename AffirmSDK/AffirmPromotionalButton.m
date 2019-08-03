@@ -115,13 +115,15 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
                          textColor:(UIColor *)textColor
                           logoType:(AffirmLogoType)logoType
 {
-    if (!logo) {
-        return [[NSAttributedString alloc] initWithString:text];
-    }
     NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:text];
     [attributedText addAttributes:@{NSFontAttributeName: font,
                                     NSForegroundColorAttributeName: textColor}
                             range:NSMakeRange(0, attributedText.length)];
+
+    if (!logo) {
+        return attributedText;
+    }
+
     while ([attributedText.mutableString containsString:@"Affirm"]) {
         NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
         attachment.image = logo;
