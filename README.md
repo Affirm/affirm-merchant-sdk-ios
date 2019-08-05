@@ -92,7 +92,7 @@ Note - For VCN Checkout, all actions should be done using your existing payment 
 
 Affirm promotional messaging components—monthly payment messaging and educational modals—show customers how they can use Affirm to finance their purchases. Promos consist of promotional messaging, which appears directly in your app, and a modal, which which offers users an ability to prequalify.
 
-To display promotional messaging, the SDK provides the `AffirmPromotionalButton` class, only requires the developer to add to their view and configure to implement. The AffirmPromotionalButton is implemented as follows:
+To create promotional messaging view, the SDK provides the `AffirmPromotionalButton` class, only requires the developer to add to their view and configure to implement. The AffirmPromotionalButton is implemented as follows:
 
 ```
 self.promotionalButton = [[AffirmPromotionalButton alloc] initWithPromoID:@"promo_set_ios"
@@ -101,7 +101,41 @@ self.promotionalButton = [[AffirmPromotionalButton alloc] initWithPromoID:@"prom
                                                  presentingViewController:self
                                                                     frame:CGRectMake(0, 0, 315, 34)];
 [self.stackView insertArrangedSubview:self.promotionalButton atIndex:0];
-[self.promotionalButton configureByHtmlStylingWithAmount:[NSDecimalNumber decimalNumberWithString:amountText] affirmLogoType:AffirmLogoTypeName affirmColor:AffirmColorTypeBlue];
+```
+
+To show / refresh promotional messaging, use
+```
+[self.promotionalButton configureByHtmlStylingWithAmount:[NSDecimalNumber decimalNumberWithString:amountText]
+                                          affirmLogoType:AffirmLogoTypeName
+                                             affirmColor:AffirmColorTypeBlue
+                                           remoteFontURL:[NSURL URLWithString:@"https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap"]
+                                            remoteCssURL:url];
+```
+or
+```
+self.promotionalButton.configure(amount: NSDecimalNumber(string: amountText),
+                         affirmLogoType: .name,
+                            affirmColor: .blue,
+                                   font: UIFont.italicSystemFont(ofSize: 15),
+                              textColor: .gray)
+```
+
+If you want to use local fonts, you need do following steps:
+> 1. Add the font files to your project (make sure that the files are targeted properly to your application)
+> 2. Add the font files to yourApp-Info.plist
+> 3. Use the font in your CSS file, for example
+```
+@font-face
+{
+font-family: 'OpenSansCondensed-Bold';
+src: local('OpenSansCondensed-Bold'),url('OpenSansCondensed-Bold.ttf') format('truetype');
+}
+
+body {
+font-family: 'OpenSansCondensed-Light';
+font-weight: normal;
+!important;
+}
 ```
 
 Tapping on the Promotional button automatically opens a modal in an `AffirmPrequalModalViewController` with more information, including (if you have it configured) a button that prompts the user to prequalify for Affirm financing.

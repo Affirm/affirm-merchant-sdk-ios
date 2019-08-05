@@ -1,11 +1,33 @@
+@font-face
+{
+    font-family: 'OpenSansCondensed-Bold';
+    src: local('OpenSansCondensed-Bold'),url('OpenSansCondensed-Bold.ttf') format('truetype');
+}
+@font-face
+{
+    font-family: 'OpenSansCondensed-Light';
+    src: local('OpenSansCondensed-Light'),url('OpenSansCondensed-Light.ttf') format('truetype');
+}
+@font-face
+{
+    font-family: 'OpenSansCondensed-LightItalic';
+    src: local('OpenSansCondensed-LightItalic'),url('OpenSansCondensed-LightItalic.ttf') format('truetype');
+}
+
 .affirm-ala-price {
     color: #0FA0EA;
     font-weight: bold;
-    font-style:italic;
+    font-style: italic;
     !important;
 }
 .affirm-modal-trigger {
     color: #2984EE;
-    font-style:italic;
+    font-family: 'Saira Stencil One', cursive;
+    font-style: italic;
+    !important;
+}
+body {
+    font-family: 'OpenSansCondensed-Light';
+    font-weight: normal;
     !important;
 }

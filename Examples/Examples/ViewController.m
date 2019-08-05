@@ -156,6 +156,7 @@
     [self.promotionalButton configureByHtmlStylingWithAmount:[NSDecimalNumber decimalNumberWithString:amountText]
                                               affirmLogoType:AffirmLogoTypeName
                                                  affirmColor:AffirmColorTypeBlue
+                                               remoteFontURL:[NSURL URLWithString:@"https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap"]
                                                 remoteCssURL:url];
 }
 

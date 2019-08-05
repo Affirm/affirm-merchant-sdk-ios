@@ -14,6 +14,12 @@
 		081439B9222E45D800C7068D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 081439B7222E45D800C7068D /* LaunchScreen.storyboard */; };
 		081439BC222E45D800C7068D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 081439BB222E45D800C7068D /* main.m */; };
 		081439D1222E45D800C7068D /* ExamplesUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 081439D0222E45D800C7068D /* ExamplesUITests.m */; };
+		0815CCF322F2817500ABB7CB /* OpenSansCondensed-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0815CCF022F2817400ABB7CB /* OpenSansCondensed-Light.ttf */; };
+		0815CCF422F2817500ABB7CB /* OpenSansCondensed-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0815CCF022F2817400ABB7CB /* OpenSansCondensed-Light.ttf */; };
+		0815CCF522F2817500ABB7CB /* OpenSansCondensed-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0815CCF122F2817400ABB7CB /* OpenSansCondensed-LightItalic.ttf */; };
+		0815CCF622F2817500ABB7CB /* OpenSansCondensed-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0815CCF122F2817400ABB7CB /* OpenSansCondensed-LightItalic.ttf */; };
+		0815CCF722F2817500ABB7CB /* OpenSansCondensed-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0815CCF222F2817500ABB7CB /* OpenSansCondensed-Bold.ttf */; };
+		0815CCF822F2817500ABB7CB /* OpenSansCondensed-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0815CCF222F2817500ABB7CB /* OpenSansCondensed-Bold.ttf */; };
 		08378C9F22B8CA9300E38D5D /* css_promo_sample.css in Resources */ = {isa = PBXBuildFile; fileRef = 08378C9E22B8CA9300E38D5D /* css_promo_sample.css */; };
 		08385F42225AFE580022FFA8 /* Button.m in Sources */ = {isa = PBXBuildFile; fileRef = 08385F41225AFE580022FFA8 /* Button.m */; };
 		0854F6932251EB99008807A6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0854F6922251EB99008807A6 /* AppDelegate.swift */; };
@@ -52,6 +58,9 @@
 		081439CC222E45D800C7068D /* ExamplesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExamplesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		081439D0222E45D800C7068D /* ExamplesUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExamplesUITests.m; sourceTree = "<group>"; };
 		081439D2222E45D800C7068D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0815CCF022F2817400ABB7CB /* OpenSansCondensed-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSansCondensed-Light.ttf"; sourceTree = "<group>"; };
+		0815CCF122F2817400ABB7CB /* OpenSansCondensed-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSansCondensed-LightItalic.ttf"; sourceTree = "<group>"; };
+		0815CCF222F2817500ABB7CB /* OpenSansCondensed-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSansCondensed-Bold.ttf"; sourceTree = "<group>"; };
 		08378C9E22B8CA9300E38D5D /* css_promo_sample.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = css_promo_sample.css; sourceTree = "<group>"; };
 		08385F40225AFE580022FFA8 /* Button.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Button.h; sourceTree = "<group>"; };
 		08385F41225AFE580022FFA8 /* Button.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Button.m; sourceTree = "<group>"; };
@@ -134,6 +143,7 @@
 		081439AB222E45D600C7068D /* Examples */ = {
 			isa = PBXGroup;
 			children = (
+				0815CCF922F2998300ABB7CB /* Fonts */,
 				081439AC222E45D600C7068D /* AppDelegate.h */,
 				081439AD222E45D600C7068D /* AppDelegate.m */,
 				081439AF222E45D600C7068D /* ViewController.h */,
@@ -161,6 +171,16 @@
 				089205102265C20300E8FD86 /* XCUIElementQuery+Utils.m */,
 			);
 			path = ExamplesUITests;
+			sourceTree = "<group>";
+		};
+		0815CCF922F2998300ABB7CB /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				0815CCF222F2817500ABB7CB /* OpenSansCondensed-Bold.ttf */,
+				0815CCF022F2817400ABB7CB /* OpenSansCondensed-Light.ttf */,
+				0815CCF122F2817400ABB7CB /* OpenSansCondensed-LightItalic.ttf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		0854F6912251EB99008807A6 /* ExamplesSwift */ = {
@@ -298,6 +318,9 @@
 				08378C9F22B8CA9300E38D5D /* css_promo_sample.css in Resources */,
 				081439B6222E45D800C7068D /* Assets.xcassets in Resources */,
 				081439B4222E45D600C7068D /* Main.storyboard in Resources */,
+				0815CCF722F2817500ABB7CB /* OpenSansCondensed-Bold.ttf in Resources */,
+				0815CCF522F2817500ABB7CB /* OpenSansCondensed-LightItalic.ttf in Resources */,
+				0815CCF322F2817500ABB7CB /* OpenSansCondensed-Light.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -312,8 +335,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0815CCF622F2817500ABB7CB /* OpenSansCondensed-LightItalic.ttf in Resources */,
 				0854F69D2251EB9A008807A6 /* LaunchScreen.storyboard in Resources */,
+				0815CCF822F2817500ABB7CB /* OpenSansCondensed-Bold.ttf in Resources */,
 				0854F69A2251EB9A008807A6 /* Assets.xcassets in Resources */,
+				0815CCF422F2817500ABB7CB /* OpenSansCondensed-Light.ttf in Resources */,
 				0854F6982251EB99008807A6 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
