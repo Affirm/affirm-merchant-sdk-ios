@@ -118,7 +118,7 @@ class ViewController: UIViewController {
     func configurPromotionalMessage() {
         let amountText = self.amountTextField.text
         self.promotionalButton.configure(amount: NSDecimalNumber(string: amountText),
-                                         affirmLogoType: .symbol,
+                                         affirmLogoType: .name,
                                          affirmColor: .blue,
                                          font: UIFont.italicSystemFont(ofSize: 15),
                                          textColor: .gray)
