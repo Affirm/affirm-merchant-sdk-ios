@@ -49,7 +49,7 @@
                                     if (data.success) {
                                     window.location.href = confirmCbUrl + '?data=' + encodeData(data.data);
                                     } else {
-                                    window.location.href = cancelledCbUrl;
+                                    window.location.href = cancelledCbUrl + '?data=' + encodeData(data.data);
                                     }
                                     }
                                     }, false);

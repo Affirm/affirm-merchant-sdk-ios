@@ -28,6 +28,7 @@ FOUNDATION_EXPORT const unsigned char AffirmSDKVersionString[];
 #import <AffirmSDK/AffirmUtils.h>
 #import <AffirmSDK/AffirmJSONifiable.h>
 #import <AffirmSDK/AffirmCreditCard.h>
+#import <AffirmSDK/AffirmReasonCode.h>
 #import <AffirmSDK/AffirmCheckoutDelegate.h>
 #import <AffirmSDK/AffirmPrequalDelegate.h>
 #import <AffirmSDK/AffirmBaseWebViewController.h>
