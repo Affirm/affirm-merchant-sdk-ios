@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        AffirmConfiguration.shared.configure(publicKey: "F6B2V0K9D5I8033Y", environment: .sandbox, merchantName: "Affirm Example Swift")
+        AffirmConfiguration.shared.configure(publicKey: "2G9MNM7462PB1TAV", environment: .sandbox, merchantName: "Affirm Example Swift")
         return true
     }
 }

@@ -61,6 +61,22 @@ static NSString * FormatAffirmLogoString(AffirmLogoType type)
         case AffirmLogoTypeText:
             return @"text";
         case AffirmLogoTypeSymbol:
+            return @"solid_circle";
+        case AffirmLogoTypeSymbolHollow:
+            return @"hollow_circle";
+    }
+}
+
+static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
+{
+    switch (type) {
+        case AffirmLogoTypeName:
+            return @"logo";
+        case AffirmLogoTypeText:
+            return @"text";
+        case AffirmLogoTypeSymbol:
+            return @"symbol";
+        case AffirmLogoTypeSymbolHollow:
             return @"symbol";
     }
 }
@@ -99,6 +115,8 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
         case AffirmLogoTypeText:
             return CGSizeZero;
         case AffirmLogoTypeSymbol:
+            return CGSizeMake(1.25 * height, 1.25 * height);
+        case AffirmLogoTypeSymbolHollow:
             return CGSizeMake(1.25 * height, 1.25 * height);
         default:
             return CGSizeMake((logoSize.width * height) / logoSize.height, height);
@@ -286,7 +304,7 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
                                                                          amount:self.amount
                                                                         showCTA:self.showCTA
                                                                        pageType:FormatAffirmPageTypeString(self.pageType)
-                                                                       logoType:FormatAffirmLogoString(affirmLogoType)
+                                                                       logoType:FormatAffirmDataTypeString(affirmLogoType)
                                                                       logoColor:FormatAffirmColorString(affirmColor)];
     [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
@@ -350,7 +368,7 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
                                                                          amount:self.amount
                                                                         showCTA:self.showCTA
                                                                        pageType:FormatAffirmPageTypeString(self.pageType)
-                                                                       logoType:FormatAffirmLogoString(affirmLogoType)
+                                                                       logoType:nil
                                                                       logoColor:FormatAffirmColorString(affirmColor)];
     [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
         NSAttributedString *attributedString = nil;
