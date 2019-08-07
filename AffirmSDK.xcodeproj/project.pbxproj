@@ -16,8 +16,6 @@
 		082C28B1223795AC00B0C01F /* AffirmLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 082C28AF223795AC00B0C01F /* AffirmLogger.m */; };
 		0841E334223A9948006D8B97 /* AffirmConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 0841E332223A9948006D8B97 /* AffirmConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0841E335223A9948006D8B97 /* AffirmConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 0841E333223A9948006D8B97 /* AffirmConstants.m */; };
-		0876CA2B22FA6804006F8062 /* AffirmReasonCode.h in Headers */ = {isa = PBXBuildFile; fileRef = 0876CA2922FA6803006F8062 /* AffirmReasonCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0876CA2C22FA6804006F8062 /* AffirmReasonCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 0876CA2A22FA6803006F8062 /* AffirmReasonCode.m */; };
 		08A81F49223F986D00FAA8D2 /* AffirmClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A81F47223F986D00FAA8D2 /* AffirmClient.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		08A81F4A223F986D00FAA8D2 /* AffirmClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A81F48223F986D00FAA8D2 /* AffirmClient.m */; };
 		08A81F4D223FF61300FAA8D2 /* AffirmConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A81F4B223FF61300FAA8D2 /* AffirmConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -93,8 +91,6 @@
 		082C28AF223795AC00B0C01F /* AffirmLogger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmLogger.m; sourceTree = "<group>"; };
 		0841E332223A9948006D8B97 /* AffirmConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmConstants.h; sourceTree = "<group>"; };
 		0841E333223A9948006D8B97 /* AffirmConstants.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmConstants.m; sourceTree = "<group>"; };
-		0876CA2922FA6803006F8062 /* AffirmReasonCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AffirmReasonCode.h; sourceTree = "<group>"; };
-		0876CA2A22FA6803006F8062 /* AffirmReasonCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AffirmReasonCode.m; sourceTree = "<group>"; };
 		08A81F47223F986D00FAA8D2 /* AffirmClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmClient.h; sourceTree = "<group>"; };
 		08A81F48223F986D00FAA8D2 /* AffirmClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmClient.m; sourceTree = "<group>"; };
 		08A81F4B223FF61300FAA8D2 /* AffirmConfiguration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmConfiguration.h; sourceTree = "<group>"; };
@@ -183,8 +179,6 @@
 		08FA5912222D08E5007E5E4E /* AffirmSDK */ = {
 			isa = PBXGroup;
 			children = (
-				0876CA2922FA6803006F8062 /* AffirmReasonCode.h */,
-				0876CA2A22FA6803006F8062 /* AffirmReasonCode.m */,
 				0813712C2255A39400ACDD91 /* AffirmOrder.h */,
 				0813712A2255A39400ACDD91 /* AffirmOrder.m */,
 				081371292255A39300ACDD91 /* AffirmProduct.h */,
@@ -273,7 +267,6 @@
 				081371302255A39400ACDD91 /* AffirmOrder.h in Headers */,
 				0813712D2255A39400ACDD91 /* AffirmProduct.h in Headers */,
 				081371332255D05300ACDD91 /* AffirmOrderTrackerViewController.h in Headers */,
-				0876CA2B22FA6804006F8062 /* AffirmReasonCode.h in Headers */,
 				7944D9C12248A84D0040525E /* AffirmUtils.h in Headers */,
 				7944D9B72240E2250040525E /* AffirmLogger.h in Headers */,
 				7944D9932240BF830040525E /* AffirmActivityIndicatorView.h in Headers */,
@@ -349,7 +342,6 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
-				Base,
 			);
 			mainGroup = 08FA5906222D08E5007E5E4E;
 			productRefGroup = 08FA5911222D08E5007E5E4E /* Products */;
@@ -402,7 +394,6 @@
 				0841E335223A9948006D8B97 /* AffirmConstants.m in Sources */,
 				08A81F4E223FF61300FAA8D2 /* AffirmConfiguration.m in Sources */,
 				08C4306D223B7C640009E045 /* AffirmRequest.m in Sources */,
-				0876CA2C22FA6804006F8062 /* AffirmReasonCode.m in Sources */,
 				DA33DCFD223A3191009D73CA /* AffirmCheckout.m in Sources */,
 				DA33DCF3223A2FD7009D73CA /* AffirmDiscount.m in Sources */,
 				DA776293223F33EC00FB2DB3 /* AffirmCheckoutViewController.m in Sources */,
