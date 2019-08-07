@@ -177,12 +177,6 @@ extension ViewController: AffirmCheckoutDelegate {
         checkoutViewController.dismiss(animated: true, completion: nil)
     }
 
-    func checkoutCancelled(_ checkoutViewController: AffirmCheckoutViewController, checkoutCanceledWithReason reasonCode: AffirmReasonCode) {
-        print("Checkout canceled with a reason: \(reasonCode.reason)")
-        resultLabel.text = "Checkout canceled \n reason: \(reasonCode.reason), \n checkout_token: \(reasonCode.checkout_token)"
-        checkoutViewController.dismiss(animated: true, completion: nil)
-    }
-
     func checkout(_ checkoutViewController: AffirmCheckoutViewController, didFailWithError error: Error) {
         print("Checkout failed with error: \(error.localizedDescription)")
         let alertController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
