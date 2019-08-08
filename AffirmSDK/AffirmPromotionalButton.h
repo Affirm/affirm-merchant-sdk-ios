@@ -22,8 +22,8 @@ typedef NS_ENUM(NSInteger, AffirmPageType) {
 };
 
 typedef NS_ENUM(NSInteger, AffirmLogoType) {
-    AffirmLogoTypeText,
     AffirmLogoTypeName,
+    AffirmLogoTypeText,
     AffirmLogoTypeSymbol,
     AffirmLogoTypeSymbolHollow
 };
