@@ -335,10 +335,10 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
                                                                             range:[rawContent rangeOfString:key]];
                 }];
                 [self.webView loadHTMLString:rawContent baseURL:baseURL];
+                return;
             }
-        } else {
-            [self configureWithAttributedText:nil response:response error:error];
         }
+        [self configureWithAttributedText:nil response:response error:error];
     }];
 }
 
@@ -409,8 +409,9 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
         }
     } else {
         [self.button setAttributedTitle:nil forState:UIControlStateNormal];
-        [[AffirmLogger sharedInstance] logEvent:@"Request Promotional Message Failed"
-                                     parameters:@{@"message": error.localizedDescription}];
+        NSString *event = @"Request Promotional Message Failed";
+        [[AffirmLogger sharedInstance] logEvent:event
+                                     parameters:@{@"message": error != nil ? error.localizedDescription : event}];
         if (self.presentingViewController && [self.presentingViewController respondsToSelector:@selector(webViewController:didFailWithError:)]) {
             [self.presentingViewController webViewController:nil
                                             didFailWithError:error];
