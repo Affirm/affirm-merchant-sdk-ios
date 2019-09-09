@@ -169,6 +169,11 @@ NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amo
                                 self.promoViewController = viewController;
 }];
 ```
+After that, you could present promo modal using
+```
+UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:self.promoViewController];
+[self presentViewController:nav animated:YES completion:nil];
+```
 
 ## Track Order Confirmed
 
