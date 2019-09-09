@@ -10,10 +10,12 @@
 #import "AffirmUtils.h"
 #import "AffirmRequest.h"
 #import "AffirmConfiguration.h"
+#import "AffirmPrequalModalViewController.h"
+#import "AffirmPromoModalViewController.h"
 
 @implementation AffirmDataHandler
 
-+ (void)getPromoMessageWithPromoID:(NSString *)promoID
++ (void)getPromoMessageWithPromoID:(nullable NSString *)promoID
                             amount:(NSDecimalNumber *)amount
                            showCTA:(BOOL)showCTA
                           pageType:(AffirmPageType)pageType
@@ -21,7 +23,8 @@
                          colorType:(AffirmColorType)colorType
                               font:(UIFont *)font
                          textColor:(UIColor *)textColor
-                 completionHandler:(void (^)(NSAttributedString * _Nullable , NSError * _Nullable ))completionHandler
+          presentingViewController:(UIViewController<AffirmPrequalDelegate> *)presentingViewController
+                 completionHandler:(void (^)(NSAttributedString * _Nullable , UIViewController * _Nullable, NSError * _Nullable))completionHandler
 {
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     NSDecimalNumber *decimal = amount.toIntegerCents;
@@ -35,6 +38,7 @@
                                                                       logoColor:FormatAffirmColorString(colorType)];
     [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
         NSAttributedString *attributedString = nil;
+        UIViewController *viewController = nil;
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
             NSString *template = nil;
             AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
@@ -48,8 +52,31 @@
                 }
                 attributedString = [AffirmPromotionalButton appendLogo:logo toText:template font:font textColor:textColor logoType:logoType];
             }
+
+            if (promoResponse.showPrequal) {
+                NSMutableDictionary *params = [@{
+                                                 @"public_api_key": [AffirmConfiguration sharedInstance].publicKey,
+                                                 @"unit_price": decimal,
+                                                 @"promo_external_id": promoID,
+                                                 @"isSDK": @"true",
+                                                 @"use_promo": @"true",
+                                                 @"referring_url": AFFIRM_PREQUAL_REFERRING_URL,
+                                                 } mutableCopy];
+                if (pageType) {
+                    params[@"page_type"] = FormatAffirmPageTypeString(pageType);
+                }
+
+                NSString *url = [NSString stringWithFormat:@"%@/apps/prequal/", [AffirmCheckoutClient host]];
+                NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"?%@", [params queryURLEncoding]]
+                                           relativeToURL:[NSURL URLWithString:url]];
+                viewController = [[AffirmPrequalModalViewController alloc] initWithURL:requestURL delegate:presentingViewController];
+            } else {
+                viewController = [[AffirmPromoModalViewController alloc] initWithPromoId:promoID
+                                                                                  amount:decimal
+                                                                                delegate:presentingViewController];
+            }
         }
-        completionHandler(attributedString, error);
+        completionHandler(attributedString, viewController, error);
     }];
 }
 

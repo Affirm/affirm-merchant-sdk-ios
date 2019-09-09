@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)loadErrorPage:(NSError *)error;
 
 /**
- Dismiss current model viewController
+ Dismiss current modal viewController
  */
 - (void)dismiss;
 

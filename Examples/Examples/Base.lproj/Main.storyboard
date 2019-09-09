@@ -27,10 +27,10 @@
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="O5J-XL-g8E">
                                                 <rect key="frame" x="30" y="100" width="315" height="425.5"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qhT-Gh-xmj">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qhT-Gh-xmj">
                                                         <rect key="frame" x="0.0" y="0.0" width="315" height="30"/>
                                                         <connections>
-                                                            <action selector="showPromoModel:" destination="BYZ-38-t0r" eventType="touchUpInside" id="MQ5-9y-cws"/>
+                                                            <action selector="showPromoModal:" destination="BYZ-38-t0r" eventType="touchUpInside" id="mk5-Rw-sYa"/>
                                                         </connections>
                                                     </button>
                                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xeb-En-Ebk">

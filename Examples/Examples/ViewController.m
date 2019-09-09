@@ -20,6 +20,7 @@
 @property (nonatomic, weak) IBOutlet UILabel *resultLabel;
 
 @property (nonatomic, strong) AffirmPromotionalButton *promotionalButton;
+@property (nonatomic, strong) UIViewController *promoViewController;
 
 @end
 
@@ -50,8 +51,10 @@
                                         colorType:AffirmColorTypeBlue
                                              font:[UIFont boldSystemFontOfSize:15]
                                         textColor:[UIColor grayColor]
-                                completionHandler:^(NSAttributedString *attributedString, NSError *error) {
+                         presentingViewController:self
+                                completionHandler:^(NSAttributedString *attributedString, UIViewController *viewController, NSError *error) {
                                     [self.promoButton setAttributedTitle:attributedString forState:UIControlStateNormal];
+                                    self.promoViewController = viewController;
                                 }];
 
     // Configure Textfields
@@ -87,9 +90,10 @@
 
 #pragma mark - Actions
 
-- (IBAction)showPromoModel:(id)sender
+- (IBAction)showPromoModal:(id)sender
 {
-    
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:self.promoViewController];
+    [self presentViewController:nav animated:YES completion:nil];
 }
 
 - (IBAction)checkout:(id)sender
