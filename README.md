@@ -149,6 +149,27 @@ UINavigationController *nav = [[UINavigationController alloc] initWithRootViewCo
 [self.presentingViewController presentViewController:nav animated:YES completion:nil];
 ```
 
+## Retrieve raw string from As low as message
+
+You can retrieve raw string using `AffirmDataHandler`.
+
+```
+NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
+[AffirmDataHandler getPromoMessageWithPromoID:@"promo_set_ios"
+                                       amount:dollarPrice
+                                      showCTA:YES
+                                     pageType:AffirmPageTypeBanner
+                                     logoType:AffirmLogoTypeName
+                                    colorType:AffirmColorTypeBlue
+                                         font:[UIFont boldSystemFontOfSize:15]
+                                    textColor:[UIColor grayColor]
+                     presentingViewController:self
+                            completionHandler:^(NSAttributedString *attributedString, UIViewController *viewController, NSError *error) {
+                                [self.promoButton setAttributedTitle:attributedString forState:UIControlStateNormal];
+                                self.promoViewController = viewController;
+}];
+```
+
 ## Track Order Confirmed
 
 The trackOrderConfirmed event triggers when a customer completes their purchase. The SDK provides the  `AffirmOrderTrackerViewController` class to track it, it requires `AffirmOrder` and an array with `AffirmProduct`.
