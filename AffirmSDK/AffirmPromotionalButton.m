@@ -15,43 +15,7 @@
 #import "AffirmRequest.h"
 #import "AffirmLogger.h"
 
-@interface AffirmPromotionalButton() <WKNavigationDelegate>
-
-@property (nonatomic, strong) NSDecimalNumber *amount;
-@property (nonatomic) BOOL showPrequal;
-@property (nonatomic) BOOL clickable;
-
-@property (nonatomic, strong) UIButton *button;
-@property (nonatomic, strong) WKWebView *webView;
-@property (nonatomic, strong) NSLayoutConstraint *webViewHeightConstraint;
-
-@end
-
 static NSString *const AFFIRM_DEFAULT_ALA_TEMPLATE = @"Buy in monthly payments with Affirm";
-
-static NSString * FormatAffirmPageTypeString(AffirmPageType type)
-{
-    switch (type) {
-        case AffirmPageTypeNone:
-            return nil;
-        case AffirmPageTypeBanner:
-            return @"banner";
-        case AffirmPageTypeCart:
-            return @"cart";
-        case AffirmPageTypeCategory:
-            return @"category";
-        case AffirmPageTypeHomepage:
-            return @"homepage";
-        case AffirmPageTypeLanding:
-            return @"landing";
-        case AffirmPageTypePayment:
-            return @"payment";
-        case AffirmPageTypeProduct:
-            return @"product";
-        case AffirmPageTypeSearch:
-            return @"search";
-    }
-}
 
 static NSString * FormatAffirmLogoString(AffirmLogoType type)
 {
@@ -81,19 +45,17 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
     }
 }
 
-static NSString * FormatAffirmColorString(AffirmColorType type)
-{
-    switch (type) {
-        case AffirmColorTypeBlue:
-            return @"blue";
-        case AffirmColorTypeBlack:
-            return @"black";
-        case AffirmColorTypeWhite:
-            return @"white";
-        case AffirmColorTypeDefault:
-            return @"blue";
-    }
-}
+@interface AffirmPromotionalButton() <WKNavigationDelegate>
+
+@property (nonatomic, strong) NSDecimalNumber *amount;
+@property (nonatomic) BOOL showPrequal;
+@property (nonatomic) BOOL clickable;
+
+@property (nonatomic, strong) UIButton *button;
+@property (nonatomic, strong) WKWebView *webView;
+@property (nonatomic, strong) NSLayoutConstraint *webViewHeightConstraint;
+
+@end
 
 @implementation AffirmPromotionalButton (Helper)
 
@@ -105,7 +67,7 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
     return image;
 }
 
-- (CGSize)sizeForLogoType:(AffirmLogoType)logoType
++ (CGSize)sizeForLogoType:(AffirmLogoType)logoType
                  logoSize:(CGSize)logoSize
                    height:(CGFloat)height
 {
@@ -123,7 +85,7 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
     }
 }
 
-- (NSAttributedString *)appendLogo:(UIImage *)logo
++ (NSAttributedString *)appendLogo:(UIImage *)logo
                             toText:(NSString *)text
                               font:(UIFont *)font
                          textColor:(UIColor *)textColor
@@ -383,7 +345,7 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
             if (affirmLogoType != AffirmLogoTypeText) {
                 logo = [AffirmPromotionalButton getAffirmDisplayForLogoType:affirmLogoType colorType:affirmColor];
             }
-            attributedString = [self appendLogo:logo toText:template font:font textColor:textColor logoType:affirmLogoType];
+            attributedString = [AffirmPromotionalButton appendLogo:logo toText:template font:font textColor:textColor logoType:affirmLogoType];
         }
         [self configureWithAttributedText:attributedString response:response error:error];
     }];

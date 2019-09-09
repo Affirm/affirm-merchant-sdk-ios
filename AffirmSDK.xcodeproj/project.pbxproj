@@ -13,6 +13,8 @@
 		081371302255A39400ACDD91 /* AffirmOrder.h in Headers */ = {isa = PBXBuildFile; fileRef = 0813712C2255A39400ACDD91 /* AffirmOrder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		081371332255D05300ACDD91 /* AffirmOrderTrackerViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 081371312255D05300ACDD91 /* AffirmOrderTrackerViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		081371342255D05300ACDD91 /* AffirmOrderTrackerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 081371322255D05300ACDD91 /* AffirmOrderTrackerViewController.m */; };
+		0827FF8B2325EB9200AEC14C /* AffirmDataHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 0827FF892325EB9200AEC14C /* AffirmDataHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0827FF8C2325EB9200AEC14C /* AffirmDataHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 0827FF8A2325EB9200AEC14C /* AffirmDataHandler.m */; };
 		082C28B1223795AC00B0C01F /* AffirmLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 082C28AF223795AC00B0C01F /* AffirmLogger.m */; };
 		0841E334223A9948006D8B97 /* AffirmConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 0841E332223A9948006D8B97 /* AffirmConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0841E335223A9948006D8B97 /* AffirmConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 0841E333223A9948006D8B97 /* AffirmConstants.m */; };
@@ -89,6 +91,8 @@
 		0813712C2255A39400ACDD91 /* AffirmOrder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AffirmOrder.h; sourceTree = "<group>"; };
 		081371312255D05300ACDD91 /* AffirmOrderTrackerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmOrderTrackerViewController.h; sourceTree = "<group>"; };
 		081371322255D05300ACDD91 /* AffirmOrderTrackerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmOrderTrackerViewController.m; sourceTree = "<group>"; };
+		0827FF892325EB9200AEC14C /* AffirmDataHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmDataHandler.h; sourceTree = "<group>"; };
+		0827FF8A2325EB9200AEC14C /* AffirmDataHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmDataHandler.m; sourceTree = "<group>"; };
 		082C28AE223795AC00B0C01F /* AffirmLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmLogger.h; sourceTree = "<group>"; };
 		082C28AF223795AC00B0C01F /* AffirmLogger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmLogger.m; sourceTree = "<group>"; };
 		0841E332223A9948006D8B97 /* AffirmConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmConstants.h; sourceTree = "<group>"; };
@@ -234,6 +238,8 @@
 				081371312255D05300ACDD91 /* AffirmOrderTrackerViewController.h */,
 				081371322255D05300ACDD91 /* AffirmOrderTrackerViewController.m */,
 				7965AB35223656680063198F /* AffirmSDK.bundle */,
+				0827FF892325EB9200AEC14C /* AffirmDataHandler.h */,
+				0827FF8A2325EB9200AEC14C /* AffirmDataHandler.m */,
 			);
 			path = AffirmSDK;
 			sourceTree = "<group>";
@@ -274,6 +280,7 @@
 				0813712D2255A39400ACDD91 /* AffirmProduct.h in Headers */,
 				081371332255D05300ACDD91 /* AffirmOrderTrackerViewController.h in Headers */,
 				0876CA2B22FA6804006F8062 /* AffirmReasonCode.h in Headers */,
+				0827FF8B2325EB9200AEC14C /* AffirmDataHandler.h in Headers */,
 				7944D9C12248A84D0040525E /* AffirmUtils.h in Headers */,
 				7944D9B72240E2250040525E /* AffirmLogger.h in Headers */,
 				7944D9932240BF830040525E /* AffirmActivityIndicatorView.h in Headers */,
@@ -396,6 +403,7 @@
 				7944D9942240BF830040525E /* AffirmActivityIndicatorView.m in Sources */,
 				79088B522238DB840059D691 /* AffirmPromoModalViewController.m in Sources */,
 				79088B4E2238D20E0059D691 /* AffirmPrequalModalViewController.m in Sources */,
+				0827FF8C2325EB9200AEC14C /* AffirmDataHandler.m in Sources */,
 				08C43075223B86A20009E045 /* AffirmProtocol.m in Sources */,
 				082C28B1223795AC00B0C01F /* AffirmLogger.m in Sources */,
 				081371342255D05300ACDD91 /* AffirmOrderTrackerViewController.m in Sources */,

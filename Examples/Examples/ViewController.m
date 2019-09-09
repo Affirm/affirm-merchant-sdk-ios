@@ -12,6 +12,7 @@
 @interface ViewController () <UITextFieldDelegate, AffirmPrequalDelegate, AffirmCheckoutDelegate>
 
 @property (nonatomic, weak) IBOutlet UIScrollView *scrollView;
+@property (nonatomic, weak) IBOutlet UIButton *promoButton;
 @property (nonatomic, weak) IBOutlet UIStackView *stackView;
 @property (nonatomic, weak) IBOutlet UITextField *amountTextField;
 @property (nonatomic, weak) IBOutlet UITextField *promoIDTextField;
@@ -29,12 +30,31 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    // Using AffirmPromotionalButton for first button
     self.promotionalButton = [[AffirmPromotionalButton alloc] initWithPromoID:@"promo_set_ios"
                                                                       showCTA:YES
                                                                      pageType:AffirmPageTypeProduct
                                                      presentingViewController:self
                                                                         frame:CGRectMake(0, 0, 315, 34)];
     [self.stackView insertArrangedSubview:self.promotionalButton atIndex:0];
+
+    // Using AffirmDataHandler for second button
+    self.promoButton.titleLabel.numberOfLines = 0;
+    NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
+    [AffirmDataHandler getPromoMessageWithPromoID:@"promo_set_ios"
+                                           amount:dollarPrice
+                                          showCTA:YES
+                                         pageType:AffirmPageTypeBanner
+                                         logoType:AffirmLogoTypeName
+                                        colorType:AffirmColorTypeBlue
+                                             font:[UIFont boldSystemFontOfSize:15]
+                                        textColor:[UIColor grayColor]
+                                completionHandler:^(NSAttributedString *attributedString, NSError *error) {
+                                    [self.promoButton setAttributedTitle:attributedString forState:UIControlStateNormal];
+                                }];
+
+    // Configure Textfields
     self.publicKeyTextfield.text = [AffirmConfiguration sharedInstance].publicKey;
     [self configureTextField];
 }
@@ -66,6 +86,11 @@
 }
 
 #pragma mark - Actions
+
+- (IBAction)showPromoModel:(id)sender
+{
+    
+}
 
 - (IBAction)checkout:(id)sender
 {
