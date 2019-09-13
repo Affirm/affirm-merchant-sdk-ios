@@ -37,6 +37,44 @@ typedef NS_ENUM(NSInteger, AffirmColorType) {
 
 NS_ASSUME_NONNULL_BEGIN
 
+static NSString * FormatAffirmPageTypeString(AffirmPageType type)
+{
+    switch (type) {
+        case AffirmPageTypeNone:
+            return nil;
+        case AffirmPageTypeBanner:
+            return @"banner";
+        case AffirmPageTypeCart:
+            return @"cart";
+        case AffirmPageTypeCategory:
+            return @"category";
+        case AffirmPageTypeHomepage:
+            return @"homepage";
+        case AffirmPageTypeLanding:
+            return @"landing";
+        case AffirmPageTypePayment:
+            return @"payment";
+        case AffirmPageTypeProduct:
+            return @"product";
+        case AffirmPageTypeSearch:
+            return @"search";
+    }
+}
+
+static NSString * FormatAffirmColorString(AffirmColorType type)
+{
+    switch (type) {
+        case AffirmColorTypeBlue:
+            return @"blue";
+        case AffirmColorTypeBlack:
+            return @"black";
+        case AffirmColorTypeWhite:
+            return @"white";
+        case AffirmColorTypeDefault:
+            return @"blue";
+    }
+}
+
 /**
  An AffirmPromotionalButton displays the contents of an Affirm as low as object which describes the merchant and the item.
  */
@@ -192,6 +230,30 @@ NS_SWIFT_NAME(configure(amount:affirmLogoType:affirmColor:font:textColor:));
 - (instancetype)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
 - (instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
+
+@end
+
+NS_ASSUME_NONNULL_END
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface AffirmPromotionalButton(Helper)
+
++ (UIImage *)getAffirmDisplayForLogoType:(AffirmLogoType)logoType
+                               colorType:(AffirmColorType)colorType
+NS_SWIFT_NAME(getAffirmDisplay(logoType:colorType:));
+
++ (CGSize)sizeForLogoType:(AffirmLogoType)logoType
+                 logoSize:(CGSize)logoSize
+                   height:(CGFloat)height
+NS_SWIFT_NAME(size(logoType:logoSize:height:));
+
++ (NSAttributedString *)appendLogo:(UIImage *)logo
+                            toText:(NSString *)text
+                              font:(UIFont *)font
+                         textColor:(UIColor *)textColor
+                          logoType:(AffirmLogoType)logoType
+NS_SWIFT_NAME(append(logo:text:font:textColor:logoType:));
 
 @end
 

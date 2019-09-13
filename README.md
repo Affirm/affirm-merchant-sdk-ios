@@ -90,7 +90,7 @@ Note - For VCN Checkout, all actions should be done using your existing payment 
 
 ## Promotional Messaging
 
-Affirm promotional messaging components—monthly payment messaging and educational modals—show customers how they can use Affirm to finance their purchases. Promos consist of promotional messaging, which appears directly in your app, and a modal, which which offers users an ability to prequalify.
+Affirm promotional messaging components—monthly payment messaging and educational modals—show customers how they can use Affirm to finance their purchases. Promos consist of promotional messaging, which appears directly in your app, and a modal, which  offers users an ability to prequalify.
 
 To create promotional messaging view, the SDK provides the `AffirmPromotionalButton` class, only requires the developer to add to their view and configure to implement. The AffirmPromotionalButton is implemented as follows:
 
@@ -137,6 +137,7 @@ font-weight: normal;
 !important;
 }
 ```
+**[Note: if no promotional message returned, the button will be hidden automatically]**
 
 Tapping on the Promotional button automatically opens a modal in an `AffirmPrequalModalViewController` with more information, including (if you have it configured) a button that prompts the user to prequalify for Affirm financing.
 
@@ -146,6 +147,32 @@ Tapping on the Promotional button automatically opens a modal in an `AffirmPrequ
 AffirmPromoModalViewController *viewController = [[AffirmPromoModalViewController alloc] initWithPromoId:@"promo_id" amount:amount delegate:delegate];
 UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:viewController];
 [self.presentingViewController presentViewController:nav animated:YES completion:nil];
+```
+
+## Retrieve raw string from As low as message
+
+You can retrieve raw string using `AffirmDataHandler`.
+
+```
+NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
+[AffirmDataHandler getPromoMessageWithPromoID:@"promo_set_ios"
+                                       amount:dollarPrice
+                                      showCTA:YES
+                                     pageType:AffirmPageTypeBanner
+                                     logoType:AffirmLogoTypeName
+                                    colorType:AffirmColorTypeBlue
+                                         font:[UIFont boldSystemFontOfSize:15]
+                                    textColor:[UIColor grayColor]
+                     presentingViewController:self
+                            completionHandler:^(NSAttributedString *attributedString, UIViewController *viewController, NSError *error) {
+                                [self.promoButton setAttributedTitle:attributedString forState:UIControlStateNormal];
+                                self.promoViewController = viewController;
+}];
+```
+After that, you could present promo modal using
+```
+UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:self.promoViewController];
+[self presentViewController:nav animated:YES completion:nil];
 ```
 
 ## Track Order Confirmed
