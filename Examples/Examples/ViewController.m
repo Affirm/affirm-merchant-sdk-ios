@@ -104,7 +104,8 @@
     AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping payoutAmount:[dollarPrice toIntegerCents]];
 
     AffirmCheckoutViewController *controller = [AffirmCheckoutViewController startCheckout:checkout delegate:self];
-    [self presentViewController:controller animated:YES completion:nil];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:controller];
+    [self presentViewController:nav animated:YES completion:nil];
 }
 
 - (IBAction)showFailedCheckout:(id)sender
@@ -115,7 +116,8 @@
     AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping payoutAmount:[dollarPrice toIntegerCents]];
     
     AffirmCheckoutViewController *controller = [AffirmCheckoutViewController startCheckout:checkout delegate:self];
-    [self presentViewController:controller animated:YES completion:nil];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:controller];
+    [self presentViewController:nav animated:YES completion:nil];
 }
 
 - (IBAction)vcnCheckout:(UIButton *)sender
@@ -126,7 +128,8 @@
     AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping payoutAmount:[dollarPrice toIntegerCents]];
     
     AffirmCheckoutViewController *controller = [AffirmCheckoutViewController startCheckout:checkout useVCN:YES getReasonCodes:YES delegate:self];
-    [self presentViewController:controller animated:YES completion:nil];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:controller];
+    [self presentViewController:nav animated:YES completion:nil];
 }
 
 - (IBAction)trackOrderConfirmation:(id)sender
