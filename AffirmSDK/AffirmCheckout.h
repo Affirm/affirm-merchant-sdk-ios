@@ -34,8 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSArray <AffirmItem *>*items;
 
 /**
- Shipping contact information. Required.
- The shipping contact object must contain a non-nil name and address.
+ Shipping contact information. Optional.
  */
 @property (nonatomic, copy, readonly, nullable) AffirmShippingDetail *shipping;
 
@@ -92,7 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
  @return The initialized checkout.
  */
 - (instancetype)initWithItems:(NSArray <AffirmItem *>*)items
-                     shipping:(AffirmShippingDetail *)shipping
+                     shipping:(nullable AffirmShippingDetail *)shipping
                     taxAmount:(NSDecimalNumber *)taxAmount
                shippingAmount:(NSDecimalNumber *)shippingAmount
                     discounts:(nullable NSArray <AffirmDiscount *>*)discounts
@@ -114,7 +113,7 @@ NS_SWIFT_NAME(init(items:shipping:taxAmount:shippingAmount:discounts:metadata:fi
  @return The initialized checkout.
  */
 - (instancetype)initWithItems:(NSArray <AffirmItem *>*)items
-                     shipping:(AffirmShippingDetail *)shipping
+                     shipping:(nullable AffirmShippingDetail *)shipping
                     taxAmount:(NSDecimalNumber *)taxAmount
                shippingAmount:(NSDecimalNumber *)shippingAmount
                     discounts:(nullable NSArray <AffirmDiscount *>*)discounts
@@ -134,7 +133,7 @@ NS_SWIFT_NAME(init(items:shipping:taxAmount:shippingAmount:discounts:metadata:fi
  @return The newly created checkout.
  */
 + (AffirmCheckout *)checkoutWithItems:(NSArray <AffirmItem *>*)items
-                             shipping:(AffirmShippingDetail *)shipping
+                             shipping:(nullable AffirmShippingDetail *)shipping
                             taxAmount:(NSDecimalNumber *)taxAmount
                        shippingAmount:(NSDecimalNumber *)shippingAmount
                      financingProgram:(nullable NSString *)financingProgram
@@ -153,7 +152,7 @@ NS_SWIFT_NAME(checkout(items:shipping:taxAmount:shippingAmount:financingProgram:
  @return The newly created checkout.
  */
 + (AffirmCheckout *)checkoutWithItems:(NSArray <AffirmItem *>*)items
-                             shipping:(AffirmShippingDetail *)shipping
+                             shipping:(nullable AffirmShippingDetail *)shipping
                             taxAmount:(NSDecimalNumber *)taxAmount
                        shippingAmount:(NSDecimalNumber *)shippingAmount
                             discounts:(nullable NSArray <AffirmDiscount *>*)discounts
@@ -171,7 +170,7 @@ NS_SWIFT_NAME(checkout(items:shipping:taxAmount:shippingAmount:discounts:metadat
  @return The newly created checkout.
  */
 + (AffirmCheckout *)checkoutWithItems:(NSArray <AffirmItem *>*)items
-                             shipping:(AffirmShippingDetail *)shipping
+                             shipping:(nullable AffirmShippingDetail *)shipping
                             taxAmount:(NSDecimalNumber *)taxAmount
                        shippingAmount:(NSDecimalNumber *)shippingAmount
 NS_SWIFT_NAME(checkout(items:shipping:taxAmount:shippingAmount:));
@@ -188,7 +187,7 @@ NS_SWIFT_NAME(checkout(items:shipping:taxAmount:shippingAmount:));
  @return The newly created checkout.
  */
 + (AffirmCheckout *)checkoutWithItems:(NSArray <AffirmItem *>*)items
-                             shipping:(AffirmShippingDetail *)shipping
+                             shipping:(nullable AffirmShippingDetail *)shipping
                             taxAmount:(NSDecimalNumber *)taxAmount
                        shippingAmount:(NSDecimalNumber *)shippingAmount
                             discounts:(nullable NSArray <AffirmDiscount *>*)discounts
@@ -207,7 +206,7 @@ NS_SWIFT_NAME(checkout(items:shipping:taxAmount:shippingAmount:discounts:metadat
  @return The initialized checkout.
  */
 - (instancetype)initWithItems:(NSArray <AffirmItem *>*)items
-                     shipping:(AffirmShippingDetail *)shipping
+                     shipping:(nullable AffirmShippingDetail *)shipping
                     discounts:(nullable NSArray <AffirmDiscount *>*)discounts
                      metadata:(nullable NSDictionary *)metadata
              financingProgram:(nullable NSString *)financingProgram
@@ -223,7 +222,7 @@ NS_SWIFT_NAME(init(items:shipping:discounts:metadata:financingProgram:payoutAmou
  @return The newly created checkout.
  */
 + (AffirmCheckout *)checkoutWithItems:(NSArray <AffirmItem *>*)items
-                             shipping:(AffirmShippingDetail *)shipping
+                             shipping:(nullable AffirmShippingDetail *)shipping
                          payoutAmount:(NSDecimalNumber *)payoutAmount
 NS_SWIFT_NAME(checkout(items:shipping:payoutAmount:));
 

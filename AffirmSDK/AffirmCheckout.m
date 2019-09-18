@@ -15,7 +15,7 @@
 @implementation AffirmCheckout
 
 - (instancetype)initWithItems:(NSArray <AffirmItem *>*)items
-                     shipping:(AffirmShippingDetail *)shipping
+                     shipping:(nullable AffirmShippingDetail *)shipping
                     taxAmount:(NSDecimalNumber *)taxAmount
                shippingAmount:(NSDecimalNumber *)shippingAmount
                     discounts:(nullable NSArray <AffirmDiscount *>*)discounts
@@ -43,7 +43,7 @@
 }
 
 - (instancetype)initWithItems:(NSArray <AffirmItem *>*)items
-                     shipping:(AffirmShippingDetail *)shipping
+                     shipping:(nullable AffirmShippingDetail *)shipping
                     taxAmount:(NSDecimalNumber *)taxAmount
                shippingAmount:(NSDecimalNumber *)shippingAmount
                     discounts:(nullable NSArray <AffirmDiscount *>*)discounts
@@ -72,7 +72,7 @@
 }
 
 + (AffirmCheckout *)checkoutWithItems:(NSArray <AffirmItem *>*)items
-                             shipping:(AffirmShippingDetail *)shipping
+                             shipping:(nullable AffirmShippingDetail *)shipping
                             taxAmount:(NSDecimalNumber *)taxAmount
                        shippingAmount:(NSDecimalNumber *)shippingAmount
 {
@@ -86,7 +86,7 @@
 }
 
 + (AffirmCheckout *)checkoutWithItems:(NSArray <AffirmItem *>*)items
-                             shipping:(AffirmShippingDetail *)shipping
+                             shipping:(nullable AffirmShippingDetail *)shipping
                             taxAmount:(NSDecimalNumber *)taxAmount
                        shippingAmount:(NSDecimalNumber *)shippingAmount
                      financingProgram:(nullable NSString *)financingProgram
@@ -101,7 +101,7 @@
 }
 
 + (AffirmCheckout *)checkoutWithItems:(NSArray <AffirmItem *>*)items
-                             shipping:(AffirmShippingDetail *)shipping
+                             shipping:(nullable AffirmShippingDetail *)shipping
                             taxAmount:(NSDecimalNumber *)taxAmount
                        shippingAmount:(NSDecimalNumber *)shippingAmount
                             discounts:(nullable NSArray <AffirmDiscount *>*)discounts
@@ -117,7 +117,7 @@
 }
 
 + (AffirmCheckout *)checkoutWithItems:(NSArray <AffirmItem *>*)items
-                             shipping:(AffirmShippingDetail *)shipping
+                             shipping:(nullable AffirmShippingDetail *)shipping
                             taxAmount:(NSDecimalNumber *)taxAmount
                        shippingAmount:(NSDecimalNumber *)shippingAmount
                             discounts:(nullable NSArray <AffirmDiscount *>*)discounts
@@ -134,7 +134,7 @@
 }
 
 - (instancetype)initWithItems:(NSArray <AffirmItem *>*)items
-                     shipping:(AffirmShippingDetail *)shipping
+                     shipping:(nullable AffirmShippingDetail *)shipping
                     discounts:(nullable NSArray <AffirmDiscount *>*)discounts
                      metadata:(nullable NSDictionary *)metadata
              financingProgram:(nullable NSString *)financingProgram
@@ -156,7 +156,7 @@
 }
 
 + (AffirmCheckout *)checkoutWithItems:(NSArray <AffirmItem *>*)items
-                             shipping:(AffirmShippingDetail *)shipping
+                             shipping:(nullable AffirmShippingDetail *)shipping
                          payoutAmount:(NSDecimalNumber *)payoutAmount
 {
     return [[self alloc] initWithItems:items
