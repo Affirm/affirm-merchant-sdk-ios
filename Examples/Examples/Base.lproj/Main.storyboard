@@ -20,10 +20,10 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lfj-ab-Q3N">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="613.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="567.5"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="O5J-XL-g8E">
-                                                <rect key="frame" x="30" y="100" width="315" height="483.5"/>
+                                                <rect key="frame" x="30" y="100" width="315" height="437.5"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qhT-Gh-xmj">
                                                         <rect key="frame" x="0.0" y="0.0" width="315" height="30"/>
@@ -91,57 +91,43 @@
                                                             </textField>
                                                         </subviews>
                                                     </stackView>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gas-TH-OlI">
-                                                        <rect key="frame" x="0.0" y="192" width="315" height="31"/>
-                                                        <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Send addresses:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rCR-uF-E5X">
-                                                                <rect key="frame" x="0.0" y="0.0" width="266" height="31"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                <nil key="textColor"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cug-dB-paw">
-                                                                <rect key="frame" x="266" y="0.0" width="51" height="31"/>
-                                                            </switch>
-                                                        </subviews>
-                                                    </stackView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2iM-sZ-gRl" customClass="Button">
-                                                        <rect key="frame" x="0.0" y="238" width="315" height="30"/>
+                                                        <rect key="frame" x="0.0" y="192" width="315" height="30"/>
                                                         <state key="normal" title="Buy with Affirm"/>
                                                         <connections>
                                                             <action selector="checkout:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0Tz-uj-wzx"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cjU-mP-ECZ" customClass="Button">
-                                                        <rect key="frame" x="0.0" y="283" width="315" height="30"/>
+                                                        <rect key="frame" x="0.0" y="237" width="315" height="30"/>
                                                         <state key="normal" title="Failed Checkout"/>
                                                         <connections>
                                                             <action selector="showFailedCheckout:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4z2-qe-b3B"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dji-SE-feF" customClass="Button">
-                                                        <rect key="frame" x="0.0" y="328" width="315" height="30"/>
+                                                        <rect key="frame" x="0.0" y="282" width="315" height="30"/>
                                                         <state key="normal" title="VCN Checkout"/>
                                                         <connections>
                                                             <action selector="vcnCheckout:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Wqj-rg-FWy"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AV4-HU-m60" customClass="Button">
-                                                        <rect key="frame" x="0.0" y="373" width="315" height="30"/>
+                                                        <rect key="frame" x="0.0" y="327" width="315" height="30"/>
                                                         <state key="normal" title="Track Order Confirmation"/>
                                                         <connections>
                                                             <action selector="trackOrderConfirmation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0Np-vA-TTi"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ydN-nd-3VK">
-                                                        <rect key="frame" x="0.0" y="418" width="315" height="30"/>
+                                                        <rect key="frame" x="0.0" y="372" width="315" height="30"/>
                                                         <state key="normal" title="Clear Cookies"/>
                                                         <connections>
                                                             <action selector="clearCookies:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ZPQ-N9-Ufs"/>
                                                         </connections>
                                                     </button>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Checkout result: " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kPP-ZX-K09">
-                                                        <rect key="frame" x="0.0" y="463" width="315" height="20.5"/>
+                                                        <rect key="frame" x="0.0" y="417" width="315" height="20.5"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -187,7 +173,6 @@
                         <outlet property="publicKeyTextfield" destination="DOS-mS-mc1" id="EwH-w4-fhu"/>
                         <outlet property="resultLabel" destination="kPP-ZX-K09" id="MLJ-Ts-7KR"/>
                         <outlet property="scrollView" destination="NQB-Zw-j9f" id="Ks6-cQ-vG2"/>
-                        <outlet property="sendAddressesSwitch" destination="Cug-dB-paw" id="6l3-k1-KnI"/>
                         <outlet property="stackView" destination="O5J-XL-g8E" id="BKz-Mb-iul"/>
                     </connections>
                 </viewController>

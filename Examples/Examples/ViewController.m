@@ -17,7 +17,6 @@
 @property (nonatomic, weak) IBOutlet UITextField *amountTextField;
 @property (nonatomic, weak) IBOutlet UITextField *promoIDTextField;
 @property (nonatomic, weak) IBOutlet UITextField *publicKeyTextfield;
-@property (nonatomic, weak) IBOutlet UISwitch *sendAddressesSwitch;
 @property (nonatomic, weak) IBOutlet UILabel *resultLabel;
 
 @property (nonatomic, strong) AffirmPromotionalButton *promotionalButton;
@@ -103,7 +102,6 @@
     AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item" SKU:@"test_item" unitPrice:dollarPrice quantity:1 URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
     AffirmShippingDetail *shipping = [AffirmShippingDetail shippingDetailWithName:@"Chester Cheetah" addressWithLine1:@"633 Folsom Street" line2:@"" city:@"San Francisco" state:@"CA" zipCode:@"94107" countryCode:@"USA"];
     AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping payoutAmount:[dollarPrice toIntegerCents]];
-    checkout.sendBillingAndShippingAddresses = self.sendAddressesSwitch.on;
 
     AffirmCheckoutViewController *controller = [AffirmCheckoutViewController startCheckout:checkout delegate:self];
     [self presentViewController:controller animated:YES completion:nil];
@@ -127,7 +125,6 @@
     AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item" SKU:@"test_item" unitPrice:dollarPrice quantity:1 URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
     AffirmShippingDetail *shipping = [AffirmShippingDetail shippingDetailWithName:@"Chester Cheetah" addressWithLine1:@"633 Folsom Street" line2:@"" city:@"San Francisco" state:@"CA" zipCode:@"94107" countryCode:@"USA"];
     AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping payoutAmount:[dollarPrice toIntegerCents]];
-    checkout.sendBillingAndShippingAddresses = self.sendAddressesSwitch.on;
     
     AffirmCheckoutViewController *controller = [AffirmCheckoutViewController startCheckout:checkout useVCN:YES getReasonCodes:YES delegate:self];
     [self presentViewController:controller animated:YES completion:nil];
