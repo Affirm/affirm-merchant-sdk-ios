@@ -11,6 +11,8 @@
 #import "AffirmItem.h"
 #import "AffirmDiscount.h"
 #import "AffirmShippingDetail.h"
+#import "AffirmBillingDetail.h"
+#import "AffirmLogger.h"
 
 @implementation AffirmCheckout
 
@@ -195,8 +197,16 @@
                                    @"api_version" :@"v2"
                                    } mutableCopy];
 
-    if (self.sendShippingAddresses && self.shipping) {
-        [dict addEntriesFromDictionary:[self.shipping toJSONDictionary]];
+    if (self.sendShippingAddresses) {
+        if (self.shipping) {
+            [dict addEntriesFromDictionary:[self.shipping toJSONDictionary]];
+        } else {
+            [[AffirmLogger sharedInstance] logException:@"Shipping addresses are required when sendShippingAddresses is true."];
+        }
+    }
+
+    if (self.billing) {
+        [dict addEntriesFromDictionary:[self.billing toJSONDictionary]];
     }
 
     if (self.shippingAmount != nil) {
@@ -242,6 +252,9 @@
                                                          orderId:self.orderId];
     if (self.payoutAmount) {
         copy.payoutAmount = self.payoutAmount;
+    }
+    if (self.billing) {
+        copy.billing = self.billing;
     }
     copy.sendShippingAddresses = self.sendShippingAddresses;
     return copy;
