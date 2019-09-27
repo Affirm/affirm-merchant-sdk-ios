@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  A flag whether to send addresses to Affirm server, default is YES.
  */
-@property (nonatomic) BOOL sendShippingAddresses;
+@property (nonatomic) BOOL sendShippingAddress;
 
 /**
  A list of purchased items. Required.
@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSArray <AffirmItem *>*items;
 
 /**
- Shipping contact information. Depending on sendShippingAddresses, it sendShippingAddresses == true, it's required.
+ Shipping contact information. Depending on sendShippingAddress, if sendShippingAddress is true, it's required.
  */
 @property (nonatomic, copy, readonly, nullable) AffirmShippingDetail *shipping;
 

@@ -39,7 +39,7 @@
         _metadata = (metadata) ? [[NSDictionary alloc] initWithDictionary:metadata copyItems:YES] : nil;
         _financingProgram = (financingProgram) ? [financingProgram copy] : nil;
         _orderId = nil;
-        _sendShippingAddresses = YES;
+        _sendShippingAddress = YES;
     }
     return self;
 }
@@ -68,7 +68,7 @@
         _metadata = metadata ? [[NSDictionary alloc] initWithDictionary:metadata copyItems:YES] : nil;
         _financingProgram = financingProgram ? [financingProgram copy] : nil;
         _orderId = orderId ? [orderId copy] : nil;
-        _sendShippingAddresses = YES;
+        _sendShippingAddress = YES;
     }
     return self;
 }
@@ -197,11 +197,11 @@
                                    @"api_version" :@"v2"
                                    } mutableCopy];
 
-    if (self.sendShippingAddresses) {
+    if (self.sendShippingAddress) {
         if (self.shipping) {
             [dict addEntriesFromDictionary:[self.shipping toJSONDictionary]];
         } else {
-            [[AffirmLogger sharedInstance] logException:@"Shipping addresses are required when sendShippingAddresses is true."];
+            [[AffirmLogger sharedInstance] logException:@"Shipping addresses are required when sendShippingAddress is true."];
         }
     }
 
@@ -256,7 +256,7 @@
     if (self.billing) {
         copy.billing = self.billing;
     }
-    copy.sendShippingAddresses = self.sendShippingAddresses;
+    copy.sendShippingAddress = self.sendShippingAddress;
     return copy;
 }
 

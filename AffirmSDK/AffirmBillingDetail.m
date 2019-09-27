@@ -57,7 +57,7 @@
 
 - (NSDictionary *)toJSONDictionary
 {
-    if (!self.name && !self.email && !self.phoneNumber && !self.line1 && !self.line2 && !self.city && !self.state && !self.zipCode && !self.countryCode) {
+    if (!self.name && !self.email && !self.phoneNumber && (!self.line1 || !self.line2 || !self.city || !self.state || !self.zipCode || !self.countryCode)) {
         return @{};
     }
 
