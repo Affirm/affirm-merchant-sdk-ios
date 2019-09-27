@@ -12,6 +12,7 @@
 @class AffirmItem;
 @class AffirmDiscount;
 @class AffirmShippingDetail;
+@class AffirmBillingDetail;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  A flag whether to send addresses to Affirm server, default is YES.
  */
-@property (nonatomic) BOOL sendBillingAndShippingAddresses;
+@property (nonatomic) BOOL sendShippingAddress;
 
 /**
  A list of purchased items. Required.
@@ -34,9 +35,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSArray <AffirmItem *>*items;
 
 /**
- Shipping contact information. Optional.
+ Shipping contact information. Depending on sendShippingAddress, if sendShippingAddress is true, it's required.
  */
 @property (nonatomic, copy, readonly, nullable) AffirmShippingDetail *shipping;
+
+/**
+ Shipping contact information. Optional.
+ */
+@property (nonatomic, copy, nullable) AffirmBillingDetail *billing;
 
 /**
  Tax amount in USD. Cannot be negative. Required if total amount isn't passed.

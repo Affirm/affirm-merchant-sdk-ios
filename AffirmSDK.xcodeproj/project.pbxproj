@@ -29,6 +29,8 @@
 		08C4306D223B7C640009E045 /* AffirmRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C4306B223B7C640009E045 /* AffirmRequest.m */; };
 		08C43074223B86A20009E045 /* AffirmProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 08C43072223B86A20009E045 /* AffirmProtocol.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		08C43075223B86A20009E045 /* AffirmProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C43073223B86A20009E045 /* AffirmProtocol.m */; };
+		08EA7147233DE10200BC36CE /* AffirmBillingDetail.h in Headers */ = {isa = PBXBuildFile; fileRef = 08EA7145233DE10200BC36CE /* AffirmBillingDetail.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		08EA7148233DE10200BC36CE /* AffirmBillingDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 08EA7146233DE10200BC36CE /* AffirmBillingDetail.m */; };
 		08FA591A222D08E5007E5E4E /* AffirmSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA5910222D08E5007E5E4E /* AffirmSDK.framework */; };
 		08FA591F222D08E5007E5E4E /* AffirmSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA591E222D08E5007E5E4E /* AffirmSDKTests.m */; };
 		08FA5921222D08E5007E5E4E /* AffirmSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA5913222D08E5007E5E4E /* AffirmSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -109,6 +111,8 @@
 		08C4306B223B7C640009E045 /* AffirmRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmRequest.m; sourceTree = "<group>"; };
 		08C43072223B86A20009E045 /* AffirmProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmProtocol.h; sourceTree = "<group>"; };
 		08C43073223B86A20009E045 /* AffirmProtocol.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmProtocol.m; sourceTree = "<group>"; };
+		08EA7145233DE10200BC36CE /* AffirmBillingDetail.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmBillingDetail.h; sourceTree = "<group>"; };
+		08EA7146233DE10200BC36CE /* AffirmBillingDetail.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmBillingDetail.m; sourceTree = "<group>"; };
 		08FA5910222D08E5007E5E4E /* AffirmSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AffirmSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		08FA5913222D08E5007E5E4E /* AffirmSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmSDK.h; sourceTree = "<group>"; };
 		08FA5919222D08E5007E5E4E /* AffirmSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AffirmSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -200,6 +204,8 @@
 				DA33DCFB223A3191009D73CA /* AffirmCheckout.m */,
 				79B1ABEC222FC929009EE7FA /* AffirmShippingDetail.h */,
 				79B1ABED222FC929009EE7FA /* AffirmShippingDetail.m */,
+				08EA7145233DE10200BC36CE /* AffirmBillingDetail.h */,
+				08EA7146233DE10200BC36CE /* AffirmBillingDetail.m */,
 				DA33DCF0223A2FD7009D73CA /* AffirmDiscount.h */,
 				DA33DCF1223A2FD7009D73CA /* AffirmDiscount.m */,
 				DA33DCF5223A30ED009D73CA /* AffirmItem.h */,
@@ -269,6 +275,7 @@
 				08A81F4D223FF61300FAA8D2 /* AffirmConfiguration.h in Headers */,
 				DA33DCFC223A3191009D73CA /* AffirmCheckout.h in Headers */,
 				DA33DCF7223A30ED009D73CA /* AffirmItem.h in Headers */,
+				08EA7147233DE10200BC36CE /* AffirmBillingDetail.h in Headers */,
 				7965AB3322364E520063198F /* AffirmPromotionalButton.h in Headers */,
 				DA33DCF2223A2FD7009D73CA /* AffirmDiscount.h in Headers */,
 				7965AB2B22362FD00063198F /* AffirmBaseWebViewController.h in Headers */,
@@ -405,6 +412,7 @@
 				DA33DCF8223A30ED009D73CA /* AffirmItem.m in Sources */,
 				7965AB2C22362FD00063198F /* AffirmBaseWebViewController.m in Sources */,
 				7944D9942240BF830040525E /* AffirmActivityIndicatorView.m in Sources */,
+				08EA7148233DE10200BC36CE /* AffirmBillingDetail.m in Sources */,
 				79088B522238DB840059D691 /* AffirmPromoModalViewController.m in Sources */,
 				79088B4E2238D20E0059D691 /* AffirmPrequalModalViewController.m in Sources */,
 				0827FF8C2325EB9200AEC14C /* AffirmDataHandler.m in Sources */,

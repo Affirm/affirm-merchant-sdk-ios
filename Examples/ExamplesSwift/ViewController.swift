@@ -52,7 +52,7 @@ class ViewController: UIViewController {
     @IBAction func checkout(sender: Any) {
         let dollarPrice = NSDecimalNumber(string: self.amountTextField.text)
         let item = AffirmItem(name: "Affirm Test Item", sku: "test_item", unitPrice: dollarPrice, quantity: 1, url: URL(string: "http://sandbox.affirm.com/item")!)
-        let shipping = AffirmShippingDetail(name: "Chester Cheetah", addressWithLine1: "633 Folsom Street", line2: "", city: "San Francisco", state: "CA", zipCode: "94107", countryCode: "USA")
+        let shipping = AffirmShippingDetail.shippingDetail(name: "Chester Cheetah", line1: "633 Folsom Street", line2: "", city: "San Francisco", state: "CA", zipCode: "94107", countryCode: "USA")
         let checkout = AffirmCheckout(items: [item], shipping: shipping, taxAmount: NSDecimalNumber.zero, shippingAmount: NSDecimalNumber.zero, discounts: nil, metadata: nil, financingProgram: nil, orderId: "JKLMO4321")
 
         let controller = AffirmCheckoutViewController.start(checkout: checkout, delegate: self)
@@ -72,7 +72,7 @@ class ViewController: UIViewController {
     @IBAction func vcnCheckout(sender: Any) {
         let dollarPrice = NSDecimalNumber(string: self.amountTextField.text)
         let item = AffirmItem(name: "Affirm Test Item", sku: "test_item", unitPrice: dollarPrice, quantity: 1, url: URL(string: "http://sandbox.affirm.com/item")!)
-        let shipping = AffirmShippingDetail(name: "Chester Cheetah", addressWithLine1: "633 Folsom Street", line2: "", city: "San Francisco", state: "CA", zipCode: "94107", countryCode: "USA")
+        let shipping = AffirmShippingDetail(name: "Chester Cheetah", email: nil, phoneNumber: nil, line1: "633 Folsom Street", line2: "", city: "San Francisco", state: "CA", zipCode: "94107", countryCode: "USA")
         let checkout = AffirmCheckout.checkout(items: [item], shipping: shipping, payoutAmount: dollarPrice.toIntegerCents())
 
         let controller = AffirmCheckoutViewController.start(checkout: checkout, useVCN: true, delegate: self)

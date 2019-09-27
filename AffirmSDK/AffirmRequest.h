@@ -81,17 +81,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AffirmErrorResponse : NSObject <AffirmResponseProtocol>
 
-@property (nonatomic, copy, readonly) NSString *field;
 @property (nonatomic, copy, readonly) NSString *message;
 @property (nonatomic, copy, readonly) NSString *code;
 @property (nonatomic, copy, readonly) NSString *type;
 @property (nonatomic, copy, readonly) NSNumber *statusCode;
 
-- (instancetype)initWithField:(NSString *)field
-                      message:(NSString *)message
-                         code:(NSString *)code
-                         type:(NSString *)type
-                   statusCode:(NSNumber *)statusCode;
+- (instancetype)initWithMessage:(NSString *)message
+                           code:(NSString *)code
+                           type:(NSString *)type
+                     statusCode:(NSNumber *)statusCode;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 - (NSDictionary *)dictionary;

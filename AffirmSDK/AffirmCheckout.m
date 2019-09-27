@@ -11,6 +11,8 @@
 #import "AffirmItem.h"
 #import "AffirmDiscount.h"
 #import "AffirmShippingDetail.h"
+#import "AffirmBillingDetail.h"
+#import "AffirmLogger.h"
 
 @implementation AffirmCheckout
 
@@ -37,7 +39,7 @@
         _metadata = (metadata) ? [[NSDictionary alloc] initWithDictionary:metadata copyItems:YES] : nil;
         _financingProgram = (financingProgram) ? [financingProgram copy] : nil;
         _orderId = nil;
-        _sendBillingAndShippingAddresses = YES;
+        _sendShippingAddress = YES;
     }
     return self;
 }
@@ -66,7 +68,7 @@
         _metadata = metadata ? [[NSDictionary alloc] initWithDictionary:metadata copyItems:YES] : nil;
         _financingProgram = financingProgram ? [financingProgram copy] : nil;
         _orderId = orderId ? [orderId copy] : nil;
-        _sendBillingAndShippingAddresses = YES;
+        _sendShippingAddress = YES;
     }
     return self;
 }
@@ -195,8 +197,16 @@
                                    @"api_version" :@"v2"
                                    } mutableCopy];
 
-    if (self.sendBillingAndShippingAddresses && self.shipping) {
-        [dict addEntriesFromDictionary:[self.shipping toJSONDictionary]];
+    if (self.sendShippingAddress) {
+        if (self.shipping) {
+            [dict addEntriesFromDictionary:[self.shipping toJSONDictionary]];
+        } else {
+            [[AffirmLogger sharedInstance] logException:@"Shipping addresses are required when sendShippingAddress is true."];
+        }
+    }
+
+    if (self.billing) {
+        [dict addEntriesFromDictionary:[self.billing toJSONDictionary]];
     }
 
     if (self.shippingAmount != nil) {
@@ -232,11 +242,21 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
-    AffirmCheckout *copy = [[AffirmCheckout alloc] initWithItems:self.items shipping:self.shipping taxAmount:self.taxAmount shippingAmount:self.shippingAmount discounts:self.discounts metadata:self.metadata financingProgram:self.financingProgram orderId:self.orderId];
+    AffirmCheckout *copy = [[AffirmCheckout alloc] initWithItems:self.items
+                                                        shipping:self.shipping
+                                                       taxAmount:self.taxAmount
+                                                  shippingAmount:self.shippingAmount
+                                                       discounts:self.discounts
+                                                        metadata:self.metadata
+                                                financingProgram:self.financingProgram
+                                                         orderId:self.orderId];
     if (self.payoutAmount) {
         copy.payoutAmount = self.payoutAmount;
     }
-    copy.sendBillingAndShippingAddresses = self.sendBillingAndShippingAddresses;
+    if (self.billing) {
+        copy.billing = self.billing;
+    }
+    copy.sendShippingAddress = self.sendShippingAddress;
     return copy;
 }
 

@@ -85,33 +85,26 @@
 
 - (NSDictionary *)toJSONDictionary
 {
-    NSDictionary *jsonDic = @{
-                              @"shipping": [self getShippingJSONDictionary],
-                              @"billing": [self getBillingJSONDictionary]
-                              };
-    return jsonDic;
+    return @{
+        @"shipping": [self getShippingJSONDictionary]
+    };
 }
 
 - (NSDictionary *)getShippingJSONDictionary
 {
     NSDictionary *address =  @{
-                               @"line1": self.line1,
-                               @"line2": self.line2,
-                               @"city": self.city,
-                               @"state": self.state,
-                               @"zipcode": self.zipCode,
-                               @"country": self.countryCode
-                               };
-    NSDictionary *jsonDic = @{
-                              @"address": address,
-                              @"name": @{@"full": self.name}
-                              };
-    return jsonDic;
-}
+        @"line1": self.line1,
+        @"line2": self.line2,
+        @"city": self.city,
+        @"state": self.state,
+        @"zipcode": self.zipCode,
+        @"country": self.countryCode
+    };
+    NSMutableDictionary *jsonDic = [@{
+        @"address": address,
+        @"name": @{@"full": self.name}
+    } mutableCopy];
 
-- (NSDictionary *)getBillingJSONDictionary
-{
-    NSMutableDictionary *jsonDic = [NSMutableDictionary dictionaryWithDictionary:[self getShippingJSONDictionary]];
     if (self.email) {
         jsonDic[@"email"] = self.email;
     }
