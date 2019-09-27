@@ -37,7 +37,7 @@
         _metadata = (metadata) ? [[NSDictionary alloc] initWithDictionary:metadata copyItems:YES] : nil;
         _financingProgram = (financingProgram) ? [financingProgram copy] : nil;
         _orderId = nil;
-        _sendBillingAndShippingAddresses = YES;
+        _sendShippingAddresses = YES;
     }
     return self;
 }
@@ -66,7 +66,7 @@
         _metadata = metadata ? [[NSDictionary alloc] initWithDictionary:metadata copyItems:YES] : nil;
         _financingProgram = financingProgram ? [financingProgram copy] : nil;
         _orderId = orderId ? [orderId copy] : nil;
-        _sendBillingAndShippingAddresses = YES;
+        _sendShippingAddresses = YES;
     }
     return self;
 }
@@ -195,7 +195,7 @@
                                    @"api_version" :@"v2"
                                    } mutableCopy];
 
-    if (self.sendBillingAndShippingAddresses && self.shipping) {
+    if (self.sendShippingAddresses && self.shipping) {
         [dict addEntriesFromDictionary:[self.shipping toJSONDictionary]];
     }
 
@@ -232,11 +232,18 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
-    AffirmCheckout *copy = [[AffirmCheckout alloc] initWithItems:self.items shipping:self.shipping taxAmount:self.taxAmount shippingAmount:self.shippingAmount discounts:self.discounts metadata:self.metadata financingProgram:self.financingProgram orderId:self.orderId];
+    AffirmCheckout *copy = [[AffirmCheckout alloc] initWithItems:self.items
+                                                        shipping:self.shipping
+                                                       taxAmount:self.taxAmount
+                                                  shippingAmount:self.shippingAmount
+                                                       discounts:self.discounts
+                                                        metadata:self.metadata
+                                                financingProgram:self.financingProgram
+                                                         orderId:self.orderId];
     if (self.payoutAmount) {
         copy.payoutAmount = self.payoutAmount;
     }
-    copy.sendBillingAndShippingAddresses = self.sendBillingAndShippingAddresses;
+    copy.sendShippingAddresses = self.sendShippingAddresses;
     return copy;
 }
 

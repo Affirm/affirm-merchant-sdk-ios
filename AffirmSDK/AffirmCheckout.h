@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  A flag whether to send addresses to Affirm server, default is YES.
  */
-@property (nonatomic) BOOL sendBillingAndShippingAddresses;
+@property (nonatomic) BOOL sendShippingAddresses;
 
 /**
  A list of purchased items. Required.

@@ -220,14 +220,12 @@
 
 @implementation AffirmErrorResponse
 
-- (instancetype)initWithField:(NSString *)field
-                      message:(NSString *)message
-                         code:(NSString *)code
-                         type:(NSString *)type
-                   statusCode:(NSNumber *)statusCode
+- (instancetype)initWithMessage:(NSString *)message
+                           code:(NSString *)code
+                           type:(NSString *)type
+                     statusCode:(NSNumber *)statusCode
 {
     if (self = [super init]) {
-        _field = [field copy];
         _message = [message copy];
         _code = [code copy];
         _type = [type copy];
@@ -239,7 +237,6 @@
 - (NSDictionary *)dictionary
 {
     return @{
-             @"field": self.field,
              @"message": self.message,
              @"code": self.code,
              @"type": self.type,
