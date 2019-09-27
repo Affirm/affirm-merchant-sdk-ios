@@ -82,7 +82,8 @@ NS_ASSUME_NONNULL_BEGIN
                                             city:(NSString *)city
                                            state:(NSString *)state
                                          zipCode:(NSString *)zipCode
-                                     countryCode:(NSString *)countryCode;
+                                     countryCode:(NSString *)countryCode
+NS_SWIFT_NAME(shippingDetail(name:line1:line2:city:state:zipCode:countryCode:));
 
 /**
  Convenience constructor for a shipping detail object with email and phone number.

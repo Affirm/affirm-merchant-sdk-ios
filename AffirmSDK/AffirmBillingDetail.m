@@ -58,7 +58,7 @@
 - (NSDictionary *)toJSONDictionary
 {
     if (!self.name && !self.email && !self.phoneNumber && !self.line1 && !self.line2 && !self.city && !self.state && !self.zipCode && !self.countryCode) {
-        return nil;
+        return @{};
     }
 
     return @{
@@ -68,20 +68,27 @@
 
 - (NSDictionary *)getBillingJSONDictionary
 {
-    NSDictionary *address =  @{
-        @"line1": self.line1,
-        @"line2": self.line2,
-        @"city": self.city,
-        @"state": self.state,
-        @"zipcode": self.zipCode,
-        @"country": self.countryCode
-    };
-    NSDictionary *jsonDic = @{
-        @"name": @{@"full": self.name},
-        @"address": address,
-        @"phone_number": self.phoneNumber,
-        @"email": self.email
-    };
+    NSMutableDictionary *jsonDic = [@{} mutableCopy];
+    if (self.line1 && self.line2 && self.city && self.state && self.zipCode && self.countryCode) {
+        NSDictionary *address =  @{
+            @"line1": self.line1,
+            @"line2": self.line2,
+            @"city": self.city,
+            @"state": self.state,
+            @"zipcode": self.zipCode,
+            @"country": self.countryCode
+        };
+        jsonDic[@"address"] = address;
+    }
+    if (self.name) {
+        jsonDic[@"name"] = @{@"full": self.name};
+    }
+    if (self.email) {
+        jsonDic[@"email"] = self.email;
+    }
+    if (self.phoneNumber) {
+        jsonDic[@"phone_number"] = self.phoneNumber;
+    }
     return jsonDic;
 }
 
