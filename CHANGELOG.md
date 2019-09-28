@@ -1,6 +1,15 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
+## Version 5.0.5 (September 27, 2019)
+- Support type face, text size, and text color for promo messaging
+- Support local fonts
+- Handle empty ALA messages
+- Shipping/Billing consistent with direct API requirements
+- Add reason codes for VCN checkout cancellation
+- Cannot exit checkout in Sandbox testing
+- Minor Bug Fixes
+
 ## Version 5.0.4 (June 20, 2019)
 - Updated modal configuration
 - Custom CSS support in ALA messaging
