@@ -34,7 +34,7 @@ An Affirm integration consists of two components: checkout and promotional messa
 
 Before you can use these components, you must first set the AffirmSDK with your public API key from your sandbox [Merchant Dashboard](https://sandbox.affirm.com/dashboard). You must set this key to the shared AffirmConfiguration once (preferably in your AppDelegate) as follows:
 ```
-[[AffirmConfiguration sharedInstance] configureWithPublicKey:@"PUBLIC_API_KEY" environment:AffirmEnvironmentSandbox];
+[[AffirmConfiguration sharedInstance] configureWithPublicKey:@"PUBLIC_API_KEY" environment:AffirmEnvironmentSandbox merchantName:@"Affirm Example"];
 ```
 
 ## Checkout
