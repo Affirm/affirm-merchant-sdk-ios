@@ -1,6 +1,10 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
+## Version 5.0.6 (October 30, 2019)
+- Contracts load in webview
+- Version in metadata is inline with release
+
 ## Version 5.0.5 (September 27, 2019)
 - Support type face, text size, and text color for promo messaging
 - Support local fonts
