@@ -142,7 +142,7 @@
     NSDictionary *data = [checkout objectForKey: @"metadata"];
     NSMutableDictionary *metaData = data ? [data mutableCopy] : [[NSMutableDictionary alloc] init];
     [metaData setValue:@"Affirm iOS SDK" forKey:@"platform_type"];
-    NSString *sdkVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    NSString *sdkVersion = [AffirmConfiguration affirmSDKVersion];
     [metaData setValue:sdkVersion forKey:@"platform_affirm"];
     [checkout addEntriesFromDictionary:@{
                                          @"merchant": @{
