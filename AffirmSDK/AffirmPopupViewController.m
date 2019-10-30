@@ -34,21 +34,4 @@
     [self.webView loadRequest:[[NSURLRequest alloc] initWithURL:self.startURL]];
 }
 
-#pragma mark - WKNavigationDelegate
-
-- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
-{
-    NSURL *url = navigationAction.request.URL;
-    if ([[UIApplication sharedApplication] canOpenURL:url]) {
-        if (@available(iOS 10.0, *)) {
-            [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
-        } else {
-            [[UIApplication sharedApplication] openURL:url];
-        }
-        decisionHandler(WKNavigationActionPolicyCancel);
-        return;
-    }
-    decisionHandler(WKNavigationActionPolicyAllow);
-}
-
 @end
