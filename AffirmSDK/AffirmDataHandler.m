@@ -23,7 +23,7 @@
                          colorType:(AffirmColorType)colorType
                               font:(UIFont *)font
                          textColor:(UIColor *)textColor
-          presentingViewController:(id<AffirmPrequalDelegate>)presentingViewController
+          presentingViewController:(id<AffirmPrequalDelegate>)delegate
                  completionHandler:(void (^)(NSAttributedString * _Nullable , UIViewController * _Nullable, NSError * _Nullable))completionHandler
 {
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
@@ -69,11 +69,11 @@
                 NSString *url = [NSString stringWithFormat:@"%@/apps/prequal/", [AffirmCheckoutClient host]];
                 NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"?%@", [params queryURLEncoding]]
                                            relativeToURL:[NSURL URLWithString:url]];
-                viewController = [[AffirmPrequalModalViewController alloc] initWithURL:requestURL delegate:presentingViewController];
+                viewController = [[AffirmPrequalModalViewController alloc] initWithURL:requestURL delegate:delegate];
             } else {
                 viewController = [[AffirmPromoModalViewController alloc] initWithPromoId:promoID
                                                                                   amount:decimal
-                                                                                delegate:presentingViewController];
+                                                                                delegate:delegate];
             }
         }
         completionHandler(attributedString, viewController, error);
