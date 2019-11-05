@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param colorType color of Affirm to display (blue, black, white) - only applies to logo and symbol affirmType values
  @param font the font of button title, maxFontSize will be set as same value
  @param textColor the color of button title
- @param presentingViewController view controller that button is displayed on, and the view controller must follow the AffirmPrequalDelegate
+ @param delegate custom implementation of AffirmPrequalDelegate
  @param completionHandler the completion handler
  */
 + (void)getPromoMessageWithPromoID:(nullable NSString *)promoID
@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
                          colorType:(AffirmColorType)colorType
                               font:(UIFont *)font
                          textColor:(UIColor *)textColor
-          presentingViewController:(UIViewController<AffirmPrequalDelegate> *)presentingViewController
+          presentingViewController:(id<AffirmPrequalDelegate>)delegate
                  completionHandler:(void (^)(NSAttributedString * _Nullable , UIViewController * _Nullable, NSError * _Nullable))completionHandler
 NS_SWIFT_NAME(getPromoMessage(promoID:amount:showCTA:pageType:logoType:colorType:font:textColor:presentingViewController:completionHandler:));
 
