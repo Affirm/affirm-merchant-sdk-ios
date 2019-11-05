@@ -23,7 +23,7 @@
                          colorType:(AffirmColorType)colorType
                               font:(UIFont *)font
                          textColor:(UIColor *)textColor
-          presentingViewController:(UIViewController<AffirmPrequalDelegate> *)presentingViewController
+          presentingViewController:(id<AffirmPrequalDelegate>)presentingViewController
                  completionHandler:(void (^)(NSAttributedString * _Nullable , UIViewController * _Nullable, NSError * _Nullable))completionHandler
 {
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
