@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
                          colorType:(AffirmColorType)colorType
                               font:(UIFont *)font
                          textColor:(UIColor *)textColor
-          presentingViewController:(id<AffirmPrequalDelegate>)delegate
+                          delegate:(id<AffirmPrequalDelegate>)delegate
                  completionHandler:(void (^)(NSAttributedString * _Nullable , UIViewController * _Nullable, NSError * _Nullable))completionHandler
 NS_SWIFT_NAME(getPromoMessage(promoID:amount:showCTA:pageType:logoType:colorType:font:textColor:presentingViewController:completionHandler:));
 
