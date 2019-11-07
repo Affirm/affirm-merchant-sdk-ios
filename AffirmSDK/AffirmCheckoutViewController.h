@@ -62,6 +62,12 @@ NS_ASSUME_NONNULL_BEGIN
                   getReasonCodes:(BOOL)getReasonCodes
 NS_SWIFT_NAME(init(delegate:checkout:useVCN:getReasonCodes:)) NS_DESIGNATED_INITIALIZER;
 
++ (UINavigationController *)startCheckoutWithNavigation:(AffirmCheckout *)checkout
+                                                 useVCN:(BOOL)useVCN
+                                         getReasonCodes:(BOOL)getReasonCodes
+                                               delegate:(nonnull id<AffirmCheckoutDelegate>)delegate
+NS_SWIFT_NAME(startNavigation(checkout:useVCN:getReasonCodes:delegate:));
+
 /**
  Convenience constructor starts the checkout process and notifies delegate regarding checkout events, useVCN is NO as default
 

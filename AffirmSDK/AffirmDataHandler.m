@@ -26,6 +26,21 @@
           presentingViewController:(id<AffirmPrequalDelegate>)delegate
                  completionHandler:(void (^)(NSAttributedString * _Nullable , UIViewController * _Nullable, NSError * _Nullable))completionHandler
 {
+    [self getPromoMessageWithPromoID:promoID amount:amount showCTA:showCTA pageType:pageType logoType:logoType colorType:colorType font:font textColor:textColor presentingViewController:delegate withNavigation:NO completionHandler:completionHandler];
+}
+
++ (void)getPromoMessageWithPromoID:(nullable NSString *)promoID
+                            amount:(NSDecimalNumber *)amount
+                           showCTA:(BOOL)showCTA
+                          pageType:(AffirmPageType)pageType
+                          logoType:(AffirmLogoType)logoType
+                         colorType:(AffirmColorType)colorType
+                              font:(UIFont *)font
+                         textColor:(UIColor *)textColor
+          presentingViewController:(id<AffirmPrequalDelegate>)delegate
+                    withNavigation:(BOOL)withNavigation
+                 completionHandler:(void (^)(NSAttributedString * _Nullable , UIViewController * _Nullable, NSError * _Nullable))completionHandler
+{
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     NSDecimalNumber *decimal = amount.toIntegerCents;
 
@@ -76,7 +91,12 @@
                                                                                 delegate:delegate];
             }
         }
-        completionHandler(attributedString, viewController, error);
+        if (viewController && withNavigation) {
+            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+            completionHandler(attributedString, navigationController, error);
+        } else {
+            completionHandler(attributedString, viewController, error);
+        }
     }];
 }
 

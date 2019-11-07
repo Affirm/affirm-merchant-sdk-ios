@@ -52,6 +52,7 @@
                                              font:[UIFont boldSystemFontOfSize:15]
                                         textColor:[UIColor grayColor]
                          presentingViewController:self
+                                   withNavigation:YES
                                 completionHandler:^(NSAttributedString *attributedString, UIViewController *viewController, NSError *error) {
                                     [self.promoButton setAttributedTitle:attributedString forState:UIControlStateNormal];
                                     self.promoViewController = viewController;
@@ -92,8 +93,7 @@
 
 - (IBAction)showPromoModal:(id)sender
 {
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:self.promoViewController];
-    [self presentViewController:nav animated:YES completion:nil];
+    [self presentViewController:self.promoViewController animated:YES completion:nil];
 }
 
 - (IBAction)checkout:(id)sender
@@ -105,8 +105,7 @@
     AffirmBillingDetail *billing = [AffirmBillingDetail billingDetailWithName:@"Chester Cheetah" email:@"testtester@test.com" phoneNumber:nil addressWithLine1:@"633 Folsom Street" line2:@"" city:@"San Francisco" state:@"CA" zipCode:@"94107" countryCode:@"USA"];
     checkout.billing = billing;
 
-    AffirmCheckoutViewController *controller = [AffirmCheckoutViewController startCheckout:checkout delegate:self];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:controller];
+    UINavigationController *nav = [AffirmCheckoutViewController startCheckoutWithNavigation:checkout useVCN:NO getReasonCodes:NO delegate:self];
     [self presentViewController:nav animated:YES completion:nil];
 }
 
@@ -117,8 +116,7 @@
     AffirmShippingDetail *shipping = [AffirmShippingDetail shippingDetailWithName:@"Test Tester" email:@"testtester@test.com" phoneNumber:@"1111111111" addressWithLine1:@"633 Folsom Street" line2:@"" city:@"San Francisco" state:@"CA" zipCode:@"94107" countryCode:@"USA"];
     AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping payoutAmount:[dollarPrice toIntegerCents]];
 
-    AffirmCheckoutViewController *controller = [AffirmCheckoutViewController startCheckout:checkout delegate:self];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:controller];
+    UINavigationController *nav = [AffirmCheckoutViewController startCheckoutWithNavigation:checkout useVCN:NO getReasonCodes:NO delegate:self];
     [self presentViewController:nav animated:YES completion:nil];
 }
 
@@ -131,8 +129,7 @@
     AffirmBillingDetail *billing = [AffirmBillingDetail billingDetailWithName:nil email:nil phoneNumber:nil addressWithLine1:nil line2:nil city:nil state:nil zipCode:nil countryCode:nil];
     checkout.billing = billing;
 
-    AffirmCheckoutViewController *controller = [AffirmCheckoutViewController startCheckout:checkout useVCN:YES getReasonCodes:YES delegate:self];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:controller];
+    UINavigationController *nav = [AffirmCheckoutViewController startCheckoutWithNavigation:checkout useVCN:YES getReasonCodes:YES delegate:self];
     [self presentViewController:nav animated:YES completion:nil];
 }
 
