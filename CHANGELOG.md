@@ -1,7 +1,11 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
-## Version 5.0.6 (October 30, 2019)
+## Version 5.0.7 (Nov 7, 2019)
+- Bug Fixes
+- Added navigation parameter for modal
+
+## Version 5.0.7 (October 30, 2019)
 - Contracts load in webview
 - Version in metadata is inline with release
 
