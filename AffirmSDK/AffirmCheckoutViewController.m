@@ -45,6 +45,15 @@
     return self;
 }
 
++ (UINavigationController *)startCheckoutWithNavigation:(AffirmCheckout *)checkout
+                                                 useVCN:(BOOL)useVCN
+                                         getReasonCodes:(BOOL)getReasonCodes
+                                               delegate:(nonnull id<AffirmCheckoutDelegate>)delegate
+{
+    AffirmCheckoutViewController *checkoutController = [self startCheckout:checkout useVCN:useVCN getReasonCodes:getReasonCodes delegate:delegate];
+    return [[UINavigationController alloc] initWithRootViewController:checkoutController];
+}
+
 + (AffirmCheckoutViewController *)startCheckout:(AffirmCheckout *)checkout
                                        delegate:(nonnull id<AffirmCheckoutDelegate>)delegate
 {
@@ -66,7 +75,7 @@
 
 + (AffirmCheckoutViewController *)startCheckout:(AffirmCheckout *)checkout
                                          useVCN:(BOOL)useVCN
-                                        getReasonCodes:(BOOL)getReasonCodes
+                                 getReasonCodes:(BOOL)getReasonCodes
                                        delegate:(nonnull id<AffirmCheckoutDelegate>)delegate
 {
     return [[self alloc] initWithDelegate:delegate
