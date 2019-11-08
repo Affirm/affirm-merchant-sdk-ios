@@ -1,7 +1,7 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
-## Version 5.0.7 (Nov 7, 2019)
+## Version 5.0.7.1 (Nov 7, 2019)
 - Bug Fixes
 - Added navigation parameter for modal
 
