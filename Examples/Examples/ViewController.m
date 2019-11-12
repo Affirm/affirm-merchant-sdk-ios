@@ -48,7 +48,7 @@
                                           showCTA:YES
                                          pageType:AffirmPageTypeBanner
                                          logoType:AffirmLogoTypeName
-                                        colorType:AffirmColorTypeBlue
+                                        colorType:AffirmColorTypeBlueBlack
                                              font:[UIFont boldSystemFontOfSize:15]
                                         textColor:[UIColor grayColor]
                          presentingViewController:self
@@ -188,7 +188,7 @@
     NSURL *url = [[NSBundle mainBundle] URLForResource:@"css_promo_sample" withExtension:@"css"];
     [self.promotionalButton configureByHtmlStylingWithAmount:[NSDecimalNumber decimalNumberWithString:amountText]
                                               affirmLogoType:AffirmLogoTypeName
-                                                 affirmColor:AffirmColorTypeBlue
+                                                 affirmColor:AffirmColorTypeBlueBlack
                                                remoteFontURL:[NSURL URLWithString:@"https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap"]
                                                 remoteCssURL:url];
 }

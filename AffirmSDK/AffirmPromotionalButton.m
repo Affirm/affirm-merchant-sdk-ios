@@ -261,13 +261,19 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     self.amount = amount.toIntegerCents;
 
+    AffirmColorType logoColor = affirmColor;
+    // Using default type when logoColor == AffirmColorTypeBlueBlack
+    if (logoColor == AffirmColorTypeBlueBlack) {
+        logoColor = AffirmColorTypeDefault;
+    }
+
     AffirmPromoRequest *request = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
                                                                         promoId:self.promoID
                                                                          amount:self.amount
                                                                         showCTA:self.showCTA
                                                                        pageType:FormatAffirmPageTypeString(self.pageType)
                                                                        logoType:FormatAffirmDataTypeString(affirmLogoType)
-                                                                      logoColor:FormatAffirmColorString(affirmColor)];
+                                                                      logoColor:FormatAffirmColorString(logoColor)];
     [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
             AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
@@ -325,13 +331,19 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     self.amount = amount.toIntegerCents;
 
+    AffirmColorType logoColor = affirmColor;
+    // Using default type when logoColor == AffirmColorTypeBlueBlack
+    if (logoColor == AffirmColorTypeBlueBlack) {
+        logoColor = AffirmColorTypeDefault;
+    }
+
     AffirmPromoRequest *request = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
                                                                         promoId:self.promoID
                                                                          amount:self.amount
                                                                         showCTA:self.showCTA
                                                                        pageType:FormatAffirmPageTypeString(self.pageType)
                                                                        logoType:nil
-                                                                      logoColor:FormatAffirmColorString(affirmColor)];
+                                                                      logoColor:FormatAffirmColorString(logoColor)];
     [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
         NSAttributedString *attributedString = nil;
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {

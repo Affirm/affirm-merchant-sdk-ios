@@ -32,7 +32,8 @@ typedef NS_ENUM(NSInteger, AffirmColorType) {
     AffirmColorTypeDefault,
     AffirmColorTypeBlue,
     AffirmColorTypeBlack,
-    AffirmColorTypeWhite
+    AffirmColorTypeWhite,
+    AffirmColorTypeBlueBlack
 };
 
 NS_ASSUME_NONNULL_BEGIN
@@ -70,6 +71,8 @@ static NSString * FormatAffirmColorString(AffirmColorType type)
             return @"black";
         case AffirmColorTypeWhite:
             return @"white";
+        case AffirmColorTypeBlueBlack:
+            return @"blue-black";
         case AffirmColorTypeDefault:
             return @"blue";
     }
