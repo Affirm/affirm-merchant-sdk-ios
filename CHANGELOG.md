@@ -1,6 +1,9 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
+## Version 5.0.8 (November 12, 2019)
+- Support for Blue and Black logo in text
+
 ## Version 5.0.7.1 (Nov 7, 2019)
 - Bug Fixes
 - Added navigation parameter for modal
