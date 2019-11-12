@@ -44,13 +44,19 @@
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     NSDecimalNumber *decimal = amount.toIntegerCents;
 
+    AffirmColorType logoColor = colorType;
+    // Using default type when logoColor == AffirmColorTypeBlueBlack
+    if (logoColor == AffirmColorTypeBlueBlack) {
+        logoColor = AffirmColorTypeDefault;
+    }
+    
     AffirmPromoRequest *request = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
                                                                         promoId:promoID
                                                                          amount:decimal
                                                                         showCTA:showCTA
                                                                        pageType:FormatAffirmPageTypeString(pageType)
                                                                        logoType:nil
-                                                                      logoColor:FormatAffirmColorString(colorType)];
+                                                                      logoColor:FormatAffirmColorString(logoColor)];
     [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
         NSAttributedString *attributedString = nil;
         UIViewController *viewController = nil;
