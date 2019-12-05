@@ -57,7 +57,7 @@
                                                                        pageType:FormatAffirmPageTypeString(pageType)
                                                                        logoType:nil
                                                                       logoColor:FormatAffirmColorString(logoColor)];
-    [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
+    [AffirmPromoClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
         NSAttributedString *attributedString = nil;
         UIViewController *viewController = nil;
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
@@ -87,7 +87,7 @@
                     params[@"page_type"] = FormatAffirmPageTypeString(pageType);
                 }
 
-                NSString *url = [NSString stringWithFormat:@"%@/apps/prequal/", [AffirmCheckoutClient host]];
+                NSString *url = [NSString stringWithFormat:@"%@/apps/prequal/", [AffirmPromoClient host]];
                 NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"?%@", [params queryURLEncoding]]
                                            relativeToURL:[NSURL URLWithString:url]];
                 viewController = [[AffirmPrequalModalViewController alloc] initWithURL:requestURL delegate:delegate];

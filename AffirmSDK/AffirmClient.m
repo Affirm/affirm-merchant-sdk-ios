@@ -142,6 +142,15 @@
 
 @end
 
+@implementation AffirmPromoClient
+
++ (NSString *)host
+{
+    return [AffirmConfiguration sharedInstance].isProductionEnvironment ? @"https://www.affirm.com" : @"https://sandbox.affirm.com";
+}
+
+@end
+
 @implementation AffirmCheckoutClient
 
 + (NSString *)host

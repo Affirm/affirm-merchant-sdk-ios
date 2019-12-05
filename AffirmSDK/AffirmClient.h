@@ -50,6 +50,10 @@ typedef void (^AffirmRequestHandler)(id <AffirmResponseProtocol> _Nullable respo
 @interface AffirmTrackerClient : NSObject <AffirmClientProtocol>
 @end
 
+@interface AffirmPromoClient : NSObject <AffirmClientProtocol>
+
+@end
+
 @interface AffirmCheckoutClient : NSObject <AffirmClientProtocol>
 @end
 
