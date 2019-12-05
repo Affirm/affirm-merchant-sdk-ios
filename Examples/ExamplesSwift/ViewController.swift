@@ -22,7 +22,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        promotionalButton = AffirmPromotionalButton(promoID: "promo_set_ios", showCTA: true, pageType: .product, presentingViewController: self, frame: CGRect(x: 0, y: 0, width: 315, height: 34))
+        promotionalButton = AffirmPromotionalButton(promoID: nil, showCTA: true, pageType: .product, presentingViewController: self, frame: CGRect(x: 0, y: 0, width: 315, height: 34))
         stackView.insertArrangedSubview(promotionalButton, at: 0)
         publicKeyTextfield.text = AffirmConfiguration.shared.publicKey
         configureTextField()

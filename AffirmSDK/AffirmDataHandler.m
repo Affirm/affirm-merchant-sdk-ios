@@ -78,11 +78,13 @@
                 NSMutableDictionary *params = [@{
                                                  @"public_api_key": [AffirmConfiguration sharedInstance].publicKey,
                                                  @"unit_price": decimal,
-                                                 @"promo_external_id": promoID,
                                                  @"isSDK": @"true",
                                                  @"use_promo": @"true",
                                                  @"referring_url": AFFIRM_PREQUAL_REFERRING_URL,
                                                  } mutableCopy];
+                if (promoID) {
+                    params[@"promo_external_id"] = promoID;
+                }
                 if (pageType) {
                     params[@"page_type"] = FormatAffirmPageTypeString(pageType);
                 }

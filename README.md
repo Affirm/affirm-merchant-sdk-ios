@@ -95,7 +95,7 @@ Affirm promotional messaging components—monthly payment messaging and educatio
 To create promotional messaging view, the SDK provides the `AffirmPromotionalButton` class, only requires the developer to add to their view and configure to implement. The AffirmPromotionalButton is implemented as follows:
 
 ```
-self.promotionalButton = [[AffirmPromotionalButton alloc] initWithPromoID:@"promo_set_ios"
+self.promotionalButton = [[AffirmPromotionalButton alloc] initWithPromoID:nil
                                                                   showCTA:YES
                                                                  pageType:AffirmPageTypeProduct
                                                  presentingViewController:self
@@ -155,7 +155,7 @@ You can retrieve raw string using `AffirmDataHandler`.
 
 ```
 NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
-[AffirmDataHandler getPromoMessageWithPromoID:@"promo_set_ios"
+[AffirmDataHandler getPromoMessageWithPromoID:nil
                                        amount:dollarPrice
                                       showCTA:YES
                                      pageType:AffirmPageTypeBanner
