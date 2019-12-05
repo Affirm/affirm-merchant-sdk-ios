@@ -65,14 +65,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly, nullable) NSDictionary *metadata;
 
 /**
- The total purchase amount. Dynamically computed from the other properties of the checkout.
+ The total amount. Dynamically computed from the other properties of the checkout if not available
  */
-@property (nonatomic, copy, readonly) NSDecimalNumber *totalAmount;
+@property (nonatomic, copy) NSDecimalNumber *totalAmount;
 
 /**
  The final payout amount, in cents. Can be passed in directly, instead of passing in shipping/tax/discount data.
  */
-@property (nonatomic, copy, nullable) NSDecimalNumber *payoutAmount;
+@property (nonatomic, copy, nullable) NSDecimalNumber *payoutAmount API_DEPRECATED("Use totalAmount instead.", ios(2.0, 13.0));
 
 /**
  Any financing program that should be applied (see https://docs.affirm.com/Integrate_Affirm/Multiple_Financing_Programs)
@@ -216,8 +216,27 @@ NS_SWIFT_NAME(checkout(items:shipping:taxAmount:shippingAmount:discounts:metadat
                     discounts:(nullable NSArray <AffirmDiscount *>*)discounts
                      metadata:(nullable NSDictionary *)metadata
              financingProgram:(nullable NSString *)financingProgram
-                 payoutAmount:(NSDecimalNumber *)payoutAmount
+                 payoutAmount:(NSDecimalNumber *)payoutAmount API_DEPRECATED("Use initWithItems:shipping:discounts:metadata:financingProgram:totalAmount: instead.", ios(2.0, 13.0))
 NS_SWIFT_NAME(init(items:shipping:discounts:metadata:financingProgram:payoutAmount:));
+
+/**
+ Initializer. See properties for more details.
+
+ @param items List of purchased items.
+ @param shipping Shipping contact.
+ @param discounts List of discounts.
+ @param metadata Additional metadata.
+ @param financingProgram Financing Program to be applied.
+ @param totalAmount Total amount of the checkout.
+ @return The initialized checkout.
+ */
+- (instancetype)initWithItems:(NSArray <AffirmItem *>*)items
+                     shipping:(nullable AffirmShippingDetail *)shipping
+                    discounts:(nullable NSArray <AffirmDiscount *>*)discounts
+                     metadata:(nullable NSDictionary *)metadata
+             financingProgram:(nullable NSString *)financingProgram
+                  totalAmount:(NSDecimalNumber *)totalAmount
+NS_SWIFT_NAME(init(items:shipping:discounts:metadata:financingProgram:totalAmount:));
 
 /**
  Convenience constructor. See properties for more details.
@@ -229,8 +248,21 @@ NS_SWIFT_NAME(init(items:shipping:discounts:metadata:financingProgram:payoutAmou
  */
 + (AffirmCheckout *)checkoutWithItems:(NSArray <AffirmItem *>*)items
                              shipping:(nullable AffirmShippingDetail *)shipping
-                         payoutAmount:(NSDecimalNumber *)payoutAmount
+                         payoutAmount:(NSDecimalNumber *)payoutAmount API_DEPRECATED("Use checkoutWithItems:shipping:totalAmount: instead.", ios(2.0, 13.0))
 NS_SWIFT_NAME(checkout(items:shipping:payoutAmount:));
+
+/**
+ Convenience constructor. See properties for more details.
+
+ @param items List of purchased items.
+ @param shipping Shipping contact.
+ @param totalAmount Total amount, in cents, of the transaction.
+ @return The newly created checkout.
+ */
++ (AffirmCheckout *)checkoutWithItems:(NSArray <AffirmItem *>*)items
+                             shipping:(nullable AffirmShippingDetail *)shipping
+                          totalAmount:(NSDecimalNumber *)totalAmount
+NS_SWIFT_NAME(checkout(items:shipping:totalAmount:));
 
 @end
 
