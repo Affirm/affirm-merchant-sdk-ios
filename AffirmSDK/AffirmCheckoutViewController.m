@@ -214,6 +214,20 @@
     }];
 }
 
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
+{
+    NSURLResponse *urlResponse = navigationResponse.response;
+    if ([urlResponse isKindOfClass:[NSHTTPURLResponse class]]) {
+        NSHTTPURLResponse *response = (NSHTTPURLResponse *)urlResponse;
+        if (response.statusCode > 400) {
+            [self.delegate checkout:self didFailWithError:[NSError errorWithDomain:AffirmSDKErrorDomain code:response.statusCode userInfo:@{NSLocalizedDescriptionKey: @"Server error"}]];
+            decisionHandler(WKNavigationResponsePolicyCancel);
+            return;
+        }
+    }
+    decisionHandler(WKNavigationResponsePolicyAllow);
+}
+
 - (void)webView:(WKWebView *)webView runJavaScriptConfirmPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL))completionHandler
 {
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:message
