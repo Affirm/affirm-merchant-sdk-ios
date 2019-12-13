@@ -92,6 +92,9 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
                           logoType:(AffirmLogoType)logoType
 {
     NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:text];
+    if (font.pointSize == 0) {
+        font = [UIFont systemFontOfSize:15];
+    }
     [attributedText addAttributes:@{NSFontAttributeName: font,
                                     NSForegroundColorAttributeName: textColor}
                             range:NSMakeRange(0, attributedText.length)];
