@@ -33,7 +33,7 @@
     [super viewDidLoad];
 
     // Using AffirmPromotionalButton for first button
-    self.promotionalButton = [[AffirmPromotionalButton alloc] initWithPromoID:@"promo_set_ios"
+    self.promotionalButton = [[AffirmPromotionalButton alloc] initWithPromoID:nil
                                                                       showCTA:YES
                                                                      pageType:AffirmPageTypeProduct
                                                      presentingViewController:self
@@ -43,7 +43,7 @@
     // Using AffirmDataHandler for second button
     self.promoButton.titleLabel.numberOfLines = 0;
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
-    [AffirmDataHandler getPromoMessageWithPromoID:@"promo_set_ios"
+    [AffirmDataHandler getPromoMessageWithPromoID:nil
                                            amount:dollarPrice
                                           showCTA:YES
                                          pageType:AffirmPageTypeBanner

@@ -87,12 +87,14 @@
 
 - (NSDictionary *)parameters
 {
-    NSMutableDictionary *_parameters = [@{@"promo_external_id": self.promoId,
-                                          @"is_sdk": @"true",
+    NSMutableDictionary *_parameters = [@{@"is_sdk": @"true",
                                           @"field": @"ala",
                                           @"show_cta": self.showCTA ? @"true" : @"false",
                                           @"amount": self.amount.stringValue
                                           } mutableCopy];
+    if (self.promoId) {
+        _parameters[@"promo_external_id"] = self.promoId;
+    }
     if (self.pageType) {
         _parameters[@"page_type"] = self.pageType;
     }
