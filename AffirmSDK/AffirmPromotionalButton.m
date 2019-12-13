@@ -277,7 +277,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
                                                                        pageType:FormatAffirmPageTypeString(self.pageType)
                                                                        logoType:FormatAffirmDataTypeString(affirmLogoType)
                                                                       logoColor:FormatAffirmColorString(logoColor)];
-    [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
+    [AffirmPromoClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
             AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
             self.showPrequal = promoResponse.showPrequal;
@@ -347,7 +347,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
                                                                        pageType:FormatAffirmPageTypeString(self.pageType)
                                                                        logoType:nil
                                                                       logoColor:FormatAffirmColorString(logoColor)];
-    [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
+    [AffirmPromoClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
         NSAttributedString *attributedString = nil;
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
             NSString *template = AFFIRM_DEFAULT_ALA_TEMPLATE;
@@ -449,7 +449,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
             params[@"page_type"] = FormatAffirmPageTypeString(self.pageType);
         }
 
-        NSString *url = [NSString stringWithFormat:@"%@/apps/prequal/", [AffirmCheckoutClient host]];
+        NSString *url = [NSString stringWithFormat:@"%@/apps/prequal/", [AffirmPromoClient host]];
         NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"?%@", [params queryURLEncoding]]
                                    relativeToURL:[NSURL URLWithString:url]];
         AffirmPrequalModalViewController *viewController = [[AffirmPrequalModalViewController alloc] initWithURL:requestURL
