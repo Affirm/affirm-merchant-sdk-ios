@@ -152,7 +152,29 @@
     if (self) {
         [AffirmValidationUtils checkNotNil:payoutAmount name:@"payoutAmount"];
         [AffirmValidationUtils checkNotNegative:payoutAmount name:@"payoutAmount"];
-        self.payoutAmount = payoutAmount;
+        self.totalAmount = payoutAmount;
+    }
+    return self;
+}
+
+- (instancetype)initWithItems:(NSArray <AffirmItem *>*)items
+                     shipping:(nullable AffirmShippingDetail *)shipping
+                    discounts:(nullable NSArray <AffirmDiscount *>*)discounts
+                     metadata:(nullable NSDictionary *)metadata
+             financingProgram:(nullable NSString *)financingProgram
+                  totalAmount:(NSDecimalNumber *)totalAmount
+{
+    self = [self initWithItems:items
+                      shipping:shipping
+                     taxAmount:[NSDecimalNumber zero]
+                shippingAmount:[NSDecimalNumber zero]
+                     discounts:discounts
+                      metadata:metadata
+              financingProgram:financingProgram];
+    if (self) {
+        [AffirmValidationUtils checkNotNil:totalAmount name:@"totalAmount"];
+        [AffirmValidationUtils checkNotNegative:totalAmount name:@"totalAmount"];
+        self.totalAmount = totalAmount;
     }
     return self;
 }
@@ -169,11 +191,23 @@
                           payoutAmount:payoutAmount];
 }
 
-- (NSDecimalNumber *)totalAmount
++ (AffirmCheckout *)checkoutWithItems:(NSArray <AffirmItem *>*)items
+                             shipping:(nullable AffirmShippingDetail *)shipping
+                          totalAmount:(NSDecimalNumber *)totalAmount
+{
+    return [[self alloc] initWithItems:items
+                              shipping:shipping
+                             discounts:nil
+                              metadata:nil
+                      financingProgram:nil
+                           totalAmount:totalAmount];
+}
+
+- (NSDecimalNumber *)calculatedTotalAmount
 {
     [AffirmValidationUtils checkNotNil:self.taxAmount name:@"taxAmount"];
     [AffirmValidationUtils checkNotNil:self.shippingAmount name:@"shippingAmount"];
-    
+
     NSDecimalNumber *totalAmount = [self.taxAmount decimalNumberByAdding:self.shippingAmount];
     for (AffirmItem *item in self.items) {
         totalAmount = [totalAmount decimalNumberByAdding:[item.unitPrice decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithDecimal:[[NSNumber numberWithInteger:item.quantity] decimalValue]]]];
@@ -182,6 +216,24 @@
         totalAmount = [totalAmount decimalNumberBySubtracting:discount.amount];
     }
     return totalAmount;
+}
+
+- (NSDecimalNumber *)totalAmount
+{
+    if (_totalAmount) {
+        return _totalAmount;
+    }
+    return [[self calculatedTotalAmount] toIntegerCents];
+}
+
+- (NSDecimalNumber *)payoutAmount
+{
+    return self.totalAmount;
+}
+
+- (void)setPayoutAmount:(NSDecimalNumber *)payoutAmount
+{
+    self.totalAmount = payoutAmount;
 }
 
 - (NSDictionary *)toJSONDictionary
@@ -193,7 +245,7 @@
     
     NSMutableDictionary *dict = [@{
                                    @"items": items,
-                                   @"total": self.payoutAmount ? self.payoutAmount : [[self totalAmount] toIntegerCents],
+                                   @"total": self.totalAmount,
                                    @"api_version" :@"v2"
                                    } mutableCopy];
 
@@ -250,8 +302,8 @@
                                                         metadata:self.metadata
                                                 financingProgram:self.financingProgram
                                                          orderId:self.orderId];
-    if (self.payoutAmount) {
-        copy.payoutAmount = self.payoutAmount;
+    if (self.totalAmount) {
+        copy.totalAmount = self.totalAmount;
     }
     if (self.billing) {
         copy.billing = self.billing;
