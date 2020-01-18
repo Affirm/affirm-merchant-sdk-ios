@@ -20,15 +20,21 @@ FOUNDATION_EXPORT NSString *const AffirmSDKErrorDomain;
 
 #endif
 
+FOUNDATION_EXPORT NSString *const AFFIRM_US_DOMAIN;
+FOUNDATION_EXPORT NSString *const AFFIRM_CA_DOMAIN;
+
 FOUNDATION_EXPORT NSString *const AFFIRM_CHECKOUT_CONFIRMATION_URL;
 FOUNDATION_EXPORT NSString *const AFFIRM_CHECKOUT_CANCELLATION_URL;
 FOUNDATION_EXPORT NSString *const AFFIRM_PREQUAL_REFERRING_URL;
-FOUNDATION_EXPORT NSString *const AFFIRM_JS_URL;
-FOUNDATION_EXPORT NSString *const AFFIRM_SANDBOX_JS_URL;
 
 typedef NS_ENUM(NSInteger, AffirmEnvironment) {
     AffirmEnvironmentProduction,
     AffirmEnvironmentSandbox
+};
+
+typedef NS_ENUM(NSInteger, AffirmLocale) {
+    AffirmLocaleUS,
+    AffirmLocaleCA
 };
 
 NS_ASSUME_NONNULL_END

@@ -8,6 +8,7 @@
 
 #import "AffirmShippingDetail.h"
 #import "AffirmUtils.h"
+#import "AffirmConfiguration.h"
 
 @implementation AffirmShippingDetail
 
@@ -92,13 +93,14 @@
 
 - (NSDictionary *)getShippingJSONDictionary
 {
+    BOOL usingInternationalRule = [AffirmConfiguration sharedInstance].locale == AffirmLocaleCA;
     NSDictionary *address =  @{
-        @"line1": self.line1,
-        @"line2": self.line2,
+        usingInternationalRule ? @"street1" : @"line1": self.line1,
+        usingInternationalRule ? @"street2" : @"line2": self.line2,
         @"city": self.city,
-        @"state": self.state,
-        @"zipcode": self.zipCode,
-        @"country": self.countryCode
+        usingInternationalRule ? @"region1_code" : @"state": self.state,
+        usingInternationalRule ? @"postal_code" : @"zipcode": self.zipCode,
+        usingInternationalRule ? @"country_code" : @"country": self.countryCode
     };
     NSMutableDictionary *jsonDic = [@{
         @"address": address,

@@ -26,7 +26,7 @@
     [AffirmValidationUtils checkNotNil:delegate name:@"delegate"];
     
     if (self = [super initWithNibName:nil bundle:nil]) {
-        NSString *jsURL = [AffirmConfiguration sharedInstance].isProductionEnvironment ? AFFIRM_JS_URL : AFFIRM_SANDBOX_JS_URL;
+        NSString *jsURL = [AffirmConfiguration sharedInstance].jsURL;
         NSString *filePath = [[NSBundle resourceBundle] pathForResource:@"promo_modal_template"
                                                                  ofType:@"html"];
         NSString *rawContent = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];

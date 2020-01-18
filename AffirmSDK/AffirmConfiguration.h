@@ -23,9 +23,19 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *publicKey;
 
 /**
- environment Developer environment. (Production, Sandbox)
+ environment Development environment. (Production, Sandbox)
  */
 @property (nonatomic, readonly) AffirmEnvironment environment;
+
+/**
+ environment User locale. (US, CA)
+ */
+@property (nonatomic, readonly) AffirmLocale locale;
+
+/**
+ environment Currency. (USD, CAD)
+ */
+@property (nonatomic, readonly) NSString *currency;
 
 /**
  merchantName Merchant name.
@@ -67,9 +77,28 @@ NS_SWIFT_NAME(configure(publicKey:environment:));
 NS_SWIFT_NAME(configure(publicKey:environment:merchantName:));
 
 /**
+Convenience constructor. See properties for more details.
+*/
+- (void)configureWithPublicKey:(NSString *)publicKey
+                   environment:(AffirmEnvironment)environment
+                        locale:(AffirmLocale)locale
+                  merchantName:(NSString * _Nullable )merchantName
+NS_SWIFT_NAME(configure(publicKey:environment:locale:merchantName:));
+
+/**
  affirmSDKVersion Current Affirm SDK version.
  */
 + (NSString *)affirmSDKVersion;
+
+/**
+domain Based on currenct locale
+*/
+- (NSString *)domain;
+
+/**
+jsURL Affirm js file url
+*/
+- (NSString *)jsURL;
 
 /**
  environmentDescription Current environment.

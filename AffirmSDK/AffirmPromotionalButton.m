@@ -283,7 +283,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
             self.showPrequal = promoResponse.showPrequal;
             if (promoResponse.htmlAla != nil && promoResponse.htmlAla.length > 0) {
                 BOOL hasRemoteCss = remoteCssURL != nil;
-                NSString *jsURL = [AffirmConfiguration sharedInstance].isProductionEnvironment ? AFFIRM_JS_URL : AFFIRM_SANDBOX_JS_URL;
+                NSString *jsURL = [AffirmConfiguration sharedInstance].jsURL;
                 NSURL *baseURL = [NSURL URLWithString:jsURL].baseURL;
                 NSMutableDictionary *matchedKeys = [@{@"{{HTML_FRAGMENT}}": promoResponse.htmlAla} mutableCopy];
 

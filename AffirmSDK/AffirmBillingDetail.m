@@ -7,6 +7,7 @@
 //
 
 #import "AffirmBillingDetail.h"
+#import "AffirmConfiguration.h"
 
 @implementation AffirmBillingDetail
 
@@ -70,13 +71,14 @@
 {
     NSMutableDictionary *jsonDic = [@{} mutableCopy];
     if (self.line1 && self.line2 && self.city && self.state && self.zipCode && self.countryCode) {
+        BOOL usingInternationalRule = [AffirmConfiguration sharedInstance].locale == AffirmLocaleCA;
         NSDictionary *address =  @{
-            @"line1": self.line1,
-            @"line2": self.line2,
+            usingInternationalRule ? @"street1" : @"line1": self.line1,
+            usingInternationalRule ? @"street2" : @"line2": self.line2,
             @"city": self.city,
-            @"state": self.state,
-            @"zipcode": self.zipCode,
-            @"country": self.countryCode
+            usingInternationalRule ? @"region1_code" : @"state": self.state,
+            usingInternationalRule ? @"postal_code" : @"zipcode": self.zipCode,
+            usingInternationalRule ? @"country_code" : @"country": self.countryCode
         };
         jsonDic[@"address"] = address;
     }

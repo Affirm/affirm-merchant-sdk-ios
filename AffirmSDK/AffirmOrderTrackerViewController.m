@@ -71,7 +71,7 @@
     [self.view addSubview:webView];
     self.webView = webView;
 
-    NSString *jsURL = [AffirmConfiguration sharedInstance].isProductionEnvironment ? AFFIRM_JS_URL : AFFIRM_SANDBOX_JS_URL;
+    NSString *jsURL = [AffirmConfiguration sharedInstance].jsURL;
     NSString *filePath = [[NSBundle resourceBundle] pathForResource:@"affirm_track_order_confirmed"
                                                              ofType:@"html"];
     __block NSString *rawContent = [NSString stringWithContentsOfFile:filePath

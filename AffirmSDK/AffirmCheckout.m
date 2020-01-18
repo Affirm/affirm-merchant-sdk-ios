@@ -7,6 +7,7 @@
 //
 
 #import "AffirmCheckout.h"
+#import "AffirmConfiguration.h"
 #import "AffirmUtils.h"
 #import "AffirmItem.h"
 #import "AffirmDiscount.h"
@@ -246,6 +247,7 @@
     NSMutableDictionary *dict = [@{
                                    @"items": items,
                                    @"total": self.totalAmount,
+                                   @"currency": [AffirmConfiguration sharedInstance].currency,
                                    @"api_version" :@"v2"
                                    } mutableCopy];
 
