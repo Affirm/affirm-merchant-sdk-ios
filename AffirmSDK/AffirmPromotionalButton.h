@@ -18,7 +18,7 @@ typedef NS_ENUM(NSInteger, AffirmPageType) {
     AffirmPageTypeLanding,
     AffirmPageTypePayment,
     AffirmPageTypeProduct,
-    AffirmPageTypeSearch,
+    AffirmPageTypeSearch
 };
 
 typedef NS_ENUM(NSInteger, AffirmLogoType) {
