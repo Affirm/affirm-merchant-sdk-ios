@@ -47,7 +47,7 @@
                                            amount:dollarPrice
                                           showCTA:YES
                                          pageType:AffirmPageTypeBanner
-                                         logoType:AffirmLogoTypeName
+                                         logoType:AffirmLogoTypeSymbol
                                         colorType:AffirmColorTypeBlueBlack
                                              font:[UIFont boldSystemFontOfSize:15]
                                         textColor:[UIColor grayColor]

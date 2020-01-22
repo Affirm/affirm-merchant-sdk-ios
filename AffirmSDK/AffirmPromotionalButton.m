@@ -25,7 +25,6 @@ static NSString * FormatAffirmLogoString(AffirmLogoType type)
         case AffirmLogoTypeText:
             return @"text";
         case AffirmLogoTypeSymbol:
-            return @"solid_circle";
         case AffirmLogoTypeSymbolHollow:
             return @"hollow_circle";
     }
