@@ -18,9 +18,10 @@ NSString *const AffirmSDKErrorDomain = @"com.affirm.sdk";
 
 #endif
 
+NSString *const AFFIRM_US_DOMAIN = @"affirm.com";
+NSString *const AFFIRM_CA_DOMAIN = @"affirm.ca";
+
 NSString *const AFFIRM_PREQUAL_REFERRING_URL = @"https://iossdk/";
 NSString *const AFFIRM_CHECKOUT_CONFIRMATION_URL = @"affirm://checkout/confirmed";
 NSString *const AFFIRM_CHECKOUT_CANCELLATION_URL = @"affirm://checkout/cancelled";
-NSString *const AFFIRM_JS_URL = @"https://cdn1.affirm.com/js/v2/affirm.js";
-NSString *const AFFIRM_SANDBOX_JS_URL = @"https://cdn1-sandbox.affirm.com/js/v2/affirm.js";
 

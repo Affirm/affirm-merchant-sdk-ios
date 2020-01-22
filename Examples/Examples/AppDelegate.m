@@ -15,6 +15,7 @@
 {
     [[AffirmConfiguration sharedInstance] configureWithPublicKey:@"ARQBLCL7NAMBTZ7F"
                                                      environment:AffirmEnvironmentSandbox
+                                                          locale:AffirmLocaleUS
                                                     merchantName:@"Affirm Example"];
     return YES;
 }

@@ -240,7 +240,7 @@
 {
     return @{
              @"message": self.message,
-             @"code": self.code,
+             @"code": self.code ?: @"",
              @"type": self.type,
              @"statusCode": self.statusCode,
              };

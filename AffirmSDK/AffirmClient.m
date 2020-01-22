@@ -137,7 +137,7 @@
 
 + (NSString *)host
 {
-    return @"https://tracker.affirm.com";
+    return [NSString stringWithFormat:@"https://tracker.%@", [AffirmConfiguration sharedInstance].domain];
 }
 
 @end
@@ -146,7 +146,8 @@
 
 + (NSString *)host
 {
-    return [AffirmConfiguration sharedInstance].isProductionEnvironment ? @"https://www.affirm.com" : @"https://sandbox.affirm.com";
+    NSString *prefix = [AffirmConfiguration sharedInstance].isProductionEnvironment ? @"www" : @"sandbox";
+    return [NSString stringWithFormat:@"https://%@.%@", prefix, [AffirmConfiguration sharedInstance].domain];
 }
 
 @end
@@ -155,7 +156,8 @@
 
 + (NSString *)host
 {
-    return [AffirmConfiguration sharedInstance].isProductionEnvironment ? @"https://api.affirm.com" : @"https://sandbox.affirm.com";
+    NSString *prefix = [AffirmConfiguration sharedInstance].isProductionEnvironment ? @"api" : @"sandbox";
+    return [NSString stringWithFormat:@"https://%@.%@", prefix, [AffirmConfiguration sharedInstance].domain];
 }
 
 @end

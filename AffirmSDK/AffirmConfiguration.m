@@ -15,6 +15,7 @@
 
 @property (nonatomic, copy, readwrite) NSString *publicKey;
 @property (nonatomic, readwrite) AffirmEnvironment environment;
+@property (nonatomic, readwrite) AffirmLocale locale;
 @property (nonatomic, copy, readwrite, nullable) NSString *merchantName;
 @property (nonatomic, strong, readwrite) WKProcessPool *pool;
 
@@ -36,6 +37,7 @@
 {
     if (self = [super init]) {
         _environment = AffirmEnvironmentSandbox;
+        _locale = AffirmLocaleUS;
     }
     return self;
 }
@@ -65,6 +67,17 @@
     self.merchantName = [merchantName copy];
 }
 
+- (void)configureWithPublicKey:(NSString *)publicKey
+                   environment:(AffirmEnvironment)environment
+                        locale:(AffirmLocale)locale
+                  merchantName:(NSString * _Nullable )merchantName
+{
+    self.publicKey = [publicKey copy];
+    self.environment = environment;
+    self.locale = locale;
+    self.merchantName = [merchantName copy];
+}
+
 - (BOOL)isProductionEnvironment
 {
     return self.environment == AffirmEnvironmentProduction;
@@ -78,9 +91,39 @@
     return _publicKey;
 }
 
+- (NSString *)currency
+{
+    switch (self.locale) {
+        case AffirmLocaleUS:
+            return @"USD";
+        case AffirmLocaleCA:
+            return @"CAD";
+    }
+}
+
 + (NSString *)affirmSDKVersion
 {
     return [[NSBundle resourceBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+}
+
+- (NSString *)domain
+{
+    switch (self.locale) {
+        case AffirmLocaleUS:
+            return AFFIRM_US_DOMAIN;
+        case AffirmLocaleCA:
+            return AFFIRM_CA_DOMAIN;
+    }
+}
+
+- (NSString *)jsURL
+{
+    switch (self.environment) {
+        case AffirmEnvironmentSandbox:
+            return [NSString stringWithFormat:@"https://cdn1-sandbox.%@/js/v2/affirm.js", self.domain];
+        case AffirmEnvironmentProduction:
+            return [NSString stringWithFormat:@"https://cdn1.%@/js/v2/affirm.js", self.domain];
+    }
 }
 
 - (NSString *)environmentDescription
@@ -98,7 +141,7 @@
     NSMutableArray *ownedCookies = [NSMutableArray array];
     NSArray *cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage].cookies;
     for (NSHTTPCookie *cookie in cookies) {
-        if ([cookie.domain rangeOfString:@"affirm.com"].location != NSNotFound) {
+        if ([cookie.domain rangeOfString:[AffirmConfiguration sharedInstance].domain].location != NSNotFound) {
             [ownedCookies addObject:cookie];
         }
     }
