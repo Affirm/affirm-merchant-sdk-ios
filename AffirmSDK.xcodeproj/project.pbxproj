@@ -20,6 +20,8 @@
 		0841E335223A9948006D8B97 /* AffirmConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 0841E333223A9948006D8B97 /* AffirmConstants.m */; };
 		0876CA2B22FA6804006F8062 /* AffirmReasonCode.h in Headers */ = {isa = PBXBuildFile; fileRef = 0876CA2922FA6803006F8062 /* AffirmReasonCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0876CA2C22FA6804006F8062 /* AffirmReasonCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 0876CA2A22FA6803006F8062 /* AffirmReasonCode.m */; };
+		0885F17423D8419F00123729 /* AffirmCheckoutMetadata.h in Headers */ = {isa = PBXBuildFile; fileRef = 0885F17223D8419F00123729 /* AffirmCheckoutMetadata.h */; };
+		0885F17523D8419F00123729 /* AffirmCheckoutMetadata.m in Headers */ = {isa = PBXBuildFile; fileRef = 0885F17323D8419F00123729 /* AffirmCheckoutMetadata.m */; settings = {ATTRIBUTES = (Public, ); }; };
 		08A4D3EB23264FE0003A4BEB /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 08A4D3EA23264FE0003A4BEB /* README.md */; };
 		08A81F49223F986D00FAA8D2 /* AffirmClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A81F47223F986D00FAA8D2 /* AffirmClient.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		08A81F4A223F986D00FAA8D2 /* AffirmClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A81F48223F986D00FAA8D2 /* AffirmClient.m */; };
@@ -102,6 +104,8 @@
 		0841E333223A9948006D8B97 /* AffirmConstants.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmConstants.m; sourceTree = "<group>"; };
 		0876CA2922FA6803006F8062 /* AffirmReasonCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AffirmReasonCode.h; sourceTree = "<group>"; };
 		0876CA2A22FA6803006F8062 /* AffirmReasonCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AffirmReasonCode.m; sourceTree = "<group>"; };
+		0885F17223D8419F00123729 /* AffirmCheckoutMetadata.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmCheckoutMetadata.h; sourceTree = "<group>"; };
+		0885F17323D8419F00123729 /* AffirmCheckoutMetadata.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmCheckoutMetadata.m; sourceTree = "<group>"; };
 		08A4D3EA23264FE0003A4BEB /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		08A81F47223F986D00FAA8D2 /* AffirmClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmClient.h; sourceTree = "<group>"; };
 		08A81F48223F986D00FAA8D2 /* AffirmClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmClient.m; sourceTree = "<group>"; };
@@ -249,6 +253,8 @@
 				7965AB35223656680063198F /* AffirmSDK.bundle */,
 				0827FF892325EB9200AEC14C /* AffirmDataHandler.h */,
 				0827FF8A2325EB9200AEC14C /* AffirmDataHandler.m */,
+				0885F17223D8419F00123729 /* AffirmCheckoutMetadata.h */,
+				0885F17323D8419F00123729 /* AffirmCheckoutMetadata.m */,
 			);
 			path = AffirmSDK;
 			sourceTree = "<group>";
@@ -292,6 +298,8 @@
 				0876CA2B22FA6804006F8062 /* AffirmReasonCode.h in Headers */,
 				0827FF8B2325EB9200AEC14C /* AffirmDataHandler.h in Headers */,
 				7944D9C12248A84D0040525E /* AffirmUtils.h in Headers */,
+				0885F17523D8419F00123729 /* AffirmCheckoutMetadata.m in Headers */,
+				0885F17423D8419F00123729 /* AffirmCheckoutMetadata.h in Headers */,
 				7944D9B72240E2250040525E /* AffirmLogger.h in Headers */,
 				7944D9932240BF830040525E /* AffirmActivityIndicatorView.h in Headers */,
 				79088B512238DB840059D691 /* AffirmPromoModalViewController.h in Headers */,

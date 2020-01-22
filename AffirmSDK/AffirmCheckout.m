@@ -13,6 +13,7 @@
 #import "AffirmShippingDetail.h"
 #import "AffirmBillingDetail.h"
 #import "AffirmLogger.h"
+#import "AffirmCheckoutMetadata.h"
 
 @implementation AffirmCheckout
 
@@ -21,7 +22,7 @@
                     taxAmount:(NSDecimalNumber *)taxAmount
                shippingAmount:(NSDecimalNumber *)shippingAmount
                     discounts:(nullable NSArray <AffirmDiscount *>*)discounts
-                     metadata:(nullable NSDictionary *)metadata
+                     metadata:(nullable AffirmCheckoutMetadata *)metadata
              financingProgram:(nullable NSString *)financingProgram
 {
     [AffirmValidationUtils checkNotNil:items name:@"items"];
@@ -36,7 +37,7 @@
         _taxAmount = [taxAmount copy];
         _shippingAmount = [shippingAmount copy];
         _discounts = (discounts) ? [[NSArray alloc] initWithArray:discounts copyItems:YES] : nil;
-        _metadata = (metadata) ? [[NSDictionary alloc] initWithDictionary:metadata copyItems:YES] : nil;
+        _metadata = (metadata) ? [metadata copy] : nil;
         _financingProgram = (financingProgram) ? [financingProgram copy] : nil;
         _orderId = nil;
         _sendShippingAddress = YES;
@@ -49,7 +50,7 @@
                     taxAmount:(NSDecimalNumber *)taxAmount
                shippingAmount:(NSDecimalNumber *)shippingAmount
                     discounts:(nullable NSArray <AffirmDiscount *>*)discounts
-                     metadata:(nullable NSDictionary *)metadata
+                     metadata:(nullable AffirmCheckoutMetadata *)metadata
              financingProgram:(nullable NSString *)financingProgram
                       orderId:(nullable NSString *)orderId
 {
@@ -65,7 +66,7 @@
         _taxAmount = [taxAmount copy];
         _shippingAmount = [shippingAmount copy];
         _discounts = discounts ? [[NSArray alloc] initWithArray:discounts copyItems:YES] : nil;
-        _metadata = metadata ? [[NSDictionary alloc] initWithDictionary:metadata copyItems:YES] : nil;
+        _metadata = metadata ? [metadata copy] : nil;
         _financingProgram = financingProgram ? [financingProgram copy] : nil;
         _orderId = orderId ? [orderId copy] : nil;
         _sendShippingAddress = YES;
@@ -107,7 +108,7 @@
                             taxAmount:(NSDecimalNumber *)taxAmount
                        shippingAmount:(NSDecimalNumber *)shippingAmount
                             discounts:(nullable NSArray <AffirmDiscount *>*)discounts
-                             metadata:(nullable NSDictionary *)metadata
+                             metadata:(nullable AffirmCheckoutMetadata *)metadata
 {
     return [self checkoutWithItems:items
                           shipping:shipping
@@ -123,7 +124,7 @@
                             taxAmount:(NSDecimalNumber *)taxAmount
                        shippingAmount:(NSDecimalNumber *)shippingAmount
                             discounts:(nullable NSArray <AffirmDiscount *>*)discounts
-                             metadata:(nullable NSDictionary *)metadata
+                             metadata:(nullable AffirmCheckoutMetadata *)metadata
                      financingProgram:(nullable NSString *)financingProgram
 {
     return [[self alloc] initWithItems:items
@@ -138,7 +139,7 @@
 - (instancetype)initWithItems:(NSArray <AffirmItem *>*)items
                      shipping:(nullable AffirmShippingDetail *)shipping
                     discounts:(nullable NSArray <AffirmDiscount *>*)discounts
-                     metadata:(nullable NSDictionary *)metadata
+                     metadata:(nullable AffirmCheckoutMetadata *)metadata
              financingProgram:(nullable NSString *)financingProgram
                  payoutAmount:(NSDecimalNumber *)payoutAmount
 {
@@ -160,7 +161,7 @@
 - (instancetype)initWithItems:(NSArray <AffirmItem *>*)items
                      shipping:(nullable AffirmShippingDetail *)shipping
                     discounts:(nullable NSArray <AffirmDiscount *>*)discounts
-                     metadata:(nullable NSDictionary *)metadata
+                     metadata:(nullable AffirmCheckoutMetadata *)metadata
              financingProgram:(nullable NSString *)financingProgram
                   totalAmount:(NSDecimalNumber *)totalAmount
 {
@@ -199,6 +200,19 @@
                               shipping:shipping
                              discounts:nil
                               metadata:nil
+                      financingProgram:nil
+                           totalAmount:totalAmount];
+}
+
++ (AffirmCheckout *)checkoutWithItems:(NSArray <AffirmItem *>*)items
+                             shipping:(nullable AffirmShippingDetail *)shipping
+                          totalAmount:(NSDecimalNumber *)totalAmount
+                             metadata:(nullable AffirmCheckoutMetadata *)metadata
+{
+    return [[self alloc] initWithItems:items
+                              shipping:shipping
+                             discounts:nil
+                              metadata:metadata
                       financingProgram:nil
                            totalAmount:totalAmount];
 }
@@ -278,7 +292,7 @@
     }
     
     if (self.metadata != nil) {
-        [dict setObject:self.metadata forKey:@"metadata"];
+        [dict setObject:[self.metadata toJSONDictionary] forKey:@"metadata"];
     }
     
     if (self.financingProgram != nil) {
