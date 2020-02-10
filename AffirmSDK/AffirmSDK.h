@@ -23,6 +23,7 @@ FOUNDATION_EXPORT const unsigned char AffirmSDKVersionString[];
 #import <AffirmSDK/AffirmItem.h>
 #import <AffirmSDK/AffirmShippingDetail.h>
 #import <AffirmSDK/AffirmBillingDetail.h>
+#import <AffirmSDK/AffirmCheckoutMetadata.h>
 #import <AffirmSDK/AffirmDiscount.h>
 #import <AffirmSDK/AffirmOrder.h>
 #import <AffirmSDK/AffirmProduct.h>
