@@ -33,8 +33,7 @@
     [super viewDidLoad];
 
     // Using AffirmPromotionalButton for first button
-    self.promotionalButton = [[AffirmPromotionalButton alloc] initWithPromoID:nil
-                                                                      showCTA:YES
+    self.promotionalButton = [[AffirmPromotionalButton alloc] initWithShowCTA:YES
                                                                      pageType:AffirmPageTypeProduct
                                                      presentingViewController:self
                                                                         frame:CGRectMake(0, 0, 315, 34)];
