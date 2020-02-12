@@ -32,30 +32,15 @@
 {
     [super viewDidLoad];
 
-    // Using AffirmPromotionalButton for first button
+    // Using AffirmPromotionalButton for first button (See more in configurPromotionalMessage)
     self.promotionalButton = [[AffirmPromotionalButton alloc] initWithShowCTA:YES
                                                                      pageType:AffirmPageTypeProduct
                                                      presentingViewController:self
                                                                         frame:CGRectMake(0, 0, 315, 34)];
     [self.stackView insertArrangedSubview:self.promotionalButton atIndex:0];
 
-    // Using AffirmDataHandler for second button
+    // Using AffirmDataHandler for second button (See more in configurPromotionalMessage)
     self.promoButton.titleLabel.numberOfLines = 0;
-    NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
-    [AffirmDataHandler getPromoMessageWithPromoID:nil
-                                           amount:dollarPrice
-                                          showCTA:YES
-                                         pageType:AffirmPageTypeBanner
-                                         logoType:AffirmLogoTypeSymbol
-                                        colorType:AffirmColorTypeBlueBlack
-                                             font:[UIFont boldSystemFontOfSize:15]
-                                        textColor:[UIColor grayColor]
-                         presentingViewController:self
-                                   withNavigation:YES
-                                completionHandler:^(NSAttributedString *attributedString, UIViewController *viewController, NSError *error) {
-                                    [self.promoButton setAttributedTitle:attributedString forState:UIControlStateNormal];
-                                    self.promoViewController = viewController;
-                                }];
 
     // Configure Textfields
     self.publicKeyTextfield.text = [AffirmConfiguration sharedInstance].publicKey;
@@ -184,13 +169,28 @@
 
 - (void)configurPromotionalMessage
 {
-    NSString *amountText = self.amountTextField.text;
+    NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
     NSURL *url = [[NSBundle mainBundle] URLForResource:@"css_promo_sample" withExtension:@"css"];
-    [self.promotionalButton configureByHtmlStylingWithAmount:[NSDecimalNumber decimalNumberWithString:amountText]
+    [self.promotionalButton configureByHtmlStylingWithAmount:dollarPrice
                                               affirmLogoType:AffirmLogoTypeName
                                                  affirmColor:AffirmColorTypeBlueBlack
                                                remoteFontURL:[NSURL URLWithString:@"https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap"]
                                                 remoteCssURL:url];
+
+    [AffirmDataHandler getPromoMessageWithPromoID:nil
+                                           amount:dollarPrice
+                                          showCTA:YES
+                                         pageType:AffirmPageTypeProduct
+                                         logoType:AffirmLogoTypeName
+                                        colorType:AffirmColorTypeBlueBlack
+                                             font:[UIFont boldSystemFontOfSize:15]
+                                        textColor:[UIColor grayColor]
+                         presentingViewController:self
+                                   withNavigation:YES
+                                completionHandler:^(NSAttributedString *attributedString, UIViewController *viewController, NSError *error) {
+                                    [self.promoButton setAttributedTitle:attributedString forState:UIControlStateNormal];
+                                    self.promoViewController = viewController;
+                                }];
 }
 
 - (void)configureTextField
