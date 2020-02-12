@@ -46,15 +46,10 @@
         _created = dict[@"created"];
         _creditCardId = dict[@"id"];
         _callbackId = dict[@"callback_id"];
-        _cvv = nil;
-        _number = nil;
-        _cardholderName = nil;
-        _expiration = nil;
-        
-        if (dict[@"cvv"]) _cvv = dict[@"cvv"];
-        if (dict[@"number"]) _number = dict[@"number"];
-        if (dict[@"cardholder_name"]) _cardholderName = dict[@"cardholder_name"];
-        if (dict[@"expiration"]) _expiration = dict[@"expiration"];
+        _cvv = dict[@"cvv"];
+        _number = dict[@"number"];
+        _cardholderName = dict[@"cardholder_name"];
+        _expiration = dict[@"expiration"];
     }
     return self;
 }
