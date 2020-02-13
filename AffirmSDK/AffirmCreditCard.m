@@ -35,11 +35,7 @@
 - (instancetype)initWithDict:(NSDictionary *)dict
 {
     [AffirmValidationUtils checkNotNil:dict[@"checkout_token"] name:@"checkout_token"];
-    [AffirmValidationUtils checkNotNil:dict[@"cvv"] name:@"cvv"];
-    [AffirmValidationUtils checkNotNil:dict[@"number"] name:@"number"];
-    [AffirmValidationUtils checkNotNil:dict[@"cardholder_name"] name:@"cardholder_name"];
     [AffirmValidationUtils checkNotNil:dict[@"callback_id"] name:@"callback_id"];
-    [AffirmValidationUtils checkNotNil:dict[@"expiration"] name:@"expiration"];
     [AffirmValidationUtils checkNotNil:dict[@"id"] name:@"creditCard_id"];
     
     if (self = [super init]) {
@@ -48,12 +44,12 @@
         }
         _checkoutToken = dict[@"checkout_token"];
         _created = dict[@"created"];
+        _creditCardId = dict[@"id"];
+        _callbackId = dict[@"callback_id"];
         _cvv = dict[@"cvv"];
         _number = dict[@"number"];
-        _callbackId = dict[@"callback_id"];
         _cardholderName = dict[@"cardholder_name"];
         _expiration = dict[@"expiration"];
-        _creditCardId = dict[@"id"];
     }
     return self;
 }
