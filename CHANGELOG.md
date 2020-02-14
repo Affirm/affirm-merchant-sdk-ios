@@ -1,6 +1,17 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
+## Version 5.0.9 (February 13, 2020)
+- Add webhook session ID
+- Update logos
+- Add support for CA currency
+- Change promo endpoint
+- Remove promoId dependency from ala messaging call
+- Add iOS Callback callback
+- Update iOS SDK to accept total amount
+- Bug-fixes
+- VCN Support null data
+
 ## Version 5.0.8 (November 12, 2019)
 - Support for Blue and Black logo in text
 
