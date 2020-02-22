@@ -1,6 +1,9 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
+## Version 5.0.10 (February 21, 2020)
+- Bug-fix
+
 ## Version 5.0.9 (February 13, 2020)
 - Add webhook session ID
 - Update logos
