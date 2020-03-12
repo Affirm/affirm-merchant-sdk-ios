@@ -168,7 +168,12 @@ extension ViewController: AffirmCheckoutDelegate {
     }
 
     func vcnCheckout(_ checkoutViewController: AffirmCheckoutViewController, completedWith creditCard: AffirmCreditCard) {
-        resultLabel.text = "Received credit card:\ncredit card id: \(creditCard.creditCardId)\ncheckout token: \(creditCard.checkoutToken)\ncard holder name: \(creditCard.cardholderName)\nnumber:\(creditCard.number)\ncvv: \(creditCard.cvv)\nexpiration: \(creditCard.expiration)\ncallback id: \(creditCard.callbackId)"
+        if let cardholderName = creditCard.cardholderName,
+            let number = creditCard.number,
+            let cvv = creditCard.cvv,
+            let expiration = creditCard.expiration {
+            resultLabel.text = "Received credit card:\ncredit card id: \(creditCard.creditCardId)\ncheckout token: \(creditCard.checkoutToken)\ncard holder name: \(cardholderName)\nnumber:\(number)\ncvv: \(cvv)\nexpiration: \(expiration)\ncallback id: \(creditCard.callbackId)"
+        }
         checkoutViewController.dismiss(animated: true, completion: nil)
     }
 
