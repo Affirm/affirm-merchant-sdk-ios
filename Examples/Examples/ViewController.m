@@ -85,8 +85,7 @@
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
     AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item" SKU:@"test_item" unitPrice:dollarPrice quantity:1 URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
     AffirmShippingDetail *shipping = [AffirmShippingDetail shippingDetailWithName:@"Chester Cheetah" addressWithLine1:@"633 Folsom Street" line2:@"" city:@"San Francisco" state:@"CA" zipCode:@"94107" countryCode:@"USA"];
-    AffirmCheckoutMetadata *metadata = [AffirmCheckoutMetadata checkoutMetadataWithShippingType:@"UPS Ground" entityName:@"internal-sub_brand-name" webhookSessionId:@"ABC123"];
-    AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping totalAmount:[dollarPrice toIntegerCents] metadata:metadata];
+    AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping totalAmount:[dollarPrice toIntegerCents]];
     AffirmBillingDetail *billing = [AffirmBillingDetail billingDetailWithName:@"Chester Cheetah" email:@"testtester@test.com" phoneNumber:nil addressWithLine1:@"633 Folsom Street" line2:@"" city:@"San Francisco" state:@"CA" zipCode:@"94107" countryCode:@"USA"];
     checkout.billing = billing;
 
