@@ -264,6 +264,21 @@ NS_SWIFT_NAME(checkout(items:shipping:payoutAmount:));
                           totalAmount:(NSDecimalNumber *)totalAmount
 NS_SWIFT_NAME(checkout(items:shipping:totalAmount:));
 
+/**
+ Convenience constructor. See properties for more details.
+
+ @param items List of purchased items.
+ @param shipping Shipping contact.
+ @param totalAmount Total amount, in cents, of the transaction.
+ @param metadata Additional metadata.
+ @return The newly created checkout.
+ */
++ (AffirmCheckout *)checkoutWithItems:(NSArray <AffirmItem *>*)items
+                             shipping:(nullable AffirmShippingDetail *)shipping
+                          totalAmount:(NSDecimalNumber *)totalAmount
+                             metadata:(nullable NSDictionary *)metadata
+NS_SWIFT_NAME(checkout(items:shipping:totalAmount:metadata:));
+
 @end
 
 NS_ASSUME_NONNULL_END

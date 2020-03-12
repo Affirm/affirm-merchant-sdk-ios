@@ -204,6 +204,19 @@
                            totalAmount:totalAmount];
 }
 
++ (AffirmCheckout *)checkoutWithItems:(NSArray <AffirmItem *>*)items
+                             shipping:(nullable AffirmShippingDetail *)shipping
+                          totalAmount:(NSDecimalNumber *)totalAmount
+                             metadata:(nullable NSDictionary *)metadata
+{
+    return [[self alloc] initWithItems:items
+                              shipping:shipping
+                             discounts:nil
+                              metadata:metadata
+                      financingProgram:nil
+                           totalAmount:totalAmount];
+}
+
 - (NSDecimalNumber *)calculatedTotalAmount
 {
     [AffirmValidationUtils checkNotNil:self.taxAmount name:@"taxAmount"];
