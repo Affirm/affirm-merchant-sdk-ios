@@ -13,7 +13,6 @@
 @class AffirmDiscount;
 @class AffirmShippingDetail;
 @class AffirmBillingDetail;
-@class AffirmCheckoutMetadata;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -63,7 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Additional metadata for the checkout. Optional.
  */
-@property (nonatomic, copy, readonly, nullable) AffirmCheckoutMetadata *metadata;
+@property (nonatomic, copy, readonly, nullable) NSDictionary *metadata;
 
 /**
  The total amount. Dynamically computed from the other properties of the checkout if not available
@@ -102,7 +101,7 @@ NS_ASSUME_NONNULL_BEGIN
                     taxAmount:(NSDecimalNumber *)taxAmount
                shippingAmount:(NSDecimalNumber *)shippingAmount
                     discounts:(nullable NSArray <AffirmDiscount *>*)discounts
-                     metadata:(nullable AffirmCheckoutMetadata *)metadata
+                     metadata:(nullable NSDictionary *)metadata
              financingProgram:(nullable NSString *)financingProgram
 NS_SWIFT_NAME(init(items:shipping:taxAmount:shippingAmount:discounts:metadata:financingProgram:));
 
@@ -124,7 +123,7 @@ NS_SWIFT_NAME(init(items:shipping:taxAmount:shippingAmount:discounts:metadata:fi
                     taxAmount:(NSDecimalNumber *)taxAmount
                shippingAmount:(NSDecimalNumber *)shippingAmount
                     discounts:(nullable NSArray <AffirmDiscount *>*)discounts
-                     metadata:(nullable AffirmCheckoutMetadata *)metadata
+                     metadata:(nullable NSDictionary *)metadata
              financingProgram:(nullable NSString *)financingProgram
                       orderId:(nullable NSString *)orderId
 NS_SWIFT_NAME(init(items:shipping:taxAmount:shippingAmount:discounts:metadata:financingProgram:orderId:));
@@ -163,7 +162,7 @@ NS_SWIFT_NAME(checkout(items:shipping:taxAmount:shippingAmount:financingProgram:
                             taxAmount:(NSDecimalNumber *)taxAmount
                        shippingAmount:(NSDecimalNumber *)shippingAmount
                             discounts:(nullable NSArray <AffirmDiscount *>*)discounts
-                             metadata:(nullable AffirmCheckoutMetadata *)metadata
+                             metadata:(nullable NSDictionary *)metadata
                      financingProgram:(nullable NSString *)financingProgram
 NS_SWIFT_NAME(checkout(items:shipping:taxAmount:shippingAmount:discounts:metadata:financingProgram:));
 
@@ -198,7 +197,7 @@ NS_SWIFT_NAME(checkout(items:shipping:taxAmount:shippingAmount:));
                             taxAmount:(NSDecimalNumber *)taxAmount
                        shippingAmount:(NSDecimalNumber *)shippingAmount
                             discounts:(nullable NSArray <AffirmDiscount *>*)discounts
-                             metadata:(nullable AffirmCheckoutMetadata *)metadata
+                             metadata:(nullable NSDictionary *)metadata
 NS_SWIFT_NAME(checkout(items:shipping:taxAmount:shippingAmount:discounts:metadata:));
 
 /**
@@ -215,7 +214,7 @@ NS_SWIFT_NAME(checkout(items:shipping:taxAmount:shippingAmount:discounts:metadat
 - (instancetype)initWithItems:(NSArray <AffirmItem *>*)items
                      shipping:(nullable AffirmShippingDetail *)shipping
                     discounts:(nullable NSArray <AffirmDiscount *>*)discounts
-                     metadata:(nullable AffirmCheckoutMetadata *)metadata
+                     metadata:(nullable NSDictionary *)metadata
              financingProgram:(nullable NSString *)financingProgram
                  payoutAmount:(NSDecimalNumber *)payoutAmount API_DEPRECATED("Use initWithItems:shipping:discounts:metadata:financingProgram:totalAmount: instead.", ios(2.0, 13.0))
 NS_SWIFT_NAME(init(items:shipping:discounts:metadata:financingProgram:payoutAmount:));
@@ -234,7 +233,7 @@ NS_SWIFT_NAME(init(items:shipping:discounts:metadata:financingProgram:payoutAmou
 - (instancetype)initWithItems:(NSArray <AffirmItem *>*)items
                      shipping:(nullable AffirmShippingDetail *)shipping
                     discounts:(nullable NSArray <AffirmDiscount *>*)discounts
-                     metadata:(nullable AffirmCheckoutMetadata *)metadata
+                     metadata:(nullable NSDictionary *)metadata
              financingProgram:(nullable NSString *)financingProgram
                   totalAmount:(NSDecimalNumber *)totalAmount
 NS_SWIFT_NAME(init(items:shipping:discounts:metadata:financingProgram:totalAmount:));
@@ -277,8 +276,9 @@ NS_SWIFT_NAME(checkout(items:shipping:totalAmount:));
 + (AffirmCheckout *)checkoutWithItems:(NSArray <AffirmItem *>*)items
                              shipping:(nullable AffirmShippingDetail *)shipping
                           totalAmount:(NSDecimalNumber *)totalAmount
-                             metadata:(nullable AffirmCheckoutMetadata *)metadata
+                             metadata:(nullable NSDictionary *)metadata
 NS_SWIFT_NAME(checkout(items:shipping:totalAmount:metadata:));
+
 @end
 
 NS_ASSUME_NONNULL_END
