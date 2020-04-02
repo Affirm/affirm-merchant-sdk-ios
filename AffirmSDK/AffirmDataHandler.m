@@ -102,7 +102,7 @@
         UIViewController *viewController = nil;
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
             AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
-            htmlValue = promoResponse.htmlAla;
+            htmlValue = withHtmlValue ? promoResponse.htmlAla : nil;
             
             NSString *template = nil;
             if (promoResponse.ala != nil && promoResponse.ala.length > 0) {
