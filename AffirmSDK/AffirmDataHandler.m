@@ -26,7 +26,17 @@
                           delegate:(id<AffirmPrequalDelegate>)delegate
                  completionHandler:(void (^)(NSAttributedString * _Nullable , UIViewController * _Nullable, NSError * _Nullable))completionHandler
 {
-    [self getPromoMessageWithPromoID:promoID amount:amount showCTA:showCTA pageType:pageType logoType:logoType colorType:colorType font:font textColor:textColor presentingViewController:delegate withNavigation:NO completionHandler:completionHandler];
+    [self getPromoMessageWithPromoID:promoID
+                              amount:amount
+                             showCTA:showCTA
+                            pageType:pageType
+                            logoType:logoType
+                           colorType:colorType
+                                font:font
+                           textColor:textColor
+            presentingViewController:delegate
+                      withNavigation:NO
+                   completionHandler:completionHandler];
 }
 
 + (void)getPromoMessageWithPromoID:(nullable NSString *)promoID
@@ -41,9 +51,38 @@
                     withNavigation:(BOOL)withNavigation
                  completionHandler:(void (^)(NSAttributedString * _Nullable , UIViewController * _Nullable, NSError * _Nullable))completionHandler
 {
+    [self getPromoMessageWithPromoID:promoID
+                              amount:amount
+                             showCTA:showCTA
+                            pageType:pageType
+                            logoType:logoType
+                           colorType:colorType
+                                font:font
+                           textColor:textColor
+            presentingViewController:delegate
+                      withNavigation:withNavigation
+                       withHtmlValue:NO
+                   completionHandler:^(NSAttributedString *attributedString, NSString *htmlValue, UIViewController *viewController, NSError *error) {
+        completionHandler(attributedString, viewController, error);
+    }];
+}
+
++ (void)getPromoMessageWithPromoID:(nullable NSString *)promoID
+                            amount:(NSDecimalNumber *)amount
+                           showCTA:(BOOL)showCTA
+                          pageType:(AffirmPageType)pageType
+                          logoType:(AffirmLogoType)logoType
+                         colorType:(AffirmColorType)colorType
+                              font:(UIFont *)font
+                         textColor:(UIColor *)textColor
+          presentingViewController:(id<AffirmPrequalDelegate>)delegate
+                    withNavigation:(BOOL)withNavigation
+                     withHtmlValue:(BOOL)withHtmlValue
+                 completionHandler:(void (^)(NSAttributedString * _Nullable, NSString * _Nullable, UIViewController * _Nullable, NSError * _Nullable))completionHandler
+{
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     NSDecimalNumber *decimal = amount.toIntegerCents;
-
+    
     AffirmColorType logoColor = colorType;
     // Using default type when logoColor == AffirmColorTypeBlueBlack
     if (logoColor == AffirmColorTypeBlueBlack) {
@@ -59,10 +98,13 @@
                                                                       logoColor:FormatAffirmColorString(logoColor)];
     [AffirmPromoClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
         NSAttributedString *attributedString = nil;
+        NSString *htmlValue = nil;
         UIViewController *viewController = nil;
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
-            NSString *template = nil;
             AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
+            htmlValue = promoResponse.htmlAla;
+            
+            NSString *template = nil;
             if (promoResponse.ala != nil && promoResponse.ala.length > 0) {
                 template = promoResponse.ala;
             }
@@ -73,22 +115,22 @@
                 }
                 attributedString = [AffirmPromotionalButton appendLogo:logo toText:template font:font textColor:textColor logoType:logoType];
             }
-
+            
             if (promoResponse.showPrequal) {
                 NSMutableDictionary *params = [@{
-                                                 @"public_api_key": [AffirmConfiguration sharedInstance].publicKey,
-                                                 @"unit_price": decimal,
-                                                 @"isSDK": @"true",
-                                                 @"use_promo": @"true",
-                                                 @"referring_url": AFFIRM_PREQUAL_REFERRING_URL,
-                                                 } mutableCopy];
+                    @"public_api_key": [AffirmConfiguration sharedInstance].publicKey,
+                    @"unit_price": decimal,
+                    @"isSDK": @"true",
+                    @"use_promo": @"true",
+                    @"referring_url": AFFIRM_PREQUAL_REFERRING_URL,
+                } mutableCopy];
                 if (promoID) {
                     params[@"promo_external_id"] = promoID;
                 }
                 if (pageType) {
                     params[@"page_type"] = FormatAffirmPageTypeString(pageType);
                 }
-
+                
                 NSString *url = [NSString stringWithFormat:@"%@/apps/prequal/", [AffirmPromoClient host]];
                 NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"?%@", [params queryURLEncoding]]
                                            relativeToURL:[NSURL URLWithString:url]];
@@ -101,9 +143,9 @@
         }
         if (viewController && withNavigation) {
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
-            completionHandler(attributedString, navigationController, error);
+            completionHandler(attributedString, htmlValue, navigationController, error);
         } else {
-            completionHandler(attributedString, viewController, error);
+            completionHandler(attributedString, htmlValue, viewController, error);
         }
     }];
 }
