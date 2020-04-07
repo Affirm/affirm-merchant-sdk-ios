@@ -141,7 +141,7 @@ font-weight: normal;
 
 Tapping on the Promotional button automatically opens a modal in an `AffirmPrequalModalViewController` with more information, including (if you have it configured) a button that prompts the user to prequalify for Affirm financing.
 
-**[Note: this integration is deprecated as of SDK version 4.0.13.]** To display the AffirmPromoModal outside of tapping on the AffirmPromotionalButton, you may initialize and display an instance of the promo modal viewController as follows
+**[Note: The AffirmPrequalModalViewController is deprecated as of SDK version 4.0.13.]** To display the AffirmPromoModal outside of tapping on the AffirmPromotionalButton, you may initialize and display an instance of the promo modal viewController as follows:
 
 ```
 AffirmPromoModalViewController *viewController = [[AffirmPromoModalViewController alloc] initWithPromoId:@"promo_id" amount:amount delegate:delegate];
