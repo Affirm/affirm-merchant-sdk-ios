@@ -234,6 +234,20 @@ NS_SWIFT_NAME(configure(amount:affirmLogoType:affirmColor:font:textColor:));
 - (instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
 
+/**
+ Configures an AffirmPromotionalButton based on the HTML string
+
+ @param htmlString html raw string
+ @param amount Amount of the transaction
+ @param remoteFontURL Use a custom font file
+ @param remoteCssURL Use a custom css file
+ */
+- (void)configureWithHtmlString:(NSString *)htmlString
+                         amount:(NSDecimalNumber *)amount
+                  remoteFontURL:(nullable NSURL *)remoteFontURL
+                   remoteCssURL:(nullable NSURL *)remoteCssURL
+NS_SWIFT_NAME(configure(htmlString:amount:remoteFontURL:remoteCssURL:));
+
 @end
 
 NS_ASSUME_NONNULL_END

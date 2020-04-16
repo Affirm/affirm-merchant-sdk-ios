@@ -170,12 +170,15 @@
 - (void)configurPromotionalMessage
 {
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
-    NSURL *url = [[NSBundle mainBundle] URLForResource:@"css_promo_sample" withExtension:@"css"];
-    [self.promotionalButton configureByHtmlStylingWithAmount:dollarPrice
-                                              affirmLogoType:AffirmLogoTypeName
-                                                 affirmColor:AffirmColorTypeBlueBlack
-                                               remoteFontURL:[NSURL URLWithString:@"https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap"]
-                                                remoteCssURL:url];
+    NSURL *fontURL = [NSURL URLWithString:@"https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap"];
+    NSURL *cssURL = [[NSBundle mainBundle] URLForResource:@"css_promo_sample" withExtension:@"css"];
+
+    // Configure promotionalButton with html styling automatically
+//    [self.promotionalButton configureByHtmlStylingWithAmount:dollarPrice
+//                                              affirmLogoType:AffirmLogoTypeName
+//                                                 affirmColor:AffirmColorTypeBlueBlack
+//                                               remoteFontURL:fontURL
+//                                                remoteCssURL:cssURL];
 
     [AffirmDataHandler getPromoMessageWithPromoID:nil
                                            amount:dollarPrice
@@ -187,10 +190,19 @@
                                         textColor:[UIColor grayColor]
                          presentingViewController:self
                                    withNavigation:YES
-                                completionHandler:^(NSAttributedString *attributedString, UIViewController *viewController, NSError *error) {
-                                    [self.promoButton setAttributedTitle:attributedString forState:UIControlStateNormal];
-                                    self.promoViewController = viewController;
-                                }];
+                                    withHtmlValue:YES
+                                completionHandler:^(NSAttributedString *attributedString, NSString *html, UIViewController *viewController, NSError *error) {
+
+        // Configure promotionalButton with html string manually
+        [self.promotionalButton configureWithHtmlString:html
+                                                 amount:dollarPrice
+                                          remoteFontURL:fontURL
+                                           remoteCssURL:cssURL];
+
+        // Configure native button using attributed string
+        [self.promoButton setAttributedTitle:attributedString forState:UIControlStateNormal];
+        self.promoViewController = viewController;
+    }];
 }
 
 - (void)configureTextField
