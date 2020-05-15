@@ -9,6 +9,7 @@
 #import "AffirmPromoModalViewController.h"
 #import "AffirmConfiguration.h"
 #import "AffirmUtils.h"
+#import "AffirmClient.h"
 
 @interface AffirmPromoModalViewController ()
 
@@ -43,7 +44,19 @@
                                                                               style:UIBarButtonItemStyleDone
                                                                              target:self
                                                                              action:@selector(dismiss)];
-    [self.webView loadHTMLString:self.htmlString baseURL:nil];
+    [self.webView loadHTMLString:self.htmlString baseURL:[NSURL URLWithString:AffirmPromoClient.host]];
+}
+
+#pragma mark - WKUIDelegate
+
+- (WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures
+{
+    NSURL *url = navigationAction.request.URL;
+    if (navigationAction.targetFrame == nil && [url.absoluteString rangeOfString:@"affirm.com/apps/prequal"].location != NSNotFound) {
+        NSString *fullURL = [url.absoluteString stringByAppendingString:@"&isSDK=true"];
+        [webView loadRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:fullURL]]];
+    }
+    return nil;
 }
 
 #pragma mark - WKNavigationDelegate
