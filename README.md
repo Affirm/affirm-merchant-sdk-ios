@@ -108,8 +108,8 @@ To show / refresh promotional messaging, use
 [self.promotionalButton configureByHtmlStylingWithAmount:[NSDecimalNumber decimalNumberWithString:amountText]
                                           affirmLogoType:AffirmLogoTypeName
                                              affirmColor:AffirmColorTypeBlue
-                                           remoteFontURL:[NSURL URLWithString:@"https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap"]
-                                            remoteCssURL:url];
+                                           remoteFontURL:fontURL
+                                            remoteCssURL:cssURL];
 ```
 or
 ```
@@ -118,6 +118,14 @@ self.promotionalButton.configure(amount: NSDecimalNumber(string: amountText),
                             affirmColor: .blue,
                                    font: UIFont.italicSystemFont(ofSize: 15),
                               textColor: .gray)
+```
+
+If you have got the html raw string, you could show the promotional messaging using
+```
+[self.promotionalButton configureWithHtmlString:html
+                                         amount:amount
+                                  remoteFontURL:fontURL
+                                   remoteCssURL:cssURL];
 ```
 
 If you want to use local fonts, you need do following steps:
