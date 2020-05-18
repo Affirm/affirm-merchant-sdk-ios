@@ -207,3 +207,8 @@ Changelog
 ==============
 
 All notable changes to this project will be documented in [changelog document](https://github.com/Affirm/affirm-merchant-sdk-ios/blob/master/CHANGELOG.md).
+
+Package Size
+==============
+
+Final Binary Size: 0.6 MB
