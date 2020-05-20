@@ -179,6 +179,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
 
 - (void)setup
 {
+    self.showPrequal = YES;
     self.clickable = NO;
     [self configureWebView];
     [self configureButton];
@@ -379,7 +380,6 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
 {
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     self.amount = amount.toIntegerCents;
-    self.showPrequal = YES;
 
     BOOL hasRemoteCss = remoteCssURL != nil;
     NSString *jsURL = [AffirmConfiguration sharedInstance].jsURL;
