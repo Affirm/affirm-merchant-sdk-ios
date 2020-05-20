@@ -80,6 +80,19 @@
     [self presentViewController:self.promoViewController animated:YES completion:nil];
 }
 
+- (IBAction)showProductModal:(id)sender
+{
+    NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
+    
+    AffirmPromoModalViewController *viewController = [[AffirmPromoModalViewController alloc] initWithPromoId:self.promoIDTextField.text
+                                                                                                      amount:dollarPrice
+                                                                                                    delegate:self];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:viewController];
+    [self presentViewController:nav
+                       animated:YES
+                     completion:nil];
+}
+
 - (IBAction)checkout:(id)sender
 {
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];

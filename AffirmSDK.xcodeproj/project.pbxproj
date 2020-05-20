@@ -36,9 +36,9 @@
 		08FA5921222D08E5007E5E4E /* AffirmSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FA5913222D08E5007E5E4E /* AffirmSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		08FA592D222D1176007E5E4E /* AffirmUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA592B222D1176007E5E4E /* AffirmUtils.m */; };
 		08FA592E222D1176007E5E4E /* AffirmUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA592B222D1176007E5E4E /* AffirmUtils.m */; };
-		79088B4D2238D20E0059D691 /* AffirmPrequalModalViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 79088B4B2238D20D0059D691 /* AffirmPrequalModalViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		79088B4D2238D20E0059D691 /* AffirmPrequalModalViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 79088B4B2238D20D0059D691 /* AffirmPrequalModalViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		79088B4E2238D20E0059D691 /* AffirmPrequalModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79088B4C2238D20D0059D691 /* AffirmPrequalModalViewController.m */; };
-		79088B512238DB840059D691 /* AffirmPromoModalViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 79088B4F2238DB840059D691 /* AffirmPromoModalViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		79088B512238DB840059D691 /* AffirmPromoModalViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 79088B4F2238DB840059D691 /* AffirmPromoModalViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		79088B522238DB840059D691 /* AffirmPromoModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79088B502238DB840059D691 /* AffirmPromoModalViewController.m */; };
 		7944D9932240BF830040525E /* AffirmActivityIndicatorView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7944D9912240BF830040525E /* AffirmActivityIndicatorView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		7944D9942240BF830040525E /* AffirmActivityIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7944D9922240BF830040525E /* AffirmActivityIndicatorView.m */; };
@@ -293,10 +293,10 @@
 				0827FF8B2325EB9200AEC14C /* AffirmDataHandler.h in Headers */,
 				7944D9C12248A84D0040525E /* AffirmUtils.h in Headers */,
 				7944D9B72240E2250040525E /* AffirmLogger.h in Headers */,
-				7944D9932240BF830040525E /* AffirmActivityIndicatorView.h in Headers */,
-				79088B512238DB840059D691 /* AffirmPromoModalViewController.h in Headers */,
-				DA77629D223F959F00FB2DB3 /* AffirmPopupViewController.h in Headers */,
 				79088B4D2238D20E0059D691 /* AffirmPrequalModalViewController.h in Headers */,
+				79088B512238DB840059D691 /* AffirmPromoModalViewController.h in Headers */,
+				7944D9932240BF830040525E /* AffirmActivityIndicatorView.h in Headers */,
+				DA77629D223F959F00FB2DB3 /* AffirmPopupViewController.h in Headers */,
 				0841E334223A9948006D8B97 /* AffirmConstants.h in Headers */,
 				08A81F49223F986D00FAA8D2 /* AffirmClient.h in Headers */,
 				08C4306C223B7C640009E045 /* AffirmRequest.h in Headers */,
