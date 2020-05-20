@@ -53,7 +53,7 @@
 {
     NSURL *url = navigationAction.request.URL;
     if (navigationAction.targetFrame == nil && [url.absoluteString rangeOfString:@"affirm.com/apps/prequal"].location != NSNotFound) {
-        NSString *fullURL = [url.absoluteString stringByAppendingString:@"&isSDK=true"];
+        NSString *fullURL = [url.absoluteString stringByAppendingString:[NSString stringWithFormat:@"&referring_url=%@", AFFIRM_PREQUAL_REFERRING_URL]];
         [webView loadRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:fullURL]]];
     }
     return nil;
@@ -64,7 +64,7 @@
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
     NSString *urlString = navigationAction.request.URL.absoluteString;
-    if ([urlString isEqualToString:AFFIRM_CHECKOUT_CANCELLATION_URL]) {
+    if ([urlString isEqualToString:AFFIRM_PREQUAL_REFERRING_URL]) {
         [self dismiss];
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
