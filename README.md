@@ -211,4 +211,4 @@ All notable changes to this project will be documented in [changelog document](h
 Package Size
 ==============
 
-Final Binary Size: 0.6 MB
+Final Binary Size: 0.67 MB
