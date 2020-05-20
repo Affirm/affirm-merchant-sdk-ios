@@ -281,30 +281,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
             AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
             self.showPrequal = promoResponse.showPrequal;
             if (promoResponse.htmlAla != nil && promoResponse.htmlAla.length > 0) {
-                BOOL hasRemoteCss = remoteCssURL != nil;
-                NSString *jsURL = [AffirmConfiguration sharedInstance].jsURL;
-                NSURL *baseURL = [NSURL URLWithString:jsURL].baseURL;
-                NSMutableDictionary *matchedKeys = [@{@"{{HTML_FRAGMENT}}": promoResponse.htmlAla} mutableCopy];
-
-                if (hasRemoteCss) {
-                    baseURL = remoteCssURL.isFileURL ? [NSBundle mainBundle].bundleURL : remoteCssURL.baseURL;
-                }
-                matchedKeys[@"{{REMOTE_FONT_URL}}"] = remoteFontURL.absoluteString ?: @"";
-                matchedKeys[@"{{REMOTE_CSS_URL}}"] = remoteCssURL.absoluteString ?: @"";
-                matchedKeys[@"{{PUBLIC_KEY}}"] = [AffirmConfiguration sharedInstance].publicKey;
-                matchedKeys[@"{{JS_URL}}"] = jsURL;
-
-                NSString *filePath = [[NSBundle resourceBundle] pathForResource:@"affirm_promo"
-                                                                         ofType:@"html"];
-                __block NSString *rawContent = [NSString stringWithContentsOfFile:filePath
-                                                                         encoding:NSUTF8StringEncoding error:nil];
-                [matchedKeys enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, NSString *  _Nonnull obj, BOOL * _Nonnull stop) {
-                    rawContent = [rawContent stringByReplacingOccurrencesOfString:key
-                                                                       withString:obj
-                                                                          options:NSLiteralSearch
-                                                                            range:[rawContent rangeOfString:key]];
-                }];
-                [self.webView loadHTMLString:rawContent baseURL:baseURL];
+                [self configureWithHtmlString:promoResponse.htmlAla amount:amount remoteFontURL:remoteFontURL remoteCssURL:remoteCssURL];
                 return;
             }
         }
@@ -393,6 +370,41 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
                                             didFailWithError:error];
         }
     }
+}
+
+- (void)configureWithHtmlString:(NSString *)htmlString
+                         amount:(NSDecimalNumber *)amount
+                  remoteFontURL:(nullable NSURL *)remoteFontURL
+                   remoteCssURL:(nullable NSURL *)remoteCssURL
+{
+    [AffirmValidationUtils checkNotNil:amount name:@"amount"];
+    self.amount = amount.toIntegerCents;
+    self.showPrequal = YES;
+
+    BOOL hasRemoteCss = remoteCssURL != nil;
+    NSString *jsURL = [AffirmConfiguration sharedInstance].jsURL;
+    NSURL *baseURL = [NSURL URLWithString:jsURL].baseURL;
+    NSMutableDictionary *matchedKeys = [@{@"{{HTML_FRAGMENT}}": htmlString} mutableCopy];
+
+    if (hasRemoteCss) {
+        baseURL = remoteCssURL.isFileURL ? [NSBundle mainBundle].bundleURL : remoteCssURL.baseURL;
+    }
+    matchedKeys[@"{{REMOTE_FONT_URL}}"] = remoteFontURL.absoluteString ?: @"";
+    matchedKeys[@"{{REMOTE_CSS_URL}}"] = remoteCssURL.absoluteString ?: @"";
+    matchedKeys[@"{{PUBLIC_KEY}}"] = [AffirmConfiguration sharedInstance].publicKey;
+    matchedKeys[@"{{JS_URL}}"] = jsURL;
+
+    NSString *filePath = [[NSBundle resourceBundle] pathForResource:@"affirm_promo"
+                                                             ofType:@"html"];
+    __block NSString *rawContent = [NSString stringWithContentsOfFile:filePath
+                                                             encoding:NSUTF8StringEncoding error:nil];
+    [matchedKeys enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, NSString *  _Nonnull obj, BOOL * _Nonnull stop) {
+        rawContent = [rawContent stringByReplacingOccurrencesOfString:key
+                                                           withString:obj
+                                                              options:NSLiteralSearch
+                                                                range:[rawContent rangeOfString:key]];
+    }];
+    [self.webView loadHTMLString:rawContent baseURL:baseURL];
 }
 
 #pragma mark - WKWebView navigation delegate
