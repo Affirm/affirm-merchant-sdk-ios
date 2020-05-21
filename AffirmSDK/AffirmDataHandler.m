@@ -120,7 +120,6 @@
                 NSMutableDictionary *params = [@{
                     @"public_api_key": [AffirmConfiguration sharedInstance].publicKey,
                     @"unit_price": decimal,
-                    @"isSDK": @"true",
                     @"use_promo": @"true",
                     @"referring_url": AFFIRM_PREQUAL_REFERRING_URL,
                 } mutableCopy];
