@@ -86,6 +86,7 @@
     
     AffirmPromoModalViewController *viewController = [[AffirmPromoModalViewController alloc] initWithPromoId:self.promoIDTextField.text
                                                                                                       amount:dollarPrice
+                                                                                                    pageType:AffirmPageTypeProduct
                                                                                                     delegate:self];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:viewController];
     [self presentViewController:nav

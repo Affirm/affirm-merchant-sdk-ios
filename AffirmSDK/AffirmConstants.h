@@ -37,4 +37,34 @@ typedef NS_ENUM(NSInteger, AffirmLocale) {
     AffirmLocaleCA
 };
 
+typedef NS_ENUM(NSInteger, AffirmPageType) {
+    AffirmPageTypeNone,
+    AffirmPageTypeBanner,
+    AffirmPageTypeCart,
+    AffirmPageTypeCategory,
+    AffirmPageTypeHomepage,
+    AffirmPageTypeLanding,
+    AffirmPageTypePayment,
+    AffirmPageTypeProduct,
+    AffirmPageTypeSearch
+};
+
+typedef NS_ENUM(NSInteger, AffirmLogoType) {
+    AffirmLogoTypeName,
+    AffirmLogoTypeText,
+    AffirmLogoTypeSymbol,
+    AffirmLogoTypeSymbolHollow
+};
+
+typedef NS_ENUM(NSInteger, AffirmColorType) {
+    AffirmColorTypeDefault,
+    AffirmColorTypeBlue,
+    AffirmColorTypeBlack,
+    AffirmColorTypeWhite,
+    AffirmColorTypeBlueBlack
+};
+
+NSString * FormatAffirmPageTypeString(AffirmPageType type);
+NSString * FormatAffirmColorString(AffirmColorType type);
+
 NS_ASSUME_NONNULL_END
