@@ -188,11 +188,11 @@
     NSURL *cssURL = [[NSBundle mainBundle] URLForResource:@"css_promo_sample" withExtension:@"css"];
 
     // Configure promotionalButton with html styling automatically
-//    [self.promotionalButton configureByHtmlStylingWithAmount:dollarPrice
-//                                              affirmLogoType:AffirmLogoTypeName
-//                                                 affirmColor:AffirmColorTypeBlueBlack
-//                                               remoteFontURL:fontURL
-//                                                remoteCssURL:cssURL];
+    [self.promotionalButton configureByHtmlStylingWithAmount:dollarPrice
+                                              affirmLogoType:AffirmLogoTypeName
+                                                 affirmColor:AffirmColorTypeBlueBlack
+                                               remoteFontURL:fontURL
+                                                remoteCssURL:cssURL];
 
     [AffirmDataHandler getPromoMessageWithPromoID:nil
                                            amount:dollarPrice
