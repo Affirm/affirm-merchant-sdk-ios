@@ -138,6 +138,7 @@
             } else {
                 viewController = [[AffirmPromoModalViewController alloc] initWithPromoId:promoID
                                                                                   amount:decimal
+                                                                                pageType:pageType
                                                                                 delegate:delegate];
             }
         }
