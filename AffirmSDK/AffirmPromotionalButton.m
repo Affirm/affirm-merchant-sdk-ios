@@ -449,7 +449,6 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
         NSMutableDictionary *params = [@{
                                          @"public_api_key": [AffirmConfiguration sharedInstance].publicKey,
                                          @"unit_price": self.amount,
-                                         @"isSDK": @"true",
                                          @"use_promo": @"true",
                                          @"referring_url": AFFIRM_PREQUAL_REFERRING_URL,
                                          } mutableCopy];
