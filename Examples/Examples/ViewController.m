@@ -31,17 +31,17 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     // Using AffirmPromotionalButton for first button (See more in configurPromotionalMessage)
     self.promotionalButton = [[AffirmPromotionalButton alloc] initWithShowCTA:YES
                                                                      pageType:AffirmPageTypeProduct
                                                      presentingViewController:self
                                                                         frame:CGRectMake(0, 0, 315, 34)];
     [self.stackView insertArrangedSubview:self.promotionalButton atIndex:0];
-
+    
     // Using AffirmDataHandler for second button (See more in configurPromotionalMessage)
     self.promoButton.titleLabel.numberOfLines = 0;
-
+    
     // Configure Textfields
     self.publicKeyTextfield.text = [AffirmConfiguration sharedInstance].publicKey;
     [self configureTextField];
@@ -77,7 +77,9 @@
 
 - (IBAction)showPromoModal:(id)sender
 {
-    [self presentViewController:self.promoViewController animated:YES completion:nil];
+    if (self.promoViewController) {
+        [self presentViewController:self.promoViewController animated:YES completion:nil];
+    }
 }
 
 - (IBAction)showProductModal:(id)sender
@@ -103,7 +105,7 @@
     AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping totalAmount:[dollarPrice toIntegerCents] metadata:metadata];
     AffirmBillingDetail *billing = [AffirmBillingDetail billingDetailWithName:@"Chester Cheetah" email:@"testtester@test.com" phoneNumber:nil addressWithLine1:@"633 Folsom Street" line2:@"" city:@"San Francisco" state:@"CA" zipCode:@"94107" countryCode:@"USA"];
     checkout.billing = billing;
-
+    
     UINavigationController *nav = [AffirmCheckoutViewController startCheckoutWithNavigation:checkout useVCN:NO getReasonCodes:NO delegate:self];
     [self presentViewController:nav animated:YES completion:nil];
 }
@@ -114,7 +116,7 @@
     AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item" SKU:@"test_item" unitPrice:dollarPrice quantity:1 URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
     AffirmShippingDetail *shipping = [AffirmShippingDetail shippingDetailWithName:@"Test Tester" email:@"testtester@test.com" phoneNumber:@"1111111111" addressWithLine1:@"633 Folsom Street" line2:@"" city:@"San Francisco" state:@"CA" zipCode:@"94107" countryCode:@"USA"];
     AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping totalAmount:[dollarPrice toIntegerCents]];
-
+    
     UINavigationController *nav = [AffirmCheckoutViewController startCheckoutWithNavigation:checkout useVCN:NO getReasonCodes:NO delegate:self];
     [self presentViewController:nav animated:YES completion:nil];
 }
@@ -127,7 +129,7 @@
     AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping totalAmount:[dollarPrice toIntegerCents]];
     AffirmBillingDetail *billing = [AffirmBillingDetail billingDetailWithName:nil email:nil phoneNumber:nil addressWithLine1:nil line2:nil city:nil state:nil zipCode:nil countryCode:nil];
     checkout.billing = billing;
-
+    
     UINavigationController *nav = [AffirmCheckoutViewController startCheckoutWithNavigation:checkout useVCN:YES getReasonCodes:YES delegate:self];
     [self presentViewController:nav animated:YES completion:nil];
 }
@@ -147,25 +149,25 @@
                                                             tax:[NSDecimalNumber decimalNumberWithString:@"285"]
                                                           total:[NSDecimalNumber decimalNumberWithString:@"3739"]];
     AffirmProduct *product0 = [[AffirmProduct alloc] initWithBrand:@"Affirm"
-                                                         category:@"Apparel"
-                                                           coupon:@"SUMMER2018"
-                                                             name:@"Affirm T-Shirt"
-                                                            price:[NSDecimalNumber decimalNumberWithString:@"730"]
-                                                        productId:@"SKU-1234"
-                                                         quantity:1
-                                                          variant:@"Black"
-                                                         currency:nil];
+                                                          category:@"Apparel"
+                                                            coupon:@"SUMMER2018"
+                                                              name:@"Affirm T-Shirt"
+                                                             price:[NSDecimalNumber decimalNumberWithString:@"730"]
+                                                         productId:@"SKU-1234"
+                                                          quantity:1
+                                                           variant:@"Black"
+                                                          currency:nil];
     AffirmProduct *product1 = [[AffirmProduct alloc] initWithBrand:@"Affirm"
-                                                         category:@"Apparel"
-                                                           coupon:@"SUMMER2018"
-                                                             name:@"Affirm Turtleneck Sweater"
-                                                            price:[NSDecimalNumber decimalNumberWithString:@"2190"]
-                                                        productId:@"SKU-5678"
-                                                         quantity:1
-                                                          variant:@"Black"
-                                                         currency:nil];
+                                                          category:@"Apparel"
+                                                            coupon:@"SUMMER2018"
+                                                              name:@"Affirm Turtleneck Sweater"
+                                                             price:[NSDecimalNumber decimalNumberWithString:@"2190"]
+                                                         productId:@"SKU-5678"
+                                                          quantity:1
+                                                           variant:@"Black"
+                                                          currency:nil];
     [AffirmOrderTrackerViewController trackOrder:order products:@[product0, product1]];
-
+    
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"Track successfully" preferredStyle:UIAlertControllerStyleAlert];
     [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:alertController animated:YES completion:nil];
@@ -175,7 +177,7 @@
 {
     [AffirmConfiguration deleteAffirmCookies];
     [self configurPromotionalMessage];
-
+    
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"Clear successfully" preferredStyle:UIAlertControllerStyleAlert];
     [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:alertController animated:YES completion:nil];
@@ -186,14 +188,14 @@
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
     NSURL *fontURL = [NSURL URLWithString:@"https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap"];
     NSURL *cssURL = [[NSBundle mainBundle] URLForResource:@"css_promo_sample" withExtension:@"css"];
-
+    
     // Configure promotionalButton with html styling automatically
     [self.promotionalButton configureByHtmlStylingWithAmount:dollarPrice
                                               affirmLogoType:AffirmLogoTypeName
                                                  affirmColor:AffirmColorTypeBlueBlack
                                                remoteFontURL:fontURL
                                                 remoteCssURL:cssURL];
-
+    
     [AffirmDataHandler getPromoMessageWithPromoID:nil
                                            amount:dollarPrice
                                           showCTA:YES
@@ -206,13 +208,15 @@
                                    withNavigation:YES
                                     withHtmlValue:YES
                                 completionHandler:^(NSAttributedString *attributedString, NSString *html, UIViewController *viewController, NSError *error) {
-
+        
         // Configure promotionalButton with html string manually
-        [self.promotionalButton configureWithHtmlString:html
-                                                 amount:dollarPrice
-                                          remoteFontURL:fontURL
-                                           remoteCssURL:cssURL];
-
+        if (html) {
+            [self.promotionalButton configureWithHtmlString:html
+                                                     amount:dollarPrice
+                                              remoteFontURL:fontURL
+                                               remoteCssURL:cssURL];
+        }
+        
         // Configure native button using attributed string
         [self.promoButton setAttributedTitle:attributedString forState:UIControlStateNormal];
         self.promoViewController = viewController;
