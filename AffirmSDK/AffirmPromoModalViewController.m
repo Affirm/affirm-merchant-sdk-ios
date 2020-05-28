@@ -7,6 +7,7 @@
 //
 
 #import "AffirmPromoModalViewController.h"
+#import "AffirmPromotionalButton.h"
 #import "AffirmConfiguration.h"
 #import "AffirmUtils.h"
 #import "AffirmClient.h"
@@ -25,16 +26,41 @@
 {
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     [AffirmValidationUtils checkNotNil:delegate name:@"delegate"];
-    
+
     if (self = [super initWithNibName:nil bundle:nil]) {
-        NSString *jsURL = [AffirmConfiguration sharedInstance].jsURL;
-        NSString *filePath = [[NSBundle resourceBundle] pathForResource:@"promo_modal_template"
-                                                                 ofType:@"html"];
-        NSString *rawContent = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-        _htmlString = [NSString stringWithFormat:rawContent, [AffirmConfiguration sharedInstance].publicKey, jsURL, amount, promoId ?: @"", AFFIRM_CHECKOUT_CANCELLATION_URL];
-        _delegate = delegate;
+        [self initializeHtmlWithPromoId:promoId amount:amount pageType:AffirmPageTypeNone delegate:delegate];
     }
     return self;
+}
+
+- (instancetype)initWithPromoId:(nullable NSString *)promoId
+                         amount:(NSDecimalNumber *)amount
+                       pageType:(AffirmPageType)pageType
+                       delegate:(id<AffirmPrequalDelegate>)delegate
+{
+    [AffirmValidationUtils checkNotNil:amount name:@"amount"];
+    [AffirmValidationUtils checkNotNil:delegate name:@"delegate"];
+
+    if (self = [super initWithNibName:nil bundle:nil]) {
+        [self initializeHtmlWithPromoId:promoId amount:amount pageType:pageType delegate:delegate];
+    }
+    return self;
+}
+
+- (void)initializeHtmlWithPromoId:(nullable NSString *)promoId
+                           amount:(NSDecimalNumber *)amount
+                         pageType:(AffirmPageType)pageType
+                         delegate:(id<AffirmPrequalDelegate>)delegate
+{
+    NSString *jsURL = [AffirmConfiguration sharedInstance].jsURL;
+    NSString *filePath = [[NSBundle resourceBundle] pathForResource:@"promo_modal_template"
+                                                             ofType:@"html"];
+    NSString *rawContent = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+
+    NSString *promoIdString = promoId ?: @"";
+    NSString *pageTypeString = FormatAffirmPageTypeString(pageType) ?: @"";
+    _htmlString = [NSString stringWithFormat:rawContent, [AffirmConfiguration sharedInstance].publicKey, jsURL, amount, promoIdString, pageTypeString, promoIdString, AFFIRM_CHECKOUT_CANCELLATION_URL];
+    _delegate = delegate;
 }
 
 - (void)viewDidLoad

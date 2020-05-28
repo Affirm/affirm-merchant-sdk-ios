@@ -8,75 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "AffirmPrequalDelegate.h"
-
-typedef NS_ENUM(NSInteger, AffirmPageType) {
-    AffirmPageTypeNone,
-    AffirmPageTypeBanner,
-    AffirmPageTypeCart,
-    AffirmPageTypeCategory,
-    AffirmPageTypeHomepage,
-    AffirmPageTypeLanding,
-    AffirmPageTypePayment,
-    AffirmPageTypeProduct,
-    AffirmPageTypeSearch
-};
-
-typedef NS_ENUM(NSInteger, AffirmLogoType) {
-    AffirmLogoTypeName,
-    AffirmLogoTypeText,
-    AffirmLogoTypeSymbol,
-    AffirmLogoTypeSymbolHollow
-};
-
-typedef NS_ENUM(NSInteger, AffirmColorType) {
-    AffirmColorTypeDefault,
-    AffirmColorTypeBlue,
-    AffirmColorTypeBlack,
-    AffirmColorTypeWhite,
-    AffirmColorTypeBlueBlack
-};
+#import "AffirmConstants.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-static NSString * FormatAffirmPageTypeString(AffirmPageType type)
-{
-    switch (type) {
-        case AffirmPageTypeNone:
-            return nil;
-        case AffirmPageTypeBanner:
-            return @"banner";
-        case AffirmPageTypeCart:
-            return @"cart";
-        case AffirmPageTypeCategory:
-            return @"category";
-        case AffirmPageTypeHomepage:
-            return @"homepage";
-        case AffirmPageTypeLanding:
-            return @"landing";
-        case AffirmPageTypePayment:
-            return @"payment";
-        case AffirmPageTypeProduct:
-            return @"product";
-        case AffirmPageTypeSearch:
-            return @"search";
-    }
-}
-
-static NSString * FormatAffirmColorString(AffirmColorType type)
-{
-    switch (type) {
-        case AffirmColorTypeBlue:
-            return @"blue";
-        case AffirmColorTypeBlack:
-            return @"black";
-        case AffirmColorTypeWhite:
-            return @"white";
-        case AffirmColorTypeBlueBlack:
-            return @"blue-black";
-        case AffirmColorTypeDefault:
-            return @"blue";
-    }
-}
 
 /**
  An AffirmPromotionalButton displays the contents of an Affirm as low as object which describes the merchant and the item.

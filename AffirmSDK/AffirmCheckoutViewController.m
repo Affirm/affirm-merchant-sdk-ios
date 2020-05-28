@@ -70,7 +70,7 @@
     return [[self alloc] initWithDelegate:delegate
                                  checkout:checkout
                                    useVCN:useVCN
-                                  getReasonCodes:NO];
+                           getReasonCodes:NO];
 }
 
 + (AffirmCheckoutViewController *)startCheckout:(AffirmCheckout *)checkout
@@ -81,7 +81,7 @@
     return [[self alloc] initWithDelegate:delegate
                                  checkout:checkout
                                    useVCN:useVCN
-                            getReasonCodes:getReasonCodes];
+                           getReasonCodes:getReasonCodes];
 }
 
 - (void)viewDidLoad
@@ -90,8 +90,14 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Close"
                                                                               style:UIBarButtonItemStyleDone
                                                                              target:self
-                                                                             action:@selector(dismiss)];
+                                                                             action:@selector(cancel:)];
     [self prepareForCheckout];
+}
+
+- (void)cancel:(id)sender
+{
+    [self.delegate checkoutCancelled:self];
+    [self dismiss];
 }
 
 - (void)prepareForCheckout
@@ -137,11 +143,11 @@
            @"{{CONFIRM_CB_URL}}": AFFIRM_CHECKOUT_CONFIRMATION_URL,
            @"{{CANCELLED_CB_URL}}": AFFIRM_CHECKOUT_CANCELLATION_URL}
          enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, NSString *  _Nonnull obj, BOOL * _Nonnull stop) {
-             rawContent = [rawContent stringByReplacingOccurrencesOfString:key
-                                                                withString:obj
-                                                                   options:NSLiteralSearch
-                                                                     range:[rawContent rangeOfString:key]];
-         }];
+            rawContent = [rawContent stringByReplacingOccurrencesOfString:key
+                                                               withString:obj
+                                                                  options:NSLiteralSearch
+                                                                    range:[rawContent rangeOfString:key]];
+        }];
         NSString *baseUrl = [NSString stringWithFormat:@"https://%@", redirectURL.host];
         [self.webView loadData:[rawContent dataUsingEncoding:NSUTF8StringEncoding] MIMEType:@"text/html" characterEncodingName:@"utf-8" baseURL:[NSURL URLWithString:baseUrl]];
     } else {
@@ -181,26 +187,26 @@
         if (_getReasonCodes) {
             
             NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:URL.absoluteString];
-            for(NSURLQueryItem *item in urlComponents.queryItems) {
+            for (NSURLQueryItem *item in urlComponents.queryItems) {
                 
                 if([item.name isEqualToString:@"data"]) {
                     [self.delegate checkoutCancelled:self
-                       checkoutCanceledWithReason:[AffirmReasonCode reasonCodeWithDict:item.value.convertToDictionary]];
-                   [[AffirmLogger sharedInstance] trackEvent:@"Checkout cancelled with reason" parameters:@{@"checkout_ari": self.checkoutARI, @"checkout_canceled_reason": item.value != nil ? item.value : @"false"}];
+                          checkoutCanceledWithReason:[AffirmReasonCode reasonCodeWithDict:item.value.convertToDictionary]];
+                    [[AffirmLogger sharedInstance] trackEvent:@"Checkout cancelled with reason" parameters:@{@"checkout_ari": self.checkoutARI, @"checkout_canceled_reason": item.value != nil ? item.value : @"false"}];
                     break;
                 }
             }
         } else {
-           [self.delegate checkoutCancelled:self];
+            [self.delegate checkoutCancelled:self];
             [[AffirmLogger sharedInstance] trackEvent:@"Checkout cancelled" parameters:@{@"checkout_ari": self.checkoutARI}];
         }
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
     }
     [self webView:webView checkIfURL:URL.absoluteString isPopupWithCompletion:^(BOOL isPopup) {
-  
+
         if (isPopup) {
-    
+
             AffirmPopupViewController *viewController = [[AffirmPopupViewController alloc] initWithURL:URL];
             UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
             [self presentViewController:navController animated:YES completion:nil];
@@ -208,7 +214,7 @@
             decisionHandler(WKNavigationActionPolicyCancel);
         }
         else {
-     
+
             decisionHandler(WKNavigationActionPolicyAllow);
         }
     }];
@@ -236,13 +242,13 @@
     [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel"
                                                         style:UIAlertActionStyleCancel
                                                       handler:^(UIAlertAction *action) {
-                                                          completionHandler(NO);
-                                                      }]];
+        completionHandler(NO);
+    }]];
     [alertController addAction:[UIAlertAction actionWithTitle:@"OK"
                                                         style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction *action) {
-                                                          completionHandler(YES);
-                                                      }]];
+        completionHandler(YES);
+    }]];
     [self presentViewController:alertController animated:YES completion:^{}];
 }
 
