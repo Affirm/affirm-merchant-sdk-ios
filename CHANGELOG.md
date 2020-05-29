@@ -1,6 +1,13 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
+## Version 5.0.12 (May 29, 2020)
+- Added parameters to product modal
+- Added an example of product modal
+- Bug-fix
+- Added SDK size
+- Added HTML support for AffirmDataHandler
+
 ## Version 5.0.11 (March 13, 2020)
 - Update metadata
 
