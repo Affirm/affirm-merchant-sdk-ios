@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "AffirmClient.h"
 
-@class AffirmCheckout;
+@class AffirmItem, AffirmCheckout;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -36,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly, nullable) NSString *pageType;
 @property (nonatomic, copy, readonly) NSString *logoType;
 @property (nonatomic, copy, readonly) NSString *logoColor;
+@property (nonatomic, copy, readonly) NSArray <AffirmItem *>*items;
 
 - (instancetype)initWithPublicKey:(NSString *)publicKey
                           promoId:(NSString *)promoId
@@ -44,6 +45,14 @@ NS_ASSUME_NONNULL_BEGIN
                          pageType:(nullable NSString *)pageType
                          logoType:(nullable NSString *)logoType
                         logoColor:(nullable NSString *)logoColor;
+- (instancetype)initWithPublicKey:(NSString *)publicKey
+                          promoId:(NSString *)promoId
+                           amount:(NSDecimalNumber *)amount
+                          showCTA:(BOOL)showCTA
+                         pageType:(nullable NSString *)pageType
+                         logoType:(nullable NSString *)logoType
+                        logoColor:(nullable NSString *)logoColor
+                            items:(nullable NSArray <AffirmItem *>*)items;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 

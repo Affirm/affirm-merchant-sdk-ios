@@ -10,6 +10,7 @@
 #import "AffirmRequest.h"
 #import "AffirmConfiguration.h"
 #import "AffirmCheckout.h"
+#import "AffirmItem.h"
 
 @implementation AffirmLogRequest
 
@@ -75,6 +76,29 @@
     return self;
 }
 
+
+- (instancetype)initWithPublicKey:(NSString *)publicKey
+                          promoId:(NSString *)promoId
+                           amount:(NSDecimalNumber *)amount
+                          showCTA:(BOOL)showCTA
+                         pageType:(nullable NSString *)pageType
+                         logoType:(nullable NSString *)logoType
+                        logoColor:(nullable NSString *)logoColor
+                            items:(nullable NSArray <AffirmItem *>*)items
+{
+    if (self = [super init]) {
+        _publicKey = [publicKey copy];
+        _promoId = [promoId copy];
+        _amount = [amount copy];
+        _showCTA = showCTA;
+        _pageType = [pageType copy];
+        _logoType = [logoType copy];
+        _logoColor = [logoColor copy];
+        _items = [[NSArray alloc] initWithArray:items copyItems:YES];
+    }
+    return self;
+}
+
 - (NSString *)path
 {
     return [NSString stringWithFormat:@"/api/promos/v2/%@", self.publicKey];
@@ -103,6 +127,13 @@
     }
     if (self.logoColor) {
         _parameters[@"logo_color"] = self.logoColor;
+    }
+    if (self.items) {
+        NSMutableArray *items = [[NSMutableArray alloc] init];
+        for (AffirmItem *item in self.items) {
+            [items addObject:[item toJSONDictionary]];
+        }
+        _parameters[@"items"] = items;
     }
     return _parameters;
 }

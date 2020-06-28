@@ -80,22 +80,54 @@
                      withHtmlValue:(BOOL)withHtmlValue
                  completionHandler:(void (^)(NSAttributedString * _Nullable, NSString * _Nullable, UIViewController * _Nullable, NSError * _Nullable))completionHandler
 {
+    [self getPromoMessageWithPromoID:promoID
+                              amount:amount
+                               items:nil
+                             showCTA:showCTA
+                            pageType:pageType
+                            logoType:logoType
+                           colorType:colorType
+                                font:font
+                           textColor:textColor
+            presentingViewController:delegate
+                      withNavigation:withNavigation
+                       withHtmlValue:NO
+                   completionHandler:^(NSAttributedString *attributedString, NSString *htmlValue, UIViewController *viewController, NSError *error) {
+        completionHandler(attributedString, htmlValue, viewController, error);
+    }];
+}
+
++ (void)getPromoMessageWithPromoID:(nullable NSString *)promoID
+                            amount:(NSDecimalNumber *)amount
+                             items:(nullable NSArray <AffirmItem *>*)items
+                           showCTA:(BOOL)showCTA
+                          pageType:(AffirmPageType)pageType
+                          logoType:(AffirmLogoType)logoType
+                         colorType:(AffirmColorType)colorType
+                              font:(UIFont *)font
+                         textColor:(UIColor *)textColor
+          presentingViewController:(id<AffirmPrequalDelegate>)delegate
+                    withNavigation:(BOOL)withNavigation
+                     withHtmlValue:(BOOL)withHtmlValue
+                 completionHandler:(void (^)(NSAttributedString * _Nullable, NSString * _Nullable, UIViewController * _Nullable, NSError * _Nullable))completionHandler
+{
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     NSDecimalNumber *decimal = amount.toIntegerCents;
-    
+
     AffirmColorType logoColor = colorType;
     // Using default type when logoColor == AffirmColorTypeBlueBlack
     if (logoColor == AffirmColorTypeBlueBlack) {
         logoColor = AffirmColorTypeDefault;
     }
-    
+
     AffirmPromoRequest *request = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
                                                                         promoId:promoID
                                                                          amount:decimal
                                                                         showCTA:showCTA
                                                                        pageType:FormatAffirmPageTypeString(pageType)
                                                                        logoType:nil
-                                                                      logoColor:FormatAffirmColorString(logoColor)];
+                                                                      logoColor:FormatAffirmColorString(logoColor)
+                                                                          items:items];
     [AffirmPromoClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
         NSAttributedString *attributedString = nil;
         NSString *htmlValue = nil;
@@ -103,7 +135,7 @@
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
             AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
             htmlValue = withHtmlValue ? promoResponse.htmlAla : nil;
-            
+
             NSString *template = nil;
             if (promoResponse.ala != nil && promoResponse.ala.length > 0) {
                 template = promoResponse.ala;
@@ -115,7 +147,7 @@
                 }
                 attributedString = [AffirmPromotionalButton appendLogo:logo toText:template font:font textColor:textColor logoType:logoType];
             }
-            
+
             if (promoResponse.showPrequal) {
                 NSMutableDictionary *params = [@{
                     @"public_api_key": [AffirmConfiguration sharedInstance].publicKey,
@@ -129,7 +161,7 @@
                 if (pageType) {
                     params[@"page_type"] = FormatAffirmPageTypeString(pageType);
                 }
-                
+
                 NSString *url = [NSString stringWithFormat:@"%@/apps/prequal/", [AffirmPromoClient host]];
                 NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"?%@", [params queryURLEncoding]]
                                            relativeToURL:[NSURL URLWithString:url]];
