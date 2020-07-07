@@ -85,7 +85,7 @@
 - (IBAction)showProductModal:(id)sender
 {
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
-    
+
     AffirmPromoModalViewController *viewController = [[AffirmPromoModalViewController alloc] initWithPromoId:self.promoIDTextField.text
                                                                                                       amount:dollarPrice
                                                                                                     pageType:AffirmPageTypeProduct
@@ -186,11 +186,14 @@
 - (void)configurPromotionalMessage
 {
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
+    AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item" SKU:@"test_item" unitPrice:dollarPrice quantity:1 URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
+
     NSURL *fontURL = [NSURL URLWithString:@"https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap"];
     NSURL *cssURL = [[NSBundle mainBundle] URLForResource:@"css_promo_sample" withExtension:@"css"];
     
     // Configure promotionalButton with html styling automatically
     [self.promotionalButton configureByHtmlStylingWithAmount:dollarPrice
+                                                       items:@[item]
                                               affirmLogoType:AffirmLogoTypeName
                                                  affirmColor:AffirmColorTypeBlueBlack
                                                remoteFontURL:fontURL
@@ -198,6 +201,7 @@
     
     [AffirmDataHandler getPromoMessageWithPromoID:nil
                                            amount:dollarPrice
+                                            items:@[item]
                                           showCTA:YES
                                          pageType:AffirmPageTypeProduct
                                          logoType:AffirmLogoTypeName

@@ -16,8 +16,15 @@
 {
     NSMutableArray<NSString *> *parametersArray = [NSMutableArray array];
     [self enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        NSString *queryString = [[NSString stringWithFormat:@"%@", obj] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-        [parametersArray addObject:[NSString stringWithFormat:@"%@=%@", key, queryString]];
+        if ([obj isKindOfClass:[NSString class]]) {
+            NSString *queryString = [[NSString stringWithFormat:@"%@", obj] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+            [parametersArray addObject:[NSString stringWithFormat:@"%@=%@", key, queryString]];
+        } else if ([obj isKindOfClass:[NSArray class]]) {
+            NSData *data = [NSJSONSerialization dataWithJSONObject:obj options:NSJSONWritingPrettyPrinted error:nil];
+            NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            dataString = [dataString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+            [parametersArray addObject:[NSString stringWithFormat:@"%@=%@", key, dataString]];
+        }
     }];
     return [parametersArray componentsJoinedByString:@"&"];
 }

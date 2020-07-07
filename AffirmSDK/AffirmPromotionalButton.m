@@ -261,6 +261,21 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
                            remoteFontURL:(nullable NSURL *)remoteFontURL
                             remoteCssURL:(nullable NSURL *)remoteCssURL
 {
+    [self configureByHtmlStylingWithAmount:amount
+                                     items:nil
+                            affirmLogoType:affirmLogoType
+                               affirmColor:affirmColor
+                             remoteFontURL:remoteFontURL
+                              remoteCssURL:remoteCssURL];
+}
+
+- (void)configureByHtmlStylingWithAmount:(NSDecimalNumber *)amount
+                                   items:(nullable NSArray <AffirmItem *>*)items
+                          affirmLogoType:(AffirmLogoType)affirmLogoType
+                             affirmColor:(AffirmColorType)affirmColor
+                           remoteFontURL:(nullable NSURL *)remoteFontURL
+                            remoteCssURL:(nullable NSURL *)remoteCssURL
+{
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     self.amount = amount.toIntegerCents;
 
@@ -276,7 +291,8 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
                                                                         showCTA:self.showCTA
                                                                        pageType:FormatAffirmPageTypeString(self.pageType)
                                                                        logoType:FormatAffirmDataTypeString(affirmLogoType)
-                                                                      logoColor:FormatAffirmColorString(logoColor)];
+                                                                      logoColor:FormatAffirmColorString(logoColor)
+                                                                          items:items];
     [AffirmPromoClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
             AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
@@ -308,6 +324,21 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
                        font:(UIFont *)font
                   textColor:(UIColor *)textColor
 {
+    [self configureWithAmount:amount
+                        items:nil
+               affirmLogoType:affirmLogoType
+                  affirmColor:affirmColor
+                         font:font
+                    textColor:textColor];
+}
+
+- (void)configureWithAmount:(NSDecimalNumber *)amount
+                      items:(nullable NSArray <AffirmItem *>*)items
+             affirmLogoType:(AffirmLogoType)affirmLogoType
+                affirmColor:(AffirmColorType)affirmColor
+                       font:(UIFont *)font
+                  textColor:(UIColor *)textColor
+{
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     self.amount = amount.toIntegerCents;
 
@@ -323,7 +354,8 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
                                                                         showCTA:self.showCTA
                                                                        pageType:FormatAffirmPageTypeString(self.pageType)
                                                                        logoType:nil
-                                                                      logoColor:FormatAffirmColorString(logoColor)];
+                                                                      logoColor:FormatAffirmColorString(logoColor)
+                                                                          items:items];
     [AffirmPromoClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
         NSAttributedString *attributedString = nil;
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
@@ -413,12 +445,12 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
 {
     [webView evaluateJavaScript:@"Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight)"
               completionHandler:^(id _Nullable result, NSError * _Nullable error) {
-                  if (!error && [result isKindOfClass:[NSNumber class]]) {
-                      NSNumber *height = result;
-                      self.webViewHeightConstraint.constant = height.floatValue;
-                      [self layoutIfNeeded];
-                  }
-              }];
+        if (!error && [result isKindOfClass:[NSNumber class]]) {
+            NSNumber *height = result;
+            self.webViewHeightConstraint.constant = height.floatValue;
+            [self layoutIfNeeded];
+        }
+    }];
     webView.hidden = NO;
     [self.button setAttributedTitle:nil forState:UIControlStateNormal];
     self.clickable = YES;
@@ -447,11 +479,11 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
     
     if (self.showPrequal) {
         NSMutableDictionary *params = [@{
-                                         @"public_api_key": [AffirmConfiguration sharedInstance].publicKey,
-                                         @"unit_price": self.amount,
-                                         @"use_promo": @"true",
-                                         @"referring_url": AFFIRM_PREQUAL_REFERRING_URL,
-                                         } mutableCopy];
+            @"public_api_key": [AffirmConfiguration sharedInstance].publicKey,
+            @"unit_price": self.amount,
+            @"use_promo": @"true",
+            @"referring_url": AFFIRM_PREQUAL_REFERRING_URL,
+        } mutableCopy];
         if (self.promoID) {
             params[@"promo_external_id"] = self.promoID;
         }
