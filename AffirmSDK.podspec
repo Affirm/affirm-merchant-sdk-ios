@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name						= 'AffirmSDK'
   s.authors						= "Affirm, Inc."
-  s.version						= '5.0.12'
+  s.version						= '5.0.13'
   s.summary						= 'Integrate Affirm into your iOS app'
   s.homepage					= 'https://github.com/Affirm/affirm-merchant-sdk-ios'
   s.license						= { :type => "BSD-3-Clause", :file => "LICENSE" }
