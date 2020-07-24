@@ -1,6 +1,9 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
+## Version 5.0.13 (July 24, 2020)
+- Added SKU based Financing Support
+
 ## Version 5.0.12 (May 29, 2020)
 - Added parameters to product modal
 - Added an example of product modal
