@@ -85,6 +85,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly, nullable) NSString *orderId;
 
 /**
+ Credit as a service
+ */
+@property (nonatomic, copy, nullable) NSString *caas;
+
+/**
  Initializer. See properties for more details.
 
  @param items List of purchased items.
