@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,10 +20,10 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MNk-Ie-CDh">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="522.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="571.5"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="YFz-wy-x2R">
-                                                <rect key="frame" x="30" y="100" width="315" height="392.5"/>
+                                                <rect key="frame" x="30" y="100" width="315" height="441.5"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S8b-na-g2J">
                                                         <rect key="frame" x="0.0" y="0.0" width="315" height="34"/>
@@ -85,43 +85,62 @@
                                                             </textField>
                                                         </subviews>
                                                     </stackView>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FEx-D6-4Fz">
+                                                        <rect key="frame" x="0.0" y="147" width="315" height="34"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CAAS:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CiU-yp-Qvf">
+                                                                <rect key="frame" x="0.0" y="0.0" width="93" height="34"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <nil key="textColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="Equ-5u-c2Z">
+                                                                <rect key="frame" x="93" y="0.0" width="222" height="34"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                                                                <connections>
+                                                                    <outlet property="delegate" destination="BYZ-38-t0r" id="kDC-t0-uDB"/>
+                                                                </connections>
+                                                            </textField>
+                                                        </subviews>
+                                                    </stackView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C6u-C5-aCh">
-                                                        <rect key="frame" x="0.0" y="147" width="315" height="30"/>
+                                                        <rect key="frame" x="0.0" y="196" width="315" height="30"/>
                                                         <state key="normal" title="Buy with Affirm"/>
                                                         <connections>
                                                             <action selector="checkoutWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="80P-Ql-dz5"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JXZ-7f-sEo">
-                                                        <rect key="frame" x="0.0" y="192" width="315" height="30"/>
+                                                        <rect key="frame" x="0.0" y="241" width="315" height="30"/>
                                                         <state key="normal" title="Failed Checkout"/>
                                                         <connections>
                                                             <action selector="showFailedCheckoutWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kBU-Sj-yEI"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BCw-Ab-2LL">
-                                                        <rect key="frame" x="0.0" y="237" width="315" height="30"/>
+                                                        <rect key="frame" x="0.0" y="286" width="315" height="30"/>
                                                         <state key="normal" title="VCN Checkout"/>
                                                         <connections>
                                                             <action selector="vcnCheckoutWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="uwq-lN-GAW"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ACl-Ue-YsN">
-                                                        <rect key="frame" x="0.0" y="282" width="315" height="30"/>
+                                                        <rect key="frame" x="0.0" y="331" width="315" height="30"/>
                                                         <state key="normal" title="Track Order Confirmation"/>
                                                         <connections>
                                                             <action selector="trackOrderConfirmationWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SeX-BK-OTu"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B7c-6q-jWr">
-                                                        <rect key="frame" x="0.0" y="327" width="315" height="30"/>
+                                                        <rect key="frame" x="0.0" y="376" width="315" height="30"/>
                                                         <state key="normal" title="Clear Cookies"/>
                                                         <connections>
                                                             <action selector="clearCookiesWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="sZw-Js-AUa"/>
                                                         </connections>
                                                     </button>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Checkout result: " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rzb-hq-GBZ">
-                                                        <rect key="frame" x="0.0" y="372" width="315" height="20.5"/>
+                                                        <rect key="frame" x="0.0" y="421" width="315" height="20.5"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -130,6 +149,7 @@
                                                 <constraints>
                                                     <constraint firstItem="WH3-Yf-wCv" firstAttribute="leading" secondItem="reI-mQ-8Iu" secondAttribute="leading" id="SHd-B7-IIs"/>
                                                     <constraint firstItem="oiw-1r-wLA" firstAttribute="leading" secondItem="reI-mQ-8Iu" secondAttribute="leading" id="ilA-e5-aco"/>
+                                                    <constraint firstItem="Equ-5u-c2Z" firstAttribute="leading" secondItem="reI-mQ-8Iu" secondAttribute="leading" id="wxY-Yi-evb"/>
                                                 </constraints>
                                             </stackView>
                                         </subviews>
@@ -162,6 +182,7 @@
                     </view>
                     <connections>
                         <outlet property="amountTextField" destination="oiw-1r-wLA" id="hbJ-pK-ckK"/>
+                        <outlet property="caasTextfield" destination="Equ-5u-c2Z" id="CSD-zF-pdb"/>
                         <outlet property="promoIDTextField" destination="WH3-Yf-wCv" id="epy-I6-Alo"/>
                         <outlet property="publicKeyTextfield" destination="reI-mQ-8Iu" id="0Lp-dt-7RV"/>
                         <outlet property="resultLabel" destination="rzb-hq-GBZ" id="XWw-zf-F2G"/>

@@ -16,14 +16,19 @@ class ViewController: UIViewController {
     @IBOutlet weak var amountTextField: UITextField!
     @IBOutlet weak var promoIDTextField: UITextField!
     @IBOutlet weak var publicKeyTextfield: UITextField!
+    @IBOutlet weak var caasTextfield: UITextField!
     @IBOutlet weak var resultLabel: UILabel!
 
     var promotionalButton: AffirmPromotionalButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        // Using AffirmPromotionalButton for first button (See more in configurPromotionalMessage)
         promotionalButton = AffirmPromotionalButton(promoID: nil, showCTA: true, pageType: .product, presentingViewController: self, frame: CGRect(x: 0, y: 0, width: 315, height: 34))
         stackView.insertArrangedSubview(promotionalButton, at: 0)
+
+        // Configure Textfields
         publicKeyTextfield.text = AffirmConfiguration.shared.publicKey
         configureTextField()
     }
@@ -37,6 +42,8 @@ class ViewController: UIViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
     @objc func keyboardWillChangeFrame(notification: Notification) {
@@ -53,7 +60,14 @@ class ViewController: UIViewController {
         let dollarPrice = NSDecimalNumber(string: self.amountTextField.text)
         let item = AffirmItem(name: "Affirm Test Item", sku: "test_item", unitPrice: dollarPrice, quantity: 1, url: URL(string: "http://sandbox.affirm.com/item")!)
         let shipping = AffirmShippingDetail.shippingDetail(name: "Chester Cheetah", line1: "633 Folsom Street", line2: "", city: "San Francisco", state: "CA", zipCode: "94107", countryCode: "USA")
+
+        // Checkout
         let checkout = AffirmCheckout(items: [item], shipping: shipping, taxAmount: NSDecimalNumber.zero, shippingAmount: NSDecimalNumber.zero, discounts: nil, metadata: nil, financingProgram: nil, orderId: "JKLMO4321")
+
+        // CAAS
+        if let caas = caasTextfield.text, !caas.isEmpty {
+            checkout.caas = caas
+        }
 
         let controller = AffirmCheckoutViewController.start(checkout: checkout, delegate: self)
         present(controller, animated: true, completion: nil)
@@ -63,7 +77,14 @@ class ViewController: UIViewController {
         let dollarPrice = NSDecimalNumber(string: self.amountTextField.text)
         let item = AffirmItem(name: "Affirm Test Item", sku: "test_item", unitPrice: dollarPrice, quantity: 1, url: URL(string: "http://sandbox.affirm.com/item")!)
         let shipping = AffirmShippingDetail(name: "Test Tester", email: "testtester@test.com", phoneNumber: "1111111111", line1: "633 Folsom Street", line2: "", city: "San Francisco", state: "CA", zipCode: "94107", countryCode: "USA")
+
+        // Checkout
         let checkout = AffirmCheckout.checkout(items: [item], shipping: shipping, payoutAmount: dollarPrice.toIntegerCents())
+
+        // CAAS
+        if let caas = caasTextfield.text, !caas.isEmpty {
+            checkout.caas = caas
+        }
 
         let controller = AffirmCheckoutViewController.start(checkout: checkout, delegate: self)
         present(controller, animated: true, completion: nil)
@@ -73,7 +94,14 @@ class ViewController: UIViewController {
         let dollarPrice = NSDecimalNumber(string: self.amountTextField.text)
         let item = AffirmItem(name: "Affirm Test Item", sku: "test_item", unitPrice: dollarPrice, quantity: 1, url: URL(string: "http://sandbox.affirm.com/item")!)
         let shipping = AffirmShippingDetail(name: "Chester Cheetah", email: nil, phoneNumber: nil, line1: "633 Folsom Street", line2: "", city: "San Francisco", state: "CA", zipCode: "94107", countryCode: "USA")
+
+        // Checkout
         let checkout = AffirmCheckout.checkout(items: [item], shipping: shipping, payoutAmount: dollarPrice.toIntegerCents())
+
+        // CAAS
+        if let caas = caasTextfield.text, !caas.isEmpty {
+            checkout.caas = caas
+        }
 
         let controller = AffirmCheckoutViewController.start(checkout: checkout, useVCN: true, delegate: self)
         present(controller, animated: true, completion: nil)
