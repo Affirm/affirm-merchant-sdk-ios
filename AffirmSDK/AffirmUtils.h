@@ -47,4 +47,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface UIImage (Utils)
+
++ (nullable UIImage *)imageNamed:(NSString *)name inBundle:(nullable NSBundle *)bundle;
++ (nullable UIImage *)imageNamed:(NSString *)name ofType:(NSString *)type inBundle:(nullable NSBundle *)bundle;
+
+@end
+
 NS_ASSUME_NONNULL_END

@@ -112,9 +112,11 @@
                                                     </stackView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2iM-sZ-gRl" customClass="Button">
                                                         <rect key="frame" x="0.0" y="241" width="315" height="30"/>
+                                                        <gestureRecognizers/>
                                                         <state key="normal" title="Buy with Affirm"/>
                                                         <connections>
                                                             <action selector="checkout:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0Tz-uj-wzx"/>
+                                                            <outletCollection property="gestureRecognizers" destination="e5V-kt-RLt" appends="YES" id="mzp-MX-k12"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cjU-mP-ECZ" customClass="Button">
@@ -126,9 +128,11 @@
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dji-SE-feF" customClass="Button">
                                                         <rect key="frame" x="0.0" y="331" width="315" height="30"/>
+                                                        <gestureRecognizers/>
                                                         <state key="normal" title="VCN Checkout"/>
                                                         <connections>
                                                             <action selector="vcnCheckout:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Wqj-rg-FWy"/>
+                                                            <outletCollection property="gestureRecognizers" destination="nbE-df-5g5" appends="YES" id="tyq-e1-qWd"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9rs-fg-GLl">
@@ -205,6 +209,16 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="e5V-kt-RLt">
+                    <connections>
+                        <action selector="showEligibility:" destination="BYZ-38-t0r" id="eLz-B3-2MN"/>
+                    </connections>
+                </pongPressGestureRecognizer>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="nbE-df-5g5">
+                    <connections>
+                        <action selector="showVCNEligibility:" destination="BYZ-38-t0r" id="Fon-hC-Yod"/>
+                    </connections>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="524" y="65.217391304347828"/>
         </scene>

@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  @param checkoutViewController The checkoutViewController that manages the checkout process.
  */
-- (void)checkoutCancelled:(AffirmCheckoutViewController *)checkoutViewController;
+- (void)checkoutCancelled:(UIViewController *)checkoutViewController;
 
 /**
  This method is called when the user has completed the vcn checkout.

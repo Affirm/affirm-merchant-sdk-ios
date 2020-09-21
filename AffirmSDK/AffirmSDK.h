@@ -38,3 +38,4 @@ FOUNDATION_EXPORT const unsigned char AffirmSDKVersionString[];
 #import <AffirmSDK/AffirmDataHandler.h>
 #import <AffirmSDK/AffirmPromoModalViewController.h>
 #import <AffirmSDK/AffirmPrequalModalViewController.h>
+#import <AffirmSDK/AffirmEligibilityViewController.h>

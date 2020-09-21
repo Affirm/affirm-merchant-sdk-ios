@@ -42,9 +42,14 @@
     self.webView = webView;
 
     AffirmActivityIndicatorView *activityIndicatorView = [[AffirmActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
-    activityIndicatorView.center = self.view.center;
     [self.view addSubview:activityIndicatorView];
     self.activityIndicatorView = activityIndicatorView;
+}
+
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    self.activityIndicatorView.center = self.view.center;
 }
 
 - (void)viewWillDisappear:(BOOL)animated

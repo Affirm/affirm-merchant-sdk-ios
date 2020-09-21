@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.source						= { :git => 'https://github.com/Affirm/affirm-merchant-sdk-ios.git', :tag => s.version.to_s }
   s.ios.deployment_target		= '9.0'
   s.source_files				= 'AffirmSDK/*.{h,m}'
-  s.resource					= 'AffirmSDK/AffirmSDK.bundle'
   s.public_header_files			= 'AffirmSDK/*.h'
   s.frameworks					= 'UIKit', 'Foundation', 'Security', 'WebKit'
+  s.resources					= ['AffirmSDK/*.xib', 'AffirmSDK/*.bundle']
 end
