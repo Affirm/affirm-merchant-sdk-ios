@@ -10,6 +10,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AffirmEligibilityViewController">
             <connections>
+                <outlet property="amountField" destination="BM8-MK-m5W" id="RJD-gd-wbu"/>
+                <outlet property="continueButton" destination="l0b-2i-9CY" id="AyX-T7-xvb"/>
                 <outlet property="fieldView" destination="f2L-A1-rCz" id="ars-JK-nI5"/>
                 <outlet property="logoView" destination="Cb3-MS-oHw" id="MZM-jB-sdz"/>
                 <outlet property="view" destination="iN0-l3-epB" id="JkQ-U3-LUX"/>
@@ -19,36 +21,36 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Big purchase? No problem." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gVI-ij-vDq">
-                    <rect key="frame" x="40" y="153" width="334" height="31.5"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How much is your purchase?" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gVI-ij-vDq">
+                    <rect key="frame" x="40" y="155.5" width="334" height="31.5"/>
                     <fontDescription key="fontDescription" type="system" pointSize="26"/>
                     <color key="textColor" red="0.12549019607843137" green="0.13333333333333333" blue="0.13725490196078433" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Take your items home today and pay monthly with Affirm. Checking your eligibility won’t affect your credit score." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LoL-iu-YcV">
-                    <rect key="frame" x="40" y="219.5" width="334" height="61"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter up to $4,000. If your purchase is more than that amount, you can cover the rest with another payment method." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LoL-iu-YcV">
+                    <rect key="frame" x="40" y="222" width="334" height="61"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.22745098039215686" green="0.23529411764705882" blue="0.23921568627450979" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Cb3-MS-oHw">
-                    <rect key="frame" x="40" y="84" width="85" height="34"/>
+                    <rect key="frame" x="40" y="84" width="120" height="36.5"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="34" id="D3v-R2-3Ud"/>
-                        <constraint firstAttribute="width" constant="85" id="fk0-76-ZRr"/>
+                        <constraint firstAttribute="width" constant="120" id="fk0-76-ZRr"/>
+                        <constraint firstAttribute="width" secondItem="Cb3-MS-oHw" secondAttribute="height" multiplier="79:24" id="izU-jV-RqH"/>
                     </constraints>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f2L-A1-rCz">
-                    <rect key="frame" x="40" y="315.5" width="334" height="44"/>
+                    <rect key="frame" x="40" y="318" width="334" height="44"/>
                     <subviews>
-                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="MOBILE NUMBER" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BM8-MK-m5W">
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="$*" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BM8-MK-m5W">
                             <rect key="frame" x="15" y="0.0" width="304" height="44"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="44" id="aTV-c1-2HE"/>
                             </constraints>
                             <color key="textColor" red="0.12549019610000001" green="0.1333333333" blue="0.13725490200000001" alpha="1" colorSpace="calibratedRGB"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <textInputTraits key="textInputTraits" keyboardType="phonePad" returnKeyType="done"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <textInputTraits key="textInputTraits" keyboardType="decimalPad" returnKeyType="done"/>
                             <connections>
                                 <outlet property="delegate" destination="iN0-l3-epB" id="b7S-CN-nla"/>
                             </connections>
@@ -63,22 +65,19 @@
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l0b-2i-9CY">
-                    <rect key="frame" x="40" y="706.5" width="334" height="60"/>
+                    <rect key="frame" x="40" y="397" width="334" height="60"/>
                     <color key="backgroundColor" red="0.058823529411764705" green="0.61176470588235299" blue="0.92941176470588238" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="60" id="t72-Aa-pQm"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                    <state key="normal" title="Get started">
+                    <state key="normal" title="Continue">
                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </state>
+                    <connections>
+                        <action selector="getStarted:" destination="-1" eventType="touchUpInside" id="KTJ-sB-Poy"/>
+                    </connections>
                 </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="We’ll send you a verification code via SMS." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uqt-lo-e2B">
-                    <rect key="frame" x="40" y="801.5" width="334" height="20.5"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" red="0.2274509804" green="0.23529411759999999" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
             </subviews>
             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
             <constraints>
@@ -86,20 +85,18 @@
                 <constraint firstItem="LoL-iu-YcV" firstAttribute="top" secondItem="gVI-ij-vDq" secondAttribute="bottom" constant="35" id="1en-dg-ng8"/>
                 <constraint firstItem="Cb3-MS-oHw" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="40" id="2sy-S4-wMS"/>
                 <constraint firstItem="l0b-2i-9CY" firstAttribute="trailing" secondItem="gVI-ij-vDq" secondAttribute="trailing" id="BFp-Xb-2yf"/>
+                <constraint firstItem="l0b-2i-9CY" firstAttribute="top" secondItem="f2L-A1-rCz" secondAttribute="bottom" constant="35" id="Dkt-JD-09E"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="gVI-ij-vDq" secondAttribute="trailing" constant="40" id="HsJ-QU-Vhh"/>
                 <constraint firstItem="f2L-A1-rCz" firstAttribute="trailing" secondItem="gVI-ij-vDq" secondAttribute="trailing" id="LL7-Ff-qFh"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="f2L-A1-rCz" secondAttribute="trailing" constant="40" id="MZI-jU-7aE"/>
                 <constraint firstItem="gVI-ij-vDq" firstAttribute="leading" secondItem="Cb3-MS-oHw" secondAttribute="leading" id="Net-qf-8af"/>
-                <constraint firstItem="uqt-lo-e2B" firstAttribute="trailing" secondItem="l0b-2i-9CY" secondAttribute="trailing" id="O3z-rH-ZhT"/>
                 <constraint firstItem="l0b-2i-9CY" firstAttribute="leading" secondItem="gVI-ij-vDq" secondAttribute="leading" id="RwC-RY-bW6"/>
-                <constraint firstItem="uqt-lo-e2B" firstAttribute="top" secondItem="l0b-2i-9CY" secondAttribute="bottom" constant="35" id="T6s-uF-YMn"/>
                 <constraint firstItem="Cb3-MS-oHw" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="40" id="U9x-pX-oux"/>
                 <constraint firstItem="f2L-A1-rCz" firstAttribute="leading" secondItem="gVI-ij-vDq" secondAttribute="leading" id="UDQ-bp-Gbw"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="uqt-lo-e2B" secondAttribute="bottom" constant="40" id="dAz-Sj-Ymf"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="l0b-2i-9CY" secondAttribute="bottom" constant="40" id="Xm3-0g-P8w"/>
                 <constraint firstItem="f2L-A1-rCz" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="40" id="eLL-V2-pxl"/>
                 <constraint firstItem="f2L-A1-rCz" firstAttribute="top" secondItem="LoL-iu-YcV" secondAttribute="bottom" constant="35" id="ewT-8r-uYS"/>
                 <constraint firstItem="LoL-iu-YcV" firstAttribute="trailing" secondItem="gVI-ij-vDq" secondAttribute="trailing" id="oLA-Oc-ioZ"/>
-                <constraint firstItem="uqt-lo-e2B" firstAttribute="leading" secondItem="l0b-2i-9CY" secondAttribute="leading" id="q7z-OI-yaH"/>
                 <constraint firstItem="gVI-ij-vDq" firstAttribute="top" secondItem="Cb3-MS-oHw" secondAttribute="bottom" constant="35" id="xz9-6U-aK2"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>

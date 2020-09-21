@@ -7,6 +7,7 @@
 //
 
 #import "AffirmEligibilityViewController.h"
+#import "AffirmCheckoutViewController.h"
 #import "AffirmActivityIndicatorView.h"
 #import "AffirmPopupViewController.h"
 #import "AffirmCheckoutDelegate.h"
@@ -20,10 +21,12 @@
 #import "AffirmConstants.h"
 #import "AffirmUtils.h"
 
-@interface AffirmEligibilityViewController ()
+@interface AffirmEligibilityViewController () <UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *logoView;
 @property (weak, nonatomic) IBOutlet UIView *fieldView;
+@property (weak, nonatomic) IBOutlet UITextField *amountField;
+@property (weak, nonatomic) IBOutlet UIButton *continueButton;
 
 @end
 
@@ -97,12 +100,39 @@
     self.fieldView.layer.cornerRadius = 5.0f;
     self.fieldView.layer.borderColor = [UIColor lightGrayColor].CGColor;
     self.fieldView.layer.borderWidth = 1 / UIScreen.mainScreen.scale;
+    self.amountField.text = self.checkout.totalAmount.stringValue;
+    UILabel *maxAmountLabel = [UILabel new];
+    maxAmountLabel.text = @"of $4,000";
+    maxAmountLabel.textColor = [UIColor lightGrayColor];
+    [maxAmountLabel sizeToFit];
+    self.amountField.rightView = maxAmountLabel;
+    self.amountField.rightViewMode = UITextFieldViewModeAlways;
+    self.continueButton.layer.masksToBounds = YES;
+    self.continueButton.layer.cornerRadius = 5.0f;
 }
 
 - (void)cancel:(id)sender
 {
     [self.delegate checkoutCancelled:self];
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (IBAction)getStarted:(id)sender
+{
+    NSCAssert(self.navigationController != nil, @"The current view controller is not contained in a navigation controller.");
+
+    self.checkout.totalAmount = [NSDecimalNumber decimalNumberWithString:self.amountField.text];
+
+    AffirmCheckoutViewController *controller = [AffirmCheckoutViewController startCheckout:self.checkout useVCN:self.useVCN getReasonCodes:self.getReasonCodes delegate:self.delegate];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+#pragma mark - UITextFieldDelegate
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return YES;
 }
 
 @end
