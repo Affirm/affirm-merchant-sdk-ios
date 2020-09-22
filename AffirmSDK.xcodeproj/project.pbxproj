@@ -32,6 +32,9 @@
 		08C4306D223B7C640009E045 /* AffirmRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C4306B223B7C640009E045 /* AffirmRequest.m */; };
 		08C43074223B86A20009E045 /* AffirmProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 08C43072223B86A20009E045 /* AffirmProtocol.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		08C43075223B86A20009E045 /* AffirmProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C43073223B86A20009E045 /* AffirmProtocol.m */; };
+		08E94C25251A05F7000296B0 /* AffirmCardInfoViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 08E94C22251A05F7000296B0 /* AffirmCardInfoViewController.h */; };
+		08E94C26251A05F7000296B0 /* AffirmCardInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E94C23251A05F7000296B0 /* AffirmCardInfoViewController.m */; };
+		08E94C27251A05F7000296B0 /* AffirmCardInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 08E94C24251A05F7000296B0 /* AffirmCardInfoViewController.xib */; };
 		08EA7147233DE10200BC36CE /* AffirmBillingDetail.h in Headers */ = {isa = PBXBuildFile; fileRef = 08EA7145233DE10200BC36CE /* AffirmBillingDetail.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		08EA7148233DE10200BC36CE /* AffirmBillingDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 08EA7146233DE10200BC36CE /* AffirmBillingDetail.m */; };
 		08FA591A222D08E5007E5E4E /* AffirmSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FA5910222D08E5007E5E4E /* AffirmSDK.framework */; };
@@ -117,6 +120,9 @@
 		08C4306B223B7C640009E045 /* AffirmRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmRequest.m; sourceTree = "<group>"; };
 		08C43072223B86A20009E045 /* AffirmProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmProtocol.h; sourceTree = "<group>"; };
 		08C43073223B86A20009E045 /* AffirmProtocol.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmProtocol.m; sourceTree = "<group>"; };
+		08E94C22251A05F7000296B0 /* AffirmCardInfoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmCardInfoViewController.h; sourceTree = "<group>"; };
+		08E94C23251A05F7000296B0 /* AffirmCardInfoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmCardInfoViewController.m; sourceTree = "<group>"; };
+		08E94C24251A05F7000296B0 /* AffirmCardInfoViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AffirmCardInfoViewController.xib; sourceTree = "<group>"; };
 		08EA7145233DE10200BC36CE /* AffirmBillingDetail.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmBillingDetail.h; sourceTree = "<group>"; };
 		08EA7146233DE10200BC36CE /* AffirmBillingDetail.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmBillingDetail.m; sourceTree = "<group>"; };
 		08FA5910222D08E5007E5E4E /* AffirmSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AffirmSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -258,6 +264,9 @@
 				7965AB35223656680063198F /* AffirmSDK.bundle */,
 				0827FF892325EB9200AEC14C /* AffirmDataHandler.h */,
 				0827FF8A2325EB9200AEC14C /* AffirmDataHandler.m */,
+				08E94C22251A05F7000296B0 /* AffirmCardInfoViewController.h */,
+				08E94C23251A05F7000296B0 /* AffirmCardInfoViewController.m */,
+				08E94C24251A05F7000296B0 /* AffirmCardInfoViewController.xib */,
 			);
 			path = AffirmSDK;
 			sourceTree = "<group>";
@@ -291,6 +300,7 @@
 				79B1ABEE222FC929009EE7FA /* AffirmShippingDetail.h in Headers */,
 				DA776292223F33EC00FB2DB3 /* AffirmCheckoutViewController.h in Headers */,
 				08FA5921222D08E5007E5E4E /* AffirmSDK.h in Headers */,
+				08E94C25251A05F7000296B0 /* AffirmCardInfoViewController.h in Headers */,
 				DA77629A223F783400FB2DB3 /* AffirmJSONifiable.h in Headers */,
 				DA7762A2223F975400FB2DB3 /* AffirmCreditCard.h in Headers */,
 				DA776298223F351700FB2DB3 /* AffirmCheckoutDelegate.h in Headers */,
@@ -396,6 +406,7 @@
 			files = (
 				08A4D3EB23264FE0003A4BEB /* README.md in Resources */,
 				7965AB36223656680063198F /* AffirmSDK.bundle in Resources */,
+				08E94C27251A05F7000296B0 /* AffirmCardInfoViewController.xib in Resources */,
 				08613156251874BB0043DFEC /* AffirmEligibilityViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -434,6 +445,7 @@
 				0841E335223A9948006D8B97 /* AffirmConstants.m in Sources */,
 				08A81F4E223FF61300FAA8D2 /* AffirmConfiguration.m in Sources */,
 				08C4306D223B7C640009E045 /* AffirmRequest.m in Sources */,
+				08E94C26251A05F7000296B0 /* AffirmCardInfoViewController.m in Sources */,
 				0876CA2C22FA6804006F8062 /* AffirmReasonCode.m in Sources */,
 				DA33DCFD223A3191009D73CA /* AffirmCheckout.m in Sources */,
 				DA33DCF3223A2FD7009D73CA /* AffirmDiscount.m in Sources */,

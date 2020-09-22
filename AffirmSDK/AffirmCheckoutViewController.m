@@ -7,6 +7,8 @@
 //
 
 #import "AffirmCheckoutViewController.h"
+#import "AffirmEligibilityViewController.h"
+#import "AffirmCardInfoViewController.h"
 #import "AffirmActivityIndicatorView.h"
 #import "AffirmPopupViewController.h"
 #import "AffirmCheckoutDelegate.h"
@@ -166,8 +168,15 @@
         for(NSURLQueryItem *item in urlComponents.queryItems) {
             if (_useVCN) {
                 if([item.name isEqualToString:@"data"]) {
-                    [self.delegate vcnCheckout:self
-                       completedWithCreditCard:[AffirmCreditCard creditCardWithDict:item.value.convertToDictionary]];
+                    AffirmCreditCard *creditCard = [AffirmCreditCard creditCardWithDict:item.value.convertToDictionary];
+                    if ([self.navigationController.viewControllers.firstObject isKindOfClass:[AffirmEligibilityViewController class]]) {
+                        AffirmCardInfoViewController *viewController = [[AffirmCardInfoViewController alloc] initWithNibName:@"AffirmCardInfoViewController" bundle:[NSBundle sdkBundle]];
+                        viewController.creditCard = creditCard;
+                        [self.navigationController pushViewController:viewController animated:YES];
+                    } else {
+                        [self.delegate vcnCheckout:self
+                           completedWithCreditCard:creditCard];
+                    }
                     [[AffirmLogger sharedInstance] trackEvent:@"Checkout completed" parameters:@{@"checkout_ari": self.checkoutARI, @"checkout_data_received": item.value != nil ? @"true" : @"false"}];
                     break;
                 }
