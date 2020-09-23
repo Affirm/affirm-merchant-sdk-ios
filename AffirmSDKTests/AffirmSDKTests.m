@@ -10,6 +10,7 @@
 #import "AffirmConfiguration.h"
 #import "AffirmUtils.h"
 #import "AffirmRequest.h"
+#import "AffirmCardValidator.h"
 
 @interface AffirmSDKTests : XCTestCase
 
@@ -36,13 +37,6 @@
 
 - (void)testUtil
 {
-    NSDictionary *someParams = @{
-                                 @"amount": @(30000),
-                                 @"publicKey": @"PKNCHBIVYOT8JSOZ",
-                                 @"is_sdk": @"true"
-                                 };
-    
-    XCTAssertEqualObjects([someParams queryURLEncoding], @"amount=30000&publicKey=PKNCHBIVYOT8JSOZ&is_sdk=true");
     XCTAssertNotNil([NSBundle sdkBundle]);
     XCTAssertNotNil([NSBundle resourceBundle]);
     XCTAssertEqualObjects([[NSDecimalNumber decimalNumberWithString:@"500"] toIntegerCents], @(50000));
@@ -54,6 +48,42 @@
     
     NSString *jsonStringError = @"{\"number\":\"40012959709,\"callback_id\":\"4DACF-ASBJ-WEAS-GBNZ\",\"date\":\"2018-09-12\"}";
     XCTAssertNil([jsonStringError convertToDictionary]);
+}
+
+- (void)testVisaCard
+{
+    AffirmBrand *brand = [[AffirmCardValidator sharedCardValidator] brandForCardNumber:@"4242 4242 4242 4242"];
+    XCTAssertEqual(brand.type, AffirmBrandTypeVisa);
+}
+
+- (void)testMasterCard
+{
+    AffirmBrand *brand = [[AffirmCardValidator sharedCardValidator] brandForCardNumber:@"5555555555554444"];
+    XCTAssertEqual(brand.type, AffirmBrandTypeMastercard);
+}
+
+- (void)testAmericanExpress
+{
+    AffirmBrand *brand = [[AffirmCardValidator sharedCardValidator] brandForCardNumber:@"378282246310005"];
+    XCTAssertEqual(brand.type, AffirmBrandTypeAmex);
+}
+
+- (void)testDiscover
+{
+    AffirmBrand *brand = [[AffirmCardValidator sharedCardValidator] brandForCardNumber:@"6011111111111117"];
+    XCTAssertEqual(brand.type, AffirmBrandTypeDiscover);
+}
+
+- (void)testDinersClub
+{
+    AffirmBrand *brand = [[AffirmCardValidator sharedCardValidator] brandForCardNumber:@"3056930009020004"];
+    XCTAssertEqual(brand.type, AffirmBrandTypeDinersClub);
+}
+
+- (void)testJCB
+{
+    AffirmBrand *brand = [[AffirmCardValidator sharedCardValidator] brandForCardNumber:@"3566002020360505"];
+    XCTAssertEqual(brand.type, AffirmBrandTypeJCB);
 }
 
 @end

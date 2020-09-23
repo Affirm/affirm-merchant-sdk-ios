@@ -18,7 +18,7 @@
 		082C28B1223795AC00B0C01F /* AffirmLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 082C28AF223795AC00B0C01F /* AffirmLogger.m */; };
 		0841E334223A9948006D8B97 /* AffirmConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 0841E332223A9948006D8B97 /* AffirmConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0841E335223A9948006D8B97 /* AffirmConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 0841E333223A9948006D8B97 /* AffirmConstants.m */; };
-		08613153251874510043DFEC /* AffirmEligibilityViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 08613151251874510043DFEC /* AffirmEligibilityViewController.h */; };
+		08613153251874510043DFEC /* AffirmEligibilityViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 08613151251874510043DFEC /* AffirmEligibilityViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		08613154251874510043DFEC /* AffirmEligibilityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08613152251874510043DFEC /* AffirmEligibilityViewController.m */; };
 		08613156251874BB0043DFEC /* AffirmEligibilityViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 08613155251874BB0043DFEC /* AffirmEligibilityViewController.xib */; };
 		0876CA2B22FA6804006F8062 /* AffirmReasonCode.h in Headers */ = {isa = PBXBuildFile; fileRef = 0876CA2922FA6803006F8062 /* AffirmReasonCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -34,7 +34,7 @@
 		08C4306D223B7C640009E045 /* AffirmRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C4306B223B7C640009E045 /* AffirmRequest.m */; };
 		08C43074223B86A20009E045 /* AffirmProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 08C43072223B86A20009E045 /* AffirmProtocol.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		08C43075223B86A20009E045 /* AffirmProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C43073223B86A20009E045 /* AffirmProtocol.m */; };
-		08E94C25251A05F7000296B0 /* AffirmCardInfoViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 08E94C22251A05F7000296B0 /* AffirmCardInfoViewController.h */; };
+		08E94C25251A05F7000296B0 /* AffirmCardInfoViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 08E94C22251A05F7000296B0 /* AffirmCardInfoViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		08E94C26251A05F7000296B0 /* AffirmCardInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E94C23251A05F7000296B0 /* AffirmCardInfoViewController.m */; };
 		08E94C27251A05F7000296B0 /* AffirmCardInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 08E94C24251A05F7000296B0 /* AffirmCardInfoViewController.xib */; };
 		08EA7147233DE10200BC36CE /* AffirmBillingDetail.h in Headers */ = {isa = PBXBuildFile; fileRef = 08EA7145233DE10200BC36CE /* AffirmBillingDetail.h */; settings = {ATTRIBUTES = (Public, ); }; };
