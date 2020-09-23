@@ -201,6 +201,52 @@
 
 @end
 
+@implementation AffirmCancelLoanRequest
+
+- (instancetype)initWithPublicKey:(NSString *)publicKey
+                         checkoutId:(NSString *)checkoutId
+{
+    if (self = [super init]) {
+        _publicKey = [publicKey copy];
+        _checkoutId = [checkoutId copy];
+    }
+    return self;
+}
+
+- (NSString *)path
+{
+    return [NSString stringWithFormat:@"/api/v2/cards/%@/cancel", self.checkoutId];
+}
+
+- (AffirmHTTPMethod)method
+{
+    return AffirmHTTPMethodPOST;
+}
+
+- (NSDictionary *)headers
+{
+    NSString *auth = [NSString stringWithFormat:@"%@:%@", self.publicKey, AFFIRM_PRIVATE_API_KEY];
+    NSData *authData = [auth dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *base64String = [authData base64EncodedStringWithOptions:NSDataBase64EncodingEndLineWithLineFeed];
+    NSMutableDictionary *_headers = [NSMutableDictionary dictionaryWithDictionary:@{@"Content-Type": @"application/json",
+                                                                                    @"Affirm-User-Agent": @"Affirm-iOS-SDK",
+                                                                                    @"Affirm-User-Agent-Version": [AffirmConfiguration affirmSDKVersion]}];
+    _headers[@"Authorization"] = [NSString stringWithFormat:@"Basic %@", base64String];
+    return _headers;
+}
+
+- (NSDictionary *)parameters
+{
+    return @{};
+}
+
+- (Class)responseClass
+{
+    return AffirmCancelLoanResponse.class;
+}
+
+@end
+
 @implementation AffirmPromoResponse
 
 - (instancetype)initWithAla:(NSString *)ala
@@ -282,3 +328,26 @@
 
 @end
 
+@implementation AffirmCancelLoanResponse
+
+- (instancetype)initWithMessage:(NSString *)message code:(NSString *)code checkoutToken:(nonnull NSString *)checkoutToken
+{
+    if (self = [super init]) {
+        _message = [message copy];
+        _code = [code copy];
+        _checkoutToken = [checkoutToken copy];
+    }
+    return self;
+}
+
++ (id <AffirmResponseProtocol>)parse:(NSData *)data
+{
+    NSError *error = nil;
+    id responseObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+    NSString *message = [responseObject valueForKey:@"message"];
+    NSString *code = [responseObject valueForKey:@"code"];
+    NSString *checkoutToken = [responseObject valueForKey:@"checkout_token"];
+    return [[AffirmCancelLoanResponse alloc] initWithMessage:message code:code checkoutToken:checkoutToken];
+}
+
+@end
