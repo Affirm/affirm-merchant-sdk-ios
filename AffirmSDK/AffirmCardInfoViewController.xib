@@ -99,7 +99,7 @@
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lUe-96-Qmo">
-                    <rect key="frame" x="40" y="667" width="334" height="60"/>
+                    <rect key="frame" x="40" y="427.5" width="334" height="60"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="60" id="gZN-vf-4Ub"/>
                     </constraints>
@@ -109,7 +109,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wvA-Ze-qbT">
-                    <rect key="frame" x="40" y="762" width="334" height="60"/>
+                    <rect key="frame" x="40" y="522.5" width="334" height="60"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="60" id="wat-Ey-DJh"/>
                     </constraints>
@@ -121,6 +121,7 @@
             </subviews>
             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
             <constraints>
+                <constraint firstItem="lUe-96-Qmo" firstAttribute="top" secondItem="odP-F8-4vN" secondAttribute="bottom" constant="35" id="4Ta-l7-iLq"/>
                 <constraint firstItem="odP-F8-4vN" firstAttribute="trailing" secondItem="YN8-o0-ljm" secondAttribute="trailing" id="5Je-0Q-Vfa"/>
                 <constraint firstItem="wvA-Ze-qbT" firstAttribute="leading" secondItem="lUe-96-Qmo" secondAttribute="leading" id="JmF-Bm-Tpa"/>
                 <constraint firstItem="wvA-Ze-qbT" firstAttribute="top" secondItem="lUe-96-Qmo" secondAttribute="bottom" constant="35" id="NkA-lx-yOv"/>
@@ -129,7 +130,7 @@
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="YN8-o0-ljm" secondAttribute="trailing" constant="40" id="RtW-gt-ATS"/>
                 <constraint firstItem="wvA-Ze-qbT" firstAttribute="trailing" secondItem="lUe-96-Qmo" secondAttribute="trailing" id="WJy-m0-g6Y"/>
                 <constraint firstItem="odP-F8-4vN" firstAttribute="leading" secondItem="YN8-o0-ljm" secondAttribute="leading" id="YD1-LP-6DQ"/>
-                <constraint firstItem="Q5M-cg-NOt" firstAttribute="bottom" secondItem="wvA-Ze-qbT" secondAttribute="bottom" constant="40" id="cFL-vW-dwD"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="wvA-Ze-qbT" secondAttribute="bottom" constant="40" id="cFL-vW-dwD"/>
                 <constraint firstItem="odP-F8-4vN" firstAttribute="top" secondItem="YN8-o0-ljm" secondAttribute="bottom" constant="35" id="fuM-SS-8Dr"/>
                 <constraint firstItem="YN8-o0-ljm" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="40" id="i0F-OJ-Tdf"/>
                 <constraint firstItem="YN8-o0-ljm" firstAttribute="top" secondItem="Q5M-cg-NOt" secondAttribute="top" constant="40" id="jHB-rv-rgc"/>

@@ -83,6 +83,13 @@
     return dict;
 }
 
+- (NSString *)stringByRemovingIllegalCharacters
+{
+    NSCharacterSet *set = [NSCharacterSet decimalDigitCharacterSet].invertedSet;
+    NSArray *components = [self componentsSeparatedByCharactersInSet:set];
+    return [components componentsJoinedByString:@""];
+}
+
 @end
 
 @implementation NSDecimalNumber (Utils)
