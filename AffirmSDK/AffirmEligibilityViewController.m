@@ -100,7 +100,7 @@
     self.fieldView.layer.cornerRadius = 5.0f;
     self.fieldView.layer.borderColor = [UIColor lightGrayColor].CGColor;
     self.fieldView.layer.borderWidth = 1 / UIScreen.mainScreen.scale;
-    self.amountField.text = self.checkout.totalAmount.stringValue;
+    self.amountField.text = [self.checkout.totalAmount formattedString];
     UILabel *maxAmountLabel = [UILabel new];
     maxAmountLabel.text = @"of $4,000";
     maxAmountLabel.textColor = [UIColor lightGrayColor];
@@ -121,13 +121,27 @@
 {
     NSCAssert(self.navigationController != nil, @"The current view controller is not contained in a navigation controller.");
 
-    self.checkout.totalAmount = [NSDecimalNumber decimalNumberWithString:self.amountField.text];
+    self.checkout.totalAmount = [self.amountField.text currencyDecimal];
 
     AffirmCheckoutViewController *controller = [AffirmCheckoutViewController startCheckout:self.checkout useVCN:self.useVCN getReasonCodes:self.getReasonCodes delegate:self.delegate];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
 #pragma mark - UITextFieldDelegate
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    NSString *term = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    if (term.length == 0) {
+        return YES;
+    }
+
+    NSDecimalNumber *number = [term currencyDecimal];
+    if (number && number != [NSDecimalNumber notANumber]) {
+        textField.text = [number formattedString];
+    }
+    return NO;
+}
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {

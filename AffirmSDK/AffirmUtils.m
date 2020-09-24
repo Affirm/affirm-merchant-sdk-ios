@@ -90,6 +90,25 @@
     return [components componentsJoinedByString:@""];
 }
 
+- (NSDecimalNumber *)currencyDecimal
+{
+    NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
+    numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+    numberFormatter.usesGroupingSeparator = YES;
+    NSMutableCharacterSet *set = [NSMutableCharacterSet characterSetWithCharactersInString:numberFormatter.currencyGroupingSeparator];
+    [set addCharactersInString:numberFormatter.currencySymbol];
+    [set addCharactersInString:numberFormatter.internationalCurrencySymbol];
+    NSMutableString *term = [self mutableCopy];
+    NSRange range = [term rangeOfCharacterFromSet:set];
+    while (range.location != NSNotFound) {
+        [term replaceCharactersInRange:range withString:@""];
+        range = [term rangeOfCharacterFromSet:set];
+    }
+
+    NSDecimalNumber *number = [NSDecimalNumber decimalNumberWithString:term];
+    return number;
+}
+
 @end
 
 @implementation NSDecimalNumber (Utils)
@@ -107,6 +126,16 @@
                                                                                 raiseOnUnderflow:YES
                                                                              raiseOnDivideByZero:YES];
     return [self decimalNumberByMultiplyingByPowerOf10:2 withBehavior:round];
+}
+
+- (NSString *)formattedString
+{
+    NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
+    numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+    numberFormatter.usesGroupingSeparator = YES;
+    numberFormatter.minimumFractionDigits = 0;
+    numberFormatter.maximumFractionDigits = 0;
+    return [numberFormatter stringFromNumber:self];
 }
 
 @end

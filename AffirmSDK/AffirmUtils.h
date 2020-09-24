@@ -30,12 +30,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSDictionary *)convertToDictionary;
 - (NSString *)stringByRemovingIllegalCharacters;
+- (NSDecimalNumber *)currencyDecimal;
 
 @end
 
 @interface NSDecimalNumber (Utils)
 
 - (NSDecimalNumber *)toIntegerCents;
+- (NSString *)formattedString;
 
 @end
 
