@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -25,7 +25,7 @@
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="O5J-XL-g8E">
                                                 <rect key="frame" x="30" y="100" width="315" height="531.5"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qhT-Gh-xmj">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qhT-Gh-xmj">
                                                         <rect key="frame" x="0.0" y="0.0" width="315" height="30"/>
                                                         <connections>
                                                             <action selector="showPromoModal:" destination="BYZ-38-t0r" eventType="touchUpInside" id="mk5-Rw-sYa"/>
@@ -35,13 +35,13 @@
                                                         <rect key="frame" x="0.0" y="45" width="315" height="34"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="PublicKey:   " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fhs-gh-iVR">
-                                                                <rect key="frame" x="0.0" y="0.0" width="93" height="34"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="92.5" height="34"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="DOS-mS-mc1">
-                                                                <rect key="frame" x="93" y="0.0" width="222" height="34"/>
+                                                                <rect key="frame" x="92.5" y="0.0" width="222.5" height="34"/>
                                                                 <accessibility key="accessibilityConfiguration" label="public API key input"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
@@ -55,13 +55,13 @@
                                                         <rect key="frame" x="0.0" y="94" width="315" height="34"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Amount:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z4I-79-lEe">
-                                                                <rect key="frame" x="0.0" y="0.0" width="93" height="34"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="92.5" height="34"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="500" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="FGx-aa-5AC">
-                                                                <rect key="frame" x="93" y="0.0" width="222" height="34"/>
+                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="40" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="FGx-aa-5AC">
+                                                                <rect key="frame" x="92.5" y="0.0" width="222.5" height="34"/>
                                                                 <accessibility key="accessibilityConfiguration" label="price input"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                                 <textInputTraits key="textInputTraits" keyboardType="decimalPad" returnKeyType="done"/>
@@ -75,13 +75,13 @@
                                                         <rect key="frame" x="0.0" y="143" width="315" height="34"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PromoID:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i3V-Zr-5m5">
-                                                                <rect key="frame" x="0.0" y="0.0" width="93" height="34"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="92.5" height="34"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="sVt-6z-4o1">
-                                                                <rect key="frame" x="93" y="0.0" width="222" height="34"/>
+                                                                <rect key="frame" x="92.5" y="0.0" width="222.5" height="34"/>
                                                                 <accessibility key="accessibilityConfiguration" label="promo ID input"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
@@ -95,13 +95,13 @@
                                                         <rect key="frame" x="0.0" y="192" width="315" height="34"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CAAS:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WTI-AF-k2O">
-                                                                <rect key="frame" x="0.0" y="0.0" width="93" height="34"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="92.5" height="34"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="Gy5-et-vvE">
-                                                                <rect key="frame" x="93" y="0.0" width="222" height="34"/>
+                                                                <rect key="frame" x="92.5" y="0.0" width="222.5" height="34"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
                                                                 <connections>
@@ -110,7 +110,7 @@
                                                             </textField>
                                                         </subviews>
                                                     </stackView>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2iM-sZ-gRl" customClass="Button">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2iM-sZ-gRl" customClass="Button">
                                                         <rect key="frame" x="0.0" y="241" width="315" height="30"/>
                                                         <gestureRecognizers/>
                                                         <state key="normal" title="Buy with Affirm"/>
@@ -119,14 +119,14 @@
                                                             <outletCollection property="gestureRecognizers" destination="e5V-kt-RLt" appends="YES" id="mzp-MX-k12"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cjU-mP-ECZ" customClass="Button">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cjU-mP-ECZ" customClass="Button">
                                                         <rect key="frame" x="0.0" y="286" width="315" height="30"/>
                                                         <state key="normal" title="Failed Checkout"/>
                                                         <connections>
                                                             <action selector="showFailedCheckout:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4z2-qe-b3B"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dji-SE-feF" customClass="Button">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dji-SE-feF" customClass="Button">
                                                         <rect key="frame" x="0.0" y="331" width="315" height="30"/>
                                                         <gestureRecognizers/>
                                                         <state key="normal" title="VCN Checkout"/>
@@ -135,21 +135,21 @@
                                                             <outletCollection property="gestureRecognizers" destination="nbE-df-5g5" appends="YES" id="tyq-e1-qWd"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9rs-fg-GLl">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9rs-fg-GLl">
                                                         <rect key="frame" x="0.0" y="376" width="315" height="30"/>
                                                         <state key="normal" title="Show Product Modal"/>
                                                         <connections>
                                                             <action selector="showProductModal:" destination="BYZ-38-t0r" eventType="touchUpInside" id="y3q-uI-3LB"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AV4-HU-m60" customClass="Button">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AV4-HU-m60" customClass="Button">
                                                         <rect key="frame" x="0.0" y="421" width="315" height="30"/>
                                                         <state key="normal" title="Track Order Confirmation"/>
                                                         <connections>
                                                             <action selector="trackOrderConfirmation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0Np-vA-TTi"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ydN-nd-3VK">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ydN-nd-3VK">
                                                         <rect key="frame" x="0.0" y="466" width="315" height="30"/>
                                                         <state key="normal" title="Clear Cookies"/>
                                                         <connections>
@@ -188,6 +188,7 @@
                                 </constraints>
                             </scrollView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="NQB-Zw-j9f" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="0Db-oE-5zJ"/>
@@ -195,7 +196,6 @@
                             <constraint firstItem="NQB-Zw-j9f" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="dAt-qG-2ne"/>
                             <constraint firstItem="NQB-Zw-j9f" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="zeh-1p-GvN"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
                         <outlet property="amountTextField" destination="FGx-aa-5AC" id="Brg-uG-eU4"/>

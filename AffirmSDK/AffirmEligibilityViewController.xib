@@ -8,6 +8,14 @@
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Calibre-Regular.otf">
+            <string>Calibre-Regular</string>
+        </array>
+        <array key="Calibre-Semibold.otf">
+            <string>Calibre-Semibold</string>
+        </array>
+    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AffirmEligibilityViewController">
             <connections>
@@ -23,15 +31,15 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How much is your purchase?" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gVI-ij-vDq">
-                    <rect key="frame" x="40" y="155.5" width="334" height="31.5"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="26"/>
+                    <rect key="frame" x="40" y="155.5" width="334" height="31"/>
+                    <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="26"/>
                     <color key="textColor" red="0.12549019607843137" green="0.13333333333333333" blue="0.13725490196078433" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter up to $4,000. If your purchase is more than that amount, you can cover the rest with another payment method." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LoL-iu-YcV">
-                    <rect key="frame" x="40" y="222" width="334" height="61"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" red="0.22745098039215686" green="0.23529411764705882" blue="0.23921568627450979" alpha="1" colorSpace="calibratedRGB"/>
+                    <rect key="frame" x="40" y="201.5" width="334" height="61"/>
+                    <fontDescription key="fontDescription" name="Calibre-Regular" family="Calibre" pointSize="17"/>
+                    <color key="textColor" red="0.22745098039215686" green="0.23529411764705882" blue="0.23921568627450979" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Cb3-MS-oHw">
@@ -42,7 +50,7 @@
                     </constraints>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f2L-A1-rCz">
-                    <rect key="frame" x="40" y="318" width="334" height="44"/>
+                    <rect key="frame" x="40" y="297.5" width="334" height="44"/>
                     <subviews>
                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="$*" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BM8-MK-m5W">
                             <rect key="frame" x="15" y="0.0" width="304" height="44"/>
@@ -66,8 +74,8 @@
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l0b-2i-9CY">
-                    <rect key="frame" x="40" y="397" width="334" height="60"/>
-                    <color key="backgroundColor" red="0.058823529411764705" green="0.61176470588235299" blue="0.92941176470588238" alpha="1" colorSpace="calibratedRGB"/>
+                    <rect key="frame" x="40" y="376.5" width="334" height="60"/>
+                    <color key="backgroundColor" red="0.058823529411764705" green="0.62745098039215685" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="60" id="t72-Aa-pQm"/>
                     </constraints>
@@ -84,7 +92,7 @@
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
                 <constraint firstItem="LoL-iu-YcV" firstAttribute="leading" secondItem="gVI-ij-vDq" secondAttribute="leading" id="1LT-zB-BP4"/>
-                <constraint firstItem="LoL-iu-YcV" firstAttribute="top" secondItem="gVI-ij-vDq" secondAttribute="bottom" constant="35" id="1en-dg-ng8"/>
+                <constraint firstItem="LoL-iu-YcV" firstAttribute="top" secondItem="gVI-ij-vDq" secondAttribute="bottom" constant="15" id="1en-dg-ng8"/>
                 <constraint firstItem="Cb3-MS-oHw" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="40" id="2sy-S4-wMS"/>
                 <constraint firstItem="l0b-2i-9CY" firstAttribute="trailing" secondItem="gVI-ij-vDq" secondAttribute="trailing" id="BFp-Xb-2yf"/>
                 <constraint firstItem="l0b-2i-9CY" firstAttribute="top" secondItem="f2L-A1-rCz" secondAttribute="bottom" constant="35" id="Dkt-JD-09E"/>

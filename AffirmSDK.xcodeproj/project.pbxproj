@@ -18,6 +18,8 @@
 		082C28B1223795AC00B0C01F /* AffirmLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 082C28AF223795AC00B0C01F /* AffirmLogger.m */; };
 		0841E334223A9948006D8B97 /* AffirmConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 0841E332223A9948006D8B97 /* AffirmConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0841E335223A9948006D8B97 /* AffirmConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 0841E333223A9948006D8B97 /* AffirmConstants.m */; };
+		084C1038251C968B008703ED /* AffirmFontLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 084C1036251C968B008703ED /* AffirmFontLoader.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		084C1039251C968B008703ED /* AffirmFontLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 084C1037251C968B008703ED /* AffirmFontLoader.m */; };
 		08613153251874510043DFEC /* AffirmEligibilityViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 08613151251874510043DFEC /* AffirmEligibilityViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		08613154251874510043DFEC /* AffirmEligibilityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08613152251874510043DFEC /* AffirmEligibilityViewController.m */; };
 		08613156251874BB0043DFEC /* AffirmEligibilityViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 08613155251874BB0043DFEC /* AffirmEligibilityViewController.xib */; };
@@ -108,6 +110,8 @@
 		082C28AF223795AC00B0C01F /* AffirmLogger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmLogger.m; sourceTree = "<group>"; };
 		0841E332223A9948006D8B97 /* AffirmConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmConstants.h; sourceTree = "<group>"; };
 		0841E333223A9948006D8B97 /* AffirmConstants.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmConstants.m; sourceTree = "<group>"; };
+		084C1036251C968B008703ED /* AffirmFontLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmFontLoader.h; sourceTree = "<group>"; };
+		084C1037251C968B008703ED /* AffirmFontLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmFontLoader.m; sourceTree = "<group>"; };
 		08613151251874510043DFEC /* AffirmEligibilityViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmEligibilityViewController.h; sourceTree = "<group>"; };
 		08613152251874510043DFEC /* AffirmEligibilityViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmEligibilityViewController.m; sourceTree = "<group>"; };
 		08613155251874BB0043DFEC /* AffirmEligibilityViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AffirmEligibilityViewController.xib; sourceTree = "<group>"; };
@@ -273,6 +277,8 @@
 				08E94C24251A05F7000296B0 /* AffirmCardInfoViewController.xib */,
 				08AF89FA251B20230011DE0A /* AffirmCardValidator.h */,
 				08AF89FB251B20230011DE0A /* AffirmCardValidator.m */,
+				084C1036251C968B008703ED /* AffirmFontLoader.h */,
+				084C1037251C968B008703ED /* AffirmFontLoader.m */,
 			);
 			path = AffirmSDK;
 			sourceTree = "<group>";
@@ -322,6 +328,7 @@
 				79088B4D2238D20E0059D691 /* AffirmPrequalModalViewController.h in Headers */,
 				79088B512238DB840059D691 /* AffirmPromoModalViewController.h in Headers */,
 				7944D9932240BF830040525E /* AffirmActivityIndicatorView.h in Headers */,
+				084C1038251C968B008703ED /* AffirmFontLoader.h in Headers */,
 				DA77629D223F959F00FB2DB3 /* AffirmPopupViewController.h in Headers */,
 				0841E334223A9948006D8B97 /* AffirmConstants.h in Headers */,
 				08A81F49223F986D00FAA8D2 /* AffirmClient.h in Headers */,
@@ -434,6 +441,7 @@
 			files = (
 				7944D9C22248A9770040525E /* AffirmShippingDetail.m in Sources */,
 				0813712E2255A39400ACDD91 /* AffirmOrder.m in Sources */,
+				084C1039251C968B008703ED /* AffirmFontLoader.m in Sources */,
 				0813712F2255A39400ACDD91 /* AffirmProduct.m in Sources */,
 				08FA592D222D1176007E5E4E /* AffirmUtils.m in Sources */,
 				08A81F4A223F986D00FAA8D2 /* AffirmClient.m in Sources */,

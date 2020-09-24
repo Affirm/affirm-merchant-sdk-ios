@@ -96,8 +96,6 @@
                                                                              target:self
                                                                              action:@selector(cancel:)];
     self.logoView.image = [UIImage imageNamed:@"blue-black_logo-transparent_bg" inBundle:[NSBundle resourceBundle]];
-    self.fieldView.layer.masksToBounds = YES;
-    self.fieldView.layer.cornerRadius = 5.0f;
     self.fieldView.layer.borderColor = [UIColor lightGrayColor].CGColor;
     self.fieldView.layer.borderWidth = 1 / UIScreen.mainScreen.scale;
     self.amountField.text = [self.checkout.totalAmount formattedString];
@@ -108,7 +106,7 @@
     self.amountField.rightView = maxAmountLabel;
     self.amountField.rightViewMode = UITextFieldViewModeAlways;
     self.continueButton.layer.masksToBounds = YES;
-    self.continueButton.layer.cornerRadius = 5.0f;
+    self.continueButton.layer.cornerRadius = 6.0f;
 }
 
 - (void)cancel:(id)sender
