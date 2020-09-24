@@ -9,11 +9,11 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
+        <array key="Calibre-Bold.otf">
+            <string>Calibre-Bold</string>
+        </array>
         <array key="Calibre-Regular.otf">
             <string>Calibre-Regular</string>
-        </array>
-        <array key="Calibre-Semibold.otf">
-            <string>Calibre-Semibold</string>
         </array>
     </customFonts>
     <objects>
@@ -32,7 +32,7 @@
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How much is your purchase?" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gVI-ij-vDq">
                     <rect key="frame" x="40" y="155.5" width="334" height="31"/>
-                    <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="26"/>
+                    <fontDescription key="fontDescription" name="Calibre-Bold" family="Calibre" pointSize="26"/>
                     <color key="textColor" red="0.12549019607843137" green="0.13333333333333333" blue="0.13725490196078433" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>

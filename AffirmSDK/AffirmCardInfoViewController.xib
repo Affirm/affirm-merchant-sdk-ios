@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Calibre-Bold.otf">
+            <string>Calibre-Bold</string>
+        </array>
+        <array key="Calibre-Semibold.otf">
+            <string>Calibre-Semibold</string>
+        </array>
+    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AffirmCardInfoViewController">
             <connections>
                 <outlet property="actionButton" destination="lUe-96-Qmo" id="mtx-hD-3SO"/>
                 <outlet property="cardButton" destination="wvA-Ze-qbT" id="Ue3-pi-orO"/>
+                <outlet property="cardLogoView" destination="7z8-pq-AqU" id="qen-x3-2rv"/>
                 <outlet property="cardNoLabel" destination="4q6-wD-vXr" id="OxT-VN-sYe"/>
                 <outlet property="cardView" destination="odP-F8-4vN" id="tJK-83-y3g"/>
                 <outlet property="cvvLabel" destination="VRF-BZ-4ds" id="Drh-gh-cwq"/>
@@ -26,13 +36,13 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Here’s a one-time card to use at Acme Retail" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YN8-o0-ljm">
-                    <rect key="frame" x="40" y="84" width="334" height="62.5"/>
-                    <fontDescription key="fontDescription" type="boldSystem" pointSize="26"/>
+                    <rect key="frame" x="40" y="84" width="334" height="62"/>
+                    <fontDescription key="fontDescription" name="Calibre-Bold" family="Calibre" pointSize="26"/>
                     <color key="textColor" red="0.12549019610000001" green="0.1333333333" blue="0.13725490200000001" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="odP-F8-4vN">
-                    <rect key="frame" x="40" y="181.5" width="334" height="211"/>
+                    <rect key="frame" x="40" y="181" width="334" height="180.5"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="GbY-eR-dPv">
                             <rect key="frame" x="15" y="15" width="93" height="37.5"/>
@@ -42,41 +52,48 @@
                             </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CARD NUMBER" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1KN-aB-inf">
-                            <rect key="frame" x="15" y="67.5" width="120" height="20.5"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <rect key="frame" x="15" y="67.5" width="81" height="15.5"/>
+                            <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="13"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4111 1111 1111 1111" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4q6-wD-vXr">
-                            <rect key="frame" x="15" y="103" width="304" height="21"/>
+                            <rect key="frame" x="15" y="88" width="304" height="21"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EXPIRES" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hKm-bZ-pZb">
-                            <rect key="frame" x="15" y="139" width="67" height="21"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <rect key="frame" x="15" y="124" width="46" height="15.5"/>
+                            <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="13"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="09/21" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EZE-PD-pUv">
-                            <rect key="frame" x="15" y="175" width="44" height="21"/>
+                            <rect key="frame" x="15" y="144.5" width="43" height="21"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="123" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VRF-BZ-4ds">
-                            <rect key="frame" x="167" y="175" width="28" height="21"/>
+                            <rect key="frame" x="167" y="144.5" width="28" height="21"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CVV" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CFL-jZ-J0P">
-                            <rect key="frame" x="167" y="139" width="34" height="21"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <rect key="frame" x="167" y="124" width="23.5" height="15.5"/>
+                            <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="13"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7z8-pq-AqU">
+                            <rect key="frame" x="258" y="145.5" width="61" height="20"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="61" id="rye-qL-Xga"/>
+                                <constraint firstAttribute="width" secondItem="7z8-pq-AqU" secondAttribute="height" multiplier="3:1" id="u8A-Jq-viI"/>
+                            </constraints>
+                        </imageView>
                     </subviews>
                     <color key="backgroundColor" red="0.023529411764705882" green="0.23137254901960785" blue="0.33725490196078434" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
@@ -86,45 +103,55 @@
                         <constraint firstItem="GbY-eR-dPv" firstAttribute="leading" secondItem="odP-F8-4vN" secondAttribute="leading" constant="15" id="F3c-Rs-Pex"/>
                         <constraint firstItem="1KN-aB-inf" firstAttribute="leading" secondItem="GbY-eR-dPv" secondAttribute="leading" id="MwZ-Jz-DEe"/>
                         <constraint firstItem="CFL-jZ-J0P" firstAttribute="leading" secondItem="odP-F8-4vN" secondAttribute="centerX" id="TTq-XV-Ill"/>
+                        <constraint firstAttribute="trailing" secondItem="7z8-pq-AqU" secondAttribute="trailing" constant="15" id="VLc-56-J4Z"/>
+                        <constraint firstAttribute="bottom" secondItem="7z8-pq-AqU" secondAttribute="bottom" constant="15" id="XUU-Gx-HYK"/>
                         <constraint firstItem="GbY-eR-dPv" firstAttribute="top" secondItem="odP-F8-4vN" secondAttribute="top" constant="15" id="XkH-vP-aXb"/>
                         <constraint firstItem="hKm-bZ-pZb" firstAttribute="leading" secondItem="1KN-aB-inf" secondAttribute="leading" id="Zh0-ng-pZE"/>
                         <constraint firstItem="CFL-jZ-J0P" firstAttribute="centerY" secondItem="hKm-bZ-pZb" secondAttribute="centerY" id="cLL-XH-oXv"/>
                         <constraint firstAttribute="bottom" secondItem="EZE-PD-pUv" secondAttribute="bottom" constant="15" id="dOT-UM-FfR"/>
                         <constraint firstItem="hKm-bZ-pZb" firstAttribute="top" secondItem="4q6-wD-vXr" secondAttribute="bottom" constant="15" id="fos-kd-uTT"/>
                         <constraint firstItem="4q6-wD-vXr" firstAttribute="leading" secondItem="1KN-aB-inf" secondAttribute="leading" id="gf9-0j-rG1"/>
-                        <constraint firstItem="EZE-PD-pUv" firstAttribute="top" secondItem="hKm-bZ-pZb" secondAttribute="bottom" constant="15" id="lTP-Qp-xZU"/>
+                        <constraint firstItem="EZE-PD-pUv" firstAttribute="top" secondItem="hKm-bZ-pZb" secondAttribute="bottom" constant="5" id="lTP-Qp-xZU"/>
                         <constraint firstItem="VRF-BZ-4ds" firstAttribute="centerY" secondItem="EZE-PD-pUv" secondAttribute="centerY" id="mUE-on-erA"/>
-                        <constraint firstItem="4q6-wD-vXr" firstAttribute="top" secondItem="1KN-aB-inf" secondAttribute="bottom" constant="15" id="rSS-qI-Rij"/>
+                        <constraint firstItem="4q6-wD-vXr" firstAttribute="top" secondItem="1KN-aB-inf" secondAttribute="bottom" constant="5" id="rSS-qI-Rij"/>
                         <constraint firstItem="1KN-aB-inf" firstAttribute="top" secondItem="GbY-eR-dPv" secondAttribute="bottom" constant="15" id="t5l-JP-3ZM"/>
                     </constraints>
                 </view>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lUe-96-Qmo">
-                    <rect key="frame" x="40" y="427.5" width="334" height="60"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lUe-96-Qmo">
+                    <rect key="frame" x="40" y="376.5" width="334" height="60"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="60" id="gZN-vf-4Ub"/>
                     </constraints>
-                    <state key="normal" title="Edit amount or cancel card"/>
+                    <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="17"/>
+                    <state key="normal" title="Edit amount or cancel card">
+                        <color key="titleColor" red="0.058823529409999999" green="0.62745098040000002" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </state>
                     <connections>
                         <action selector="editPressed:" destination="-1" eventType="touchUpInside" id="zY0-ev-SeZ"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wvA-Ze-qbT">
-                    <rect key="frame" x="40" y="522.5" width="334" height="60"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wvA-Ze-qbT">
+                    <rect key="frame" x="40" y="451.5" width="334" height="60"/>
+                    <color key="backgroundColor" red="0.058823529409999999" green="0.62745098040000002" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="60" id="wat-Ey-DJh"/>
                     </constraints>
-                    <state key="normal" title="Copy Card Number"/>
+                    <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="17"/>
+                    <state key="normal" title="Copy Card Number">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
                     <connections>
                         <action selector="copyCardPressed:" destination="-1" eventType="touchUpInside" id="b59-uq-BvO"/>
                     </connections>
                 </button>
             </subviews>
-            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+            <viewLayoutGuide key="safeArea" id="Q5M-cg-NOt"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
-                <constraint firstItem="lUe-96-Qmo" firstAttribute="top" secondItem="odP-F8-4vN" secondAttribute="bottom" constant="35" id="4Ta-l7-iLq"/>
+                <constraint firstItem="lUe-96-Qmo" firstAttribute="top" secondItem="odP-F8-4vN" secondAttribute="bottom" constant="15" id="4Ta-l7-iLq"/>
                 <constraint firstItem="odP-F8-4vN" firstAttribute="trailing" secondItem="YN8-o0-ljm" secondAttribute="trailing" id="5Je-0Q-Vfa"/>
                 <constraint firstItem="wvA-Ze-qbT" firstAttribute="leading" secondItem="lUe-96-Qmo" secondAttribute="leading" id="JmF-Bm-Tpa"/>
-                <constraint firstItem="wvA-Ze-qbT" firstAttribute="top" secondItem="lUe-96-Qmo" secondAttribute="bottom" constant="35" id="NkA-lx-yOv"/>
+                <constraint firstItem="wvA-Ze-qbT" firstAttribute="top" secondItem="lUe-96-Qmo" secondAttribute="bottom" constant="15" id="NkA-lx-yOv"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="wvA-Ze-qbT" secondAttribute="trailing" constant="40" id="Pbi-Uv-qCp"/>
                 <constraint firstItem="odP-F8-4vN" firstAttribute="top" secondItem="YN8-o0-ljm" secondAttribute="bottom" constant="35" id="R8s-Qb-VoR"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="YN8-o0-ljm" secondAttribute="trailing" constant="40" id="RtW-gt-ATS"/>
@@ -136,8 +163,12 @@
                 <constraint firstItem="YN8-o0-ljm" firstAttribute="top" secondItem="Q5M-cg-NOt" secondAttribute="top" constant="40" id="jHB-rv-rgc"/>
                 <constraint firstItem="wvA-Ze-qbT" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="40" id="wNC-Vy-WSE"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="Q5M-cg-NOt"/>
             <point key="canvasLocation" x="131.8840579710145" y="144.64285714285714"/>
         </view>
     </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
 </document>

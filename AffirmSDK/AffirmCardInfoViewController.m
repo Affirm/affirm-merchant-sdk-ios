@@ -23,6 +23,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *cardNoLabel;
 @property (weak, nonatomic) IBOutlet UILabel *expiresLabel;
 @property (weak, nonatomic) IBOutlet UILabel *cvvLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *cardLogoView;
 @property (weak, nonatomic) IBOutlet UIButton *actionButton;
 @property (weak, nonatomic) IBOutlet UIButton *cardButton;
 @property (nonatomic, strong) AffirmActivityIndicatorView *activityIndicatorView;
@@ -34,21 +35,16 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.navigationItem setHidesBackButton:YES];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Close"
                                                                               style:UIBarButtonItemStyleDone
                                                                              target:self
                                                                              action:@selector(cancel:)];
     self.logoView.image = [UIImage imageNamed:@"white_logo-transparent_bg" inBundle:[NSBundle resourceBundle]];
     self.cardView.layer.masksToBounds = YES;
-    self.cardView.layer.cornerRadius = 5.0f;
-    self.actionButton.layer.masksToBounds = YES;
-    self.actionButton.layer.cornerRadius = 5.0f;
-    self.actionButton.layer.borderColor = [UIColor blueColor].CGColor;
-    self.actionButton.layer.borderWidth = 1.0f;
+    self.cardView.layer.cornerRadius = 16.0f;
     self.cardButton.layer.masksToBounds = YES;
-    self.cardButton.layer.cornerRadius = 5.0f;
-    self.cardButton.layer.borderColor = [UIColor blueColor].CGColor;
-    self.cardButton.layer.borderWidth = 1.0f;
+    self.cardButton.layer.cornerRadius = 6.0f;
     [self setCardNo:self.creditCard.number];
     [self setExpires:self.creditCard.expiration];
     self.cvvLabel.text = self.creditCard.cvv;
@@ -69,6 +65,8 @@
     AffirmBrandType type = AffirmBrandTypeUnknown;
     AffirmBrand *brand = [[AffirmCardValidator sharedCardValidator] brandForCardNumber:self.creditCard.number];
     if (brand) { type = brand.type; }
+
+    self.cardLogoView.image = [UIImage imageNamed:type == AffirmBrandTypeVisa ? @"visa" : @"mastercard" inBundle:[NSBundle resourceBundle]];
 
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:16], NSForegroundColorAttributeName: [UIColor whiteColor]}];
     NSArray *cardNumberFormat = [AffirmCardValidator cardNumberFormatForBrand:type];
