@@ -21,6 +21,7 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *amountLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *logoView;
+@property (weak, nonatomic) IBOutlet UIView *cardBackView;
 @property (weak, nonatomic) IBOutlet UIView *cardView;
 @property (weak, nonatomic) IBOutlet UILabel *cardNoLabel;
 @property (weak, nonatomic) IBOutlet UILabel *expiresLabel;
@@ -30,6 +31,9 @@
 @property (weak, nonatomic) IBOutlet UIButton *cardButton;
 @property (weak, nonatomic) IBOutlet UIButton *infoButton;
 @property (nonatomic, strong) AffirmActivityIndicatorView *activityIndicatorView;
+@property (weak, nonatomic) IBOutlet UIImageView *backLogoView;
+@property (weak, nonatomic) IBOutlet UIButton *rightButton;
+@property (weak, nonatomic) IBOutlet UILabel *holderLabel;
 
 @end
 
@@ -46,6 +50,14 @@
     self.logoView.image = [UIImage imageNamed:@"white_logo-transparent_bg" inBundle:[NSBundle resourceBundle]];
     self.cardView.layer.masksToBounds = YES;
     self.cardView.layer.cornerRadius = 16.0f;
+
+    self.cardBackView.layer.masksToBounds = YES;
+    self.cardBackView.layer.cornerRadius = 16.0f;
+    self.cardBackView.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    self.cardBackView.layer.borderWidth = 1 / [UIScreen mainScreen].scale;
+    self.backLogoView.image = [UIImage imageNamed:@"blue-black_logo-transparent_bg" inBundle:[NSBundle resourceBundle]];
+    [self.rightButton setImage:[UIImage imageNamed:@"right" inBundle:[NSBundle resourceBundle]] forState:UIControlStateNormal];
+    self.holderLabel.text = [NSString stringWithFormat:@"Authorized Cardholder: %@", self.creditCard.cardholderName];
 
     CAGradientLayer *gradient = [CAGradientLayer layer];
     gradient.frame = self.cardView.bounds;
@@ -166,7 +178,24 @@
 
 - (IBAction)infoPressed:(id)sender
 {
+    [UIView transitionWithView:self.cardView duration:0.25 options:UIViewAnimationOptionTransitionFlipFromRight | UIViewAnimationOptionShowHideTransitionViews animations:^{
+        self.cardView.alpha = 0;
+    } completion:nil];
 
+    [UIView transitionWithView:self.cardBackView duration:0.25 options:UIViewAnimationOptionTransitionFlipFromRight | UIViewAnimationOptionShowHideTransitionViews animations:^{
+        self.cardBackView.alpha = 1;
+    } completion:nil];
+}
+
+- (IBAction)flipBack:(id)sender
+{
+    [UIView transitionWithView:self.cardView duration:0.25 options:UIViewAnimationOptionTransitionFlipFromLeft | UIViewAnimationOptionShowHideTransitionViews animations:^{
+        self.cardView.alpha = 1;
+    } completion:nil];
+
+    [UIView transitionWithView:self.cardBackView duration:0.25 options:UIViewAnimationOptionTransitionFlipFromLeft | UIViewAnimationOptionShowHideTransitionViews animations:^{
+        self.cardBackView.alpha = 0;
+    } completion:nil];
 }
 
 - (IBAction)editPressed:(id)sender

@@ -15,6 +15,12 @@
         <array key="Calibre-Bold.otf">
             <string>Calibre-Bold</string>
         </array>
+        <array key="Calibre-Medium.otf">
+            <string>Calibre-Medium</string>
+        </array>
+        <array key="Calibre-Regular.otf">
+            <string>Calibre-Regular</string>
+        </array>
         <array key="Calibre-Semibold.otf">
             <string>Calibre-Semibold</string>
         </array>
@@ -24,14 +30,18 @@
             <connections>
                 <outlet property="actionButton" destination="lUe-96-Qmo" id="mtx-hD-3SO"/>
                 <outlet property="amountLabel" destination="YN8-o0-ljm" id="XgA-K9-sjg"/>
+                <outlet property="backLogoView" destination="g9M-v8-6q7" id="NFH-gs-s3u"/>
+                <outlet property="cardBackView" destination="4m1-og-C5c" id="Lev-7F-v1U"/>
                 <outlet property="cardButton" destination="wvA-Ze-qbT" id="Ue3-pi-orO"/>
                 <outlet property="cardLogoView" destination="7z8-pq-AqU" id="qen-x3-2rv"/>
                 <outlet property="cardNoLabel" destination="4q6-wD-vXr" id="OxT-VN-sYe"/>
                 <outlet property="cardView" destination="odP-F8-4vN" id="tJK-83-y3g"/>
                 <outlet property="cvvLabel" destination="VRF-BZ-4ds" id="Drh-gh-cwq"/>
                 <outlet property="expiresLabel" destination="EZE-PD-pUv" id="8jI-1d-G21"/>
+                <outlet property="holderLabel" destination="2bZ-tY-Rgx" id="ri7-XR-BtS"/>
                 <outlet property="infoButton" destination="hba-Ge-b2l" id="Wxk-Oh-czp"/>
                 <outlet property="logoView" destination="GbY-eR-dPv" id="EmG-6L-qJ1"/>
+                <outlet property="rightButton" destination="GwG-rx-Qa7" id="toc-qZ-1EP"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -46,6 +56,63 @@
                     <color key="textColor" red="0.12549019610000001" green="0.1333333333" blue="0.13725490200000001" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4m1-og-C5c">
+                    <rect key="frame" x="20" y="169" width="374" height="251.5"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="g9M-v8-6q7">
+                            <rect key="frame" x="15" y="15" width="100" height="30.5"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="100" id="b7S-ya-Ahc"/>
+                                <constraint firstAttribute="width" secondItem="g9M-v8-6q7" secondAttribute="height" multiplier="79:24" id="qDZ-J7-cPE"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Limited Use Virtual Card" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Ua-Fk-SPw">
+                            <rect key="frame" x="130" y="30" width="123.5" height="15.5"/>
+                            <fontDescription key="fontDescription" name="Calibre-Regular" family="Calibre" pointSize="13"/>
+                            <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GwG-rx-Qa7">
+                            <rect key="frame" x="335" y="18" width="24" height="24"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="24" id="6di-YE-KxC"/>
+                                <constraint firstAttribute="height" constant="24" id="pK4-Em-Jgc"/>
+                            </constraints>
+                            <connections>
+                                <action selector="flipBack:" destination="-1" eventType="touchUpInside" id="IRC-NB-a6t"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Authorized Cardholder: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2bZ-tY-Rgx">
+                            <rect key="frame" x="15" y="60.5" width="344" height="20.5"/>
+                            <fontDescription key="fontDescription" name="Calibre-Medium" family="Calibre" pointSize="17"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n9w-av-66s">
+                            <rect key="frame" x="15" y="190" width="344" height="46.5"/>
+                            <string key="text">The Affirm Card is funded by Cross River Bank, Member FDIC, and issued by Sutton Bank, Member FDIC, pursuant to license from Visa U.S.A. Inc. The Affirm Card is powered by Marqeta.</string>
+                            <fontDescription key="fontDescription" name="Calibre-Regular" family="Calibre" pointSize="13"/>
+                            <color key="textColor" systemColor="systemGrayColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstItem="n9w-av-66s" firstAttribute="leading" secondItem="4m1-og-C5c" secondAttribute="leading" constant="15" id="4Zx-hu-Dvn"/>
+                        <constraint firstAttribute="trailing" secondItem="GwG-rx-Qa7" secondAttribute="trailing" constant="15" id="54C-2M-ZKv"/>
+                        <constraint firstAttribute="trailing" secondItem="n9w-av-66s" secondAttribute="trailing" constant="15" id="Al2-j9-JZz"/>
+                        <constraint firstItem="g9M-v8-6q7" firstAttribute="leading" secondItem="4m1-og-C5c" secondAttribute="leading" constant="15" id="BWS-Wt-Ajn"/>
+                        <constraint firstItem="2bZ-tY-Rgx" firstAttribute="top" secondItem="g9M-v8-6q7" secondAttribute="bottom" constant="15" id="Cne-4F-rZr"/>
+                        <constraint firstItem="2bZ-tY-Rgx" firstAttribute="leading" secondItem="4m1-og-C5c" secondAttribute="leading" constant="15" id="EWb-UV-3PN"/>
+                        <constraint firstItem="g9M-v8-6q7" firstAttribute="top" secondItem="4m1-og-C5c" secondAttribute="top" constant="15" id="IlT-9D-elh"/>
+                        <constraint firstItem="5Ua-Fk-SPw" firstAttribute="bottom" secondItem="g9M-v8-6q7" secondAttribute="bottom" id="LVN-0k-NhQ"/>
+                        <constraint firstAttribute="trailing" secondItem="2bZ-tY-Rgx" secondAttribute="trailing" constant="15" id="XKl-WC-M60"/>
+                        <constraint firstItem="GwG-rx-Qa7" firstAttribute="centerY" secondItem="g9M-v8-6q7" secondAttribute="centerY" id="e92-Ea-tLc"/>
+                        <constraint firstAttribute="bottom" secondItem="n9w-av-66s" secondAttribute="bottom" constant="15" id="fvy-bg-Tcg"/>
+                        <constraint firstItem="5Ua-Fk-SPw" firstAttribute="leading" secondItem="g9M-v8-6q7" secondAttribute="trailing" constant="15" id="nFi-Us-SK9"/>
+                        <constraint firstItem="n9w-av-66s" firstAttribute="top" relation="greaterThanOrEqual" secondItem="2bZ-tY-Rgx" secondAttribute="bottom" constant="15" id="qCJ-Qw-qBC"/>
+                    </constraints>
+                </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="odP-F8-4vN">
                     <rect key="frame" x="20" y="169" width="374" height="251.5"/>
                     <subviews>
@@ -167,17 +234,21 @@
             <constraints>
                 <constraint firstItem="lUe-96-Qmo" firstAttribute="top" secondItem="odP-F8-4vN" secondAttribute="bottom" constant="15" id="4Ta-l7-iLq"/>
                 <constraint firstItem="odP-F8-4vN" firstAttribute="trailing" secondItem="YN8-o0-ljm" secondAttribute="trailing" id="5Je-0Q-Vfa"/>
+                <constraint firstItem="odP-F8-4vN" firstAttribute="bottom" secondItem="4m1-og-C5c" secondAttribute="bottom" id="F0m-zK-Xg4"/>
                 <constraint firstItem="wvA-Ze-qbT" firstAttribute="leading" secondItem="lUe-96-Qmo" secondAttribute="leading" id="JmF-Bm-Tpa"/>
                 <constraint firstItem="wvA-Ze-qbT" firstAttribute="top" relation="greaterThanOrEqual" secondItem="lUe-96-Qmo" secondAttribute="bottom" constant="15" id="NkA-lx-yOv"/>
+                <constraint firstItem="odP-F8-4vN" firstAttribute="leading" secondItem="4m1-og-C5c" secondAttribute="leading" id="P1V-eI-3dN"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="wvA-Ze-qbT" secondAttribute="trailing" constant="20" id="Pbi-Uv-qCp"/>
                 <constraint firstItem="odP-F8-4vN" firstAttribute="top" secondItem="YN8-o0-ljm" secondAttribute="bottom" constant="35" id="R8s-Qb-VoR"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="YN8-o0-ljm" secondAttribute="trailing" constant="20" id="RtW-gt-ATS"/>
                 <constraint firstItem="wvA-Ze-qbT" firstAttribute="trailing" secondItem="lUe-96-Qmo" secondAttribute="trailing" id="WJy-m0-g6Y"/>
                 <constraint firstItem="odP-F8-4vN" firstAttribute="leading" secondItem="YN8-o0-ljm" secondAttribute="leading" id="YD1-LP-6DQ"/>
+                <constraint firstItem="odP-F8-4vN" firstAttribute="trailing" secondItem="4m1-og-C5c" secondAttribute="trailing" id="YXo-D3-J0w"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="bottom" secondItem="wvA-Ze-qbT" secondAttribute="bottom" id="cFL-vW-dwD"/>
                 <constraint firstItem="odP-F8-4vN" firstAttribute="top" secondItem="YN8-o0-ljm" secondAttribute="bottom" constant="35" id="fuM-SS-8Dr"/>
                 <constraint firstItem="YN8-o0-ljm" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="20" id="i0F-OJ-Tdf"/>
                 <constraint firstItem="YN8-o0-ljm" firstAttribute="top" secondItem="Q5M-cg-NOt" secondAttribute="top" constant="40" id="jHB-rv-rgc"/>
+                <constraint firstItem="odP-F8-4vN" firstAttribute="top" secondItem="4m1-og-C5c" secondAttribute="top" id="qRZ-Ci-kNA"/>
                 <constraint firstItem="wvA-Ze-qbT" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="20" id="wNC-Vy-WSE"/>
             </constraints>
             <point key="canvasLocation" x="131.8840579710145" y="144.64285714285714"/>
@@ -186,6 +257,9 @@
     <resources>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGrayColor">
+            <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
