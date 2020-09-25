@@ -153,7 +153,7 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="60" id="wat-Ey-DJh"/>
                     </constraints>
-                    <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="17"/>
+                    <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="20"/>
                     <state key="normal" title="Copy Card Number">
                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </state>

@@ -23,6 +23,7 @@
 
 @interface AffirmEligibilityViewController () <UITextFieldDelegate>
 
+@property (weak, nonatomic) IBOutlet UILabel *merchantLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *logoView;
 @property (weak, nonatomic) IBOutlet UIView *fieldView;
 @property (weak, nonatomic) IBOutlet UITextField *amountField;
@@ -95,9 +96,13 @@
                                                                               style:UIBarButtonItemStyleDone
                                                                              target:self
                                                                              action:@selector(cancel:)];
+    NSString *merchantName = [AffirmConfiguration sharedInstance].merchantName;
+    if (merchantName) {
+        self.merchantLabel.text = [NSString stringWithFormat:@"In proud partnership with %@", merchantName];
+    } else {
+        self.merchantLabel.text = nil;
+    }
     self.logoView.image = [UIImage imageNamed:@"blue-black_logo-transparent_bg" inBundle:[NSBundle resourceBundle]];
-    self.fieldView.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    self.fieldView.layer.borderWidth = 1 / UIScreen.mainScreen.scale;
     self.amountField.text = [self.checkout.totalAmount formattedString];
     UILabel *maxAmountLabel = [UILabel new];
     maxAmountLabel.text = @"of $4,000";
