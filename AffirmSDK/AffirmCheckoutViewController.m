@@ -172,6 +172,7 @@
                     if ([self.navigationController.viewControllers.firstObject isKindOfClass:[AffirmEligibilityViewController class]]) {
                         AffirmCardInfoViewController *viewController = [[AffirmCardInfoViewController alloc] initWithNibName:@"AffirmCardInfoViewController" bundle:[NSBundle sdkBundle]];
                         viewController.creditCard = creditCard;
+                        viewController.amount = self.checkout.totalAmount;
                         [self.navigationController pushViewController:viewController animated:YES];
                     } else {
                         [self.delegate vcnCheckout:self

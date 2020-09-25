@@ -23,12 +23,14 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AffirmCardInfoViewController">
             <connections>
                 <outlet property="actionButton" destination="lUe-96-Qmo" id="mtx-hD-3SO"/>
+                <outlet property="amountLabel" destination="YN8-o0-ljm" id="XgA-K9-sjg"/>
                 <outlet property="cardButton" destination="wvA-Ze-qbT" id="Ue3-pi-orO"/>
                 <outlet property="cardLogoView" destination="7z8-pq-AqU" id="qen-x3-2rv"/>
                 <outlet property="cardNoLabel" destination="4q6-wD-vXr" id="OxT-VN-sYe"/>
                 <outlet property="cardView" destination="odP-F8-4vN" id="tJK-83-y3g"/>
                 <outlet property="cvvLabel" destination="VRF-BZ-4ds" id="Drh-gh-cwq"/>
                 <outlet property="expiresLabel" destination="EZE-PD-pUv" id="8jI-1d-G21"/>
+                <outlet property="infoButton" destination="hba-Ge-b2l" id="Wxk-Oh-czp"/>
                 <outlet property="logoView" destination="GbY-eR-dPv" id="EmG-6L-qJ1"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -45,70 +47,81 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="odP-F8-4vN">
-                    <rect key="frame" x="20" y="169" width="374" height="223.5"/>
+                    <rect key="frame" x="20" y="169" width="374" height="251.5"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="GbY-eR-dPv">
-                            <rect key="frame" x="20" y="15" width="93" height="37.5"/>
+                            <rect key="frame" x="20" y="20" width="93" height="37.5"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="93" id="4iL-9P-G48"/>
                                 <constraint firstAttribute="width" secondItem="GbY-eR-dPv" secondAttribute="height" multiplier="131:53" id="vfA-xo-bs4"/>
                             </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CARD NUMBER" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1KN-aB-inf">
-                            <rect key="frame" x="20" y="87.5" width="81" height="15.5"/>
-                            <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="13"/>
+                            <rect key="frame" x="20" y="92.5" width="93.5" height="18"/>
+                            <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="15"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4111 1111 1111 1111" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4q6-wD-vXr">
-                            <rect key="frame" x="20" y="108" width="339" height="20"/>
-                            <fontDescription key="fontDescription" name="AlmaMono-Bold" family="Alma Mono" pointSize="17"/>
+                            <rect key="frame" x="20" y="115.5" width="339" height="29"/>
+                            <fontDescription key="fontDescription" name="AlmaMono-Bold" family="Alma Mono" pointSize="24"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EXPIRES" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hKm-bZ-pZb">
-                            <rect key="frame" x="20" y="163" width="46" height="15.5"/>
-                            <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="13"/>
+                            <rect key="frame" x="20" y="179.5" width="53" height="18"/>
+                            <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="15"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="09/21" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EZE-PD-pUv">
-                            <rect key="frame" x="20" y="183.5" width="59.5" height="20"/>
-                            <fontDescription key="fontDescription" name="AlmaMono-Bold" family="Alma Mono" pointSize="17"/>
+                            <rect key="frame" x="20" y="202.5" width="84" height="29"/>
+                            <fontDescription key="fontDescription" name="AlmaMono-Bold" family="Alma Mono" pointSize="24"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="123" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VRF-BZ-4ds">
-                            <rect key="frame" x="187" y="183.5" width="36" height="20"/>
-                            <fontDescription key="fontDescription" name="AlmaMono-Bold" family="Alma Mono" pointSize="17"/>
+                            <rect key="frame" x="144" y="202.5" width="50.5" height="29"/>
+                            <fontDescription key="fontDescription" name="AlmaMono-Bold" family="Alma Mono" pointSize="24"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CVV" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CFL-jZ-J0P">
-                            <rect key="frame" x="187" y="163" width="23.5" height="15.5"/>
-                            <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="13"/>
+                            <rect key="frame" x="144" y="179.5" width="27.5" height="18"/>
+                            <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="15"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7z8-pq-AqU">
-                            <rect key="frame" x="293" y="183.5" width="61" height="20"/>
+                            <rect key="frame" x="278" y="206.5" width="76" height="25"/>
                             <constraints>
-                                <constraint firstAttribute="width" constant="61" id="rye-qL-Xga"/>
+                                <constraint firstAttribute="width" constant="76" id="rye-qL-Xga"/>
                                 <constraint firstAttribute="width" secondItem="7z8-pq-AqU" secondAttribute="height" multiplier="3:1" id="u8A-Jq-viI"/>
                             </constraints>
                         </imageView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hba-Ge-b2l">
+                            <rect key="frame" x="324" y="20" width="30" height="30"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="30" id="48w-8g-jxI"/>
+                                <constraint firstAttribute="width" constant="30" id="KH0-fS-Cbh"/>
+                            </constraints>
+                            <connections>
+                                <action selector="infoPressed:" destination="-1" eventType="touchUpInside" id="DYi-nu-nGx"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" red="0.023529411764705882" green="0.23137254901960785" blue="0.33725490196078434" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstItem="VRF-BZ-4ds" firstAttribute="leading" secondItem="CFL-jZ-J0P" secondAttribute="leading" id="0ef-D6-Ywx"/>
                         <constraint firstItem="EZE-PD-pUv" firstAttribute="leading" secondItem="1KN-aB-inf" secondAttribute="leading" id="1Rn-Te-nqO"/>
+                        <constraint firstItem="hba-Ge-b2l" firstAttribute="top" secondItem="odP-F8-4vN" secondAttribute="top" constant="20" id="3sM-0z-hcE"/>
                         <constraint firstAttribute="trailing" secondItem="4q6-wD-vXr" secondAttribute="trailing" constant="15" id="8Jh-Lj-7bc"/>
                         <constraint firstItem="GbY-eR-dPv" firstAttribute="leading" secondItem="odP-F8-4vN" secondAttribute="leading" constant="20" id="F3c-Rs-Pex"/>
                         <constraint firstItem="1KN-aB-inf" firstAttribute="leading" secondItem="GbY-eR-dPv" secondAttribute="leading" id="MwZ-Jz-DEe"/>
-                        <constraint firstItem="CFL-jZ-J0P" firstAttribute="leading" secondItem="odP-F8-4vN" secondAttribute="centerX" id="TTq-XV-Ill"/>
+                        <constraint firstItem="CFL-jZ-J0P" firstAttribute="leading" secondItem="EZE-PD-pUv" secondAttribute="trailing" constant="40" id="TTq-XV-Ill"/>
                         <constraint firstAttribute="trailing" secondItem="7z8-pq-AqU" secondAttribute="trailing" constant="20" id="VLc-56-J4Z"/>
                         <constraint firstAttribute="bottom" secondItem="7z8-pq-AqU" secondAttribute="bottom" constant="20" id="XUU-Gx-HYK"/>
-                        <constraint firstItem="GbY-eR-dPv" firstAttribute="top" secondItem="odP-F8-4vN" secondAttribute="top" constant="15" id="XkH-vP-aXb"/>
+                        <constraint firstItem="GbY-eR-dPv" firstAttribute="top" secondItem="odP-F8-4vN" secondAttribute="top" constant="20" id="XkH-vP-aXb"/>
                         <constraint firstItem="hKm-bZ-pZb" firstAttribute="leading" secondItem="1KN-aB-inf" secondAttribute="leading" id="Zh0-ng-pZE"/>
                         <constraint firstItem="CFL-jZ-J0P" firstAttribute="centerY" secondItem="hKm-bZ-pZb" secondAttribute="centerY" id="cLL-XH-oXv"/>
                         <constraint firstAttribute="bottom" secondItem="EZE-PD-pUv" secondAttribute="bottom" constant="20" id="dOT-UM-FfR"/>
@@ -116,12 +129,13 @@
                         <constraint firstItem="4q6-wD-vXr" firstAttribute="leading" secondItem="1KN-aB-inf" secondAttribute="leading" id="gf9-0j-rG1"/>
                         <constraint firstItem="EZE-PD-pUv" firstAttribute="top" secondItem="hKm-bZ-pZb" secondAttribute="bottom" constant="5" id="lTP-Qp-xZU"/>
                         <constraint firstItem="VRF-BZ-4ds" firstAttribute="centerY" secondItem="EZE-PD-pUv" secondAttribute="centerY" id="mUE-on-erA"/>
+                        <constraint firstAttribute="trailing" secondItem="hba-Ge-b2l" secondAttribute="trailing" constant="20" id="rL2-Gg-tFE"/>
                         <constraint firstItem="4q6-wD-vXr" firstAttribute="top" secondItem="1KN-aB-inf" secondAttribute="bottom" constant="5" id="rSS-qI-Rij"/>
                         <constraint firstItem="1KN-aB-inf" firstAttribute="top" secondItem="GbY-eR-dPv" secondAttribute="bottom" constant="35" id="t5l-JP-3ZM"/>
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lUe-96-Qmo">
-                    <rect key="frame" x="40" y="407.5" width="334" height="60"/>
+                    <rect key="frame" x="20" y="435.5" width="374" height="60"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="60" id="gZN-vf-4Ub"/>
                     </constraints>
@@ -134,7 +148,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wvA-Ze-qbT">
-                    <rect key="frame" x="40" y="482.5" width="334" height="60"/>
+                    <rect key="frame" x="20" y="802" width="374" height="60"/>
                     <color key="backgroundColor" red="0.058823529409999999" green="0.62745098040000002" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="60" id="wat-Ey-DJh"/>
@@ -154,17 +168,17 @@
                 <constraint firstItem="lUe-96-Qmo" firstAttribute="top" secondItem="odP-F8-4vN" secondAttribute="bottom" constant="15" id="4Ta-l7-iLq"/>
                 <constraint firstItem="odP-F8-4vN" firstAttribute="trailing" secondItem="YN8-o0-ljm" secondAttribute="trailing" id="5Je-0Q-Vfa"/>
                 <constraint firstItem="wvA-Ze-qbT" firstAttribute="leading" secondItem="lUe-96-Qmo" secondAttribute="leading" id="JmF-Bm-Tpa"/>
-                <constraint firstItem="wvA-Ze-qbT" firstAttribute="top" secondItem="lUe-96-Qmo" secondAttribute="bottom" constant="15" id="NkA-lx-yOv"/>
-                <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="wvA-Ze-qbT" secondAttribute="trailing" constant="40" id="Pbi-Uv-qCp"/>
+                <constraint firstItem="wvA-Ze-qbT" firstAttribute="top" relation="greaterThanOrEqual" secondItem="lUe-96-Qmo" secondAttribute="bottom" constant="15" id="NkA-lx-yOv"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="wvA-Ze-qbT" secondAttribute="trailing" constant="20" id="Pbi-Uv-qCp"/>
                 <constraint firstItem="odP-F8-4vN" firstAttribute="top" secondItem="YN8-o0-ljm" secondAttribute="bottom" constant="35" id="R8s-Qb-VoR"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="YN8-o0-ljm" secondAttribute="trailing" constant="20" id="RtW-gt-ATS"/>
                 <constraint firstItem="wvA-Ze-qbT" firstAttribute="trailing" secondItem="lUe-96-Qmo" secondAttribute="trailing" id="WJy-m0-g6Y"/>
                 <constraint firstItem="odP-F8-4vN" firstAttribute="leading" secondItem="YN8-o0-ljm" secondAttribute="leading" id="YD1-LP-6DQ"/>
-                <constraint firstItem="Q5M-cg-NOt" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="wvA-Ze-qbT" secondAttribute="bottom" constant="40" id="cFL-vW-dwD"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="bottom" secondItem="wvA-Ze-qbT" secondAttribute="bottom" id="cFL-vW-dwD"/>
                 <constraint firstItem="odP-F8-4vN" firstAttribute="top" secondItem="YN8-o0-ljm" secondAttribute="bottom" constant="35" id="fuM-SS-8Dr"/>
                 <constraint firstItem="YN8-o0-ljm" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="20" id="i0F-OJ-Tdf"/>
                 <constraint firstItem="YN8-o0-ljm" firstAttribute="top" secondItem="Q5M-cg-NOt" secondAttribute="top" constant="40" id="jHB-rv-rgc"/>
-                <constraint firstItem="wvA-Ze-qbT" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="40" id="wNC-Vy-WSE"/>
+                <constraint firstItem="wvA-Ze-qbT" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="20" id="wNC-Vy-WSE"/>
             </constraints>
             <point key="canvasLocation" x="131.8840579710145" y="144.64285714285714"/>
         </view>

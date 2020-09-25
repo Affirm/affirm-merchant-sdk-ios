@@ -18,6 +18,7 @@
 
 @interface AffirmCardInfoViewController ()
 
+@property (weak, nonatomic) IBOutlet UILabel *amountLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *logoView;
 @property (weak, nonatomic) IBOutlet UIView *cardView;
 @property (weak, nonatomic) IBOutlet UILabel *cardNoLabel;
@@ -26,6 +27,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *cardLogoView;
 @property (weak, nonatomic) IBOutlet UIButton *actionButton;
 @property (weak, nonatomic) IBOutlet UIButton *cardButton;
+@property (weak, nonatomic) IBOutlet UIButton *infoButton;
 @property (nonatomic, strong) AffirmActivityIndicatorView *activityIndicatorView;
 
 @end
@@ -40,14 +42,26 @@
                                                                               style:UIBarButtonItemStyleDone
                                                                              target:self
                                                                              action:@selector(cancel:)];
+    self.amountLabel.text = [NSString stringWithFormat:@"$%@", self.amount.formattedString];
     self.logoView.image = [UIImage imageNamed:@"white_logo-transparent_bg" inBundle:[NSBundle resourceBundle]];
     self.cardView.layer.masksToBounds = YES;
     self.cardView.layer.cornerRadius = 16.0f;
+
+    CAGradientLayer *gradient = [CAGradientLayer layer];
+    gradient.frame = self.cardView.bounds;
+    gradient.colors = @[(id)[UIColor colorWithWhite:1 alpha:0.32].CGColor, (id)[UIColor colorWithRed:35.0f/255.0f green:41.0f/255.0f blue:47.0f/255.0f alpha:0.0001].CGColor];
+    gradient.startPoint = CGPointMake(0.07245350629091263, 0.2407626062631607);
+    gradient.endPoint = CGPointMake(0.927546501159668, 0.7592374086380005);
+    gradient.locations = @[@0, @0.9898];
+    [self.cardView.layer insertSublayer:gradient atIndex:0];
+
     self.cardButton.layer.masksToBounds = YES;
     self.cardButton.layer.cornerRadius = 6.0f;
     [self setCardNo:self.creditCard.number];
     [self setExpires:self.creditCard.expiration];
     self.cvvLabel.text = self.creditCard.cvv;
+
+    [self.infoButton setImage:[UIImage imageNamed:@"info" inBundle:[NSBundle resourceBundle]] forState:UIControlStateNormal];
 
     AffirmActivityIndicatorView *activityIndicatorView = [[AffirmActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
     [self.view addSubview:activityIndicatorView];
@@ -68,14 +82,14 @@
 
     self.cardLogoView.image = [UIImage imageNamed:type == AffirmBrandTypeVisa ? @"visa" : @"mastercard" inBundle:[NSBundle resourceBundle]];
 
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName: [UIFont fontWithName:AffirmFontNameAlmaMonoBold size:17], NSForegroundColorAttributeName: [UIColor whiteColor]}];
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName: [UIFont fontWithName:AffirmFontNameAlmaMonoBold size:24], NSForegroundColorAttributeName: [UIColor whiteColor]}];
     NSArray *cardNumberFormat = [AffirmCardValidator cardNumberFormatForBrand:type];
     NSUInteger index = 0;
     for (NSNumber *segmentLength in cardNumberFormat) {
         NSUInteger segmentIndex = 0;
         for (; index < attributedString.length && segmentIndex < [segmentLength unsignedIntegerValue]; index++, segmentIndex++) {
             if (index + 1 != attributedString.length && segmentIndex + 1 == [segmentLength unsignedIntegerValue]) {
-                [attributedString addAttribute:NSKernAttributeName value:@(5)
+                [attributedString addAttribute:NSKernAttributeName value:@(10)
                                          range:NSMakeRange(index, 1)];
             } else {
                 [attributedString addAttribute:NSKernAttributeName value:@(0)
@@ -140,6 +154,11 @@
             [self.activityIndicatorView stopAnimating];
         }
     }];
+}
+
+- (IBAction)infoPressed:(id)sender
+{
+
 }
 
 - (IBAction)editPressed:(id)sender
