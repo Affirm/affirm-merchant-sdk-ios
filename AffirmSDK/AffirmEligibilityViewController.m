@@ -92,10 +92,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Close"
-                                                                              style:UIBarButtonItemStyleDone
-                                                                             target:self
-                                                                             action:@selector(cancel:)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"close_blue" inBundle:[NSBundle resourceBundle]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"question_blue" inBundle:[NSBundle resourceBundle]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(question:)];
     NSString *merchantName = [AffirmConfiguration sharedInstance].merchantName;
     if (merchantName) {
         self.merchantLabel.text = [NSString stringWithFormat:@"In proud partnership with %@", merchantName];
@@ -118,6 +116,11 @@
 {
     [self.delegate checkoutCancelled:self];
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)question:(id)sender
+{
+    
 }
 
 - (IBAction)getStarted:(id)sender

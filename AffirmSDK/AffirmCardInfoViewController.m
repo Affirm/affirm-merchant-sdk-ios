@@ -38,10 +38,9 @@
 {
     [super viewDidLoad];
     [self.navigationItem setHidesBackButton:YES];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Close"
-                                                                              style:UIBarButtonItemStyleDone
-                                                                             target:self
-                                                                             action:@selector(cancel:)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"close_grey" inBundle:[NSBundle resourceBundle]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"question_dark" inBundle:[NSBundle resourceBundle]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(question:)];
+
     self.amountLabel.text = [NSString stringWithFormat:@"$%@", self.amount.formattedString];
     self.logoView.image = [UIImage imageNamed:@"white_logo-transparent_bg" inBundle:[NSBundle resourceBundle]];
     self.cardView.layer.masksToBounds = YES;
@@ -154,6 +153,11 @@
             [self.activityIndicatorView stopAnimating];
         }
     }];
+}
+
+- (void)question:(id)sender
+{
+
 }
 
 - (IBAction)infoPressed:(id)sender
