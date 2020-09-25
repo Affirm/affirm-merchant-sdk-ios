@@ -9,6 +9,9 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
+        <array key="AlmaMono-Bold.otf">
+            <string>AlmaMono-Bold</string>
+        </array>
         <array key="Calibre-Bold.otf">
             <string>Calibre-Bold</string>
         </array>
@@ -35,60 +38,60 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Here’s a one-time card to use at Acme Retail" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YN8-o0-ljm">
-                    <rect key="frame" x="40" y="84" width="334" height="62"/>
-                    <fontDescription key="fontDescription" name="Calibre-Bold" family="Calibre" pointSize="26"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$500" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YN8-o0-ljm">
+                    <rect key="frame" x="20" y="84" width="374" height="50"/>
+                    <fontDescription key="fontDescription" name="Calibre-Bold" family="Calibre" pointSize="42"/>
                     <color key="textColor" red="0.12549019610000001" green="0.1333333333" blue="0.13725490200000001" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="odP-F8-4vN">
-                    <rect key="frame" x="40" y="181" width="334" height="180.5"/>
+                    <rect key="frame" x="20" y="169" width="374" height="223.5"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="GbY-eR-dPv">
-                            <rect key="frame" x="15" y="15" width="93" height="37.5"/>
+                            <rect key="frame" x="20" y="15" width="93" height="37.5"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="93" id="4iL-9P-G48"/>
                                 <constraint firstAttribute="width" secondItem="GbY-eR-dPv" secondAttribute="height" multiplier="131:53" id="vfA-xo-bs4"/>
                             </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CARD NUMBER" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1KN-aB-inf">
-                            <rect key="frame" x="15" y="67.5" width="81" height="15.5"/>
+                            <rect key="frame" x="20" y="87.5" width="81" height="15.5"/>
                             <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="13"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4111 1111 1111 1111" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4q6-wD-vXr">
-                            <rect key="frame" x="15" y="88" width="304" height="21"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <rect key="frame" x="20" y="108" width="339" height="20"/>
+                            <fontDescription key="fontDescription" name="AlmaMono-Bold" family="Alma Mono" pointSize="17"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EXPIRES" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hKm-bZ-pZb">
-                            <rect key="frame" x="15" y="124" width="46" height="15.5"/>
+                            <rect key="frame" x="20" y="163" width="46" height="15.5"/>
                             <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="13"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="09/21" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EZE-PD-pUv">
-                            <rect key="frame" x="15" y="144.5" width="43" height="21"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <rect key="frame" x="20" y="183.5" width="59.5" height="20"/>
+                            <fontDescription key="fontDescription" name="AlmaMono-Bold" family="Alma Mono" pointSize="17"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="123" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VRF-BZ-4ds">
-                            <rect key="frame" x="167" y="144.5" width="28" height="21"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <rect key="frame" x="187" y="183.5" width="36" height="20"/>
+                            <fontDescription key="fontDescription" name="AlmaMono-Bold" family="Alma Mono" pointSize="17"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CVV" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CFL-jZ-J0P">
-                            <rect key="frame" x="167" y="124" width="23.5" height="15.5"/>
+                            <rect key="frame" x="187" y="163" width="23.5" height="15.5"/>
                             <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="13"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7z8-pq-AqU">
-                            <rect key="frame" x="258" y="145.5" width="61" height="20"/>
+                            <rect key="frame" x="293" y="183.5" width="61" height="20"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="61" id="rye-qL-Xga"/>
                                 <constraint firstAttribute="width" secondItem="7z8-pq-AqU" secondAttribute="height" multiplier="3:1" id="u8A-Jq-viI"/>
@@ -100,30 +103,30 @@
                         <constraint firstItem="VRF-BZ-4ds" firstAttribute="leading" secondItem="CFL-jZ-J0P" secondAttribute="leading" id="0ef-D6-Ywx"/>
                         <constraint firstItem="EZE-PD-pUv" firstAttribute="leading" secondItem="1KN-aB-inf" secondAttribute="leading" id="1Rn-Te-nqO"/>
                         <constraint firstAttribute="trailing" secondItem="4q6-wD-vXr" secondAttribute="trailing" constant="15" id="8Jh-Lj-7bc"/>
-                        <constraint firstItem="GbY-eR-dPv" firstAttribute="leading" secondItem="odP-F8-4vN" secondAttribute="leading" constant="15" id="F3c-Rs-Pex"/>
+                        <constraint firstItem="GbY-eR-dPv" firstAttribute="leading" secondItem="odP-F8-4vN" secondAttribute="leading" constant="20" id="F3c-Rs-Pex"/>
                         <constraint firstItem="1KN-aB-inf" firstAttribute="leading" secondItem="GbY-eR-dPv" secondAttribute="leading" id="MwZ-Jz-DEe"/>
                         <constraint firstItem="CFL-jZ-J0P" firstAttribute="leading" secondItem="odP-F8-4vN" secondAttribute="centerX" id="TTq-XV-Ill"/>
-                        <constraint firstAttribute="trailing" secondItem="7z8-pq-AqU" secondAttribute="trailing" constant="15" id="VLc-56-J4Z"/>
-                        <constraint firstAttribute="bottom" secondItem="7z8-pq-AqU" secondAttribute="bottom" constant="15" id="XUU-Gx-HYK"/>
+                        <constraint firstAttribute="trailing" secondItem="7z8-pq-AqU" secondAttribute="trailing" constant="20" id="VLc-56-J4Z"/>
+                        <constraint firstAttribute="bottom" secondItem="7z8-pq-AqU" secondAttribute="bottom" constant="20" id="XUU-Gx-HYK"/>
                         <constraint firstItem="GbY-eR-dPv" firstAttribute="top" secondItem="odP-F8-4vN" secondAttribute="top" constant="15" id="XkH-vP-aXb"/>
                         <constraint firstItem="hKm-bZ-pZb" firstAttribute="leading" secondItem="1KN-aB-inf" secondAttribute="leading" id="Zh0-ng-pZE"/>
                         <constraint firstItem="CFL-jZ-J0P" firstAttribute="centerY" secondItem="hKm-bZ-pZb" secondAttribute="centerY" id="cLL-XH-oXv"/>
-                        <constraint firstAttribute="bottom" secondItem="EZE-PD-pUv" secondAttribute="bottom" constant="15" id="dOT-UM-FfR"/>
-                        <constraint firstItem="hKm-bZ-pZb" firstAttribute="top" secondItem="4q6-wD-vXr" secondAttribute="bottom" constant="15" id="fos-kd-uTT"/>
+                        <constraint firstAttribute="bottom" secondItem="EZE-PD-pUv" secondAttribute="bottom" constant="20" id="dOT-UM-FfR"/>
+                        <constraint firstItem="hKm-bZ-pZb" firstAttribute="top" secondItem="4q6-wD-vXr" secondAttribute="bottom" constant="35" id="fos-kd-uTT"/>
                         <constraint firstItem="4q6-wD-vXr" firstAttribute="leading" secondItem="1KN-aB-inf" secondAttribute="leading" id="gf9-0j-rG1"/>
                         <constraint firstItem="EZE-PD-pUv" firstAttribute="top" secondItem="hKm-bZ-pZb" secondAttribute="bottom" constant="5" id="lTP-Qp-xZU"/>
                         <constraint firstItem="VRF-BZ-4ds" firstAttribute="centerY" secondItem="EZE-PD-pUv" secondAttribute="centerY" id="mUE-on-erA"/>
                         <constraint firstItem="4q6-wD-vXr" firstAttribute="top" secondItem="1KN-aB-inf" secondAttribute="bottom" constant="5" id="rSS-qI-Rij"/>
-                        <constraint firstItem="1KN-aB-inf" firstAttribute="top" secondItem="GbY-eR-dPv" secondAttribute="bottom" constant="15" id="t5l-JP-3ZM"/>
+                        <constraint firstItem="1KN-aB-inf" firstAttribute="top" secondItem="GbY-eR-dPv" secondAttribute="bottom" constant="35" id="t5l-JP-3ZM"/>
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lUe-96-Qmo">
-                    <rect key="frame" x="40" y="376.5" width="334" height="60"/>
+                    <rect key="frame" x="40" y="407.5" width="334" height="60"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="60" id="gZN-vf-4Ub"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="17"/>
-                    <state key="normal" title="Edit amount or cancel card">
+                    <state key="normal" title="Edit or cancel card">
                         <color key="titleColor" red="0.058823529409999999" green="0.62745098040000002" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
                     <connections>
@@ -131,7 +134,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wvA-Ze-qbT">
-                    <rect key="frame" x="40" y="451.5" width="334" height="60"/>
+                    <rect key="frame" x="40" y="482.5" width="334" height="60"/>
                     <color key="backgroundColor" red="0.058823529409999999" green="0.62745098040000002" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="60" id="wat-Ey-DJh"/>
@@ -154,12 +157,12 @@
                 <constraint firstItem="wvA-Ze-qbT" firstAttribute="top" secondItem="lUe-96-Qmo" secondAttribute="bottom" constant="15" id="NkA-lx-yOv"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="wvA-Ze-qbT" secondAttribute="trailing" constant="40" id="Pbi-Uv-qCp"/>
                 <constraint firstItem="odP-F8-4vN" firstAttribute="top" secondItem="YN8-o0-ljm" secondAttribute="bottom" constant="35" id="R8s-Qb-VoR"/>
-                <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="YN8-o0-ljm" secondAttribute="trailing" constant="40" id="RtW-gt-ATS"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="YN8-o0-ljm" secondAttribute="trailing" constant="20" id="RtW-gt-ATS"/>
                 <constraint firstItem="wvA-Ze-qbT" firstAttribute="trailing" secondItem="lUe-96-Qmo" secondAttribute="trailing" id="WJy-m0-g6Y"/>
                 <constraint firstItem="odP-F8-4vN" firstAttribute="leading" secondItem="YN8-o0-ljm" secondAttribute="leading" id="YD1-LP-6DQ"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="wvA-Ze-qbT" secondAttribute="bottom" constant="40" id="cFL-vW-dwD"/>
                 <constraint firstItem="odP-F8-4vN" firstAttribute="top" secondItem="YN8-o0-ljm" secondAttribute="bottom" constant="35" id="fuM-SS-8Dr"/>
-                <constraint firstItem="YN8-o0-ljm" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="40" id="i0F-OJ-Tdf"/>
+                <constraint firstItem="YN8-o0-ljm" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="20" id="i0F-OJ-Tdf"/>
                 <constraint firstItem="YN8-o0-ljm" firstAttribute="top" secondItem="Q5M-cg-NOt" secondAttribute="top" constant="40" id="jHB-rv-rgc"/>
                 <constraint firstItem="wvA-Ze-qbT" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="40" id="wNC-Vy-WSE"/>
             </constraints>

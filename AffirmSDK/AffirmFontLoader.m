@@ -20,7 +20,7 @@
         NSBundle *bundle = [NSBundle resourceBundle];
         NSString *identifier = bundle.bundleIdentifier;
 
-        NSArray *fonts = @[AffirmFontNameCalibreMedium, AffirmFontNameCalibreBold, AffirmFontNameCalibreSemibold, AffirmFontNameCalibreRegular];
+        NSArray *fonts = @[AffirmFontNameCalibreMedium, AffirmFontNameCalibreBold, AffirmFontNameCalibreSemibold, AffirmFontNameCalibreRegular, AffirmFontNameAlmaMonoBold];
         for (NSString *fontName in fonts) {
             NSURL *fontURL = nil;
             if ([identifier hasPrefix:@"org.cocoapods"]) {

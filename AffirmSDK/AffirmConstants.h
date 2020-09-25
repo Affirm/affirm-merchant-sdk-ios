@@ -34,6 +34,9 @@ FOUNDATION_EXPORT NSString *const AffirmFontNameCalibreBold;
 FOUNDATION_EXPORT NSString *const AffirmFontNameCalibreSemibold;
 FOUNDATION_EXPORT NSString *const AffirmFontNameCalibreRegular;
 
+FOUNDATION_EXPORT NSString *const AffirmFontFamilyNameAlmaMono;
+FOUNDATION_EXPORT NSString *const AffirmFontNameAlmaMonoBold;
+
 typedef NS_ENUM(NSInteger, AffirmEnvironment) {
     AffirmEnvironmentProduction,
     AffirmEnvironmentSandbox

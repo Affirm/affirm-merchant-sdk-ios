@@ -68,7 +68,7 @@
 
     self.cardLogoView.image = [UIImage imageNamed:type == AffirmBrandTypeVisa ? @"visa" : @"mastercard" inBundle:[NSBundle resourceBundle]];
 
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:16], NSForegroundColorAttributeName: [UIColor whiteColor]}];
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName: [UIFont fontWithName:AffirmFontNameAlmaMonoBold size:17], NSForegroundColorAttributeName: [UIColor whiteColor]}];
     NSArray *cardNumberFormat = [AffirmCardValidator cardNumberFormatForBrand:type];
     NSUInteger index = 0;
     for (NSNumber *segmentLength in cardNumberFormat) {
@@ -158,6 +158,9 @@
 - (IBAction)copyCardPressed:(id)sender
 {
     [[UIPasteboard generalPasteboard] setString:self.creditCard.number];
+    UIAlertController *controller = [UIAlertController alertControllerWithTitle:nil message:@"Copied" preferredStyle:UIAlertControllerStyleAlert];
+    [controller addAction:[UIAlertAction actionWithTitle:@"Okay" style:UIAlertActionStyleDefault handler:nil]];
+    [self presentViewController:controller animated:YES completion:nil];
 }
 
 @end
