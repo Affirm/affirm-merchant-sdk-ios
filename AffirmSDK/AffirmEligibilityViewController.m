@@ -20,6 +20,7 @@
 #import "AffirmLogger.h"
 #import "AffirmConstants.h"
 #import "AffirmUtils.h"
+#import "AffirmHowToViewController.h"
 
 @interface AffirmEligibilityViewController () <UITextFieldDelegate>
 
@@ -120,7 +121,10 @@
 
 - (void)question:(id)sender
 {
-    
+    AffirmHowToViewController *controller = [[AffirmHowToViewController alloc] initWithNibName:@"AffirmHowToViewController" bundle:[NSBundle sdkBundle]];
+    controller.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentViewController:controller animated:YES completion:nil];
 }
 
 - (IBAction)getStarted:(id)sender

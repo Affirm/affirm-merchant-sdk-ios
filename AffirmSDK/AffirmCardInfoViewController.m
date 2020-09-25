@@ -15,6 +15,7 @@
 #import "AffirmClient.h"
 #import "AffirmLogger.h"
 #import "AffirmActivityIndicatorView.h"
+#import "AffirmHowToViewController.h"
 
 @interface AffirmCardInfoViewController ()
 
@@ -157,7 +158,10 @@
 
 - (void)question:(id)sender
 {
-
+    AffirmHowToViewController *controller = [[AffirmHowToViewController alloc] initWithNibName:@"AffirmHowToViewController" bundle:[NSBundle sdkBundle]];
+    controller.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentViewController:controller animated:YES completion:nil];
 }
 
 - (IBAction)infoPressed:(id)sender
