@@ -36,7 +36,6 @@
 
 - (instancetype)initWithDelegate:(id<AffirmCheckoutDelegate>)delegate
                         checkout:(AffirmCheckout *)checkout
-                          useVCN:(BOOL)useVCN
                   getReasonCodes:(BOOL)getReasonCodes
 {
     [AffirmValidationUtils checkNotNil:delegate name:@"checkout delegate"];
@@ -45,18 +44,16 @@
     if (self = [super initWithNibName:@"AffirmEligibilityViewController" bundle:[NSBundle sdkBundle]]) {
         _delegate = delegate;
         _checkout = [checkout copy];
-        _useVCN = useVCN;
         _getReasonCodes = getReasonCodes;
     }
     return self;
 }
 
 + (UINavigationController *)startCheckoutWithNavigation:(AffirmCheckout *)checkout
-                                                 useVCN:(BOOL)useVCN
                                          getReasonCodes:(BOOL)getReasonCodes
                                                delegate:(nonnull id<AffirmCheckoutDelegate>)delegate
 {
-    AffirmEligibilityViewController *checkoutController = [self startCheckout:checkout useVCN:useVCN getReasonCodes:getReasonCodes delegate:delegate];
+    AffirmEligibilityViewController *checkoutController = [self startCheckout:checkout getReasonCodes:getReasonCodes delegate:delegate];
     return [[UINavigationController alloc] initWithRootViewController:checkoutController];
 }
 
@@ -65,28 +62,15 @@
 {
     return [[self alloc] initWithDelegate:delegate
                                  checkout:checkout
-                                   useVCN:NO
                            getReasonCodes:NO];
 }
 
 + (AffirmEligibilityViewController *)startCheckout:(AffirmCheckout *)checkout
-                                            useVCN:(BOOL)useVCN
-                                          delegate:(nonnull id<AffirmCheckoutDelegate>)delegate
-{
-    return [[self alloc] initWithDelegate:delegate
-                                 checkout:checkout
-                                   useVCN:useVCN
-                           getReasonCodes:NO];
-}
-
-+ (AffirmEligibilityViewController *)startCheckout:(AffirmCheckout *)checkout
-                                            useVCN:(BOOL)useVCN
                                     getReasonCodes:(BOOL)getReasonCodes
                                           delegate:(nonnull id<AffirmCheckoutDelegate>)delegate
 {
     return [[self alloc] initWithDelegate:delegate
                                  checkout:checkout
-                                   useVCN:useVCN
                            getReasonCodes:getReasonCodes];
 }
 
@@ -140,7 +124,7 @@
     NSDecimalNumber *totalAmount = [self.amountField.text currencyDecimal];
     self.checkout.totalAmount = [totalAmount decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:@"100"]];
 
-    AffirmCheckoutViewController *controller = [AffirmCheckoutViewController startCheckout:self.checkout useVCN:self.useVCN getReasonCodes:self.getReasonCodes delegate:self.delegate];
+    AffirmCheckoutViewController *controller = [AffirmCheckoutViewController startCheckout:self.checkout useVCN:YES getReasonCodes:self.getReasonCodes delegate:self.delegate];
     [self.navigationController pushViewController:controller animated:YES];
 }
 

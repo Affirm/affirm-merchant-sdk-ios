@@ -25,8 +25,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.automaticallyAdjustsScrollViewInsets = NO;
-
+    
     WKWebViewConfiguration *configuration = [WKWebViewConfiguration new];
     configuration.preferences.javaScriptCanOpenWindowsAutomatically = YES;
     configuration.applicationNameForUserAgent = [NSString stringWithFormat:@"Affirm-iOS-SDK-%@", [AffirmConfiguration affirmSDKVersion]];

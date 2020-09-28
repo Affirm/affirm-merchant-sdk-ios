@@ -202,7 +202,7 @@
         checkout.caas = self.caasTextfield.text;
     }
 
-    UINavigationController *nav = [AffirmEligibilityViewController startCheckoutWithNavigation:checkout useVCN:YES getReasonCodes:YES delegate:self];
+    UINavigationController *nav = [AffirmEligibilityViewController startCheckoutWithNavigation:checkout getReasonCodes:YES delegate:self];
     [self presentViewController:nav animated:YES completion:nil];
 }
 
