@@ -95,6 +95,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly, nonnull) NSString *creditCardId;
 
 /**
+ expiredDate. Optional
+ */
+@property (nonatomic, copy, nonnull) NSDate *expiredDate;
+
+/**
  Convenience constructor for a credit card object with dictionary data.
 
  @param dict Data dictionary.

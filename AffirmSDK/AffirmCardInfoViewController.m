@@ -51,6 +51,9 @@
 @property (weak, nonatomic) IBOutlet UIImageView *backLogoView;
 @property (weak, nonatomic) IBOutlet UIButton *rightButton;
 @property (weak, nonatomic) IBOutlet UILabel *holderLabel;
+@property (weak, nonatomic) IBOutlet UILabel *timerLabel;
+
+@property (nonatomic, strong) NSTimer *timer;
 
 @end
 
@@ -63,7 +66,7 @@
 {
     [AffirmValidationUtils checkNotNil:delegate name:@"checkout delegate"];
     [AffirmValidationUtils checkNotNil:checkout name:@"checkout"];
-    
+
     if (self = [super initWithNibName:@"AffirmCardInfoViewController" bundle:[NSBundle sdkBundle]]) {
         _delegate = delegate;
         _checkout = [checkout copy];
@@ -102,7 +105,7 @@
     [self.navigationItem setHidesBackButton:YES];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"close_grey" inBundle:[NSBundle resourceBundle]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"question_dark" inBundle:[NSBundle resourceBundle]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(question:)];
-    
+
     NSDecimalNumber *totalAmount = self.checkout.totalAmount;
     if (totalAmount && totalAmount != NSDecimalNumber.notANumber) {
         totalAmount = [totalAmount decimalNumberByDividingBy:[NSDecimalNumber decimalNumberWithString:@"100"]];
@@ -110,11 +113,11 @@
     } else {
         self.amountLabel.text = nil;
     }
-    
+
     self.logoView.image = [UIImage imageNamed:@"white_logo-transparent_bg" inBundle:[NSBundle resourceBundle]];
     self.cardView.layer.masksToBounds = YES;
     self.cardView.layer.cornerRadius = 16.0f;
-    
+
     self.cardBackView.layer.masksToBounds = YES;
     self.cardBackView.layer.cornerRadius = 16.0f;
     self.cardBackView.layer.borderColor = [UIColor darkGrayColor].CGColor;
@@ -122,7 +125,7 @@
     self.backLogoView.image = [UIImage imageNamed:@"blue-black_logo-transparent_bg" inBundle:[NSBundle resourceBundle]];
     [self.rightButton setImage:[UIImage imageNamed:@"right" inBundle:[NSBundle resourceBundle]] forState:UIControlStateNormal];
     self.holderLabel.text = [NSString stringWithFormat:@"Authorized Cardholder: %@", self.creditCard.cardholderName];
-    
+
     CAGradientLayer *gradient = [CAGradientLayer layer];
     gradient.frame = self.cardView.bounds;
     gradient.colors = @[(id)[UIColor colorWithWhite:1 alpha:0.32].CGColor, (id)[UIColor colorWithRed:35.0f/255.0f green:41.0f/255.0f blue:47.0f/255.0f alpha:0.0001].CGColor];
@@ -130,18 +133,22 @@
     gradient.endPoint = CGPointMake(0.927546501159668, 0.7592374086380005);
     gradient.locations = @[@0, @0.9898];
     [self.cardView.layer insertSublayer:gradient atIndex:0];
-    
+
     self.cardButton.layer.masksToBounds = YES;
     self.cardButton.layer.cornerRadius = 6.0f;
     [self setCardNo:self.creditCard.number];
     [self setExpires:self.creditCard.expiration];
     self.cvvLabel.text = self.creditCard.cvv;
-    
+
     [self.infoButton setImage:[UIImage imageNamed:@"info" inBundle:[NSBundle resourceBundle]] forState:UIControlStateNormal];
-    
+
     AffirmActivityIndicatorView *activityIndicatorView = [[AffirmActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
     [self.view addSubview:activityIndicatorView];
     self.activityIndicatorView = activityIndicatorView;
+
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
+        [self setTimerText];
+    }];
 }
 
 - (void)viewDidLayoutSubviews
@@ -150,14 +157,22 @@
     self.activityIndicatorView.center = self.view.center;
 }
 
+- (void)dealloc
+{
+    if (self.timer) {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
+}
+
 - (void)setCardNo:(NSString *)text
 {
     AffirmBrandType type = AffirmBrandTypeUnknown;
     AffirmBrand *brand = [[AffirmCardValidator sharedCardValidator] brandForCardNumber:self.creditCard.number];
     if (brand) { type = brand.type; }
-    
+
     self.cardLogoView.image = [UIImage imageNamed:type == AffirmBrandTypeVisa ? @"visa" : @"mastercard" inBundle:[NSBundle resourceBundle]];
-    
+
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName: [UIFont fontWithName:AffirmFontNameAlmaMonoBold size:24], NSForegroundColorAttributeName: [UIColor whiteColor]}];
     NSArray *cardNumberFormat = [AffirmCardValidator cardNumberFormatForBrand:type];
     NSUInteger index = 0;
@@ -185,11 +200,11 @@
         expirationYear = [expirationYear stringByRemovingIllegalCharacters];
         expirationYear = [expirationYear substringToIndex:MIN(expirationYear.length, 4)];
     }
-    
+
     if (expirationMonth.length == 1 && ![expirationMonth isEqualToString:@"0"] && ![expirationMonth isEqualToString:@"1"]) {
         expirationMonth = [NSString stringWithFormat:@"0%@", text];
     }
-    
+
     NSMutableArray *array = [NSMutableArray array];
     if (expirationMonth && ![expirationMonth isEqualToString:@""]) {
         [array addObject:expirationMonth];
@@ -197,9 +212,34 @@
     if (expirationMonth.length == 2 && expirationMonth.integerValue > 0 && expirationMonth.integerValue <= 12) {
         [array addObject:expirationYear];
     }
-    
+
     _text = [array componentsJoinedByString:@"/"];
     self.expiresLabel.text = _text;
+}
+
+- (void)setTimerText
+{
+    NSTimeInterval seconds = [self.creditCard.expiredDate timeIntervalSinceNow];
+    if (seconds > 0) {
+        NSString *hour = [NSString stringWithFormat:@"%02d", (int)seconds / 3600];
+        NSString *min = [NSString stringWithFormat:@"%02d", ((int)seconds % 3600) / 60];
+        NSString *sec = [NSString stringWithFormat:@"%02d", (int)seconds % 60];
+        NSString *time = [NSString stringWithFormat:@"%@:%@:%@", hour, min, sec];
+
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.dateFormat = [NSString stringWithFormat:@"HH:mm:ss"];
+        self.timerLabel.text = [NSString stringWithFormat:@"This card is valid for %@", time];
+    } else {
+        self.timerLabel.text = @"00:00:00";
+        [self.timer invalidate];
+        self.timer = nil;
+
+        UIAlertController *controller = [UIAlertController alertControllerWithTitle:nil message:@"This card is expired." preferredStyle:UIAlertControllerStyleAlert];
+        [controller addAction:[UIAlertAction actionWithTitle:@"Okay" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }]];
+        [self presentViewController:controller animated:YES completion:nil];
+    }
 }
 
 - (void)cancel:(id)sender
@@ -215,7 +255,7 @@
         if (response && [response isKindOfClass:[AffirmCancelLoanResponse class]]) {
             AffirmCancelLoanResponse *cancelResponse = (AffirmCancelLoanResponse *)response;
             [AffirmConfiguration.sharedInstance updateCreditCard:nil];
-            
+
             UIAlertController *controller = [UIAlertController alertControllerWithTitle:nil message:cancelResponse.message preferredStyle:UIAlertControllerStyleAlert];
             [controller addAction:[UIAlertAction actionWithTitle:@"Okay" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                 [self dismissViewControllerAnimated:YES completion:nil];
@@ -246,7 +286,7 @@
     [UIView transitionWithView:self.cardView duration:0.25 options:UIViewAnimationOptionTransitionFlipFromRight | UIViewAnimationOptionShowHideTransitionViews animations:^{
         self.cardView.alpha = 0;
     } completion:nil];
-    
+
     [UIView transitionWithView:self.cardBackView duration:0.25 options:UIViewAnimationOptionTransitionFlipFromRight | UIViewAnimationOptionShowHideTransitionViews animations:^{
         self.cardBackView.alpha = 1;
     } completion:nil];
@@ -257,7 +297,7 @@
     [UIView transitionWithView:self.cardView duration:0.25 options:UIViewAnimationOptionTransitionFlipFromLeft | UIViewAnimationOptionShowHideTransitionViews animations:^{
         self.cardView.alpha = 1;
     } completion:nil];
-    
+
     [UIView transitionWithView:self.cardBackView duration:0.25 options:UIViewAnimationOptionTransitionFlipFromLeft | UIViewAnimationOptionShowHideTransitionViews animations:^{
         self.cardBackView.alpha = 0;
     } completion:nil];

@@ -194,6 +194,7 @@ NS_SWIFT_NAME(init(delegate:checkout:creditCard:getReasonCodes:)) NS_DESIGNATED_
             if (_useVCN) {
                 if([item.name isEqualToString:@"data"]) {
                     AffirmCreditCard *creditCard = [AffirmCreditCard creditCardWithDict:item.value.convertToDictionary];
+                    creditCard.expiredDate = [[NSDate date] dateByAddingTimeInterval:24 * 60 * 60];
                     [[AffirmConfiguration sharedInstance] updateCreditCard:creditCard];
 
                     UIViewController *first = self.navigationController.viewControllers.firstObject;

@@ -42,6 +42,7 @@
                 <outlet property="infoButton" destination="hba-Ge-b2l" id="Wxk-Oh-czp"/>
                 <outlet property="logoView" destination="GbY-eR-dPv" id="EmG-6L-qJ1"/>
                 <outlet property="rightButton" destination="GwG-rx-Qa7" id="toc-qZ-1EP"/>
+                <outlet property="timerLabel" destination="xS6-IJ-vBQ" id="XkD-ld-nBu"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -83,7 +84,7 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Authorized Cardholder: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2bZ-tY-Rgx">
-                            <rect key="frame" x="15" y="60.5" width="344" height="20.5"/>
+                            <rect key="frame" x="15" y="60.5" width="344" height="20"/>
                             <fontDescription key="fontDescription" name="Calibre-Medium" family="Calibre" pointSize="17"/>
                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
@@ -202,7 +203,7 @@
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lUe-96-Qmo">
-                    <rect key="frame" x="20" y="435.5" width="374" height="60"/>
+                    <rect key="frame" x="20" y="450.5" width="374" height="60"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="60" id="gZN-vf-4Ub"/>
                     </constraints>
@@ -228,20 +229,29 @@
                         <action selector="copyCardPressed:" destination="-1" eventType="touchUpInside" id="b59-uq-BvO"/>
                     </connections>
                 </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xS6-IJ-vBQ">
+                    <rect key="frame" x="15" y="435.5" width="384" height="0.0"/>
+                    <fontDescription key="fontDescription" name="Calibre-Regular" family="Calibre" pointSize="19"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <viewLayoutGuide key="safeArea" id="Q5M-cg-NOt"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
-                <constraint firstItem="lUe-96-Qmo" firstAttribute="top" secondItem="odP-F8-4vN" secondAttribute="bottom" constant="15" id="4Ta-l7-iLq"/>
+                <constraint firstItem="lUe-96-Qmo" firstAttribute="top" secondItem="xS6-IJ-vBQ" secondAttribute="bottom" constant="15" id="4Ta-l7-iLq"/>
                 <constraint firstItem="odP-F8-4vN" firstAttribute="trailing" secondItem="YN8-o0-ljm" secondAttribute="trailing" id="5Je-0Q-Vfa"/>
+                <constraint firstItem="xS6-IJ-vBQ" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="15" id="CBU-Xx-b4C"/>
                 <constraint firstItem="odP-F8-4vN" firstAttribute="bottom" secondItem="4m1-og-C5c" secondAttribute="bottom" id="F0m-zK-Xg4"/>
                 <constraint firstItem="wvA-Ze-qbT" firstAttribute="leading" secondItem="lUe-96-Qmo" secondAttribute="leading" id="JmF-Bm-Tpa"/>
+                <constraint firstItem="xS6-IJ-vBQ" firstAttribute="top" secondItem="4m1-og-C5c" secondAttribute="bottom" constant="15" id="KQw-3M-0UE"/>
                 <constraint firstItem="wvA-Ze-qbT" firstAttribute="top" relation="greaterThanOrEqual" secondItem="lUe-96-Qmo" secondAttribute="bottom" constant="15" id="NkA-lx-yOv"/>
                 <constraint firstItem="odP-F8-4vN" firstAttribute="leading" secondItem="4m1-og-C5c" secondAttribute="leading" id="P1V-eI-3dN"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="wvA-Ze-qbT" secondAttribute="trailing" constant="20" id="Pbi-Uv-qCp"/>
                 <constraint firstItem="odP-F8-4vN" firstAttribute="top" secondItem="YN8-o0-ljm" secondAttribute="bottom" constant="35" id="R8s-Qb-VoR"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="YN8-o0-ljm" secondAttribute="trailing" constant="20" id="RtW-gt-ATS"/>
                 <constraint firstItem="wvA-Ze-qbT" firstAttribute="trailing" secondItem="lUe-96-Qmo" secondAttribute="trailing" id="WJy-m0-g6Y"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="xS6-IJ-vBQ" secondAttribute="trailing" constant="15" id="XOK-L5-mss"/>
                 <constraint firstItem="odP-F8-4vN" firstAttribute="leading" secondItem="YN8-o0-ljm" secondAttribute="leading" id="YD1-LP-6DQ"/>
                 <constraint firstItem="odP-F8-4vN" firstAttribute="trailing" secondItem="4m1-og-C5c" secondAttribute="trailing" id="YXo-D3-J0w"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="bottom" secondItem="wvA-Ze-qbT" secondAttribute="bottom" id="cFL-vW-dwD"/>
