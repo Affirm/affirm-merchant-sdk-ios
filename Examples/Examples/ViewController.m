@@ -100,15 +100,36 @@
 - (IBAction)checkout:(id)sender
 {
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
-    AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item" SKU:@"test_item" unitPrice:dollarPrice quantity:1 URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
-    AffirmShippingDetail *shipping = [AffirmShippingDetail shippingDetailWithName:@"Chester Cheetah" addressWithLine1:@"633 Folsom Street" line2:@"" city:@"San Francisco" state:@"CA" zipCode:@"94107" countryCode:@"USA"];
+    AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item"
+                                            SKU:@"test_item"
+                                      unitPrice:dollarPrice
+                                       quantity:1
+                                            URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
+    AffirmShippingDetail *shipping = [AffirmShippingDetail shippingDetailWithName:@"Chester Cheetah"
+                                                                 addressWithLine1:@"633 Folsom Street"
+                                                                            line2:@""
+                                                                             city:@"San Francisco"
+                                                                            state:@"CA"
+                                                                          zipCode:@"94107"
+                                                                      countryCode:@"USA"];
     NSDictionary *metadata = @{@"shipping_type": @"UPS Ground", @"entity_name": @"internal-sub_brand-name", @"webhook_session_id": @"ABC123"};
 
     // Checkout
-    AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping totalAmount:[dollarPrice toIntegerCents] metadata:metadata];
+    AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item]
+                                                        shipping:shipping
+                                                     totalAmount:[dollarPrice toIntegerCents]
+                                                        metadata:metadata];
 
     // Billing
-    AffirmBillingDetail *billing = [AffirmBillingDetail billingDetailWithName:@"Chester Cheetah" email:@"testtester@test.com" phoneNumber:nil addressWithLine1:@"633 Folsom Street" line2:@"" city:@"San Francisco" state:@"CA" zipCode:@"94107" countryCode:@"USA"];
+    AffirmBillingDetail *billing = [AffirmBillingDetail billingDetailWithName:@"Chester Cheetah"
+                                                                        email:@"testtester@test.com"
+                                                                  phoneNumber:nil
+                                                             addressWithLine1:@"633 Folsom Street"
+                                                                        line2:@""
+                                                                         city:@"San Francisco"
+                                                                        state:@"CA"
+                                                                      zipCode:@"94107"
+                                                                  countryCode:@"USA"];
     checkout.billing = billing;
 
     // CAAS
@@ -116,39 +137,79 @@
         checkout.caas = self.caasTextfield.text;
     }
     
-    UINavigationController *nav = [AffirmCheckoutViewController startCheckoutWithNavigation:checkout useVCN:NO getReasonCodes:NO delegate:self];
+    UINavigationController *nav = [AffirmCheckoutViewController startCheckoutWithNavigation:checkout
+                                                                                     useVCN:NO
+                                                                             getReasonCodes:NO
+                                                                                   delegate:self];
     [self presentViewController:nav animated:YES completion:nil];
 }
 
 - (IBAction)showFailedCheckout:(id)sender
 {
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
-    AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item" SKU:@"test_item" unitPrice:dollarPrice quantity:1 URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
-    AffirmShippingDetail *shipping = [AffirmShippingDetail shippingDetailWithName:@"Test Tester" email:@"testtester@test.com" phoneNumber:@"1111111111" addressWithLine1:@"633 Folsom Street" line2:@"" city:@"San Francisco" state:@"CA" zipCode:@"94107" countryCode:@"USA"];
+    AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item"
+                                            SKU:@"test_item"
+                                      unitPrice:dollarPrice
+                                       quantity:1
+                                            URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
+    AffirmShippingDetail *shipping = [AffirmShippingDetail shippingDetailWithName:@"Test Tester"
+                                                                            email:@"testtester@test.com"
+                                                                      phoneNumber:@"1111111111"
+                                                                 addressWithLine1:@"633 Folsom Street"
+                                                                            line2:@""
+                                                                             city:@"San Francisco"
+                                                                            state:@"CA"
+                                                                          zipCode:@"94107"
+                                                                      countryCode:@"USA"];
 
     // Checkout
-    AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping totalAmount:[dollarPrice toIntegerCents]];
+    AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item]
+                                                        shipping:shipping
+                                                     totalAmount:[dollarPrice toIntegerCents]];
 
     // CAAS
     if (self.caasTextfield.text) {
         checkout.caas = self.caasTextfield.text;
     }
 
-    UINavigationController *nav = [AffirmCheckoutViewController startCheckoutWithNavigation:checkout useVCN:NO getReasonCodes:NO delegate:self];
+    UINavigationController *nav = [AffirmCheckoutViewController startCheckoutWithNavigation:checkout
+                                                                                     useVCN:NO
+                                                                             getReasonCodes:NO
+                                                                                   delegate:self];
     [self presentViewController:nav animated:YES completion:nil];
 }
 
 - (IBAction)vcnCheckout:(UIButton *)sender
 {
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
-    AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item" SKU:@"test_item" unitPrice:dollarPrice quantity:1 URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
-    AffirmShippingDetail *shipping = [AffirmShippingDetail shippingDetailWithName:@"Chester Cheetah" addressWithLine1:@"633 Folsom Street" line2:@"" city:@"San Francisco" state:@"CA" zipCode:@"94107" countryCode:@"USA"];
+    AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item"
+                                            SKU:@"test_item"
+                                      unitPrice:dollarPrice
+                                       quantity:1
+                                            URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
+    AffirmShippingDetail *shipping = [AffirmShippingDetail shippingDetailWithName:@"Chester Cheetah"
+                                                                 addressWithLine1:@"633 Folsom Street"
+                                                                            line2:@""
+                                                                             city:@"San Francisco"
+                                                                            state:@"CA"
+                                                                          zipCode:@"94107"
+                                                                      countryCode:@"USA"];
 
     // Checkout
-    AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping totalAmount:[dollarPrice toIntegerCents]];
+    AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item]
+                                                        shipping:shipping
+                                                     totalAmount:[dollarPrice toIntegerCents]];
 
     // Billing
-    AffirmBillingDetail *billing = [AffirmBillingDetail billingDetailWithName:nil email:nil phoneNumber:nil addressWithLine1:nil line2:nil city:nil state:nil zipCode:nil countryCode:nil];
+    AffirmBillingDetail *billing = [AffirmBillingDetail billingDetailWithName:nil
+                                                                        email:nil
+                                                                  phoneNumber:nil
+                                                             addressWithLine1:nil
+                                                                        line2:nil
+                                                                         city:nil
+                                                                        state:nil
+                                                                      zipCode:nil
+                                                                  countryCode:nil];
     checkout.billing = billing;
 
     // CAAS
@@ -156,7 +217,10 @@
         checkout.caas = self.caasTextfield.text;
     }
 
-    UINavigationController *nav = [AffirmCheckoutViewController startCheckoutWithNavigation:checkout useVCN:YES getReasonCodes:YES delegate:self];
+    UINavigationController *nav = [AffirmCheckoutViewController startCheckoutWithNavigation:checkout
+                                                                                     useVCN:YES
+                                                                             getReasonCodes:YES
+                                                                                   delegate:self];
     [self presentViewController:nav animated:YES completion:nil];
 }
 
@@ -164,14 +228,22 @@
 {
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         if ([AffirmConfiguration sharedInstance].isCreditCardExists) {
-            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleAlert];
-            [alertController addAction:[UIAlertAction actionWithTitle:@"Show credit card info" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
+                                                                                     message:nil
+                                                                              preferredStyle:UIAlertControllerStyleAlert];
+            [alertController addAction:[UIAlertAction actionWithTitle:@"Show credit card info"
+                                                                style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * _Nonnull action) {
                 [self showCreditCardInfo];
             }]];
-            [alertController addAction:[UIAlertAction actionWithTitle:@"Start new checkout flow" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [alertController addAction:[UIAlertAction actionWithTitle:@"Start new checkout flow"
+                                                                style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * _Nonnull action) {
                 [self showNewVCNCheckoutFlow];
             }]];
-            [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+            [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel"
+                                                                style:UIAlertActionStyleCancel
+                                                              handler:nil]];
             [self presentViewController:alertController animated:YES completion:nil];
         } else {
             [self showNewVCNCheckoutFlow];
@@ -187,14 +259,34 @@
 - (void)showNewVCNCheckoutFlow
 {
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
-    AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item" SKU:@"test_item" unitPrice:dollarPrice quantity:1 URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
-    AffirmShippingDetail *shipping = [AffirmShippingDetail shippingDetailWithName:@"Chester Cheetah" addressWithLine1:@"633 Folsom Street" line2:@"" city:@"San Francisco" state:@"CA" zipCode:@"94107" countryCode:@"USA"];
+    AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item"
+                                            SKU:@"test_item"
+                                      unitPrice:dollarPrice
+                                       quantity:1
+                                            URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
+    AffirmShippingDetail *shipping = [AffirmShippingDetail shippingDetailWithName:@"Chester Cheetah"
+                                                                 addressWithLine1:@"633 Folsom Street"
+                                                                            line2:@""
+                                                                             city:@"San Francisco"
+                                                                            state:@"CA"
+                                                                          zipCode:@"94107"
+                                                                      countryCode:@"USA"];
 
     // Checkout
-    AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping totalAmount:[dollarPrice toIntegerCents]];
+    AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item]
+                                                        shipping:shipping
+                                                     totalAmount:[dollarPrice toIntegerCents]];
 
     // Billing
-    AffirmBillingDetail *billing = [AffirmBillingDetail billingDetailWithName:nil email:nil phoneNumber:nil addressWithLine1:nil line2:nil city:nil state:nil zipCode:nil countryCode:nil];
+    AffirmBillingDetail *billing = [AffirmBillingDetail billingDetailWithName:nil
+                                                                        email:nil
+                                                                  phoneNumber:nil
+                                                             addressWithLine1:nil
+                                                                        line2:nil
+                                                                         city:nil
+                                                                        state:nil
+                                                                      zipCode:nil
+                                                                  countryCode:nil];
     checkout.billing = billing;
 
     // CAAS
@@ -202,7 +294,9 @@
         checkout.caas = self.caasTextfield.text;
     }
 
-    UINavigationController *nav = [AffirmEligibilityViewController startCheckoutWithNavigation:checkout getReasonCodes:YES delegate:self];
+    UINavigationController *nav = [AffirmEligibilityViewController startCheckoutWithNavigation:checkout
+                                                                                getReasonCodes:YES
+                                                                                      delegate:self];
     [self presentViewController:nav animated:YES completion:nil];
 }
 
@@ -238,10 +332,15 @@
                                                           quantity:1
                                                            variant:@"Black"
                                                           currency:nil];
-    [AffirmOrderTrackerViewController trackOrder:order products:@[product0, product1]];
+    [AffirmOrderTrackerViewController trackOrder:order
+                                        products:@[product0, product1]];
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"Track successfully" preferredStyle:UIAlertControllerStyleAlert];
-    [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
+                                                                             message:@"Track successfully"
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"OK"
+                                                        style:UIAlertActionStyleCancel
+                                                      handler:nil]];
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
@@ -250,15 +349,23 @@
     [AffirmConfiguration deleteAffirmCookies];
     [self configurPromotionalMessage];
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"Clear successfully" preferredStyle:UIAlertControllerStyleAlert];
-    [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
+                                                                             message:@"Clear successfully"
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"OK"
+                                                        style:UIAlertActionStyleCancel
+                                                      handler:nil]];
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)configurPromotionalMessage
 {
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
-    AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item" SKU:@"test_item" unitPrice:dollarPrice quantity:1 URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
+    AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item"
+                                            SKU:@"test_item"
+                                      unitPrice:dollarPrice
+                                       quantity:1
+                                            URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
 
     NSURL *fontURL = [NSURL URLWithString:@"https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap"];
     NSURL *cssURL = [[NSBundle mainBundle] URLForResource:@"css_promo_sample" withExtension:@"css"];
@@ -303,8 +410,12 @@
 {
     [@[self.publicKeyTextfield, self.amountTextField, self.promoIDTextField] enumerateObjectsUsingBlock:^(UITextField * _Nonnull textField, NSUInteger idx, BOOL * _Nonnull stop) {
         UIToolbar *toolbar = [UIToolbar new];
-        UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-        UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:textField action:@selector(resignFirstResponder)];
+        UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+                                                                                      target:nil
+                                                                                      action:nil];
+        UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                  target:textField
+                                                                                  action:@selector(resignFirstResponder)];
         toolbar.items = @[flexibleItem, doneItem];
         [toolbar sizeToFit];
         textField.inputAccessoryView = toolbar;
@@ -336,8 +447,12 @@
     // The prequal process failed
     NSLog(@"Prequal failed with error: %@", error.userInfo);
     if (webViewController) {
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-        [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                                 message:error.localizedDescription
+                                                                          preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"OK"
+                                                            style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * _Nonnull action) {
             [webViewController dismissViewControllerAnimated:YES completion:nil];
         }]];
         [webViewController presentViewController:alertController animated:YES completion:nil];
@@ -383,8 +498,12 @@
 {
     // The checkout process failed
     NSLog(@"Checkout failed with error: %@", error);
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-    [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                             message:error.localizedDescription
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"OK"
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction * _Nonnull action) {
         [checkoutViewController dismissViewControllerAnimated:YES completion:nil];
     }]];
     [checkoutViewController presentViewController:alertController animated:YES completion:nil];
