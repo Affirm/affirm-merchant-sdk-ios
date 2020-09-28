@@ -74,47 +74,6 @@
     self.scrollView.contentInset = UIEdgeInsetsZero;
 }
 
-- (AffirmCheckout *)generateCheckout
-{
-    NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
-    AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item"
-                                            SKU:@"test_item"
-                                      unitPrice:dollarPrice
-                                       quantity:1
-                                            URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
-    AffirmShippingDetail *shipping = [AffirmShippingDetail shippingDetailWithName:@"Chester Cheetah"
-                                                                 addressWithLine1:@"633 Folsom Street"
-                                                                            line2:@""
-                                                                             city:@"San Francisco"
-                                                                            state:@"CA"
-                                                                          zipCode:@"94107"
-                                                                      countryCode:@"USA"];
-
-    // Checkout
-    AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item]
-                                                        shipping:shipping
-                                                     totalAmount:[dollarPrice toIntegerCents]];
-
-    // Billing
-    AffirmBillingDetail *billing = [AffirmBillingDetail billingDetailWithName:nil
-                                                                        email:nil
-                                                                  phoneNumber:nil
-                                                             addressWithLine1:nil
-                                                                        line2:nil
-                                                                         city:nil
-                                                                        state:nil
-                                                                      zipCode:nil
-                                                                  countryCode:nil];
-    checkout.billing = billing;
-
-    // CAAS
-    if (self.caasTextfield.text) {
-        checkout.caas = self.caasTextfield.text;
-    }
-
-    return checkout;
-}
-
 #pragma mark - Actions
 
 - (IBAction)showPromoModal:(id)sender
@@ -222,6 +181,16 @@
 
 - (IBAction)vcnCheckout:(UIButton *)sender
 {
+    AffirmCheckout *checkout = [self generateVCNCheckout];
+    UINavigationController *nav = [AffirmCheckoutViewController startCheckoutWithNavigation:checkout
+                                                                                     useVCN:YES
+                                                                             getReasonCodes:YES
+                                                                                   delegate:self];
+    [self presentViewController:nav animated:YES completion:nil];
+}
+
+- (AffirmCheckout *)generateVCNCheckout
+{
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
     AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item"
                                             SKU:@"test_item"
@@ -258,11 +227,7 @@
         checkout.caas = self.caasTextfield.text;
     }
 
-    UINavigationController *nav = [AffirmCheckoutViewController startCheckoutWithNavigation:checkout
-                                                                                     useVCN:YES
-                                                                             getReasonCodes:YES
-                                                                                   delegate:self];
-    [self presentViewController:nav animated:YES completion:nil];
+    return checkout;
 }
 
 - (IBAction)showVCNEligibility:(UIGestureRecognizer *)recognizer
@@ -294,9 +259,8 @@
 
 - (void)showCreditCardInfo
 {
-    AffirmCheckout *checkout = [self generateCheckout];
+    AffirmCheckout *checkout = [self generateVCNCheckout];
     AffirmCreditCard *creditCard = [AffirmConfiguration sharedInstance].creditCard;
-    
     UINavigationController *nav = [AffirmCardInfoViewController startCheckoutWithNavigation:checkout
                                                                                 creditCard:creditCard
                                                                                 getReasonCodes:YES
@@ -306,7 +270,7 @@
 
 - (void)showNewVCNCheckoutFlow
 {
-    AffirmCheckout *checkout = [self generateCheckout];
+    AffirmCheckout *checkout = [self generateVCNCheckout];
     UINavigationController *nav = [AffirmEligibilityViewController startCheckoutWithNavigation:checkout
                                                                                 getReasonCodes:YES
                                                                                       delegate:self];
