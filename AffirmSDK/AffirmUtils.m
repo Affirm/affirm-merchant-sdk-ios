@@ -131,7 +131,7 @@
 - (NSString *)formattedString
 {
     NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
-    numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+    numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
     numberFormatter.usesGroupingSeparator = YES;
     numberFormatter.minimumFractionDigits = 0;
     numberFormatter.maximumFractionDigits = 0;

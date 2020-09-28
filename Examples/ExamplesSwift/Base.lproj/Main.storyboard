@@ -54,7 +54,7 @@
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="40" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="oiw-1r-wLA">
+                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="4000" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="oiw-1r-wLA">
                                                                 <rect key="frame" x="92.5" y="0.0" width="222.5" height="34"/>
                                                                 <accessibility key="accessibilityConfiguration" label="price input"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>

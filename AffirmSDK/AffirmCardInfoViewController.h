@@ -8,14 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-@class AffirmCreditCard;
+@class AffirmCreditCard, AffirmCheckout;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface AffirmCardInfoViewController : UIViewController
 
 @property (nonatomic, strong) AffirmCreditCard *creditCard;
-@property (nonatomic, strong) NSDecimalNumber *amount;
+@property (nonatomic, strong) AffirmCheckout *checkout;
 
 @end
 

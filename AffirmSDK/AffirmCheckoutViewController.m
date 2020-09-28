@@ -22,6 +22,12 @@
 #import "AffirmConstants.h"
 #import "AffirmUtils.h"
 
+@interface AffirmConfiguration ()
+
+- (void)updateCreditCard:(AffirmCreditCard *)creditCard;
+
+@end
+
 @interface AffirmCheckoutViewController ()
 
 @property (nonatomic, copy, readwrite) NSString *checkoutARI;
@@ -169,10 +175,11 @@
             if (_useVCN) {
                 if([item.name isEqualToString:@"data"]) {
                     AffirmCreditCard *creditCard = [AffirmCreditCard creditCardWithDict:item.value.convertToDictionary];
+                    [[AffirmConfiguration sharedInstance] updateCreditCard:creditCard];
                     if ([self.navigationController.viewControllers.firstObject isKindOfClass:[AffirmEligibilityViewController class]]) {
                         AffirmCardInfoViewController *viewController = [[AffirmCardInfoViewController alloc] initWithNibName:@"AffirmCardInfoViewController" bundle:[NSBundle sdkBundle]];
                         viewController.creditCard = creditCard;
-                        viewController.amount = self.checkout.totalAmount;
+                        viewController.checkout = self.checkout;
                         [self.navigationController pushViewController:viewController animated:YES];
                     } else {
                         [self.delegate vcnCheckout:self

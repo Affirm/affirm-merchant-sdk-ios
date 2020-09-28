@@ -9,6 +9,7 @@
 #import "AffirmCardInfoViewController.h"
 #import "AffirmConfiguration.h"
 #import "AffirmCreditCard.h"
+#import "AffirmCheckout.h"
 #import "AffirmUtils.h"
 #import "AffirmCardValidator.h"
 #import "AffirmRequest.h"
@@ -46,7 +47,14 @@
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"close_grey" inBundle:[NSBundle resourceBundle]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"question_dark" inBundle:[NSBundle resourceBundle]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(question:)];
 
-    self.amountLabel.text = [NSString stringWithFormat:@"$%@", self.amount.formattedString];
+    NSDecimalNumber *totalAmount = self.checkout.totalAmount;
+    if (totalAmount && totalAmount != NSDecimalNumber.notANumber) {
+        totalAmount = [totalAmount decimalNumberByDividingBy:[NSDecimalNumber decimalNumberWithString:@"100"]];
+        self.amountLabel.text = totalAmount.formattedString;
+    } else {
+        self.amountLabel.text = nil;
+    }
+
     self.logoView.image = [UIImage imageNamed:@"white_logo-transparent_bg" inBundle:[NSBundle resourceBundle]];
     self.cardView.layer.masksToBounds = YES;
     self.cardView.layer.cornerRadius = 16.0f;

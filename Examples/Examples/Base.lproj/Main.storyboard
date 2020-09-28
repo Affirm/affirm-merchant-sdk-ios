@@ -60,7 +60,7 @@
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="40" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="FGx-aa-5AC">
+                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="4000" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="FGx-aa-5AC">
                                                                 <rect key="frame" x="92.5" y="0.0" width="222.5" height="34"/>
                                                                 <accessibility key="accessibilityConfiguration" label="price input"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -116,7 +116,6 @@
                                                         <state key="normal" title="Buy with Affirm"/>
                                                         <connections>
                                                             <action selector="checkout:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0Tz-uj-wzx"/>
-                                                            <outletCollection property="gestureRecognizers" destination="e5V-kt-RLt" appends="YES" id="mzp-MX-k12"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cjU-mP-ECZ" customClass="Button">
@@ -209,11 +208,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="e5V-kt-RLt">
-                    <connections>
-                        <action selector="showEligibility:" destination="BYZ-38-t0r" id="eLz-B3-2MN"/>
-                    </connections>
-                </pongPressGestureRecognizer>
                 <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="nbE-df-5g5">
                     <connections>
                         <action selector="showVCNEligibility:" destination="BYZ-38-t0r" id="Fon-hC-Yod"/>
