@@ -15,8 +15,24 @@
 #import "AffirmRequest.h"
 #import "AffirmClient.h"
 #import "AffirmLogger.h"
+#import "AffirmEligibilityViewController.h"
 #import "AffirmActivityIndicatorView.h"
 #import "AffirmHowToViewController.h"
+#import "AffirmCheckoutViewController.h"
+
+@interface AffirmConfiguration ()
+
+- (void)updateCreditCard:(AffirmCreditCard *)creditCard;
+
+@end
+
+@interface AffirmEligibilityViewController ()
+
++ (AffirmEligibilityViewController *)startCheckout:(AffirmCheckout *)checkout
+                                    getReasonCodes:(BOOL)getReasonCodes
+                                          delegate:(nonnull id<AffirmCheckoutDelegate>)delegate;
+
+@end
 
 @interface AffirmCardInfoViewController ()
 
@@ -40,13 +56,53 @@
 
 @implementation AffirmCardInfoViewController
 
+- (instancetype)initWithDelegate:(id<AffirmCheckoutDelegate>)delegate
+                        checkout:(AffirmCheckout *)checkout
+                      creditCard:(AffirmCreditCard *)creditCard
+                  getReasonCodes:(BOOL)getReasonCodes
+{
+    [AffirmValidationUtils checkNotNil:delegate name:@"checkout delegate"];
+    [AffirmValidationUtils checkNotNil:checkout name:@"checkout"];
+    
+    if (self = [super initWithNibName:@"AffirmCardInfoViewController" bundle:[NSBundle sdkBundle]]) {
+        _delegate = delegate;
+        _checkout = [checkout copy];
+        _creditCard = creditCard;
+        _getReasonCodes = getReasonCodes;
+    }
+    return self;
+}
+
++ (UINavigationController *)startCheckoutWithNavigation:(AffirmCheckout *)checkout
+                                             creditCard:(AffirmCreditCard *)creditCard
+                                         getReasonCodes:(BOOL)getReasonCodes
+                                               delegate:(nonnull id<AffirmCheckoutDelegate>)delegate
+{
+    AffirmCardInfoViewController *checkoutController = [self startCheckout:checkout
+                                                                creditCard:creditCard
+                                                            getReasonCodes:getReasonCodes
+                                                                  delegate:delegate];
+    return [[UINavigationController alloc] initWithRootViewController:checkoutController];
+}
+
++ (AffirmCardInfoViewController *)startCheckout:(AffirmCheckout *)checkout
+                                     creditCard:(AffirmCreditCard *)creditCard
+                                 getReasonCodes:(BOOL)getReasonCodes
+                                       delegate:(nonnull id<AffirmCheckoutDelegate>)delegate
+{
+    return [[self alloc] initWithDelegate:delegate
+                                 checkout:checkout
+                               creditCard:(AffirmCreditCard *)creditCard
+                           getReasonCodes:getReasonCodes];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     [self.navigationItem setHidesBackButton:YES];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"close_grey" inBundle:[NSBundle resourceBundle]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"question_dark" inBundle:[NSBundle resourceBundle]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(question:)];
-
+    
     NSDecimalNumber *totalAmount = self.checkout.totalAmount;
     if (totalAmount && totalAmount != NSDecimalNumber.notANumber) {
         totalAmount = [totalAmount decimalNumberByDividingBy:[NSDecimalNumber decimalNumberWithString:@"100"]];
@@ -54,11 +110,11 @@
     } else {
         self.amountLabel.text = nil;
     }
-
+    
     self.logoView.image = [UIImage imageNamed:@"white_logo-transparent_bg" inBundle:[NSBundle resourceBundle]];
     self.cardView.layer.masksToBounds = YES;
     self.cardView.layer.cornerRadius = 16.0f;
-
+    
     self.cardBackView.layer.masksToBounds = YES;
     self.cardBackView.layer.cornerRadius = 16.0f;
     self.cardBackView.layer.borderColor = [UIColor darkGrayColor].CGColor;
@@ -66,7 +122,7 @@
     self.backLogoView.image = [UIImage imageNamed:@"blue-black_logo-transparent_bg" inBundle:[NSBundle resourceBundle]];
     [self.rightButton setImage:[UIImage imageNamed:@"right" inBundle:[NSBundle resourceBundle]] forState:UIControlStateNormal];
     self.holderLabel.text = [NSString stringWithFormat:@"Authorized Cardholder: %@", self.creditCard.cardholderName];
-
+    
     CAGradientLayer *gradient = [CAGradientLayer layer];
     gradient.frame = self.cardView.bounds;
     gradient.colors = @[(id)[UIColor colorWithWhite:1 alpha:0.32].CGColor, (id)[UIColor colorWithRed:35.0f/255.0f green:41.0f/255.0f blue:47.0f/255.0f alpha:0.0001].CGColor];
@@ -74,15 +130,15 @@
     gradient.endPoint = CGPointMake(0.927546501159668, 0.7592374086380005);
     gradient.locations = @[@0, @0.9898];
     [self.cardView.layer insertSublayer:gradient atIndex:0];
-
+    
     self.cardButton.layer.masksToBounds = YES;
     self.cardButton.layer.cornerRadius = 6.0f;
     [self setCardNo:self.creditCard.number];
     [self setExpires:self.creditCard.expiration];
     self.cvvLabel.text = self.creditCard.cvv;
-
+    
     [self.infoButton setImage:[UIImage imageNamed:@"info" inBundle:[NSBundle resourceBundle]] forState:UIControlStateNormal];
-
+    
     AffirmActivityIndicatorView *activityIndicatorView = [[AffirmActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
     [self.view addSubview:activityIndicatorView];
     self.activityIndicatorView = activityIndicatorView;
@@ -99,9 +155,9 @@
     AffirmBrandType type = AffirmBrandTypeUnknown;
     AffirmBrand *brand = [[AffirmCardValidator sharedCardValidator] brandForCardNumber:self.creditCard.number];
     if (brand) { type = brand.type; }
-
+    
     self.cardLogoView.image = [UIImage imageNamed:type == AffirmBrandTypeVisa ? @"visa" : @"mastercard" inBundle:[NSBundle resourceBundle]];
-
+    
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName: [UIFont fontWithName:AffirmFontNameAlmaMonoBold size:24], NSForegroundColorAttributeName: [UIColor whiteColor]}];
     NSArray *cardNumberFormat = [AffirmCardValidator cardNumberFormatForBrand:type];
     NSUInteger index = 0;
@@ -129,11 +185,11 @@
         expirationYear = [expirationYear stringByRemovingIllegalCharacters];
         expirationYear = [expirationYear substringToIndex:MIN(expirationYear.length, 4)];
     }
-
+    
     if (expirationMonth.length == 1 && ![expirationMonth isEqualToString:@"0"] && ![expirationMonth isEqualToString:@"1"]) {
         expirationMonth = [NSString stringWithFormat:@"0%@", text];
     }
-
+    
     NSMutableArray *array = [NSMutableArray array];
     if (expirationMonth && ![expirationMonth isEqualToString:@""]) {
         [array addObject:expirationMonth];
@@ -141,7 +197,7 @@
     if (expirationMonth.length == 2 && expirationMonth.integerValue > 0 && expirationMonth.integerValue <= 12) {
         [array addObject:expirationYear];
     }
-
+    
     _text = [array componentsJoinedByString:@"/"];
     self.expiresLabel.text = _text;
 }
@@ -158,7 +214,8 @@
     [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nullable error) {
         if (response && [response isKindOfClass:[AffirmCancelLoanResponse class]]) {
             AffirmCancelLoanResponse *cancelResponse = (AffirmCancelLoanResponse *)response;
-
+            [AffirmConfiguration.sharedInstance updateCreditCard:nil];
+            
             UIAlertController *controller = [UIAlertController alertControllerWithTitle:nil message:cancelResponse.message preferredStyle:UIAlertControllerStyleAlert];
             [controller addAction:[UIAlertAction actionWithTitle:@"Okay" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                 [self dismissViewControllerAnimated:YES completion:nil];
@@ -189,7 +246,7 @@
     [UIView transitionWithView:self.cardView duration:0.25 options:UIViewAnimationOptionTransitionFlipFromRight | UIViewAnimationOptionShowHideTransitionViews animations:^{
         self.cardView.alpha = 0;
     } completion:nil];
-
+    
     [UIView transitionWithView:self.cardBackView duration:0.25 options:UIViewAnimationOptionTransitionFlipFromRight | UIViewAnimationOptionShowHideTransitionViews animations:^{
         self.cardBackView.alpha = 1;
     } completion:nil];
@@ -200,7 +257,7 @@
     [UIView transitionWithView:self.cardView duration:0.25 options:UIViewAnimationOptionTransitionFlipFromLeft | UIViewAnimationOptionShowHideTransitionViews animations:^{
         self.cardView.alpha = 1;
     } completion:nil];
-
+    
     [UIView transitionWithView:self.cardBackView duration:0.25 options:UIViewAnimationOptionTransitionFlipFromLeft | UIViewAnimationOptionShowHideTransitionViews animations:^{
         self.cardBackView.alpha = 0;
     } completion:nil];
@@ -210,7 +267,14 @@
 {
     UIAlertController *controller = [UIAlertController alertControllerWithTitle:nil message:@"Edit amount or cancel card" preferredStyle:UIAlertControllerStyleAlert];
     [controller addAction:[UIAlertAction actionWithTitle:@"Edit amount" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [self.navigationController popToRootViewControllerAnimated:YES];
+        if ([self.navigationController.viewControllers.firstObject isKindOfClass:[AffirmEligibilityViewController class]]) {
+            [self.navigationController popToRootViewControllerAnimated:YES];
+        } else {
+            AffirmEligibilityViewController *controller = [AffirmEligibilityViewController startCheckout:self.checkout
+                                                                                          getReasonCodes:self.getReasonCodes
+                                                                                                delegate:self.delegate];
+            [self.navigationController pushViewController:controller animated:YES];
+        }
     }]];
     [controller addAction:[UIAlertAction actionWithTitle:@"Cancel card" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self cancelCard];

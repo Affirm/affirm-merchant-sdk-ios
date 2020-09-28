@@ -28,6 +28,25 @@
 
 @end
 
+@interface AffirmCardInfoViewController ()
+
+/**
+ Initializer. See properties for more details. UseVCN is YES as default
+
+ @param delegate A delegate object which responds to the checkout events created by the view controller.
+ @param checkout A checkout object which contains information about the customer and the purchase.
+ @param creditCard The credit card object used to render card info page.
+ @param getReasonCodes A boolean which determines whether to return the reason why the checkout was canceled
+ @return The newly created checkout view controller.
+ */
+- (instancetype)initWithDelegate:(id<AffirmCheckoutDelegate>)delegate
+                        checkout:(AffirmCheckout *)checkout
+                      creditCard:(AffirmCreditCard *)creditCard
+                  getReasonCodes:(BOOL)getReasonCodes
+NS_SWIFT_NAME(init(delegate:checkout:creditCard:getReasonCodes:)) NS_DESIGNATED_INITIALIZER;
+
+@end
+
 @interface AffirmCheckoutViewController ()
 
 @property (nonatomic, copy, readwrite) NSString *checkoutARI;
@@ -176,10 +195,10 @@
                 if([item.name isEqualToString:@"data"]) {
                     AffirmCreditCard *creditCard = [AffirmCreditCard creditCardWithDict:item.value.convertToDictionary];
                     [[AffirmConfiguration sharedInstance] updateCreditCard:creditCard];
-                    if ([self.navigationController.viewControllers.firstObject isKindOfClass:[AffirmEligibilityViewController class]]) {
-                        AffirmCardInfoViewController *viewController = [[AffirmCardInfoViewController alloc] initWithNibName:@"AffirmCardInfoViewController" bundle:[NSBundle sdkBundle]];
-                        viewController.creditCard = creditCard;
-                        viewController.checkout = self.checkout;
+
+                    UIViewController *first = self.navigationController.viewControllers.firstObject;
+                    if ([first isKindOfClass:[AffirmEligibilityViewController class]] || [first isKindOfClass:[AffirmCardInfoViewController class]]) {
+                        AffirmCardInfoViewController *viewController = [[AffirmCardInfoViewController alloc] initWithDelegate:self.delegate checkout:self.checkout creditCard:creditCard getReasonCodes:self.getReasonCodes];
                         [self.navigationController pushViewController:viewController animated:YES];
                     } else {
                         [self.delegate vcnCheckout:self

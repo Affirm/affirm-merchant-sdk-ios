@@ -20,7 +20,7 @@
 @property (nonatomic, readwrite) AffirmLocale locale;
 @property (nonatomic, copy, readwrite, nullable) NSString *merchantName;
 @property (nonatomic, strong, readwrite) WKProcessPool *pool;
-@property (nonatomic, strong, readwrite) AffirmCreditCard *creditCard;
+@property (nonatomic, strong, readwrite, nullable) AffirmCreditCard *creditCard;
 
 @end
 
@@ -151,7 +151,7 @@
     return self.creditCard != nil;
 }
 
-- (void)updateCreditCard:(AffirmCreditCard *)creditCard
+- (void)updateCreditCard:(nullable AffirmCreditCard *)creditCard
 {
     self.creditCard = creditCard;
 }

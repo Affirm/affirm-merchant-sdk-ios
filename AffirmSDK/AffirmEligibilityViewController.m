@@ -58,14 +58,6 @@
 }
 
 + (AffirmEligibilityViewController *)startCheckout:(AffirmCheckout *)checkout
-                                          delegate:(nonnull id<AffirmCheckoutDelegate>)delegate
-{
-    return [[self alloc] initWithDelegate:delegate
-                                 checkout:checkout
-                           getReasonCodes:NO];
-}
-
-+ (AffirmEligibilityViewController *)startCheckout:(AffirmCheckout *)checkout
                                     getReasonCodes:(BOOL)getReasonCodes
                                           delegate:(nonnull id<AffirmCheckoutDelegate>)delegate
 {

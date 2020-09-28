@@ -37,35 +37,17 @@ NS_ASSUME_NONNULL_BEGIN
                          bundle:(nullable NSBundle *)nibBundleOrNil NS_UNAVAILABLE;
 
 /**
- Initializer. See properties for more details. UseVCN is YES as default
+ Convenience constructor starts the checkout process and notifies delegate regarding checkout events
  
- @param delegate A delegate object which responds to the checkout events created by the view controller.
  @param checkout A checkout object which contains information about the customer and the purchase.
- @param getReasonCodes A boolean which determines whether to return the reason why the checkout was canceled
- @return The newly created checkout view controller.
+ @param getReasonCodes A boolean which determines whether to return the reason why the checkout was canceled.
+ @param delegate A delegate object which responds to the checkout events created by the view controller.
+ @return The newly created navigation controller with checkout view controller.
  */
-- (instancetype)initWithDelegate:(id<AffirmCheckoutDelegate>)delegate
-                        checkout:(AffirmCheckout *)checkout
-                  getReasonCodes:(BOOL)getReasonCodes
-NS_SWIFT_NAME(init(delegate:checkout:getReasonCodes:)) NS_DESIGNATED_INITIALIZER;
-
 + (UINavigationController *)startCheckoutWithNavigation:(AffirmCheckout *)checkout
                                          getReasonCodes:(BOOL)getReasonCodes
                                                delegate:(nonnull id<AffirmCheckoutDelegate>)delegate
 NS_SWIFT_NAME(startNavigation(checkout:getReasonCodes:delegate:));
-
-/**
- Convenience constructor starts the checkout process and notifies delegate regarding checkout events
- 
- @param checkout A checkout object which contains information about the customer and the purchase.
- @param getReasonCodes A boolean which determines whether to return the reason code when a checkout is canceled
- @param delegate A delegate object which responds to the checkout events created by the view controller.
- @return The newly created checkout view controller.
- */
-+ (AffirmEligibilityViewController *)startCheckout:(AffirmCheckout *)checkout
-                                    getReasonCodes:(BOOL)getReasonCodes
-                                          delegate:(id<AffirmCheckoutDelegate>)delegate
-NS_SWIFT_NAME(start(checkout:getReasonCodes:delegate:));
 
 @end
 
