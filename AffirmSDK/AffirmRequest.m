@@ -175,19 +175,22 @@
     NSDictionary *data = [checkout objectForKey: @"metadata"];
     NSMutableDictionary *metaData = data ? [data mutableCopy] : [[NSMutableDictionary alloc] init];
     [metaData setValue:@"Affirm iOS SDK" forKey:@"platform_type"];
-    NSString *sdkVersion = [AffirmConfiguration affirmSDKVersion];
-    [metaData setValue:sdkVersion forKey:@"platform_affirm"];
+    [metaData setValue:[AffirmConfiguration affirmSDKVersion] forKey:@"platform_affirm"];
+    NSMutableDictionary *merchant = [@{
+        @"name": [AffirmConfiguration sharedInstance].merchantName ?: @"",
+        @"public_api_key": self.publicKey,
+        @"user_confirmation_url": AFFIRM_CHECKOUT_CONFIRMATION_URL,
+        @"user_cancel_url": AFFIRM_CHECKOUT_CANCELLATION_URL,
+        @"user_confirmation_url_action": @"POST",
+        @"use_vcn": @(self.useVCN)
+    } mutableCopy];
+    if (self.checkout.caas) {
+        merchant[@"caas"] = self.checkout.caas;
+    }
     [checkout addEntriesFromDictionary:@{
-                                         @"merchant": @{
-                                                 @"name": [AffirmConfiguration sharedInstance].merchantName ?: @"",
-                                                 @"public_api_key": self.publicKey,
-                                                 @"user_confirmation_url": AFFIRM_CHECKOUT_CONFIRMATION_URL,
-                                                 @"user_cancel_url": AFFIRM_CHECKOUT_CANCELLATION_URL,
-                                                 @"user_confirmation_url_action": @"GET",
-                                                 @"use_vcn": @(self.useVCN)
-                                                 },
-                                         @"metadata": metaData
-                                         }];
+        @"merchant": merchant,
+        @"metadata": metaData
+    }];
     return @{@"checkout": checkout};
 }
 

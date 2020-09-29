@@ -324,6 +324,9 @@
         copy.billing = self.billing;
     }
     copy.sendShippingAddress = self.sendShippingAddress;
+    if (self.caas) {
+        copy.caas = self.caas;
+    }
     return copy;
 }
 
