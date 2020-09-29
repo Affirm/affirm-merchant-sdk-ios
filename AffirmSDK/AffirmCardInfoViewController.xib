@@ -57,19 +57,19 @@
                     <color key="textColor" red="0.12549019610000001" green="0.1333333333" blue="0.13725490200000001" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4m1-og-C5c">
+                <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4m1-og-C5c" userLabel="Back Card">
                     <rect key="frame" x="20" y="169" width="374" height="251.5"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="g9M-v8-6q7">
-                            <rect key="frame" x="15" y="15" width="100" height="30.5"/>
+                            <rect key="frame" x="5" y="15" width="100" height="30.5"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="100" id="b7S-ya-Ahc"/>
                                 <constraint firstAttribute="width" secondItem="g9M-v8-6q7" secondAttribute="height" multiplier="79:24" id="qDZ-J7-cPE"/>
                             </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Limited Use Virtual Card" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Ua-Fk-SPw">
-                            <rect key="frame" x="130" y="30" width="123.5" height="15.5"/>
-                            <fontDescription key="fontDescription" name="Calibre-Regular" family="Calibre" pointSize="13"/>
+                            <rect key="frame" x="120" y="27.5" width="146" height="18"/>
+                            <fontDescription key="fontDescription" name="Calibre-Medium" family="Calibre" pointSize="15"/>
                             <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
@@ -102,7 +102,7 @@
                         <constraint firstItem="n9w-av-66s" firstAttribute="leading" secondItem="4m1-og-C5c" secondAttribute="leading" constant="15" id="4Zx-hu-Dvn"/>
                         <constraint firstAttribute="trailing" secondItem="GwG-rx-Qa7" secondAttribute="trailing" constant="15" id="54C-2M-ZKv"/>
                         <constraint firstAttribute="trailing" secondItem="n9w-av-66s" secondAttribute="trailing" constant="15" id="Al2-j9-JZz"/>
-                        <constraint firstItem="g9M-v8-6q7" firstAttribute="leading" secondItem="4m1-og-C5c" secondAttribute="leading" constant="15" id="BWS-Wt-Ajn"/>
+                        <constraint firstItem="g9M-v8-6q7" firstAttribute="leading" secondItem="4m1-og-C5c" secondAttribute="leading" constant="5" id="BWS-Wt-Ajn"/>
                         <constraint firstItem="2bZ-tY-Rgx" firstAttribute="top" secondItem="g9M-v8-6q7" secondAttribute="bottom" constant="15" id="Cne-4F-rZr"/>
                         <constraint firstItem="2bZ-tY-Rgx" firstAttribute="leading" secondItem="4m1-og-C5c" secondAttribute="leading" constant="15" id="EWb-UV-3PN"/>
                         <constraint firstItem="g9M-v8-6q7" firstAttribute="top" secondItem="4m1-og-C5c" secondAttribute="top" constant="15" id="IlT-9D-elh"/>
@@ -114,7 +114,7 @@
                         <constraint firstItem="n9w-av-66s" firstAttribute="top" relation="greaterThanOrEqual" secondItem="2bZ-tY-Rgx" secondAttribute="bottom" constant="15" id="qCJ-Qw-qBC"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="odP-F8-4vN">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="odP-F8-4vN" userLabel="Card">
                     <rect key="frame" x="20" y="169" width="374" height="251.5"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="GbY-eR-dPv">

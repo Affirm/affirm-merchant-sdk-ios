@@ -117,11 +117,20 @@
     self.logoView.image = [UIImage imageNamed:@"white_logo-transparent_bg" inBundle:[NSBundle resourceBundle]];
     self.cardView.layer.masksToBounds = YES;
     self.cardView.layer.cornerRadius = 16.0f;
+    self.cardView.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.cardView.layer.shadowOffset = CGSizeMake(0, 0);
+    self.cardView.layer.shadowOpacity = 0.5;
+    self.cardView.layer.shadowRadius = 5;
 
     self.cardBackView.layer.masksToBounds = YES;
     self.cardBackView.layer.cornerRadius = 16.0f;
     self.cardBackView.layer.borderColor = [UIColor darkGrayColor].CGColor;
     self.cardBackView.layer.borderWidth = 1 / [UIScreen mainScreen].scale;
+    self.cardBackView.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.cardBackView.layer.shadowOffset = CGSizeMake(0, 0);
+    self.cardBackView.layer.shadowOpacity = 0.5;
+    self.cardBackView.layer.shadowRadius = 5;
+
     self.backLogoView.image = [UIImage imageNamed:@"blue-black_logo-transparent_bg" inBundle:[NSBundle resourceBundle]];
     [self.rightButton setImage:[UIImage imageNamed:@"right" inBundle:[NSBundle resourceBundle]] forState:UIControlStateNormal];
     self.holderLabel.text = [NSString stringWithFormat:@"Authorized Cardholder: %@", self.creditCard.cardholderName];
