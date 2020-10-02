@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="AlmaMono-Bold.otf">
+            <string>AlmaMono-Bold</string>
+        </array>
+        <array key="Calibre-Bold.otf">
+            <string>Calibre-Bold</string>
+        </array>
+        <array key="Calibre-Medium.otf">
+            <string>Calibre-Medium</string>
+        </array>
+        <array key="Calibre-Regular.otf">
+            <string>Calibre-Regular</string>
+        </array>
+        <array key="Calibre-Semibold.otf">
+            <string>Calibre-Semibold</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AffirmCardInfoViewController">
+            <connections>
+                <outlet property="actionButton" destination="lUe-96-Qmo" id="mtx-hD-3SO"/>
+                <outlet property="amountLabel" destination="YN8-o0-ljm" id="XgA-K9-sjg"/>
+                <outlet property="backLogoView" destination="g9M-v8-6q7" id="NFH-gs-s3u"/>
+                <outlet property="cardBackView" destination="4m1-og-C5c" id="Lev-7F-v1U"/>
+                <outlet property="cardButton" destination="wvA-Ze-qbT" id="Ue3-pi-orO"/>
+                <outlet property="cardLogoView" destination="7z8-pq-AqU" id="qen-x3-2rv"/>
+                <outlet property="cardNoLabel" destination="4q6-wD-vXr" id="OxT-VN-sYe"/>
+                <outlet property="cardView" destination="odP-F8-4vN" id="tJK-83-y3g"/>
+                <outlet property="cvvLabel" destination="VRF-BZ-4ds" id="Drh-gh-cwq"/>
+                <outlet property="expiresLabel" destination="EZE-PD-pUv" id="8jI-1d-G21"/>
+                <outlet property="holderLabel" destination="2bZ-tY-Rgx" id="ri7-XR-BtS"/>
+                <outlet property="infoButton" destination="hba-Ge-b2l" id="Wxk-Oh-czp"/>
+                <outlet property="logoView" destination="GbY-eR-dPv" id="EmG-6L-qJ1"/>
+                <outlet property="rightButton" destination="GwG-rx-Qa7" id="toc-qZ-1EP"/>
+                <outlet property="timerLabel" destination="xS6-IJ-vBQ" id="XkD-ld-nBu"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$500" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YN8-o0-ljm">
+                    <rect key="frame" x="20" y="84" width="374" height="50"/>
+                    <fontDescription key="fontDescription" name="Calibre-Bold" family="Calibre" pointSize="42"/>
+                    <color key="textColor" red="0.12549019610000001" green="0.1333333333" blue="0.13725490200000001" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4m1-og-C5c" userLabel="Back Card">
+                    <rect key="frame" x="20" y="169" width="374" height="251.5"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="g9M-v8-6q7">
+                            <rect key="frame" x="5" y="15" width="100" height="30.5"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="100" id="b7S-ya-Ahc"/>
+                                <constraint firstAttribute="width" secondItem="g9M-v8-6q7" secondAttribute="height" multiplier="79:24" id="qDZ-J7-cPE"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Limited Use Virtual Card" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Ua-Fk-SPw">
+                            <rect key="frame" x="120" y="27.5" width="146" height="18"/>
+                            <fontDescription key="fontDescription" name="Calibre-Medium" family="Calibre" pointSize="15"/>
+                            <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GwG-rx-Qa7">
+                            <rect key="frame" x="335" y="18" width="24" height="24"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="24" id="6di-YE-KxC"/>
+                                <constraint firstAttribute="height" constant="24" id="pK4-Em-Jgc"/>
+                            </constraints>
+                            <connections>
+                                <action selector="flipBack:" destination="-1" eventType="touchUpInside" id="IRC-NB-a6t"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Authorized Cardholder: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2bZ-tY-Rgx">
+                            <rect key="frame" x="15" y="60.5" width="344" height="20"/>
+                            <fontDescription key="fontDescription" name="Calibre-Medium" family="Calibre" pointSize="17"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n9w-av-66s">
+                            <rect key="frame" x="15" y="190" width="344" height="46.5"/>
+                            <string key="text">The Affirm Card is funded by Cross River Bank, Member FDIC, and issued by Sutton Bank, Member FDIC, pursuant to license from Visa U.S.A. Inc. The Affirm Card is powered by Marqeta.</string>
+                            <fontDescription key="fontDescription" name="Calibre-Regular" family="Calibre" pointSize="13"/>
+                            <color key="textColor" systemColor="systemGrayColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstItem="n9w-av-66s" firstAttribute="leading" secondItem="4m1-og-C5c" secondAttribute="leading" constant="15" id="4Zx-hu-Dvn"/>
+                        <constraint firstAttribute="trailing" secondItem="GwG-rx-Qa7" secondAttribute="trailing" constant="15" id="54C-2M-ZKv"/>
+                        <constraint firstAttribute="trailing" secondItem="n9w-av-66s" secondAttribute="trailing" constant="15" id="Al2-j9-JZz"/>
+                        <constraint firstItem="g9M-v8-6q7" firstAttribute="leading" secondItem="4m1-og-C5c" secondAttribute="leading" constant="5" id="BWS-Wt-Ajn"/>
+                        <constraint firstItem="2bZ-tY-Rgx" firstAttribute="top" secondItem="g9M-v8-6q7" secondAttribute="bottom" constant="15" id="Cne-4F-rZr"/>
+                        <constraint firstItem="2bZ-tY-Rgx" firstAttribute="leading" secondItem="4m1-og-C5c" secondAttribute="leading" constant="15" id="EWb-UV-3PN"/>
+                        <constraint firstItem="g9M-v8-6q7" firstAttribute="top" secondItem="4m1-og-C5c" secondAttribute="top" constant="15" id="IlT-9D-elh"/>
+                        <constraint firstItem="5Ua-Fk-SPw" firstAttribute="bottom" secondItem="g9M-v8-6q7" secondAttribute="bottom" id="LVN-0k-NhQ"/>
+                        <constraint firstAttribute="trailing" secondItem="2bZ-tY-Rgx" secondAttribute="trailing" constant="15" id="XKl-WC-M60"/>
+                        <constraint firstItem="GwG-rx-Qa7" firstAttribute="centerY" secondItem="g9M-v8-6q7" secondAttribute="centerY" id="e92-Ea-tLc"/>
+                        <constraint firstAttribute="bottom" secondItem="n9w-av-66s" secondAttribute="bottom" constant="15" id="fvy-bg-Tcg"/>
+                        <constraint firstItem="5Ua-Fk-SPw" firstAttribute="leading" secondItem="g9M-v8-6q7" secondAttribute="trailing" constant="15" id="nFi-Us-SK9"/>
+                        <constraint firstItem="n9w-av-66s" firstAttribute="top" relation="greaterThanOrEqual" secondItem="2bZ-tY-Rgx" secondAttribute="bottom" constant="15" id="qCJ-Qw-qBC"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="odP-F8-4vN" userLabel="Card">
+                    <rect key="frame" x="20" y="169" width="374" height="251.5"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="GbY-eR-dPv">
+                            <rect key="frame" x="20" y="20" width="93" height="37.5"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="93" id="4iL-9P-G48"/>
+                                <constraint firstAttribute="width" secondItem="GbY-eR-dPv" secondAttribute="height" multiplier="131:53" id="vfA-xo-bs4"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CARD NUMBER" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1KN-aB-inf">
+                            <rect key="frame" x="20" y="92.5" width="93.5" height="18"/>
+                            <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="15"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4111 1111 1111 1111" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4q6-wD-vXr">
+                            <rect key="frame" x="20" y="115.5" width="339" height="29"/>
+                            <fontDescription key="fontDescription" name="AlmaMono-Bold" family="Alma Mono" pointSize="24"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EXPIRES" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hKm-bZ-pZb">
+                            <rect key="frame" x="20" y="179.5" width="53" height="18"/>
+                            <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="15"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="09/21" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EZE-PD-pUv">
+                            <rect key="frame" x="20" y="202.5" width="84" height="29"/>
+                            <fontDescription key="fontDescription" name="AlmaMono-Bold" family="Alma Mono" pointSize="24"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="123" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VRF-BZ-4ds">
+                            <rect key="frame" x="144" y="202.5" width="50.5" height="29"/>
+                            <fontDescription key="fontDescription" name="AlmaMono-Bold" family="Alma Mono" pointSize="24"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CVV" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CFL-jZ-J0P">
+                            <rect key="frame" x="144" y="179.5" width="27.5" height="18"/>
+                            <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="15"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7z8-pq-AqU">
+                            <rect key="frame" x="278" y="206.5" width="76" height="25"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="76" id="rye-qL-Xga"/>
+                                <constraint firstAttribute="width" secondItem="7z8-pq-AqU" secondAttribute="height" multiplier="3:1" id="u8A-Jq-viI"/>
+                            </constraints>
+                        </imageView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hba-Ge-b2l">
+                            <rect key="frame" x="324" y="20" width="30" height="30"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="30" id="48w-8g-jxI"/>
+                                <constraint firstAttribute="width" constant="30" id="KH0-fS-Cbh"/>
+                            </constraints>
+                            <connections>
+                                <action selector="infoPressed:" destination="-1" eventType="touchUpInside" id="DYi-nu-nGx"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="0.023529411764705882" green="0.23137254901960785" blue="0.33725490196078434" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstItem="VRF-BZ-4ds" firstAttribute="leading" secondItem="CFL-jZ-J0P" secondAttribute="leading" id="0ef-D6-Ywx"/>
+                        <constraint firstItem="EZE-PD-pUv" firstAttribute="leading" secondItem="1KN-aB-inf" secondAttribute="leading" id="1Rn-Te-nqO"/>
+                        <constraint firstItem="hba-Ge-b2l" firstAttribute="top" secondItem="odP-F8-4vN" secondAttribute="top" constant="20" id="3sM-0z-hcE"/>
+                        <constraint firstAttribute="trailing" secondItem="4q6-wD-vXr" secondAttribute="trailing" constant="15" id="8Jh-Lj-7bc"/>
+                        <constraint firstItem="GbY-eR-dPv" firstAttribute="leading" secondItem="odP-F8-4vN" secondAttribute="leading" constant="20" id="F3c-Rs-Pex"/>
+                        <constraint firstItem="1KN-aB-inf" firstAttribute="leading" secondItem="GbY-eR-dPv" secondAttribute="leading" id="MwZ-Jz-DEe"/>
+                        <constraint firstItem="CFL-jZ-J0P" firstAttribute="leading" secondItem="EZE-PD-pUv" secondAttribute="trailing" constant="40" id="TTq-XV-Ill"/>
+                        <constraint firstAttribute="trailing" secondItem="7z8-pq-AqU" secondAttribute="trailing" constant="20" id="VLc-56-J4Z"/>
+                        <constraint firstAttribute="bottom" secondItem="7z8-pq-AqU" secondAttribute="bottom" constant="20" id="XUU-Gx-HYK"/>
+                        <constraint firstItem="GbY-eR-dPv" firstAttribute="top" secondItem="odP-F8-4vN" secondAttribute="top" constant="20" id="XkH-vP-aXb"/>
+                        <constraint firstItem="hKm-bZ-pZb" firstAttribute="leading" secondItem="1KN-aB-inf" secondAttribute="leading" id="Zh0-ng-pZE"/>
+                        <constraint firstItem="CFL-jZ-J0P" firstAttribute="centerY" secondItem="hKm-bZ-pZb" secondAttribute="centerY" id="cLL-XH-oXv"/>
+                        <constraint firstAttribute="bottom" secondItem="EZE-PD-pUv" secondAttribute="bottom" constant="20" id="dOT-UM-FfR"/>
+                        <constraint firstItem="hKm-bZ-pZb" firstAttribute="top" secondItem="4q6-wD-vXr" secondAttribute="bottom" constant="35" id="fos-kd-uTT"/>
+                        <constraint firstItem="4q6-wD-vXr" firstAttribute="leading" secondItem="1KN-aB-inf" secondAttribute="leading" id="gf9-0j-rG1"/>
+                        <constraint firstItem="EZE-PD-pUv" firstAttribute="top" secondItem="hKm-bZ-pZb" secondAttribute="bottom" constant="5" id="lTP-Qp-xZU"/>
+                        <constraint firstItem="VRF-BZ-4ds" firstAttribute="centerY" secondItem="EZE-PD-pUv" secondAttribute="centerY" id="mUE-on-erA"/>
+                        <constraint firstAttribute="trailing" secondItem="hba-Ge-b2l" secondAttribute="trailing" constant="20" id="rL2-Gg-tFE"/>
+                        <constraint firstItem="4q6-wD-vXr" firstAttribute="top" secondItem="1KN-aB-inf" secondAttribute="bottom" constant="5" id="rSS-qI-Rij"/>
+                        <constraint firstItem="1KN-aB-inf" firstAttribute="top" secondItem="GbY-eR-dPv" secondAttribute="bottom" constant="35" id="t5l-JP-3ZM"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lUe-96-Qmo">
+                    <rect key="frame" x="20" y="450.5" width="374" height="60"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="60" id="gZN-vf-4Ub"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="17"/>
+                    <state key="normal" title="Edit or cancel card">
+                        <color key="titleColor" red="0.058823529409999999" green="0.62745098040000002" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="editPressed:" destination="-1" eventType="touchUpInside" id="zY0-ev-SeZ"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wvA-Ze-qbT">
+                    <rect key="frame" x="20" y="802" width="374" height="60"/>
+                    <color key="backgroundColor" red="0.28627450980392155" green="0.61960784313725492" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="60" id="wat-Ey-DJh"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="20"/>
+                    <state key="normal" title="Copy Card Number">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <connections>
+                        <action selector="copyCardPressed:" destination="-1" eventType="touchUpInside" id="b59-uq-BvO"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xS6-IJ-vBQ">
+                    <rect key="frame" x="15" y="435.5" width="384" height="0.0"/>
+                    <fontDescription key="fontDescription" name="Calibre-Regular" family="Calibre" pointSize="19"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="Q5M-cg-NOt"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="lUe-96-Qmo" firstAttribute="top" secondItem="xS6-IJ-vBQ" secondAttribute="bottom" constant="15" id="4Ta-l7-iLq"/>
+                <constraint firstItem="odP-F8-4vN" firstAttribute="trailing" secondItem="YN8-o0-ljm" secondAttribute="trailing" id="5Je-0Q-Vfa"/>
+                <constraint firstItem="xS6-IJ-vBQ" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="15" id="CBU-Xx-b4C"/>
+                <constraint firstItem="odP-F8-4vN" firstAttribute="bottom" secondItem="4m1-og-C5c" secondAttribute="bottom" id="F0m-zK-Xg4"/>
+                <constraint firstItem="wvA-Ze-qbT" firstAttribute="leading" secondItem="lUe-96-Qmo" secondAttribute="leading" id="JmF-Bm-Tpa"/>
+                <constraint firstItem="xS6-IJ-vBQ" firstAttribute="top" secondItem="4m1-og-C5c" secondAttribute="bottom" constant="15" id="KQw-3M-0UE"/>
+                <constraint firstItem="wvA-Ze-qbT" firstAttribute="top" relation="greaterThanOrEqual" secondItem="lUe-96-Qmo" secondAttribute="bottom" constant="15" id="NkA-lx-yOv"/>
+                <constraint firstItem="odP-F8-4vN" firstAttribute="leading" secondItem="4m1-og-C5c" secondAttribute="leading" id="P1V-eI-3dN"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="wvA-Ze-qbT" secondAttribute="trailing" constant="20" id="Pbi-Uv-qCp"/>
+                <constraint firstItem="odP-F8-4vN" firstAttribute="top" secondItem="YN8-o0-ljm" secondAttribute="bottom" constant="35" id="R8s-Qb-VoR"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="YN8-o0-ljm" secondAttribute="trailing" constant="20" id="RtW-gt-ATS"/>
+                <constraint firstItem="wvA-Ze-qbT" firstAttribute="trailing" secondItem="lUe-96-Qmo" secondAttribute="trailing" id="WJy-m0-g6Y"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="xS6-IJ-vBQ" secondAttribute="trailing" constant="15" id="XOK-L5-mss"/>
+                <constraint firstItem="odP-F8-4vN" firstAttribute="leading" secondItem="YN8-o0-ljm" secondAttribute="leading" id="YD1-LP-6DQ"/>
+                <constraint firstItem="odP-F8-4vN" firstAttribute="trailing" secondItem="4m1-og-C5c" secondAttribute="trailing" id="YXo-D3-J0w"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="bottom" secondItem="wvA-Ze-qbT" secondAttribute="bottom" id="cFL-vW-dwD"/>
+                <constraint firstItem="odP-F8-4vN" firstAttribute="top" secondItem="YN8-o0-ljm" secondAttribute="bottom" constant="35" id="fuM-SS-8Dr"/>
+                <constraint firstItem="YN8-o0-ljm" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="20" id="i0F-OJ-Tdf"/>
+                <constraint firstItem="YN8-o0-ljm" firstAttribute="top" secondItem="Q5M-cg-NOt" secondAttribute="top" constant="40" id="jHB-rv-rgc"/>
+                <constraint firstItem="odP-F8-4vN" firstAttribute="top" secondItem="4m1-og-C5c" secondAttribute="top" id="qRZ-Ci-kNA"/>
+                <constraint firstItem="wvA-Ze-qbT" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="20" id="wNC-Vy-WSE"/>
+            </constraints>
+            <point key="canvasLocation" x="131.8840579710145" y="144.64285714285714"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGrayColor">
+            <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

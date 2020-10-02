@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Calibre-Bold.otf">
+            <string>Calibre-Bold</string>
+        </array>
+        <array key="Calibre-Regular.otf">
+            <string>Calibre-Regular</string>
+        </array>
+        <array key="Calibre-Semibold.otf">
+            <string>Calibre-Semibold</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AffirmEligibilityViewController">
+            <connections>
+                <outlet property="amountField" destination="BM8-MK-m5W" id="RJD-gd-wbu"/>
+                <outlet property="continueButton" destination="l0b-2i-9CY" id="AyX-T7-xvb"/>
+                <outlet property="fieldView" destination="f2L-A1-rCz" id="ars-JK-nI5"/>
+                <outlet property="logoView" destination="Cb3-MS-oHw" id="MZM-jB-sdz"/>
+                <outlet property="merchantLabel" destination="yMA-th-HII" id="6Iw-9K-iPG"/>
+                <outlet property="view" destination="iN0-l3-epB" id="JkQ-U3-LUX"/>
+            </connections>
+        </placeholder>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Cb3-MS-oHw">
+                    <rect key="frame" x="20" y="84" width="120" height="36.5"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="120" id="fk0-76-ZRr"/>
+                        <constraint firstAttribute="width" secondItem="Cb3-MS-oHw" secondAttribute="height" multiplier="79:24" id="izU-jV-RqH"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="In proud partnership with XXX" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yMA-th-HII">
+                    <rect key="frame" x="20" y="155.5" width="374" height="26.5"/>
+                    <fontDescription key="fontDescription" name="Calibre-Regular" family="Calibre" pointSize="22"/>
+                    <color key="textColor" red="0.43137254901960786" green="0.4392156862745098" blue="0.44313725490196076" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Enter an amount. Remember to add shipping and tax. You'll get back any amount that you don't use." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LoL-iu-YcV">
+                    <rect key="frame" x="20" y="217" width="374" height="40.5"/>
+                    <fontDescription key="fontDescription" name="Calibre-Regular" family="Calibre" pointSize="17"/>
+                    <color key="textColor" red="0.22745098039215686" green="0.23529411764705882" blue="0.23921568627450979" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f2L-A1-rCz" userLabel="Field">
+                    <rect key="frame" x="20" y="338.5" width="374" height="60"/>
+                    <subviews>
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="$*" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BM8-MK-m5W">
+                            <rect key="frame" x="15" y="0.0" width="344" height="60"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="60" id="aTV-c1-2HE"/>
+                            </constraints>
+                            <color key="textColor" red="0.12549019610000001" green="0.1333333333" blue="0.13725490200000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="26"/>
+                            <textInputTraits key="textInputTraits" keyboardType="decimalPad" returnKeyType="done"/>
+                            <connections>
+                                <outlet property="delegate" destination="-1" id="UJJ-N2-0Df"/>
+                            </connections>
+                        </textField>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstItem="BM8-MK-m5W" firstAttribute="leading" secondItem="f2L-A1-rCz" secondAttribute="leading" constant="15" id="0oJ-Ns-DyT"/>
+                        <constraint firstAttribute="bottom" secondItem="BM8-MK-m5W" secondAttribute="bottom" id="Ims-Ru-EmC"/>
+                        <constraint firstAttribute="trailing" secondItem="BM8-MK-m5W" secondAttribute="trailing" constant="15" id="NAr-bw-lMS"/>
+                        <constraint firstItem="BM8-MK-m5W" firstAttribute="top" secondItem="f2L-A1-rCz" secondAttribute="top" id="Sq2-IW-L5y"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l0b-2i-9CY">
+                    <rect key="frame" x="20" y="433.5" width="374" height="60"/>
+                    <color key="backgroundColor" red="0.058823529411764705" green="0.62745098039215685" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="60" id="t72-Aa-pQm"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="20"/>
+                    <state key="normal" title="Submit">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <connections>
+                        <action selector="getStarted:" destination="-1" eventType="touchUpInside" id="KTJ-sB-Poy"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="How much is your purchase?" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gVI-ij-vDq">
+                    <rect key="frame" x="20" y="272.5" width="374" height="31"/>
+                    <fontDescription key="fontDescription" name="Calibre-Bold" family="Calibre" pointSize="26"/>
+                    <color key="textColor" red="0.12549019607843137" green="0.13333333333333333" blue="0.13725490196078433" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="LoL-iu-YcV" firstAttribute="leading" secondItem="gVI-ij-vDq" secondAttribute="leading" id="1LT-zB-BP4"/>
+                <constraint firstItem="gVI-ij-vDq" firstAttribute="top" secondItem="LoL-iu-YcV" secondAttribute="bottom" constant="15" id="25h-uc-BSz"/>
+                <constraint firstItem="Cb3-MS-oHw" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="2sy-S4-wMS"/>
+                <constraint firstItem="LoL-iu-YcV" firstAttribute="top" secondItem="yMA-th-HII" secondAttribute="bottom" constant="35" id="AWT-nT-2Zb"/>
+                <constraint firstItem="l0b-2i-9CY" firstAttribute="trailing" secondItem="f2L-A1-rCz" secondAttribute="trailing" id="CLu-Ln-LCa"/>
+                <constraint firstItem="l0b-2i-9CY" firstAttribute="top" secondItem="f2L-A1-rCz" secondAttribute="bottom" constant="35" id="Dkt-JD-09E"/>
+                <constraint firstItem="LoL-iu-YcV" firstAttribute="trailing" secondItem="yMA-th-HII" secondAttribute="trailing" id="IvM-qW-DaO"/>
+                <constraint firstItem="f2L-A1-rCz" firstAttribute="top" secondItem="gVI-ij-vDq" secondAttribute="bottom" constant="35" id="Kgz-yM-Alk"/>
+                <constraint firstItem="f2L-A1-rCz" firstAttribute="trailing" secondItem="gVI-ij-vDq" secondAttribute="trailing" id="LL7-Ff-qFh"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="yMA-th-HII" secondAttribute="trailing" constant="20" id="S4s-Kz-F6x"/>
+                <constraint firstItem="Cb3-MS-oHw" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="40" id="U9x-pX-oux"/>
+                <constraint firstItem="f2L-A1-rCz" firstAttribute="leading" secondItem="gVI-ij-vDq" secondAttribute="leading" id="UDQ-bp-Gbw"/>
+                <constraint firstItem="yMA-th-HII" firstAttribute="leading" secondItem="Cb3-MS-oHw" secondAttribute="leading" id="V0Y-w4-8Pz"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="l0b-2i-9CY" secondAttribute="bottom" constant="40" id="Xm3-0g-P8w"/>
+                <constraint firstItem="LoL-iu-YcV" firstAttribute="trailing" secondItem="gVI-ij-vDq" secondAttribute="trailing" id="oLA-Oc-ioZ"/>
+                <constraint firstItem="LoL-iu-YcV" firstAttribute="leading" secondItem="yMA-th-HII" secondAttribute="leading" id="rVQ-AZ-FFf"/>
+                <constraint firstItem="l0b-2i-9CY" firstAttribute="leading" secondItem="f2L-A1-rCz" secondAttribute="leading" id="tXN-uX-H4U"/>
+                <constraint firstItem="yMA-th-HII" firstAttribute="top" secondItem="Cb3-MS-oHw" secondAttribute="bottom" constant="35" id="ww2-gH-tnO"/>
+            </constraints>
+            <point key="canvasLocation" x="131.8840579710145" y="144.64285714285714"/>
+        </view>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

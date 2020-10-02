@@ -24,6 +24,16 @@ NSString *const AFFIRM_CA_DOMAIN = @"affirm.ca";
 NSString *const AFFIRM_PREQUAL_REFERRING_URL = @"https://iossdk/";
 NSString *const AFFIRM_CHECKOUT_CONFIRMATION_URL = @"affirm://checkout/confirmed";
 NSString *const AFFIRM_CHECKOUT_CANCELLATION_URL = @"affirm://checkout/cancelled";
+NSString *const AFFIRM_PRIVATE_API_KEY = @"EnZAoKpzVIYAjgjDlUCvCPXd6PdM15Qz";
+
+NSString *const AffirmFontFamilyNameCalibre = @"Calibre";
+NSString *const AffirmFontNameCalibreMedium = @"Calibre-Medium";
+NSString *const AffirmFontNameCalibreBold = @"Calibre-Bold";
+NSString *const AffirmFontNameCalibreSemibold = @"Calibre-Semibold";
+NSString *const AffirmFontNameCalibreRegular = @"Calibre-Regular";
+
+NSString *const AffirmFontFamilyNameAlmaMono = @"AlmaMono";
+NSString *const AffirmFontNameAlmaMonoBold = @"AlmaMono-Bold";
 
 NSString * FormatAffirmPageTypeString(AffirmPageType type)
 {

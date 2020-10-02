@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Calibre-Medium.otf">
+            <string>Calibre-Medium</string>
+        </array>
+        <array key="Calibre-Semibold.otf">
+            <string>Calibre-Semibold</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AffirmHowToViewController">
+            <connections>
+                <outlet property="contentView" destination="MjJ-bY-hD5" id="FPA-HW-gec"/>
+                <outlet property="gotItButton" destination="PRa-fQ-mlb" id="TQo-3d-cvX"/>
+                <outlet property="logoView" destination="P2J-PV-qY4" id="eUd-E8-z2k"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MjJ-bY-hD5">
+                    <rect key="frame" x="20" y="249" width="374" height="398.5"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How do I use this card?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YOK-cL-wBK">
+                            <rect key="frame" x="86" y="40" width="202.5" height="26.5"/>
+                            <fontDescription key="fontDescription" name="Calibre-Medium" family="Calibre" pointSize="22"/>
+                            <color key="textColor" red="0.2274509804" green="0.23529411759999999" blue="0.23921568630000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="P2J-PV-qY4">
+                            <rect key="frame" x="163" y="81.5" width="48" height="38"/>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="ONLINE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KP1-Jk-gLn">
+                            <rect key="frame" x="155.5" y="134.5" width="63.5" height="24"/>
+                            <fontDescription key="fontDescription" name="Calibre-Medium" family="Calibre" pointSize="20"/>
+                            <color key="textColor" red="0.2274509804" green="0.23529411759999999" blue="0.23921568630000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ydp-DB-NG3">
+                            <rect key="frame" x="30" y="178.5" width="314" height="60"/>
+                            <attributedString key="attributedText">
+                                <fragment content="Enter the card number at checkout, along with your own name and billing address.">
+                                    <attributes>
+                                        <color key="NSColor" name="windowFrameTextColor" catalog="System" colorSpace="catalog"/>
+                                        <font key="NSFont" size="19" name="Calibre-Regular"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" minimumLineHeight="30" maximumLineHeight="30" tighteningFactorForTruncation="0.0"/>
+                                    </attributes>
+                                </fragment>
+                            </attributedString>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PRa-fQ-mlb">
+                            <rect key="frame" x="15" y="298.5" width="344" height="60"/>
+                            <color key="backgroundColor" red="0.28627450980392155" green="0.61960784313725492" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="60" id="Yra-5K-LHO"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="Calibre-Semibold" family="Calibre" pointSize="22"/>
+                            <state key="normal" title="Got It!">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <connections>
+                                <action selector="gotItPressed:" destination="-1" eventType="touchUpInside" id="AxU-qO-RGN"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="ydp-DB-NG3" secondAttribute="trailing" constant="30" id="0nf-ww-Lg5"/>
+                        <constraint firstItem="ydp-DB-NG3" firstAttribute="leading" secondItem="MjJ-bY-hD5" secondAttribute="leading" constant="30" id="86x-wM-Kjn"/>
+                        <constraint firstItem="ydp-DB-NG3" firstAttribute="top" secondItem="KP1-Jk-gLn" secondAttribute="bottom" constant="15" id="AZT-RN-en6"/>
+                        <constraint firstItem="YOK-cL-wBK" firstAttribute="centerX" secondItem="MjJ-bY-hD5" secondAttribute="centerX" id="CWU-e7-iY3"/>
+                        <constraint firstItem="PRa-fQ-mlb" firstAttribute="leading" secondItem="MjJ-bY-hD5" secondAttribute="leading" constant="15" id="FoL-ek-fIO"/>
+                        <constraint firstItem="YOK-cL-wBK" firstAttribute="top" secondItem="MjJ-bY-hD5" secondAttribute="top" constant="40" id="G3c-6s-gMF"/>
+                        <constraint firstAttribute="bottom" secondItem="PRa-fQ-mlb" secondAttribute="bottom" constant="40" id="G8g-s5-0sQ"/>
+                        <constraint firstItem="PRa-fQ-mlb" firstAttribute="top" secondItem="ydp-DB-NG3" secondAttribute="bottom" constant="60" id="a9u-aA-Txz"/>
+                        <constraint firstItem="KP1-Jk-gLn" firstAttribute="centerX" secondItem="MjJ-bY-hD5" secondAttribute="centerX" id="geW-O8-JCP"/>
+                        <constraint firstItem="P2J-PV-qY4" firstAttribute="top" secondItem="YOK-cL-wBK" secondAttribute="bottom" constant="35" id="ij1-y8-1dm"/>
+                        <constraint firstAttribute="trailing" secondItem="PRa-fQ-mlb" secondAttribute="trailing" constant="15" id="ijJ-AL-3vy"/>
+                        <constraint firstItem="KP1-Jk-gLn" firstAttribute="top" secondItem="P2J-PV-qY4" secondAttribute="bottom" constant="35" id="mTU-oa-6Vp"/>
+                        <constraint firstItem="P2J-PV-qY4" firstAttribute="centerX" secondItem="MjJ-bY-hD5" secondAttribute="centerX" id="oZR-Cp-vme"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="Q5M-cg-NOt"/>
+            <color key="backgroundColor" white="0.0" alpha="0.30348351883561642" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="MjJ-bY-hD5" secondAttribute="trailing" constant="20" id="8a0-en-DZg"/>
+                <constraint firstItem="MjJ-bY-hD5" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="MLc-Ue-TcG"/>
+                <constraint firstItem="MjJ-bY-hD5" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="Stm-2H-RkZ"/>
+                <constraint firstItem="MjJ-bY-hD5" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="wwY-xY-xpQ"/>
+            </constraints>
+            <point key="canvasLocation" x="140.57971014492756" y="112.5"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

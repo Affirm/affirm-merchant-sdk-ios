@@ -10,6 +10,8 @@
 #import "AffirmUtils.h"
 #import "AffirmLogger.h"
 #import <WebKit/WebKit.h>
+#import "AffirmFontLoader.h"
+#import "AffirmCreditCard.h"
 
 @interface AffirmConfiguration ()
 
@@ -18,6 +20,7 @@
 @property (nonatomic, readwrite) AffirmLocale locale;
 @property (nonatomic, copy, readwrite, nullable) NSString *merchantName;
 @property (nonatomic, strong, readwrite) WKProcessPool *pool;
+@property (nonatomic, strong, readwrite, nullable) AffirmCreditCard *creditCard;
 
 @end
 
@@ -31,6 +34,13 @@
         _sharedInstance = [[self alloc] init];
     });
     return _sharedInstance;
+}
+
++ (void)initialize
+{
+    if (self == [AffirmConfiguration class]) {
+        [AffirmFontLoader loadFontIfNeeded];
+    }
 }
 
 - (instancetype)init
@@ -134,6 +144,16 @@
         case AffirmEnvironmentSandbox:
             return @"sandbox";
     }
+}
+
+- (BOOL)isCreditCardExists
+{
+    return self.creditCard != nil;
+}
+
+- (void)updateCreditCard:(nullable AffirmCreditCard *)creditCard
+{
+    self.creditCard = creditCard;
 }
 
 + (NSArray <NSHTTPCookie *> *)cookiesForAffirm

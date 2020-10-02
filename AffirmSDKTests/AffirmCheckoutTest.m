@@ -47,23 +47,6 @@
     XCTAssertEqualObjects([_item toJSONDictionary], item);
 }
 
-- (void)testAffirmShippingDetail
-{
-    NSDictionary *addressDetails = @{
-                                     @"line1": @"325 Pacific Ave.",
-                                     @"line2": @"",
-                                     @"city": @"San Francisco",
-                                     @"state": @"CA",
-                                     @"zipcode": @"94111",
-                                     @"country": @"USA"
-                                     };
-    NSDictionary *shippingDetail = @{
-                                     @"billing": @{@"address": addressDetails, @"name": @{@"full": @"Test Tester"}},
-                                     @"shipping": @{@"address": addressDetails, @"name": @{@"full": @"Test Tester"}}
-                                     };
-    XCTAssertEqualObjects([_shipping toJSONDictionary], shippingDetail);
-}
-
 - (void)testAffirmDiscount
 {
     NSDictionary *discount = @{
@@ -71,50 +54,6 @@
                                @"discount_amount": @300
                                };
     XCTAssertEqualObjects([_discount toJSONDictionary], discount);
-}
-
-- (void)testAffirmCheckout
-{
-    NSDictionary *checkout = @{
-                               @"items": @{
-                                       @"test_item": @{
-                                               @"display_name": @"Affirm Test Item",
-                                               @"sku": @"test_item",
-                                               @"unit_price": @1500,
-                                               @"qty": @1,
-                                               @"item_url": @"http://sandbox.affirm.com/item",
-                                               }
-                                       },
-                               @"billing": @{
-                                       @"name": @{@"full": @"Test Tester"},
-                                       @"address":
-                                           @{
-                                               @"line1": @"325 Pacific Ave.",
-                                               @"line2": @"",
-                                               @"city": @"San Francisco",
-                                               @"state": @"CA",
-                                               @"zipcode": @"94111",
-                                               @"country": @"USA"
-                                               }
-                                       },
-                               @"shipping": @{
-                                       @"name": @{@"full": @"Test Tester"},
-                                       @"address":
-                                           @{
-                                               @"line1": @"325 Pacific Ave.",
-                                               @"line2": @"",
-                                               @"city": @"San Francisco",
-                                               @"state": @"CA",
-                                               @"zipcode": @"94111",
-                                               @"country": @"USA"
-                                               }
-                                       },
-                               @"shipping_amount": @500,
-                               @"tax_amount": @100,
-                               @"total": @2100,
-                               @"api_version": @"v2"
-                               };
-    XCTAssertEqualObjects([_checkout toJSONDictionary], checkout);
 }
 
 - (void)testCheckoutSuccessCase

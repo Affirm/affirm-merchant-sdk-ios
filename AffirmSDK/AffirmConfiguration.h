@@ -10,6 +10,8 @@
 #import <WebKit/WebKit.h>
 #import "AffirmConstants.h"
 
+@class AffirmCreditCard;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -46,6 +48,16 @@ NS_ASSUME_NONNULL_BEGIN
  isProductionEnvironment Return a boolean whether it's production mode.
  */
 @property (nonatomic, readonly) BOOL isProductionEnvironment;
+
+/**
+  creditCard Return an existing credit card.
+ */
+@property (nonatomic, readonly, strong, nullable) AffirmCreditCard *creditCard;
+
+/**
+ isCreditCardExists Return a boolean whether credit card exists.
+ */
+@property (nonatomic, readonly) BOOL isCreditCardExists;
 
 /**
  pool A WKProcessPool object represents a pool of web content processes.

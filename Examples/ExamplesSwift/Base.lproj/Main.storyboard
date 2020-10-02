@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -29,13 +29,13 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="315" height="34"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="PublicKey:   " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lzb-rz-pVo">
-                                                                <rect key="frame" x="0.0" y="0.0" width="93" height="34"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="92.5" height="34"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="reI-mQ-8Iu">
-                                                                <rect key="frame" x="93" y="0.0" width="222" height="34"/>
+                                                                <rect key="frame" x="92.5" y="0.0" width="222.5" height="34"/>
                                                                 <accessibility key="accessibilityConfiguration" label="public API key input"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
@@ -49,13 +49,13 @@
                                                         <rect key="frame" x="0.0" y="49" width="315" height="34"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Amount:   " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MqX-ho-xgz">
-                                                                <rect key="frame" x="0.0" y="0.0" width="93" height="34"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="92.5" height="34"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="500" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="oiw-1r-wLA">
-                                                                <rect key="frame" x="93" y="0.0" width="222" height="34"/>
+                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="4000" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="oiw-1r-wLA">
+                                                                <rect key="frame" x="92.5" y="0.0" width="222.5" height="34"/>
                                                                 <accessibility key="accessibilityConfiguration" label="price input"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                                 <textInputTraits key="textInputTraits" keyboardType="decimalPad" returnKeyType="done"/>
@@ -69,13 +69,13 @@
                                                         <rect key="frame" x="0.0" y="98" width="315" height="34"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PromoID:  " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="abc-TF-VwV">
-                                                                <rect key="frame" x="0.0" y="0.0" width="93" height="34"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="92.5" height="34"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="WH3-Yf-wCv">
-                                                                <rect key="frame" x="93" y="0.0" width="222" height="34"/>
+                                                                <rect key="frame" x="92.5" y="0.0" width="222.5" height="34"/>
                                                                 <accessibility key="accessibilityConfiguration" label="promo ID input"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
@@ -89,13 +89,13 @@
                                                         <rect key="frame" x="0.0" y="147" width="315" height="34"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CAAS:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CiU-yp-Qvf">
-                                                                <rect key="frame" x="0.0" y="0.0" width="93" height="34"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="92.5" height="34"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="Equ-5u-c2Z">
-                                                                <rect key="frame" x="93" y="0.0" width="222" height="34"/>
+                                                                <rect key="frame" x="92.5" y="0.0" width="222.5" height="34"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
                                                                 <connections>
@@ -104,35 +104,35 @@
                                                             </textField>
                                                         </subviews>
                                                     </stackView>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C6u-C5-aCh">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C6u-C5-aCh">
                                                         <rect key="frame" x="0.0" y="196" width="315" height="30"/>
                                                         <state key="normal" title="Buy with Affirm"/>
                                                         <connections>
                                                             <action selector="checkoutWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="80P-Ql-dz5"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JXZ-7f-sEo">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JXZ-7f-sEo">
                                                         <rect key="frame" x="0.0" y="241" width="315" height="30"/>
                                                         <state key="normal" title="Failed Checkout"/>
                                                         <connections>
                                                             <action selector="showFailedCheckoutWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kBU-Sj-yEI"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BCw-Ab-2LL">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BCw-Ab-2LL">
                                                         <rect key="frame" x="0.0" y="286" width="315" height="30"/>
                                                         <state key="normal" title="VCN Checkout"/>
                                                         <connections>
                                                             <action selector="vcnCheckoutWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="uwq-lN-GAW"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ACl-Ue-YsN">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ACl-Ue-YsN">
                                                         <rect key="frame" x="0.0" y="331" width="315" height="30"/>
                                                         <state key="normal" title="Track Order Confirmation"/>
                                                         <connections>
                                                             <action selector="trackOrderConfirmationWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SeX-BK-OTu"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B7c-6q-jWr">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B7c-6q-jWr">
                                                         <rect key="frame" x="0.0" y="376" width="315" height="30"/>
                                                         <state key="normal" title="Clear Cookies"/>
                                                         <connections>
@@ -171,6 +171,7 @@
                                 </constraints>
                             </scrollView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="YJ5-vq-etB" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="5TE-pb-g1P"/>
@@ -178,7 +179,6 @@
                             <constraint firstItem="YJ5-vq-etB" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Klk-g1-YqR"/>
                             <constraint firstItem="YJ5-vq-etB" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="l0s-i9-tg3"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
                         <outlet property="amountTextField" destination="oiw-1r-wLA" id="hbJ-pK-ckK"/>

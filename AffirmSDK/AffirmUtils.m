@@ -83,6 +83,32 @@
     return dict;
 }
 
+- (NSString *)stringByRemovingIllegalCharacters
+{
+    NSCharacterSet *set = [NSCharacterSet decimalDigitCharacterSet].invertedSet;
+    NSArray *components = [self componentsSeparatedByCharactersInSet:set];
+    return [components componentsJoinedByString:@""];
+}
+
+- (NSDecimalNumber *)currencyDecimal
+{
+    NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
+    numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+    numberFormatter.usesGroupingSeparator = YES;
+    NSMutableCharacterSet *set = [NSMutableCharacterSet characterSetWithCharactersInString:numberFormatter.currencyGroupingSeparator];
+    [set addCharactersInString:numberFormatter.currencySymbol];
+    [set addCharactersInString:numberFormatter.internationalCurrencySymbol];
+    NSMutableString *term = [self mutableCopy];
+    NSRange range = [term rangeOfCharacterFromSet:set];
+    while (range.location != NSNotFound) {
+        [term replaceCharactersInRange:range withString:@""];
+        range = [term rangeOfCharacterFromSet:set];
+    }
+
+    NSDecimalNumber *number = [NSDecimalNumber decimalNumberWithString:term];
+    return number;
+}
+
 @end
 
 @implementation NSDecimalNumber (Utils)
@@ -100,6 +126,30 @@
                                                                                 raiseOnUnderflow:YES
                                                                              raiseOnDivideByZero:YES];
     return [self decimalNumberByMultiplyingByPowerOf10:2 withBehavior:round];
+}
+
+- (NSString *)formattedString
+{
+    NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
+    numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
+    numberFormatter.usesGroupingSeparator = YES;
+    numberFormatter.minimumFractionDigits = 0;
+    numberFormatter.maximumFractionDigits = 0;
+    return [numberFormatter stringFromNumber:self];
+}
+
+@end
+
+@implementation UIImage (Utils)
+
++ (nullable UIImage *)imageNamed:(NSString *)name inBundle:(nullable NSBundle *)bundle
+{
+    return [UIImage imageNamed:name ofType:@"png" inBundle:bundle];
+}
+
++ (nullable UIImage *)imageNamed:(NSString *)name ofType:(NSString *)type inBundle:(nullable NSBundle *)bundle
+{
+    return [UIImage imageWithContentsOfFile:[bundle pathForResource:name ofType:type]];
 }
 
 @end

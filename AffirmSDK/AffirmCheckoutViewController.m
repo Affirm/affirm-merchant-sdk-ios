@@ -7,6 +7,8 @@
 //
 
 #import "AffirmCheckoutViewController.h"
+#import "AffirmEligibilityViewController.h"
+#import "AffirmCardInfoViewController.h"
 #import "AffirmActivityIndicatorView.h"
 #import "AffirmPopupViewController.h"
 #import "AffirmCheckoutDelegate.h"
@@ -19,6 +21,31 @@
 #import "AffirmLogger.h"
 #import "AffirmConstants.h"
 #import "AffirmUtils.h"
+
+@interface AffirmConfiguration ()
+
+- (void)updateCreditCard:(AffirmCreditCard *)creditCard;
+
+@end
+
+@interface AffirmCardInfoViewController ()
+
+/**
+ Initializer. See properties for more details. UseVCN is YES as default
+
+ @param delegate A delegate object which responds to the checkout events created by the view controller.
+ @param checkout A checkout object which contains information about the customer and the purchase.
+ @param creditCard The credit card object used to render card info page.
+ @param getReasonCodes A boolean which determines whether to return the reason why the checkout was canceled
+ @return The newly created checkout view controller.
+ */
+- (instancetype)initWithDelegate:(id<AffirmCheckoutDelegate>)delegate
+                        checkout:(AffirmCheckout *)checkout
+                      creditCard:(AffirmCreditCard *)creditCard
+                  getReasonCodes:(BOOL)getReasonCodes
+NS_SWIFT_NAME(init(delegate:checkout:creditCard:getReasonCodes:)) NS_DESIGNATED_INITIALIZER;
+
+@end
 
 @interface AffirmCheckoutViewController ()
 
@@ -166,8 +193,18 @@
         for(NSURLQueryItem *item in urlComponents.queryItems) {
             if (_useVCN) {
                 if([item.name isEqualToString:@"data"]) {
-                    [self.delegate vcnCheckout:self
-                       completedWithCreditCard:[AffirmCreditCard creditCardWithDict:item.value.convertToDictionary]];
+                    AffirmCreditCard *creditCard = [AffirmCreditCard creditCardWithDict:item.value.convertToDictionary];
+                    creditCard.expiredDate = [[NSDate date] dateByAddingTimeInterval:24 * 60 * 60];
+                    [[AffirmConfiguration sharedInstance] updateCreditCard:creditCard];
+
+                    UIViewController *first = self.navigationController.viewControllers.firstObject;
+                    if ([first isKindOfClass:[AffirmEligibilityViewController class]] || [first isKindOfClass:[AffirmCardInfoViewController class]]) {
+                        AffirmCardInfoViewController *viewController = [[AffirmCardInfoViewController alloc] initWithDelegate:self.delegate checkout:self.checkout creditCard:creditCard getReasonCodes:self.getReasonCodes];
+                        [self.navigationController pushViewController:viewController animated:YES];
+                    } else {
+                        [self.delegate vcnCheckout:self
+                           completedWithCreditCard:creditCard];
+                    }
                     [[AffirmLogger sharedInstance] trackEvent:@"Checkout completed" parameters:@{@"checkout_ari": self.checkoutARI, @"checkout_data_received": item.value != nil ? @"true" : @"false"}];
                     break;
                 }
