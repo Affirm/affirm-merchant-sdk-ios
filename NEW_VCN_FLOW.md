@@ -22,9 +22,9 @@ UINavigationController *nav = [AffirmEligibilityViewController startCheckoutWith
 - Present a screen to show the credit card info (a checkout object and a credit card object are required):
 ```
 UINavigationController *nav = [AffirmCardInfoViewController startCheckoutWithNavigation:checkout
-                                                                            creditCard:creditCard
-                                                                            getReasonCodes:YES
-                                                                                  delegate:self];
+                                                                             creditCard:creditCard
+                                                                         getReasonCodes:YES
+                                                                               delegate:self];
 [self presentViewController:nav animated:YES completion:nil];
 ```
 
