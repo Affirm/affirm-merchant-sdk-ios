@@ -30,7 +30,7 @@
 		08A81F4A223F986D00FAA8D2 /* AffirmClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A81F48223F986D00FAA8D2 /* AffirmClient.m */; };
 		08A81F4D223FF61300FAA8D2 /* AffirmConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A81F4B223FF61300FAA8D2 /* AffirmConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		08A81F4E223FF61300FAA8D2 /* AffirmConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A81F4C223FF61300FAA8D2 /* AffirmConfiguration.m */; };
-		08AF89FC251B20230011DE0A /* AffirmCardValidator.h in Headers */ = {isa = PBXBuildFile; fileRef = 08AF89FA251B20230011DE0A /* AffirmCardValidator.h */; };
+		08AF89FC251B20230011DE0A /* AffirmCardValidator.h in Headers */ = {isa = PBXBuildFile; fileRef = 08AF89FA251B20230011DE0A /* AffirmCardValidator.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		08AF89FD251B20230011DE0A /* AffirmCardValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 08AF89FB251B20230011DE0A /* AffirmCardValidator.m */; };
 		08C4306C223B7C640009E045 /* AffirmRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 08C4306A223B7C640009E045 /* AffirmRequest.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		08C4306D223B7C640009E045 /* AffirmRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C4306B223B7C640009E045 /* AffirmRequest.m */; };
@@ -311,7 +311,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				08AF89FC251B20230011DE0A /* AffirmCardValidator.h in Headers */,
 				08A81F4D223FF61300FAA8D2 /* AffirmConfiguration.h in Headers */,
 				DA33DCFC223A3191009D73CA /* AffirmCheckout.h in Headers */,
 				DA33DCF7223A30ED009D73CA /* AffirmItem.h in Headers */,
@@ -343,6 +342,7 @@
 				0841E334223A9948006D8B97 /* AffirmConstants.h in Headers */,
 				08A81F49223F986D00FAA8D2 /* AffirmClient.h in Headers */,
 				08C4306C223B7C640009E045 /* AffirmRequest.h in Headers */,
+				08AF89FC251B20230011DE0A /* AffirmCardValidator.h in Headers */,
 				08613153251874510043DFEC /* AffirmEligibilityViewController.h in Headers */,
 				08C43074223B86A20009E045 /* AffirmProtocol.h in Headers */,
 			);
