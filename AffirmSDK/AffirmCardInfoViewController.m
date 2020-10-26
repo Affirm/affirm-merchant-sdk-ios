@@ -258,28 +258,7 @@
 
 - (void)cancelCard
 {
-    [self.activityIndicatorView startAnimating];
-    AffirmCancelLoanRequest *request = [[AffirmCancelLoanRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey checkoutId:self.creditCard.creditCardId];
-    [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nullable error) {
-        if (response && [response isKindOfClass:[AffirmCancelLoanResponse class]]) {
-            AffirmCancelLoanResponse *cancelResponse = (AffirmCancelLoanResponse *)response;
-            [AffirmConfiguration.sharedInstance updateCreditCard:nil];
-
-            UIAlertController *controller = [UIAlertController alertControllerWithTitle:nil message:cancelResponse.message preferredStyle:UIAlertControllerStyleAlert];
-            [controller addAction:[UIAlertAction actionWithTitle:@"Okay" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                [self dismissViewControllerAnimated:YES completion:nil];
-            }]];
-            [self presentViewController:controller animated:YES completion:nil];
-            [self.activityIndicatorView stopAnimating];
-        } else if (response && [response isKindOfClass:[AffirmErrorResponse class]]) {
-            AffirmErrorResponse *errorResponse = (AffirmErrorResponse *)response;
-            [[AffirmLogger sharedInstance] trackEvent:@"Cancel loan failed" parameters:errorResponse.dictionary];
-            UIAlertController *controller = [UIAlertController alertControllerWithTitle:nil message:errorResponse.message preferredStyle:UIAlertControllerStyleAlert];
-            [controller addAction:[UIAlertAction actionWithTitle:@"Okay" style:UIAlertActionStyleCancel handler:nil]];
-            [self presentViewController:controller animated:YES completion:nil];
-            [self.activityIndicatorView stopAnimating];
-        }
-    }];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)question:(id)sender
