@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param checkoutViewController The checkoutViewController that manages the vcn checkout process.
  @param creditCard This credit card info represents the completed vcn checkout.
  */
-- (void)vcnCheckout:(AffirmCheckoutViewController *)checkoutViewController completedWithCreditCard:(AffirmCreditCard *)creditCard;
+- (void)vcnCheckout:(UIViewController *)checkoutViewController completedWithCreditCard:(AffirmCreditCard *)creditCard;
 
 /**
  This method is called when the user has cancelled the checkout.

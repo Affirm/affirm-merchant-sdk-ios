@@ -72,18 +72,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface AffirmCancelLoanRequest : NSObject <AffirmRequestProtocol>
-
-@property (nonatomic, copy, readonly) NSString *publicKey;
-@property (nonatomic, copy, readonly) NSString *checkoutId;
-
-- (instancetype)initWithPublicKey:(NSString *)publicKey
-                       checkoutId:(NSString *)checkoutId;
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
-
-@end
-
 @interface AffirmPromoResponse : NSObject <AffirmResponseProtocol>
 
 @property (nonatomic, copy, readonly) NSString *htmlAla;
@@ -114,20 +102,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 - (NSDictionary *)dictionary;
-
-@end
-
-@interface AffirmCancelLoanResponse : NSObject <AffirmResponseProtocol>
-
-@property (nonatomic, copy, readonly) NSString *message;
-@property (nonatomic, copy, readonly) NSString *code;
-@property (nonatomic, copy, readonly) NSString *checkoutToken;
-
-- (instancetype)initWithMessage:(NSString *)message
-                           code:(NSString *)code
-                  checkoutToken:(NSString *)checkoutToken;
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
 
 @end
 

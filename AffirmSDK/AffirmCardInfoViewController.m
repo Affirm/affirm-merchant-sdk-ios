@@ -19,6 +19,8 @@
 #import "AffirmActivityIndicatorView.h"
 #import "AffirmHowToViewController.h"
 #import "AffirmCheckoutViewController.h"
+#import "AffirmCheckoutDelegate.h"
+
 
 @interface AffirmConfiguration ()
 
@@ -155,9 +157,8 @@
     [self.view addSubview:activityIndicatorView];
     self.activityIndicatorView = activityIndicatorView;
 
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
-        [self setTimerText];
-    }];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(setTimerText) userInfo: nil repeats:YES];
+    
 }
 
 - (void)viewDidLayoutSubviews
@@ -314,9 +315,9 @@
 - (IBAction)copyCardPressed:(id)sender
 {
     [[UIPasteboard generalPasteboard] setString:self.creditCard.number];
-    UIAlertController *controller = [UIAlertController alertControllerWithTitle:nil message:@"Copied" preferredStyle:UIAlertControllerStyleAlert];
-    [controller addAction:[UIAlertAction actionWithTitle:@"Okay" style:UIAlertActionStyleDefault handler:nil]];
-    [self presentViewController:controller animated:YES completion:nil];
+    
+    [self.delegate vcnCheckout:self
+       completedWithCreditCard:self.creditCard];
 }
 
 @end

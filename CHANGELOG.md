@@ -1,6 +1,9 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
+## Version 5.0.15 (October 30, 2020)
+- Bug fix and compatibility support
+
 ## Version 5.0.14 (October 27, 2020)
 - Added CaaS support
 - Added alternate checkout flow
