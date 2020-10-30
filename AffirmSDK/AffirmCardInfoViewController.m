@@ -157,7 +157,7 @@
     [self.view addSubview:activityIndicatorView];
     self.activityIndicatorView = activityIndicatorView;
 
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:NSSelectorFromString(@"setTimerText") userInfo: nil repeats:YES];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(setTimerText) userInfo: nil repeats:YES];
     
 }
 
