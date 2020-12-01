@@ -189,12 +189,12 @@ NS_SWIFT_NAME(init(delegate:checkout:creditCard:getReasonCodes:)) NS_DESIGNATED_
     NSURL *URL = navigationAction.request.URL;
     NSString *strippedURL = [NSString stringWithFormat:@"%@://%@%@", URL.scheme, URL.host, URL.path];
     if ([strippedURL isEqualToString:AFFIRM_CHECKOUT_CONFIRMATION_URL]) {
-        BOOL isResponded = NO;
+        BOOL hasRespondedWithCheckoutToken = NO;
         NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:URL.absoluteString];
         for(NSURLQueryItem *item in urlComponents.queryItems) {
             if (_useVCN) {
                 if([item.name isEqualToString:@"data"]) {
-                    isResponded = YES;
+                    hasRespondedWithCheckoutToken = YES;
                     AffirmCreditCard *creditCard = [AffirmCreditCard creditCardWithDict:item.value.convertToDictionary];
                     creditCard.expiredDate = [[NSDate date] dateByAddingTimeInterval:24 * 60 * 60];
                     [[AffirmConfiguration sharedInstance] updateCreditCard:creditCard];
@@ -212,14 +212,14 @@ NS_SWIFT_NAME(init(delegate:checkout:creditCard:getReasonCodes:)) NS_DESIGNATED_
                 }
             } else {
                 if([item.name isEqualToString:@"checkout_token"]) {
-                    isResponded = YES;
+                    hasRespondedWithCheckoutToken = YES;
                     [self.delegate checkout:self completedWithToken:item.value];
                     [[AffirmLogger sharedInstance] trackEvent:@"Checkout completed" parameters:@{@"checkout_ari": self.checkoutARI, @"checkout_token_received": item.value != nil ? @"true" : @"false"}];
                     break;
                 }
             }
         }
-        if (!isResponded) {
+        if (!hasRespondedWithCheckoutToken) {
             [self.delegate checkout:self didFailWithError:[NSError errorWithDomain:AffirmSDKErrorDomain code:-1 userInfo:@{NSLocalizedDescriptionKey: @"Server error"}]];
         }
         decisionHandler(WKNavigationActionPolicyCancel);
