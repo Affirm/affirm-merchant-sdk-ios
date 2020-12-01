@@ -181,7 +181,7 @@
         @"public_api_key": self.publicKey,
         @"user_confirmation_url": AFFIRM_CHECKOUT_CONFIRMATION_URL,
         @"user_cancel_url": AFFIRM_CHECKOUT_CANCELLATION_URL,
-        @"user_confirmation_url_action": @"POST",
+        @"user_confirmation_url_action": @"GET",
         @"use_vcn": @(self.useVCN)
     } mutableCopy];
     if (self.checkout.caas) {
