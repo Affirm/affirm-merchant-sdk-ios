@@ -1,6 +1,9 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
+## Version 5.0.16 (December 1, 2020)
+- Hot fix to correct missing checkout token
+
 ## Version 5.0.15 (October 30, 2020)
 - Bug fix and compatibility support
 
