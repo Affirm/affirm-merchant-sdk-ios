@@ -113,7 +113,7 @@
 
 + (NSString *)affirmSDKVersion
 {
-    return [[NSBundle resourceBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+    return [[NSBundle resourceBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
 }
 
 - (NSString *)domain
