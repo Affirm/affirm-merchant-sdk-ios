@@ -32,7 +32,7 @@
 
 /**
  Initializer. See properties for more details. UseVCN is YES as default
-
+ 
  @param delegate A delegate object which responds to the checkout events created by the view controller.
  @param checkout A checkout object which contains information about the customer and the purchase.
  @param creditCard The credit card object used to render card info page.
@@ -64,12 +64,37 @@ NS_SWIFT_NAME(init(delegate:checkout:creditCard:getReasonCodes:)) NS_DESIGNATED_
     [AffirmValidationUtils checkNotNil:checkout name:@"checkout"];
     
     if (self = [super initWithNibName:nil bundle:nil]) {
-        _delegate = delegate;
-        _checkout = [checkout copy];
-        _useVCN = useVCN;
-        _getReasonCodes = getReasonCodes;
+        [self initializeWithDelegate:delegate checkout:checkout useVCN:useVCN getReasonCodes:getReasonCodes cardAuthWindow:-1];
     }
     return self;
+}
+
+- (instancetype)initWithDelegate:(id<AffirmCheckoutDelegate>)delegate
+                        checkout:(AffirmCheckout *)checkout
+                          useVCN:(BOOL)useVCN
+                  getReasonCodes:(BOOL)getReasonCodes
+                  cardAuthWindow:(NSInteger)cardAuthWindow
+{
+    [AffirmValidationUtils checkNotNil:delegate name:@"checkout delegate"];
+    [AffirmValidationUtils checkNotNil:checkout name:@"checkout"];
+    
+    if (self = [super initWithNibName:nil bundle:nil]) {
+        [self initializeWithDelegate:delegate checkout:checkout useVCN:useVCN getReasonCodes:getReasonCodes cardAuthWindow:cardAuthWindow];
+    }
+    return self;
+}
+
+- (void)initializeWithDelegate:(id<AffirmCheckoutDelegate>)delegate
+                      checkout:(AffirmCheckout *)checkout
+                        useVCN:(BOOL)useVCN
+                getReasonCodes:(BOOL)getReasonCodes
+                cardAuthWindow:(NSInteger)cardAuthWindow
+{
+    _delegate = delegate;
+    _checkout = [checkout copy];
+    _useVCN = useVCN;
+    _getReasonCodes = getReasonCodes;
+    _cardAuthWindow = cardAuthWindow;
 }
 
 + (UINavigationController *)startCheckoutWithNavigation:(AffirmCheckout *)checkout
@@ -133,7 +158,8 @@ NS_SWIFT_NAME(init(delegate:checkout:creditCard:getReasonCodes:)) NS_DESIGNATED_
     [self.activityIndicatorView startAnimating];
     AffirmCheckoutRequest *request = [[AffirmCheckoutRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
                                                                              checkout:self.checkout
-                                                                               useVCN:self.useVCN];
+                                                                               useVCN:self.useVCN
+                                                                       cardAuthWindow:self.cardAuthWindow];
     [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nullable error) {
         if (response && [response isKindOfClass:[AffirmCheckoutResponse class]]) {
             AffirmCheckoutResponse *checkoutResponse = (AffirmCheckoutResponse *)response;
@@ -198,7 +224,7 @@ NS_SWIFT_NAME(init(delegate:checkout:creditCard:getReasonCodes:)) NS_DESIGNATED_
                     AffirmCreditCard *creditCard = [AffirmCreditCard creditCardWithDict:item.value.convertToDictionary];
                     creditCard.expiredDate = [[NSDate date] dateByAddingTimeInterval:24 * 60 * 60];
                     [[AffirmConfiguration sharedInstance] updateCreditCard:creditCard];
-
+                    
                     UIViewController *first = self.navigationController.viewControllers.firstObject;
                     if ([first isKindOfClass:[AffirmEligibilityViewController class]] || [first isKindOfClass:[AffirmCardInfoViewController class]]) {
                         AffirmCardInfoViewController *viewController = [[AffirmCardInfoViewController alloc] initWithDelegate:self.delegate checkout:self.checkout creditCard:creditCard getReasonCodes:self.getReasonCodes];
@@ -226,7 +252,7 @@ NS_SWIFT_NAME(init(delegate:checkout:creditCard:getReasonCodes:)) NS_DESIGNATED_
         return;
     }
     if ([strippedURL isEqualToString:AFFIRM_CHECKOUT_CANCELLATION_URL]) {
-
+        
         if (_getReasonCodes) {
             
             NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:URL.absoluteString];
@@ -247,9 +273,9 @@ NS_SWIFT_NAME(init(delegate:checkout:creditCard:getReasonCodes:)) NS_DESIGNATED_
         return;
     }
     [self webView:webView checkIfURL:URL.absoluteString isPopupWithCompletion:^(BOOL isPopup) {
-
+        
         if (isPopup) {
-
+            
             AffirmPopupViewController *viewController = [[AffirmPopupViewController alloc] initWithURL:URL];
             UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
             [self presentViewController:navController animated:YES completion:nil];
@@ -257,7 +283,7 @@ NS_SWIFT_NAME(init(delegate:checkout:creditCard:getReasonCodes:)) NS_DESIGNATED_
             decisionHandler(WKNavigationActionPolicyCancel);
         }
         else {
-
+            
             decisionHandler(WKNavigationActionPolicyAllow);
         }
     }];

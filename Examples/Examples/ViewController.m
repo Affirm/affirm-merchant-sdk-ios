@@ -137,10 +137,8 @@
         checkout.caas = self.caasTextfield.text;
     }
     
-    UINavigationController *nav = [AffirmCheckoutViewController startCheckoutWithNavigation:checkout
-                                                                                     useVCN:NO
-                                                                             getReasonCodes:NO
-                                                                                   delegate:self];
+    AffirmCheckoutViewController *checkoutViewController = [[AffirmCheckoutViewController alloc] initWithDelegate:self checkout:checkout useVCN:NO getReasonCodes:NO cardAuthWindow:10];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:checkoutViewController];
     [self presentViewController:nav animated:YES completion:nil];
 }
 
@@ -172,20 +170,16 @@
         checkout.caas = self.caasTextfield.text;
     }
 
-    UINavigationController *nav = [AffirmCheckoutViewController startCheckoutWithNavigation:checkout
-                                                                                     useVCN:NO
-                                                                             getReasonCodes:NO
-                                                                                   delegate:self];
+    AffirmCheckoutViewController *checkoutViewController = [[AffirmCheckoutViewController alloc] initWithDelegate:self checkout:checkout useVCN:NO getReasonCodes:NO cardAuthWindow:10];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:checkoutViewController];
     [self presentViewController:nav animated:YES completion:nil];
 }
 
 - (IBAction)vcnCheckout:(UIButton *)sender
 {
     AffirmCheckout *checkout = [self generateVCNCheckout];
-    UINavigationController *nav = [AffirmCheckoutViewController startCheckoutWithNavigation:checkout
-                                                                                     useVCN:YES
-                                                                             getReasonCodes:YES
-                                                                                   delegate:self];
+    AffirmCheckoutViewController *checkoutViewController = [[AffirmCheckoutViewController alloc] initWithDelegate:self checkout:checkout useVCN:YES getReasonCodes:YES cardAuthWindow:10];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:checkoutViewController];
     [self presentViewController:nav animated:YES completion:nil];
 }
 

@@ -63,10 +63,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *publicKey;
 @property (nonatomic, copy, readonly) AffirmCheckout *checkout;
 @property (nonatomic, readonly) BOOL useVCN;
+@property (nonatomic, readonly) NSInteger cardAuthWindow;
 
 - (instancetype)initWithPublicKey:(NSString *)publicKey
                          checkout:(AffirmCheckout *)checkout
-                           useVCN:(BOOL)useVCN;
+                           useVCN:(BOOL)useVCN
+                   cardAuthWindow:(NSInteger)cardAuthWindow;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
