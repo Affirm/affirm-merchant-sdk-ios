@@ -74,7 +74,8 @@ AffirmCheckout *checkout = [[AffirmCheckout alloc] initWithItems:@[item] shippin
 AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping payoutAmount:price];
 
 // initialize an UINavigationController with the checkout object and present it
-UINavigationController *nav = [AffirmCheckoutViewController startCheckoutWithNavigation:checkout useVCN:NO getReasonCodes:NO delegate:self];
+AffirmCheckoutViewController *checkoutViewController = [[AffirmCheckoutViewController alloc] initWithDelegate:self checkout:checkout useVCN:NO getReasonCodes:NO cardAuthWindow:10];
+UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:checkoutViewController];
 [self presentViewController:nav animated:YES completion:nil];
 
 // It is recommended that you round the total in the checkout request to two decimal places. Affirm SDK converts the float total to integer cents before initiating the checkout, so may round up or down depending on the decimal places. Ensure that the rounding in your app uses the same calculation across your other backend systems, otherwise, it may cause an error of 1 cent or more in the total validation on your end. 

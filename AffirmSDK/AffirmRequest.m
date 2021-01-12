@@ -150,11 +150,13 @@
 - (instancetype)initWithPublicKey:(NSString *)publicKey
                          checkout:(AffirmCheckout *)checkout
                            useVCN:(BOOL)useVCN
+                   cardAuthWindow:(NSInteger)cardAuthWindow
 {
     if (self = [super init]) {
         _publicKey = [publicKey copy];
         _checkout = [checkout copy];
         _useVCN = useVCN;
+        _cardAuthWindow = cardAuthWindow;
     }
     return self;
 }
@@ -186,6 +188,9 @@
     } mutableCopy];
     if (self.checkout.caas) {
         merchant[@"caas"] = self.checkout.caas;
+    }
+    if (self.cardAuthWindow > 0) {
+        merchant[@"card_auth_window"] = @(self.cardAuthWindow);
     }
     [checkout addEntriesFromDictionary:@{
         @"merchant": merchant,

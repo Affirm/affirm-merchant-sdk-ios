@@ -41,6 +41,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy, readonly) NSString *checkoutARI;
 
+/**
+  Card auth window
+ */
+@property (nonatomic, readonly) NSInteger cardAuthWindow;
+
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 - (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
@@ -52,8 +57,8 @@ NS_ASSUME_NONNULL_BEGIN
 
  @param delegate A delegate object which responds to the checkout events created by the view controller.
  @param checkout A checkout object which contains information about the customer and the purchase.
- @param useVCN A boolean which determines whether the checkout flow should use virtual card network to handle the checkout
- @param getReasonCodes A boolean which determines whether to return the reason why the checkout was canceled
+ @param useVCN A boolean which determines whether the checkout flow should use virtual card network to handle the checkout.
+ @param getReasonCodes A boolean which determines whether to return the reason why the checkout was canceled.
  @return The newly created checkout view controller.
  */
 - (instancetype)initWithDelegate:(id<AffirmCheckoutDelegate>)delegate
@@ -62,10 +67,27 @@ NS_ASSUME_NONNULL_BEGIN
                   getReasonCodes:(BOOL)getReasonCodes
 NS_SWIFT_NAME(init(delegate:checkout:useVCN:getReasonCodes:)) NS_DESIGNATED_INITIALIZER;
 
+/**
+ Initializer. See properties for more details. UseVCN is NO as default
+
+ @param delegate A delegate object which responds to the checkout events created by the view controller.
+ @param checkout A checkout object which contains information about the customer and the purchase.
+ @param useVCN A boolean which determines whether the checkout flow should use virtual card network to handle the checkout.
+ @param getReasonCodes A boolean which determines whether to return the reason why the checkout was canceled.
+ @param cardAuthWindow A positive integer.
+ @return The newly created checkout view controller.
+ */
+- (instancetype)initWithDelegate:(id<AffirmCheckoutDelegate>)delegate
+                        checkout:(AffirmCheckout *)checkout
+                          useVCN:(BOOL)useVCN
+                  getReasonCodes:(BOOL)getReasonCodes
+                  cardAuthWindow:(NSInteger)cardAuthWindow
+NS_SWIFT_NAME(init(delegate:checkout:useVCN:getReasonCodes:cardAuthWindow:)) NS_DESIGNATED_INITIALIZER;
+
 + (UINavigationController *)startCheckoutWithNavigation:(AffirmCheckout *)checkout
                                                  useVCN:(BOOL)useVCN
                                          getReasonCodes:(BOOL)getReasonCodes
-                                               delegate:(nonnull id<AffirmCheckoutDelegate>)delegate
+                                               delegate:(nonnull id<AffirmCheckoutDelegate>)delegate API_DEPRECATED("Use initWithDelegate:checkout:useVCN:getReasonCodes: instead.", ios(2.0, 14.0))
 NS_SWIFT_NAME(startNavigation(checkout:useVCN:getReasonCodes:delegate:));
 
 /**
@@ -76,7 +98,7 @@ NS_SWIFT_NAME(startNavigation(checkout:useVCN:getReasonCodes:delegate:));
  @return The newly created checkout view controller.
  */
 + (AffirmCheckoutViewController *)startCheckout:(AffirmCheckout *)checkout
-                                       delegate:(id<AffirmCheckoutDelegate>)delegate
+                                       delegate:(id<AffirmCheckoutDelegate>)delegate API_DEPRECATED("Use initWithDelegate:checkout:useVCN:getReasonCodes: instead.", ios(2.0, 14.0))
 NS_SWIFT_NAME(start(checkout:delegate:));
 
 /**
@@ -89,7 +111,7 @@ NS_SWIFT_NAME(start(checkout:delegate:));
  */
 + (AffirmCheckoutViewController *)startCheckout:(AffirmCheckout *)checkout
                                          useVCN:(BOOL)useVCN
-                                       delegate:(id<AffirmCheckoutDelegate>)delegate
+                                       delegate:(id<AffirmCheckoutDelegate>)delegate API_DEPRECATED("Use initWithDelegate:checkout:useVCN:getReasonCodes: instead.", ios(2.0, 14.0))
 NS_SWIFT_NAME(start(checkout:useVCN:delegate:));
 
 /**
@@ -104,7 +126,7 @@ NS_SWIFT_NAME(start(checkout:useVCN:delegate:));
 + (AffirmCheckoutViewController *)startCheckout:(AffirmCheckout *)checkout
                                          useVCN:(BOOL)useVCN
                                  getReasonCodes:(BOOL)getReasonCodes
-                                       delegate:(id<AffirmCheckoutDelegate>)delegate
+                                       delegate:(id<AffirmCheckoutDelegate>)delegate API_DEPRECATED("Use initWithDelegate:checkout:useVCN:getReasonCodes: instead.", ios(2.0, 14.0))
 NS_SWIFT_NAME(start(checkout:useVCN:getReasonCodes:delegate:));
 
 @end
