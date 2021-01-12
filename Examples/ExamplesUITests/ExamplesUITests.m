@@ -33,7 +33,7 @@
 
     [alaElement tap];
 
-    XCUIElement *checkoutElement = self.app.staticTexts[@"Make easy monthly payments over 3, 6, or 12 months"];
+    XCUIElement *checkoutElement = self.app.staticTexts[@"Pay over time"];
     [self waitForElement:checkoutElement duration:10];
     XCTAssertTrue(checkoutElement.exists);
 }

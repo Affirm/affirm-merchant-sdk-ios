@@ -15,7 +15,7 @@
 #import "AffirmRequest.h"
 #import "AffirmLogger.h"
 
-static NSString *const AFFIRM_DEFAULT_ALA_TEMPLATE = @"Buy in monthly payments with Affirm";
+static NSString *const AFFIRM_DEFAULT_ALA_TEMPLATE = @"Pay over time with Affirm";
 
 static NSString * FormatAffirmLogoString(AffirmLogoType type)
 {
