@@ -278,6 +278,11 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
 {
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     self.amount = amount.toIntegerCents;
+    
+    if (amount.doubleValue > [NSDecimalNumber decimalNumberWithString:AFFIRM_MAX_PROMO_AMOUNT].doubleValue) {
+        [self configureWithAttributedText:nil response:nil error:nil];
+        return;
+    }
 
     AffirmColorType logoColor = affirmColor;
     // Using default type when logoColor == AffirmColorTypeBlueBlack
@@ -341,6 +346,11 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
 {
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     self.amount = amount.toIntegerCents;
+    
+    if (amount.doubleValue > [NSDecimalNumber decimalNumberWithString:AFFIRM_MAX_PROMO_AMOUNT].doubleValue) {
+        [self configureWithAttributedText:nil response:nil error:nil];
+        return;
+    }
 
     AffirmColorType logoColor = affirmColor;
     // Using default type when logoColor == AffirmColorTypeBlueBlack

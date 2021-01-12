@@ -113,6 +113,11 @@
 {
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     NSDecimalNumber *decimal = amount.toIntegerCents;
+    
+    if (amount.doubleValue > [NSDecimalNumber decimalNumberWithString:AFFIRM_MAX_PROMO_AMOUNT].doubleValue) {
+        completionHandler(nil, nil, nil, nil);
+        return;
+    }
 
     AffirmColorType logoColor = colorType;
     // Using default type when logoColor == AffirmColorTypeBlueBlack
