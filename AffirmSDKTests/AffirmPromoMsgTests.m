@@ -10,6 +10,8 @@
 #import "AffirmConfiguration.h"
 #import "AffirmUtils.h"
 #import "AffirmRequest.h"
+#import "AffirmDataHandler.h"
+#import "AffirmItem.h"
 
 @interface AffirmPromoMsgTests : XCTestCase
 
@@ -54,6 +56,36 @@
         XCTAssertNotNil(response);
         XCTAssertFalse([response isKindOfClass:[AffirmPromoResponse class]]);
         XCTAssertTrue([response isKindOfClass:[AffirmErrorResponse class]]);
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:10 handler:nil];
+}
+
+- (void)testDataHandler
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"start calculate price 10000"];
+    NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:@"10000"];
+    AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item"
+                                            SKU:@"test_item"
+                                      unitPrice:dollarPrice
+                                       quantity:1
+                                            URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
+    
+    [AffirmDataHandler getPromoMessageWithPromoID:nil
+                                           amount:dollarPrice
+                                            items:@[item]
+                                          showCTA:YES
+                                         pageType:AffirmPageTypeProduct
+                                         logoType:AffirmLogoTypeName
+                                        colorType:AffirmColorTypeBlueBlack
+                                             font:[UIFont boldSystemFontOfSize:15]
+                                        textColor:[UIColor grayColor]
+                         presentingViewController:self
+                                   withNavigation:YES
+                                    withHtmlValue:YES
+                                completionHandler:^(NSAttributedString *attributedString, NSString *html, UIViewController *viewController, NSError *error) {
+        XCTAssertNil(error);
+        XCTAssertNotNil(attributedString);
         [expectation fulfill];
     }];
     [self waitForExpectationsWithTimeout:10 handler:nil];
