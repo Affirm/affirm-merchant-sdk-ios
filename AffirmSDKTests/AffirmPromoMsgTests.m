@@ -22,14 +22,14 @@
     [[AffirmConfiguration sharedInstance] configureWithPublicKey:@"PKNCHBIVYOT8JSOZ" environment:AffirmEnvironmentSandbox];
 }
 
-- (void)testCalculatePrice
+- (void)testRequestPromoSuccess
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"start calculate price 500"];
     AffirmPromoRequest *request = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey promoId:@"promo_set_ios" amount:[NSDecimalNumber decimalNumberWithString:@"50000"] showCTA:YES pageType:nil logoType:@"text" logoColor:@"blue"];
     [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nonnull error) {
         XCTAssertNil(error);
         XCTAssertTrue([response isKindOfClass:[AffirmPromoResponse class]]);
-        XCTAssertEqualObjects(((AffirmPromoResponse *)response).ala, @"Starting at $44/mo with Affirm. Learn more");
+        XCTAssertEqualObjects(((AffirmPromoResponse *)response).ala, @"Starting at $46/mo with Affirm. Learn more");
         [expectation fulfill];
     }];
     [self waitForExpectationsWithTimeout:10 handler:nil];
@@ -39,7 +39,7 @@
     [AffirmCheckoutClient send:request2 handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nonnull error) {
         XCTAssertNil(error);
         XCTAssertTrue([response isKindOfClass:[AffirmPromoResponse class]]);
-        XCTAssertEqualObjects(((AffirmPromoResponse *)response).ala, @"Starting at $9/mo with Affirm. Learn more");
+        XCTAssertEqualObjects(((AffirmPromoResponse *)response).ala, @"Starting at $10/mo with Affirm. Learn more");
         [expectation2 fulfill];
     }];
     [self waitForExpectationsWithTimeout:10 handler:nil];

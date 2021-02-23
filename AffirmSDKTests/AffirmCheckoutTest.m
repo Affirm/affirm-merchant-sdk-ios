@@ -38,33 +38,31 @@
 
 - (void)testAffirmItem {
     NSDictionary *item = @{
-                           @"display_name": @"Affirm Test Item",
-                           @"sku": @"test_item",
-                           @"unit_price": @1500,
-                           @"qty": @1,
-                           @"item_url": @"http://sandbox.affirm.com/item"
-                           };
+        @"display_name": @"Affirm Test Item",
+        @"sku": @"test_item",
+        @"unit_price": @1500,
+        @"qty": @1,
+        @"item_url": @"http://sandbox.affirm.com/item"
+    };
     XCTAssertEqualObjects([_item toJSONDictionary], item);
 }
 
 - (void)testAffirmDiscount
 {
     NSDictionary *discount = @{
-                               @"discount_display_name": @"Affirm Test Discount",
-                               @"discount_amount": @300
-                               };
+        @"discount_display_name": @"Affirm Test Discount",
+        @"discount_amount": @300
+    };
     XCTAssertEqualObjects([_discount toJSONDictionary], discount);
 }
 
-- (void)testCheckoutSuccessCase
+- (void)testCheckoutSuccess
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"checkout response error format"];
     [[AffirmConfiguration sharedInstance] configureWithPublicKey:@"2G9MNM7462PB1TAV"
                                                      environment:AffirmEnvironmentSandbox
                                                     merchantName:@"Affirm Example"];
-    AffirmCheckoutRequest *request = [[AffirmCheckoutRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
-                                                                             checkout:self.checkout
-                                                                               useVCN:NO];
+    AffirmCheckoutRequest *request = [[AffirmCheckoutRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey checkout:self.checkout useVCN:NO cardAuthWindow:0];
     [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nonnull error) {
         XCTAssertTrue([response isKindOfClass:[AffirmCheckoutResponse class]]);
         XCTAssertNil(error);
@@ -73,15 +71,13 @@
     [self waitForExpectationsWithTimeout:10 handler:nil];
 }
 
-- (void)testCheckoutWithVCNSuccessCase
+- (void)testCheckoutWithVCNSuccess
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"checkout response error format"];
     [[AffirmConfiguration sharedInstance] configureWithPublicKey:@"2G9MNM7462PB1TAV"
                                                      environment:AffirmEnvironmentSandbox
                                                     merchantName:@"Affirm Example"];
-    AffirmCheckoutRequest *request = [[AffirmCheckoutRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
-                                                                             checkout:self.checkout
-                                                                               useVCN:YES];
+    AffirmCheckoutRequest *request = [[AffirmCheckoutRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey checkout:self.checkout useVCN:YES cardAuthWindow:0];
     [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nonnull error) {
         XCTAssertTrue([response isKindOfClass:[AffirmCheckoutResponse class]]);
         XCTAssertNil(error);
@@ -90,7 +86,7 @@
     [self waitForExpectationsWithTimeout:10 handler:nil];
 }
 
-- (void)testCheckoutFailedCase
+- (void)testCheckoutFailed
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"checkout response error format"];
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:@"500"];
@@ -100,9 +96,7 @@
     [[AffirmConfiguration sharedInstance] configureWithPublicKey:@"2G9MNM7462PB1TAV"
                                                      environment:AffirmEnvironmentSandbox
                                                     merchantName:@"Affirm Example"];
-    AffirmCheckoutRequest *request = [[AffirmCheckoutRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
-                                                                             checkout:checkout
-                                                                               useVCN:NO];
+    AffirmCheckoutRequest *request = [[AffirmCheckoutRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey checkout:checkout useVCN:NO cardAuthWindow:0];
     [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nonnull error) {
         XCTAssertTrue([response isKindOfClass:[AffirmErrorResponse class]]);
         XCTAssertNil(error);
