@@ -1,6 +1,9 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
+## Version 5.0.18 (January 12, 2021)
+- Bug fix for promotional modal
+
 ## Version 5.0.17 (January 12, 2021)
 - Add support for specifying Virtual Card Auth windows
 - Enhanced Promo Messaging
