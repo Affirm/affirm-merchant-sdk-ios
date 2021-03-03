@@ -133,8 +133,8 @@
     NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
     numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
     numberFormatter.usesGroupingSeparator = YES;
-    numberFormatter.minimumFractionDigits = 0;
-    numberFormatter.maximumFractionDigits = 0;
+    numberFormatter.minimumFractionDigits = 2;
+    numberFormatter.maximumFractionDigits = 2;
     return [numberFormatter stringFromNumber:self];
 }
 
