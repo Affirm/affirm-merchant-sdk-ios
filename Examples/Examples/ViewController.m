@@ -86,7 +86,7 @@
 - (IBAction)showProductModal:(id)sender
 {
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
-
+    
     AffirmPromoModalViewController *viewController = [[AffirmPromoModalViewController alloc] initWithPromoId:self.promoIDTextField.text
                                                                                                       amount:dollarPrice
                                                                                                     pageType:AffirmPageTypeProduct
@@ -113,13 +113,13 @@
                                                                           zipCode:@"94107"
                                                                       countryCode:@"USA"];
     NSDictionary *metadata = @{@"shipping_type": @"UPS Ground", @"entity_name": @"internal-sub_brand-name", @"webhook_session_id": @"ABC123"};
-
+    
     // Checkout
     AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item]
                                                         shipping:shipping
                                                      totalAmount:[dollarPrice toIntegerCents]
                                                         metadata:metadata];
-
+    
     // Billing
     AffirmBillingDetail *billing = [AffirmBillingDetail billingDetailWithName:@"Chester Cheetah"
                                                                         email:@"testtester@test.com"
@@ -131,7 +131,7 @@
                                                                       zipCode:@"94107"
                                                                   countryCode:@"USA"];
     checkout.billing = billing;
-
+    
     // CAAS
     if (self.caasTextfield.text) {
         checkout.caas = self.caasTextfield.text;
@@ -159,17 +159,17 @@
                                                                             state:@"CA"
                                                                           zipCode:@"94107"
                                                                       countryCode:@"USA"];
-
+    
     // Checkout
     AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item]
                                                         shipping:shipping
                                                      totalAmount:[dollarPrice toIntegerCents]];
-
+    
     // CAAS
     if (self.caasTextfield.text) {
         checkout.caas = self.caasTextfield.text;
     }
-
+    
     AffirmCheckoutViewController *checkoutViewController = [[AffirmCheckoutViewController alloc] initWithDelegate:self checkout:checkout useVCN:NO getReasonCodes:NO cardAuthWindow:10];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:checkoutViewController];
     [self presentViewController:nav animated:YES completion:nil];
@@ -198,12 +198,12 @@
                                                                             state:@"CA"
                                                                           zipCode:@"94107"
                                                                       countryCode:@"USA"];
-
+    
     // Checkout
     AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item]
                                                         shipping:shipping
                                                      totalAmount:[dollarPrice toIntegerCents]];
-
+    
     // Billing
     AffirmBillingDetail *billing = [AffirmBillingDetail billingDetailWithName:nil
                                                                         email:nil
@@ -215,12 +215,12 @@
                                                                       zipCode:nil
                                                                   countryCode:nil];
     checkout.billing = billing;
-
+    
     // CAAS
     if (self.caasTextfield.text) {
         checkout.caas = self.caasTextfield.text;
     }
-
+    
     return checkout;
 }
 
@@ -256,9 +256,9 @@
     AffirmCheckout *checkout = [self generateVCNCheckout];
     AffirmCreditCard *creditCard = [AffirmConfiguration sharedInstance].creditCard;
     UINavigationController *nav = [AffirmCardInfoViewController startCheckoutWithNavigation:checkout
-                                                                                creditCard:creditCard
-                                                                                getReasonCodes:YES
-                                                                                      delegate:self];
+                                                                                 creditCard:creditCard
+                                                                             getReasonCodes:YES
+                                                                                   delegate:self];
     [self presentViewController:nav animated:YES completion:nil];
 }
 
@@ -337,7 +337,7 @@
                                       unitPrice:dollarPrice
                                        quantity:1
                                             URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
-
+    
     NSURL *fontURL = [NSURL URLWithString:@"https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap"];
     NSURL *cssURL = [[NSBundle mainBundle] URLForResource:@"css_promo_sample" withExtension:@"css"];
     
