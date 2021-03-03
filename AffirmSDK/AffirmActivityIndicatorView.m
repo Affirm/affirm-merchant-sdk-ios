@@ -40,13 +40,13 @@
     if (self.isAnimating) {
         return;
     }
-
+    
     if (self.progressLayer.superlayer == nil) {
         [self.layer addSublayer:self.progressLayer];
     }
     self.alpha = 1;
     self.hidden = NO;
-
+    
     CABasicAnimation *animationStrokeStart = [CABasicAnimation animationWithKeyPath:@"strokeStart"];
     animationStrokeStart.beginTime = 0.5;
     animationStrokeStart.fromValue = @(0);
@@ -81,7 +81,7 @@
     if (!self.isAnimating) {
         return;
     }
-
+    
     [UIView animateWithDuration:0.25 animations:^{
         self.alpha = 0;
     } completion:^(BOOL finished) {

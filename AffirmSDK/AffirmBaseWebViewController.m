@@ -40,7 +40,7 @@
     [webView addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];
     [self.view addSubview:webView];
     self.webView = webView;
-
+    
     AffirmActivityIndicatorView *activityIndicatorView = [[AffirmActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
     [self.view addSubview:activityIndicatorView];
     self.activityIndicatorView = activityIndicatorView;

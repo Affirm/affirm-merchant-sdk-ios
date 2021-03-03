@@ -59,7 +59,7 @@
     [AffirmValidationUtils checkNotNegative:taxAmount name:@"taxAmount"];
     [AffirmValidationUtils checkNotNil:shippingAmount name:@"shippingAmount"];
     [AffirmValidationUtils checkNotNegative:shippingAmount name:@"shippingAmount"];
-
+    
     if (self = [super init]) {
         _items = [[NSArray alloc] initWithArray:items copyItems:YES];
         _shipping = [shipping copy];
@@ -221,7 +221,7 @@
 {
     [AffirmValidationUtils checkNotNil:self.taxAmount name:@"taxAmount"];
     [AffirmValidationUtils checkNotNil:self.shippingAmount name:@"shippingAmount"];
-
+    
     NSDecimalNumber *totalAmount = [self.taxAmount decimalNumberByAdding:self.shippingAmount];
     for (AffirmItem *item in self.items) {
         totalAmount = [totalAmount decimalNumberByAdding:[item.unitPrice decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithDecimal:[[NSNumber numberWithInteger:item.quantity] decimalValue]]]];
@@ -258,12 +258,12 @@
     }
     
     NSMutableDictionary *dict = [@{
-                                   @"items": items,
-                                   @"total": self.totalAmount,
-                                   @"currency": [AffirmConfiguration sharedInstance].currency,
-                                   @"api_version" :@"v2"
-                                   } mutableCopy];
-
+        @"items": items,
+        @"total": self.totalAmount,
+        @"currency": [AffirmConfiguration sharedInstance].currency,
+        @"api_version" :@"v2"
+    } mutableCopy];
+    
     if (self.sendShippingAddress) {
         if (self.shipping) {
             [dict addEntriesFromDictionary:[self.shipping toJSONDictionary]];
@@ -271,11 +271,11 @@
             [[AffirmLogger sharedInstance] logException:@"Shipping addresses are required when sendShippingAddress is true."];
         }
     }
-
+    
     if (self.billing) {
         [dict addEntriesFromDictionary:[self.billing toJSONDictionary]];
     }
-
+    
     if (self.shippingAmount != nil) {
         [dict setValue:self.shippingAmount.toIntegerCents forKey:@"shipping_amount"];
     }
@@ -299,7 +299,7 @@
     if (self.financingProgram != nil) {
         [dict setObject:self.financingProgram forKey:@"financing_program"];
     }
-
+    
     if (self.orderId != nil) {
         [dict setObject:self.orderId forKey:@"order_id"];
     }

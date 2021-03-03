@@ -58,8 +58,8 @@
                                                                       logCount:self.logCount];
     [AffirmTrackerClient send:logRequest
                       handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
-                                [[AffirmLogger sharedInstance] logEvent:[NSString stringWithFormat:@"Tracked with error: %@", error.localizedDescription]];
-                            }];
+        [[AffirmLogger sharedInstance] logEvent:[NSString stringWithFormat:@"Tracked with error: %@", error.localizedDescription]];
+    }];
     self.logCount++;
 }
 

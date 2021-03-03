@@ -45,7 +45,7 @@ void _protocol_extension_merge(AffirmExtendedProtocol *extendedProtocol, Class c
     free(extendedProtocol->instanceMethods);
     extendedProtocol->instanceMethods = mergedInstanceMethods;
     extendedProtocol->instanceMethodCount += appendingInstanceMethodCount;
-
+    
     // Class methods
     unsigned appendingClassMethodCount = 0;
     Method *appendingClassMethods = class_copyMethodList(object_getClass(containerClass), &appendingClassMethodCount);
@@ -61,7 +61,7 @@ void _protocol_extension_merge(AffirmExtendedProtocol *extendedProtocol, Class c
 void _protocol_extension_load(Protocol *protocol, Class containerClass)
 {
     pthread_mutex_lock(&protocolsLoadingLock);
-
+    
     if (extendedProtcolCount >= extendedProtcolCapacity) {
         size_t newCapacity = 0;
         if (extendedProtcolCapacity == 0) {
@@ -72,7 +72,7 @@ void _protocol_extension_load(Protocol *protocol, Class containerClass)
         allExtendedProtocols = realloc(allExtendedProtocols, sizeof(*allExtendedProtocols) * newCapacity);
         extendedProtcolCapacity = newCapacity;
     }
-
+    
     size_t resultIndex = SIZE_T_MAX;
     for (size_t index = 0; index < extendedProtcolCount; ++index) {
         if (allExtendedProtocols[index].protocol == protocol) {
@@ -80,7 +80,7 @@ void _protocol_extension_load(Protocol *protocol, Class containerClass)
             break;
         }
     }
-
+    
     if (resultIndex == SIZE_T_MAX) {
         allExtendedProtocols[extendedProtcolCount] = (AffirmExtendedProtocol){
             .protocol = protocol,
@@ -92,9 +92,9 @@ void _protocol_extension_load(Protocol *protocol, Class containerClass)
         resultIndex = extendedProtcolCount;
         extendedProtcolCount++;
     }
-
+    
     _protocol_extension_merge(&(allExtendedProtocols[resultIndex]), containerClass);
-
+    
     pthread_mutex_unlock(&protocolsLoadingLock);
 }
 
@@ -103,28 +103,28 @@ static void _protocol_extension_inject_class(Class targetClass, AffirmExtendedPr
     for (unsigned methodIndex = 0; methodIndex < extendedProtocol.instanceMethodCount; ++methodIndex) {
         Method method = extendedProtocol.instanceMethods[methodIndex];
         SEL selector = method_getName(method);
-
+        
         if (class_getInstanceMethod(targetClass, selector)) {
             continue;
         }
-
+        
         IMP imp = method_getImplementation(method);
         const char *types = method_getTypeEncoding(method);
         class_addMethod(targetClass, selector, imp, types);
     }
-
+    
     Class targetMetaClass = object_getClass(targetClass);
     for (unsigned methodIndex = 0; methodIndex < extendedProtocol.classMethodCount; ++methodIndex) {
         Method method = extendedProtocol.classMethods[methodIndex];
         SEL selector = method_getName(method);
-
+        
         if (selector == @selector(load) || selector == @selector(initialize)) {
             continue;
         }
         if (class_getInstanceMethod(targetMetaClass, selector)) {
             continue;
         }
-
+        
         IMP imp = method_getImplementation(method);
         const char *types = method_getTypeEncoding(method);
         class_addMethod(targetMetaClass, selector, imp, types);
@@ -134,10 +134,10 @@ static void _protocol_extension_inject_class(Class targetClass, AffirmExtendedPr
 __attribute__((constructor)) static void _protocol_extension_inject_entry(void)
 {
     pthread_mutex_lock(&protocolsLoadingLock);
-
+    
     unsigned classCount = 0;
     Class *allClasses = objc_copyClassList(&classCount);
-
+    
     @autoreleasepool {
         for (unsigned protocolIndex = 0; protocolIndex < extendedProtcolCount; ++protocolIndex) {
             AffirmExtendedProtocol extendedProtcol = allExtendedProtocols[protocolIndex];
@@ -151,7 +151,7 @@ __attribute__((constructor)) static void _protocol_extension_inject_entry(void)
         }
     }
     pthread_mutex_unlock(&protocolsLoadingLock);
-
+    
     free(allClasses);
     free(allExtendedProtocols);
     extendedProtcolCount = 0;

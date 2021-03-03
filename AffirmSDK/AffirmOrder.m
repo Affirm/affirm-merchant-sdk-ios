@@ -26,7 +26,7 @@
 {
     [AffirmValidationUtils checkNotNil:storeName name:@"storeName"];
     [AffirmValidationUtils checkNotNil:orderId name:@"orderId"];
-
+    
     if (self = [super init]) {
         _storeName = [storeName copy];
         _checkoutId = [checkoutId copy];

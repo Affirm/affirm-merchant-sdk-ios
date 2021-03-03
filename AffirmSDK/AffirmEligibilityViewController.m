@@ -40,7 +40,7 @@
 {
     [AffirmValidationUtils checkNotNil:delegate name:@"checkout delegate"];
     [AffirmValidationUtils checkNotNil:checkout name:@"checkout"];
-
+    
     if (self = [super initWithNibName:@"AffirmEligibilityViewController" bundle:[NSBundle sdkBundle]]) {
         _delegate = delegate;
         _checkout = [checkout copy];
@@ -112,10 +112,10 @@
 - (IBAction)getStarted:(id)sender
 {
     NSCAssert(self.navigationController != nil, @"The current view controller is not contained in a navigation controller.");
-
+    
     NSDecimalNumber *totalAmount = [self.amountField.text currencyDecimal];
     self.checkout.totalAmount = [totalAmount decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:@"100"]];
-
+    
     AffirmCheckoutViewController *controller = [AffirmCheckoutViewController startCheckout:self.checkout useVCN:YES getReasonCodes:self.getReasonCodes delegate:self.delegate];
     [self.navigationController pushViewController:controller animated:YES];
 }
@@ -128,7 +128,7 @@
     if (term.length == 0) {
         return YES;
     }
-
+    
     NSDecimalNumber *number = [term currencyDecimal];
     if (number && number != [NSDecimalNumber notANumber]) {
         textField.text = [number formattedString];
