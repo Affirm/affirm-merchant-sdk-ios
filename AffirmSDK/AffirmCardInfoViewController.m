@@ -53,7 +53,10 @@
 @property (weak, nonatomic) IBOutlet UIImageView *backLogoView;
 @property (weak, nonatomic) IBOutlet UIButton *rightButton;
 @property (weak, nonatomic) IBOutlet UILabel *holderLabel;
+@property (weak, nonatomic) IBOutlet UILabel *tipLabel;
 @property (weak, nonatomic) IBOutlet UILabel *timerLabel;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *timerTopLayoutToCard;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *timerTopLayoutToTip;
 
 @property (nonatomic, strong) NSTimer *timer;
 
@@ -159,6 +162,16 @@
 
     self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(setTimerText) userInfo: nil repeats:YES];
     
+    NSString *tipText = AffirmConfiguration.sharedInstance.cardTip;
+    self.timerTopLayoutToCard.constant = 15;
+    if (tipText && tipText.length > 0) {
+        self.tipLabel.text = tipText;
+        self.timerTopLayoutToCard.active = NO;
+        self.timerTopLayoutToTip.active = YES;
+    } else {
+        self.timerTopLayoutToCard.active = YES;
+        self.timerTopLayoutToTip.active = NO;
+    }
 }
 
 - (void)viewDidLayoutSubviews
