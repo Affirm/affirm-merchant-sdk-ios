@@ -128,6 +128,7 @@ If you have got the html raw string, you could show the promotional messaging us
                                   remoteFontURL:fontURL
                                    remoteCssURL:cssURL];
 ```
+**[Note: the amount fields passed to the promotional messaging configuration methods should be in dollars (no cents), so it is best practice to round up to the nearest dollar before passing.]**
 
 If you want to use local fonts, you need do following steps:
 > 1. Add the font files to your project (make sure that the files are targeted properly to your application)
