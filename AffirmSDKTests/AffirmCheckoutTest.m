@@ -7,14 +7,14 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "AffirmConfiguration.h"
-#import "AffirmCheckout.h"
-#import "AffirmItem.h"
-#import "AffirmShippingDetail.h"
-#import "AffirmDiscount.h"
-#import "AffirmUtils.h"
-#import "AffirmRequest.h"
-#import "AffirmClient.h"
+#import "../AffirmSDK/AffirmConfiguration.h"
+#import "../AffirmSDK/AffirmCheckout.h"
+#import "../AffirmSDK/AffirmItem.h"
+#import "../AffirmSDK/AffirmShippingDetail.h"
+#import "../AffirmSDK/AffirmDiscount.h"
+#import "../AffirmSDK/AffirmUtils.h"
+#import "../AffirmSDK/AffirmRequest.h"
+#import "../AffirmSDK/AffirmClient.h"
 
 @interface AffirmCheckoutTest : XCTestCase
 
@@ -64,7 +64,7 @@
                                                     merchantName:@"Affirm Example"];
     AffirmCheckoutRequest *request = [[AffirmCheckoutRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
                                                                              checkout:self.checkout
-                                                                               useVCN:NO];
+                                                                               useVCN:NO cardAuthWindow:0];
     [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nonnull error) {
         XCTAssertTrue([response isKindOfClass:[AffirmCheckoutResponse class]]);
         XCTAssertNil(error);
@@ -81,7 +81,7 @@
                                                     merchantName:@"Affirm Example"];
     AffirmCheckoutRequest *request = [[AffirmCheckoutRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
                                                                              checkout:self.checkout
-                                                                               useVCN:YES];
+                                                                               useVCN:YES cardAuthWindow:0];
     [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nonnull error) {
         XCTAssertTrue([response isKindOfClass:[AffirmCheckoutResponse class]]);
         XCTAssertNil(error);
@@ -102,7 +102,7 @@
                                                     merchantName:@"Affirm Example"];
     AffirmCheckoutRequest *request = [[AffirmCheckoutRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
                                                                              checkout:checkout
-                                                                               useVCN:NO];
+                                                                               useVCN:NO cardAuthWindow:0];
     [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nonnull error) {
         XCTAssertTrue([response isKindOfClass:[AffirmErrorResponse class]]);
         XCTAssertNil(error);

@@ -14,29 +14,29 @@ FOUNDATION_EXPORT double AffirmSDKVersionNumber;
 //! Project version string for AffirmSDK.
 FOUNDATION_EXPORT const unsigned char AffirmSDKVersionString[];
 
-// In this header, you should import all the public headers of your framework using statements like #import <AffirmSDK/PublicHeader.h>
+// In this header, you should import all the public headers of your framework using statements like #import "PublicHeader.h"
 
-#import <AffirmSDK/AffirmConfiguration.h>
-#import <AffirmSDK/AffirmConstants.h>
-#import <AffirmSDK/AffirmPromotionalButton.h>
-#import <AffirmSDK/AffirmCheckout.h>
-#import <AffirmSDK/AffirmItem.h>
-#import <AffirmSDK/AffirmShippingDetail.h>
-#import <AffirmSDK/AffirmBillingDetail.h>
-#import <AffirmSDK/AffirmDiscount.h>
-#import <AffirmSDK/AffirmOrder.h>
-#import <AffirmSDK/AffirmProduct.h>
-#import <AffirmSDK/AffirmUtils.h>
-#import <AffirmSDK/AffirmJSONifiable.h>
-#import <AffirmSDK/AffirmCreditCard.h>
-#import <AffirmSDK/AffirmReasonCode.h>
-#import <AffirmSDK/AffirmCheckoutDelegate.h>
-#import <AffirmSDK/AffirmPrequalDelegate.h>
-#import <AffirmSDK/AffirmBaseWebViewController.h>
-#import <AffirmSDK/AffirmCheckoutViewController.h>
-#import <AffirmSDK/AffirmOrderTrackerViewController.h>
-#import <AffirmSDK/AffirmDataHandler.h>
-#import <AffirmSDK/AffirmPromoModalViewController.h>
-#import <AffirmSDK/AffirmPrequalModalViewController.h>
-#import <AffirmSDK/AffirmEligibilityViewController.h>
-#import <AffirmSDK/AffirmCardInfoViewController.h>
+#import "AffirmConfiguration.h"
+#import "AffirmConstants.h"
+#import "AffirmPromotionalButton.h"
+#import "AffirmCheckout.h"
+#import "AffirmItem.h"
+#import "AffirmShippingDetail.h"
+#import "AffirmBillingDetail.h"
+#import "AffirmDiscount.h"
+#import "AffirmOrder.h"
+#import "AffirmProduct.h"
+#import "AffirmUtils.h"
+#import "AffirmJSONifiable.h"
+#import "AffirmCreditCard.h"
+#import "AffirmReasonCode.h"
+#import "AffirmCheckoutDelegate.h"
+#import "AffirmPrequalDelegate.h"
+#import "AffirmBaseWebViewController.h"
+#import "AffirmCheckoutViewController.h"
+#import "AffirmOrderTrackerViewController.h"
+#import "AffirmDataHandler.h"
+#import "AffirmPromoModalViewController.h"
+#import "AffirmPrequalModalViewController.h"
+#import "AffirmEligibilityViewController.h"
+#import "AffirmCardInfoViewController.h"
