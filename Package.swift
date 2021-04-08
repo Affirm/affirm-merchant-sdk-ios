@@ -12,14 +12,12 @@ let package = Package(
     targets: [
         .target(name: "AffirmSDK",
                 path: "AffirmSDK",
-                exclude: ["AffirmSDK.bundle",
-                          "Carthage/Info.plist"
-                          ],
+                exclude: ["Carthage/Info.plist"],
                 resources: [
                     .process("AffirmCardInfoViewController.xib"),
                     .process("AffirmEligibilityViewController.xib"),
                     .process("AffirmHowToViewController"),
-                    .copy("AffirmSDK.bundle")
+                    .process("AffirmSDK.bundle")
                 ], publicHeadersPath: "."),
         .testTarget(name: "AffirmSDKTests",
                     dependencies: ["AffirmSDK"],
