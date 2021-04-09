@@ -187,7 +187,7 @@ NS_SWIFT_NAME(init(delegate:checkout:creditCard:getReasonCodes:)) NS_DESIGNATED_
 - (void)loadRedirectURL:(NSURL *)redirectURL
 {
     if (_useVCN) {
-        NSBundle *sdkBundle = [NSBundle bundleWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"AffirmSDK" ofType:@"bundle"]];
+        NSBundle *sdkBundle = [NSBundle resourceBundle];
         NSString *filePath = [sdkBundle pathForResource:@"vcn_checkout" ofType:@"html"];
         NSString *urlString = redirectURL.absoluteString;
         __block NSString *rawContent = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
