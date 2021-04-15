@@ -24,6 +24,8 @@
             NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
             dataString = [dataString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
             [parametersArray addObject:[NSString stringWithFormat:@"%@=%@", key, dataString]];
+        } else if ([obj isKindOfClass:[NSDecimalNumber class]]) {
+            [parametersArray addObject:[NSString stringWithFormat:@"%@=%@", key, [(NSDecimalNumber *)obj stringValue]]];
         }
     }];
     return [parametersArray componentsJoinedByString:@"&"];
