@@ -1,6 +1,10 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
+## Version 5.0.19 (January 12, 2021)
+- Bug fixes
+- Added Swift Package Manager Support
+
 ## Version 5.0.18 (January 12, 2021)
 - Bug fix for promotional modal
 - Enhancement for VCN checkout flow
