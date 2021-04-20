@@ -58,7 +58,11 @@
 
 + (NSBundle *)sdkBundle
 {
+#if SWIFT_PACKAGE
+    return SWIFTPM_MODULE_BUNDLE;
+#else
     return [NSBundle bundleForClass:[AffirmConfiguration class]];
+#endif
 }
 
 + (NSBundle *)resourceBundle
