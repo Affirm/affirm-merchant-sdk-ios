@@ -88,7 +88,7 @@
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
     
     AffirmPromoModalViewController *viewController = [[AffirmPromoModalViewController alloc] initWithPromoId:self.promoIDTextField.text
-                                                                                                      amount:dollarPrice
+                                                                                                      amount:[dollarPrice toIntegerCents]
                                                                                                     pageType:AffirmPageTypeProduct
                                                                                                     delegate:self];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:viewController];

@@ -7,11 +7,11 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "AffirmConfiguration.h"
-#import "AffirmUtils.h"
-#import "AffirmRequest.h"
-#import "AffirmDataHandler.h"
-#import "AffirmItem.h"
+#import "../AffirmSDK/AffirmConfiguration.h"
+#import "../AffirmSDK/AffirmUtils.h"
+#import "../AffirmSDK/AffirmRequest.h"
+#import "../AffirmSDK/AffirmDataHandler.h"
+#import "../AffirmSDK/AffirmItem.h"
 
 @interface AffirmPromoMsgTests : XCTestCase
 

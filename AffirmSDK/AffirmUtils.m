@@ -24,6 +24,8 @@
             NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
             dataString = [dataString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
             [parametersArray addObject:[NSString stringWithFormat:@"%@=%@", key, dataString]];
+        } else if ([obj isKindOfClass:[NSDecimalNumber class]]) {
+            [parametersArray addObject:[NSString stringWithFormat:@"%@=%@", key, [(NSDecimalNumber *)obj stringValue]]];
         }
     }];
     return [parametersArray componentsJoinedByString:@"&"];
@@ -56,7 +58,11 @@
 
 + (NSBundle *)sdkBundle
 {
+#if SWIFT_PACKAGE
+    return SWIFTPM_MODULE_BUNDLE;
+#else
     return [NSBundle bundleForClass:[AffirmConfiguration class]];
+#endif
 }
 
 + (NSBundle *)resourceBundle
@@ -133,8 +139,8 @@
     NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
     numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
     numberFormatter.usesGroupingSeparator = YES;
-    numberFormatter.minimumFractionDigits = 0;
-    numberFormatter.maximumFractionDigits = 0;
+    numberFormatter.minimumFractionDigits = 2;
+    numberFormatter.maximumFractionDigits = 2;
     return [numberFormatter stringFromNumber:self];
 }
 

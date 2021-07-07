@@ -7,14 +7,14 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "AffirmConfiguration.h"
-#import "AffirmCheckout.h"
-#import "AffirmItem.h"
-#import "AffirmShippingDetail.h"
-#import "AffirmDiscount.h"
-#import "AffirmUtils.h"
-#import "AffirmRequest.h"
-#import "AffirmClient.h"
+#import "../AffirmSDK/AffirmConfiguration.h"
+#import "../AffirmSDK/AffirmCheckout.h"
+#import "../AffirmSDK/AffirmItem.h"
+#import "../AffirmSDK/AffirmShippingDetail.h"
+#import "../AffirmSDK/AffirmDiscount.h"
+#import "../AffirmSDK/AffirmUtils.h"
+#import "../AffirmSDK/AffirmRequest.h"
+#import "../AffirmSDK/AffirmClient.h"
 
 @interface AffirmCheckoutTest : XCTestCase
 

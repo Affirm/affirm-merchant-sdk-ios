@@ -59,7 +59,7 @@
     
     NSString *promoIdString = promoId ?: @"";
     NSString *pageTypeString = FormatAffirmPageTypeString(pageType) ?: @"";
-    _htmlString = [NSString stringWithFormat:rawContent, [AffirmConfiguration sharedInstance].publicKey, jsURL, amount, promoIdString, pageTypeString, promoIdString, AFFIRM_CHECKOUT_CANCELLATION_URL];
+    _htmlString = [NSString stringWithFormat:rawContent, [AffirmConfiguration sharedInstance].publicKey, jsURL, amount, promoIdString, pageTypeString, promoIdString, AFFIRM_PREQUAL_REFERRING_URL];
     _delegate = delegate;
 }
 

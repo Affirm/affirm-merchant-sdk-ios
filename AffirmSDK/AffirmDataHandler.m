@@ -156,7 +156,7 @@
             if (promoResponse.showPrequal) {
                 NSMutableDictionary *params = [@{
                     @"public_api_key": [AffirmConfiguration sharedInstance].publicKey,
-                    @"unit_price": decimal,
+                    @"unit_price": [decimal stringValue],
                     @"use_promo": @"true",
                     @"referring_url": AFFIRM_PREQUAL_REFERRING_URL,
                 } mutableCopy];
