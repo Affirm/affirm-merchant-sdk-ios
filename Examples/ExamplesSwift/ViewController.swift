@@ -63,6 +63,10 @@ class ViewController: UIViewController {
 
         // Checkout
         let checkout = AffirmCheckout(items: [item], shipping: shipping, taxAmount: NSDecimalNumber.zero, shippingAmount: NSDecimalNumber.zero, discounts: nil, metadata: nil, financingProgram: nil, orderId: "JKLMO4321")
+        
+        // Billing
+        let billing = AffirmBillingDetail(name: "Chester Cheetah", email: "testtester@test.com", phoneNumber: nil, line1: "633 Folsom Street", line2: "", city: "San Francisco", state: "CA", zipCode: "94107", countryCode: "USA")
+        checkout.billing = billing
 
         // CAAS
         if let caas = caasTextfield.text, !caas.isEmpty {
@@ -195,7 +199,7 @@ extension ViewController: AffirmCheckoutDelegate {
         checkoutViewController.dismiss(animated: true, completion: nil)
     }
 
-    func vcnCheckout(_ checkoutViewController: AffirmCheckoutViewController, completedWith creditCard: AffirmCreditCard) {
+    func vcnCheckout(_ checkoutViewController: UIViewController, completedWith creditCard: AffirmCreditCard) {
         if let cardholderName = creditCard.cardholderName,
             let number = creditCard.number,
             let cvv = creditCard.cvv,
@@ -205,7 +209,7 @@ extension ViewController: AffirmCheckoutDelegate {
         checkoutViewController.dismiss(animated: true, completion: nil)
     }
 
-    func checkoutCancelled(_ checkoutViewController: AffirmCheckoutViewController) {
+    func checkoutCancelled(_ checkoutViewController: UIViewController) {
         print("Checkout was cancelled")
         checkoutViewController.dismiss(animated: true, completion: nil)
     }
