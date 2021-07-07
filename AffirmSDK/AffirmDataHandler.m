@@ -118,13 +118,13 @@
         completionHandler(nil, nil, nil, nil);
         return;
     }
-
+    
     AffirmColorType logoColor = colorType;
     // Using default type when logoColor == AffirmColorTypeBlueBlack
     if (logoColor == AffirmColorTypeBlueBlack) {
         logoColor = AffirmColorTypeDefault;
     }
-
+    
     AffirmPromoRequest *request = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
                                                                         promoId:promoID
                                                                          amount:decimal
@@ -140,7 +140,7 @@
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
             AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
             htmlValue = withHtmlValue ? promoResponse.htmlAla : nil;
-
+            
             NSString *template = nil;
             if (promoResponse.ala != nil && promoResponse.ala.length > 0) {
                 template = promoResponse.ala;
@@ -152,7 +152,7 @@
                 }
                 attributedString = [AffirmPromotionalButton appendLogo:logo toText:template font:font textColor:textColor logoType:logoType];
             }
-
+            
             if (promoResponse.showPrequal) {
                 NSMutableDictionary *params = [@{
                     @"public_api_key": [AffirmConfiguration sharedInstance].publicKey,
@@ -166,7 +166,7 @@
                 if (pageType) {
                     params[@"page_type"] = FormatAffirmPageTypeString(pageType);
                 }
-
+                
                 NSString *url = [NSString stringWithFormat:@"%@/apps/prequal/", [AffirmPromoClient host]];
                 NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"?%@", [params queryURLEncoding]]
                                            relativeToURL:[NSURL URLWithString:url]];

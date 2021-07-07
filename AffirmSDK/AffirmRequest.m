@@ -40,15 +40,15 @@
 {
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc] initWithDictionary:self.eventParameters];
     [parameters addEntriesFromDictionary:@{
-                                           @"app_id": @"iOS SDK",
-                                           @"device_type": [UIDevice currentDevice].model,
-                                           @"release": [AffirmConfiguration affirmSDKVersion],
-                                           @"app_name": [AffirmConfiguration sharedInstance].merchantName ?: @"",
-                                           @"environment": [AffirmConfiguration sharedInstance].environmentDescription,
-                                           @"ts": @([NSDate date].timeIntervalSince1970 * 1000),
-                                           @"event_name": self.eventName,
-                                           @"local_log_counter": @(self.logCount)
-                                           }];
+        @"app_id": @"iOS SDK",
+        @"device_type": [UIDevice currentDevice].model,
+        @"release": [AffirmConfiguration affirmSDKVersion],
+        @"app_name": [AffirmConfiguration sharedInstance].merchantName ?: @"",
+        @"environment": [AffirmConfiguration sharedInstance].environmentDescription,
+        @"ts": @([NSDate date].timeIntervalSince1970 * 1000),
+        @"event_name": self.eventName,
+        @"local_log_counter": @(self.logCount)
+    }];
     return parameters;
 }
 
@@ -115,7 +115,7 @@
                                           @"field": @"ala",
                                           @"show_cta": self.showCTA ? @"true" : @"false",
                                           @"amount": self.amount.stringValue
-                                          } mutableCopy];
+    } mutableCopy];
     if (self.promoId) {
         _parameters[@"promo_external_id"] = self.promoId;
     }
@@ -278,11 +278,11 @@
 - (NSDictionary *)dictionary
 {
     return @{
-             @"message": self.message,
-             @"code": self.code ?: @"",
-             @"type": self.type,
-             @"statusCode": self.statusCode,
-             };
+        @"message": self.message,
+        @"code": self.code ?: @"",
+        @"type": self.type,
+        @"statusCode": self.statusCode,
+    };
 }
 
 @end

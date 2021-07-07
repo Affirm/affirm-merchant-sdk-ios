@@ -24,7 +24,7 @@
 {
     [AffirmValidationUtils checkNotNil:URL name:@"URL"];
     [AffirmValidationUtils checkNotNil:delegate name:@"delegate"];
-
+    
     if (self = [super initWithNibName:nil bundle:nil]) {
         _requestURL = URL;
         _delegate = delegate;
@@ -39,8 +39,8 @@
                                                                               style:UIBarButtonItemStyleDone
                                                                              target:self
                                                                              action:@selector(dismiss)];
-
-
+    
+    
     [self.webView loadRequest:[NSURLRequest requestWithURL:self.requestURL
                                                cachePolicy:NSURLRequestUseProtocolCachePolicy
                                            timeoutInterval:30]];

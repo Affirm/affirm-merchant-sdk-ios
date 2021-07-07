@@ -19,7 +19,7 @@
     if ([UIFont fontNamesForFamilyName:AffirmFontFamilyNameCalibre].count == 0) {
         NSBundle *bundle = [NSBundle resourceBundle];
         NSString *identifier = bundle.bundleIdentifier;
-
+        
         NSArray *fonts = @[AffirmFontNameCalibreMedium, AffirmFontNameCalibreBold, AffirmFontNameCalibreSemibold, AffirmFontNameCalibreRegular, AffirmFontNameAlmaMonoBold];
         for (NSString *fontName in fonts) {
             NSURL *fontURL = nil;
@@ -34,7 +34,7 @@
             CGFontRef font = CGFontCreateWithDataProvider(provider);
             if (!CTFontManagerRegisterGraphicsFont(font, &error)) {
                 CFStringRef errorDescription = CFErrorCopyDescription(error);
-
+                
                 NSLog(@"Failed to load font: %@", errorDescription);
                 CFRelease(errorDescription);
             }

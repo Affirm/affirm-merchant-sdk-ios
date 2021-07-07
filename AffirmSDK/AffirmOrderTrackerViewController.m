@@ -29,7 +29,7 @@
 {
     [AffirmValidationUtils checkNotNil:order name:@"order"];
     [AffirmValidationUtils checkNotNil:products name:@"products"];
-
+    
     if (self = [super initWithNibName:nil bundle:nil]) {
         _order = [order copy];
         _products = [[NSArray alloc] initWithArray:products copyItems:YES];
@@ -61,7 +61,7 @@
 {
     [super viewDidLoad];
     self.view.hidden = YES;
-
+    
     WKWebViewConfiguration *configuration = [WKWebViewConfiguration new];
     configuration.applicationNameForUserAgent = [NSString stringWithFormat:@"Affirm-iOS-SDK-%@", [AffirmConfiguration affirmSDKVersion]];
     WKWebView *webView = [[WKWebView alloc] initWithFrame:self.view.bounds configuration:configuration];
@@ -70,7 +70,7 @@
     webView.multipleTouchEnabled = NO;
     [self.view addSubview:webView];
     self.webView = webView;
-
+    
     NSString *jsURL = [AffirmConfiguration sharedInstance].jsURL;
     NSString *filePath = [[NSBundle resourceBundle] pathForResource:@"affirm_track_order_confirmed"
                                                              ofType:@"html"];
@@ -88,17 +88,17 @@
                                                                                               options:NSJSONWritingPrettyPrinted
                                                                                                 error:nil]
                                                      encoding:NSUTF8StringEncoding];
-
+    
     [@{@"{{PUBLIC_KEY}}": [AffirmConfiguration sharedInstance].publicKey,
        @"{{JS_URL}}": jsURL,
        @"{{TRACK_ORDER_OBJECT}}": orderString,
        @"{{TRACK_PRODUCTS_OBJECT}}": productsString}
      enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, NSString *  _Nonnull obj, BOOL * _Nonnull stop) {
-         rawContent = [rawContent stringByReplacingOccurrencesOfString:key
-                                                            withString:obj
-                                                               options:NSLiteralSearch
-                                                                 range:[rawContent rangeOfString:key]];
-     }];
+        rawContent = [rawContent stringByReplacingOccurrencesOfString:key
+                                                           withString:obj
+                                                              options:NSLiteralSearch
+                                                                range:[rawContent rangeOfString:key]];
+    }];
     NSString *baseUrl = [NSString stringWithFormat:@"https://%@", [NSURL URLWithString:jsURL].host];
     [self.webView loadHTMLString:rawContent baseURL:[NSURL URLWithString:baseUrl]];
 }

@@ -97,11 +97,11 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
     [attributedText addAttributes:@{NSFontAttributeName: font,
                                     NSForegroundColorAttributeName: textColor}
                             range:NSMakeRange(0, attributedText.length)];
-
+    
     if (!logo) {
         return attributedText;
     }
-
+    
     while ([attributedText.mutableString containsString:@"Affirm"]) {
         NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
         attachment.image = logo;
@@ -125,7 +125,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
                           frame:(CGRect)frame
 {
     [AffirmValidationUtils checkNotNil:presentingViewController name:@"presentingViewController"];
-
+    
     if (self = [super initWithFrame:frame]) {
         _promoID = promoID;
         _pageType = AffirmPageTypeNone;
@@ -142,7 +142,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
                           frame:(CGRect)frame
 {
     [AffirmValidationUtils checkNotNil:presentingViewController name:@"presentingViewController"];
-
+    
     if (self = [super initWithFrame:frame]) {
         _promoID = nil;
         _pageType = pageType;
@@ -160,7 +160,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
                           frame:(CGRect)frame
 {
     [AffirmValidationUtils checkNotNil:presentingViewController name:@"presentingViewController"];
-
+    
     if (self = [super initWithFrame:frame]) {
         _promoID = promoID;
         _pageType = pageType;
@@ -283,13 +283,13 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
         [self configureWithAttributedText:nil response:nil error:nil];
         return;
     }
-
+    
     AffirmColorType logoColor = affirmColor;
     // Using default type when logoColor == AffirmColorTypeBlueBlack
     if (logoColor == AffirmColorTypeBlueBlack) {
         logoColor = AffirmColorTypeDefault;
     }
-
+    
     AffirmPromoRequest *request = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
                                                                         promoId:self.promoID
                                                                          amount:self.amount
@@ -351,13 +351,13 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
         [self configureWithAttributedText:nil response:nil error:nil];
         return;
     }
-
+    
     AffirmColorType logoColor = affirmColor;
     // Using default type when logoColor == AffirmColorTypeBlueBlack
     if (logoColor == AffirmColorTypeBlueBlack) {
         logoColor = AffirmColorTypeDefault;
     }
-
+    
     AffirmPromoRequest *request = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
                                                                         promoId:self.promoID
                                                                          amount:self.amount
@@ -422,12 +422,12 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
 {
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     self.amount = amount.toIntegerCents;
-
+    
     BOOL hasRemoteCss = remoteCssURL != nil;
     NSString *jsURL = [AffirmConfiguration sharedInstance].jsURL;
     NSURL *baseURL = [NSURL URLWithString:jsURL].baseURL;
     NSMutableDictionary *matchedKeys = [@{@"{{HTML_FRAGMENT}}": htmlString} mutableCopy];
-
+    
     if (hasRemoteCss) {
         baseURL = remoteCssURL.isFileURL ? [NSBundle mainBundle].bundleURL : remoteCssURL.baseURL;
     }
@@ -435,7 +435,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
     matchedKeys[@"{{REMOTE_CSS_URL}}"] = remoteCssURL.absoluteString ?: @"";
     matchedKeys[@"{{PUBLIC_KEY}}"] = [AffirmConfiguration sharedInstance].publicKey;
     matchedKeys[@"{{JS_URL}}"] = jsURL;
-
+    
     NSString *filePath = [[NSBundle resourceBundle] pathForResource:@"affirm_promo"
                                                              ofType:@"html"];
     __block NSString *rawContent = [NSString stringWithContentsOfFile:filePath
@@ -500,7 +500,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
         if (self.pageType) {
             params[@"page_type"] = FormatAffirmPageTypeString(self.pageType);
         }
-
+        
         NSString *url = [NSString stringWithFormat:@"%@/apps/prequal/", [AffirmPromoClient host]];
         NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"?%@", [params queryURLEncoding]]
                                    relativeToURL:[NSURL URLWithString:url]];

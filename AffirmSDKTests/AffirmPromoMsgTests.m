@@ -10,6 +10,8 @@
 #import "../AffirmSDK/AffirmConfiguration.h"
 #import "../AffirmSDK/AffirmUtils.h"
 #import "../AffirmSDK/AffirmRequest.h"
+#import "../AffirmSDK/AffirmDataHandler.h"
+#import "../AffirmSDK/AffirmItem.h"
 
 @interface AffirmPromoMsgTests : XCTestCase
 
@@ -22,14 +24,14 @@
     [[AffirmConfiguration sharedInstance] configureWithPublicKey:@"PKNCHBIVYOT8JSOZ" environment:AffirmEnvironmentSandbox];
 }
 
-- (void)testCalculatePrice
+- (void)testRequestPromoSuccess
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"start calculate price 500"];
     AffirmPromoRequest *request = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey promoId:@"promo_set_ios" amount:[NSDecimalNumber decimalNumberWithString:@"50000"] showCTA:YES pageType:nil logoType:@"text" logoColor:@"blue"];
     [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nonnull error) {
         XCTAssertNil(error);
         XCTAssertTrue([response isKindOfClass:[AffirmPromoResponse class]]);
-        XCTAssertEqualObjects(((AffirmPromoResponse *)response).ala, @"Starting at $44/mo with Affirm. Learn more");
+        XCTAssertEqualObjects(((AffirmPromoResponse *)response).ala, @"Starting at $46/mo with Affirm. Learn more");
         [expectation fulfill];
     }];
     [self waitForExpectationsWithTimeout:10 handler:nil];
@@ -39,7 +41,7 @@
     [AffirmCheckoutClient send:request2 handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nonnull error) {
         XCTAssertNil(error);
         XCTAssertTrue([response isKindOfClass:[AffirmPromoResponse class]]);
-        XCTAssertEqualObjects(((AffirmPromoResponse *)response).ala, @"Starting at $9/mo with Affirm. Learn more");
+        XCTAssertEqualObjects(((AffirmPromoResponse *)response).ala, @"Starting at $10/mo with Affirm. Learn more");
         [expectation2 fulfill];
     }];
     [self waitForExpectationsWithTimeout:10 handler:nil];
@@ -54,6 +56,36 @@
         XCTAssertNotNil(response);
         XCTAssertFalse([response isKindOfClass:[AffirmPromoResponse class]]);
         XCTAssertTrue([response isKindOfClass:[AffirmErrorResponse class]]);
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:10 handler:nil];
+}
+
+- (void)testDataHandler
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"start calculate price 10000"];
+    NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:@"10000"];
+    AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item"
+                                            SKU:@"test_item"
+                                      unitPrice:dollarPrice
+                                       quantity:1
+                                            URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
+    
+    [AffirmDataHandler getPromoMessageWithPromoID:nil
+                                           amount:dollarPrice
+                                            items:@[item]
+                                          showCTA:YES
+                                         pageType:AffirmPageTypeProduct
+                                         logoType:AffirmLogoTypeName
+                                        colorType:AffirmColorTypeBlueBlack
+                                             font:[UIFont boldSystemFontOfSize:15]
+                                        textColor:[UIColor grayColor]
+                         presentingViewController:self
+                                   withNavigation:YES
+                                    withHtmlValue:YES
+                                completionHandler:^(NSAttributedString *attributedString, NSString *html, UIViewController *viewController, NSError *error) {
+        XCTAssertNil(error);
+        XCTAssertNotNil(attributedString);
         [expectation fulfill];
     }];
     [self waitForExpectationsWithTimeout:10 handler:nil];

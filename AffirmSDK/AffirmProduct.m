@@ -22,7 +22,7 @@
                      currency:(nullable NSString *)currency
 {
     [AffirmValidationUtils checkNotNil:productId name:@"productId"];
-
+    
     if (self = [super init]) {
         _brand = [brand copy];
         _category = [category copy];

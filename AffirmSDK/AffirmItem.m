@@ -50,12 +50,12 @@
 - (NSDictionary *)toJSONDictionary
 {
     return @{
-             @"display_name": self.name,
-             @"sku": self.SKU,
-             @"unit_price": self.unitPrice.toIntegerCents,
-             @"qty": @(self.quantity),
-             @"item_url": [self.URL absoluteString],
-             };
+        @"display_name": self.name,
+        @"sku": self.SKU,
+        @"unit_price": self.unitPrice.toIntegerCents,
+        @"qty": @(self.quantity),
+        @"item_url": [self.URL absoluteString],
+    };
 }
 
 - (id)copyWithZone:(NSZone *)zone

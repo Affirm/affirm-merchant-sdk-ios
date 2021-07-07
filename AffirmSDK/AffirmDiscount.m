@@ -35,9 +35,9 @@
 - (NSDictionary *)toJSONDictionary
 {
     return @{
-             @"discount_display_name": self.name,
-             @"discount_amount": self.amount.toIntegerCents
-             };
+        @"discount_display_name": self.name,
+        @"discount_amount": self.amount.toIntegerCents
+    };
 }
 
 - (id)copyWithZone:(NSZone *)zone

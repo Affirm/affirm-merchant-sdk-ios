@@ -110,7 +110,7 @@
         [term replaceCharactersInRange:range withString:@""];
         range = [term rangeOfCharacterFromSet:set];
     }
-
+    
     NSDecimalNumber *number = [NSDecimalNumber decimalNumberWithString:term];
     return number;
 }
