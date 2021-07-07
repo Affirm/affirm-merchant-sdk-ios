@@ -17,6 +17,7 @@
                                                      environment:AffirmEnvironmentSandbox
                                                           locale:AffirmLocaleUS
                                                     merchantName:@"Affirm Example"];
+    [AffirmConfiguration sharedInstance].cardTip = @"We've added these card details to Rakuten Autofill for quick, easy checkout.";
     return YES;
 }
 

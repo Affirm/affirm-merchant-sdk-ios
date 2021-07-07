@@ -55,6 +55,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly, strong, nullable) AffirmCreditCard *creditCard;
 
 /**
+ cardTip Return a text for the label below the Virtual Card image..
+ */
+@property (nonatomic, copy, nullable) NSString *cardTip;
+
+/**
  isCreditCardExists Return a boolean whether credit card exists.
  */
 @property (nonatomic, readonly) BOOL isCreditCardExists;

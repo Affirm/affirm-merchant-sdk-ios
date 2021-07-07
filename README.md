@@ -3,7 +3,7 @@ Affirm iOS SDK
 ==============
 [![CocoaPods](https://img.shields.io/cocoapods/v/AffirmSDK.svg)](http://cocoadocs.org/docsets/AffirmSDK) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![license](https://img.shields.io/cocoapods/l/AffirmSDK.svg)]()
 
-The Affirm iOS SDK allows you to offer Affirm monthly payments in your own app.
+The Affirm iOS SDK allows you to offer Affirm in your own app.
 
 Installation
 ============
@@ -74,7 +74,8 @@ AffirmCheckout *checkout = [[AffirmCheckout alloc] initWithItems:@[item] shippin
 AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item] shipping:shipping payoutAmount:price];
 
 // initialize an UINavigationController with the checkout object and present it
-UINavigationController *nav = [AffirmCheckoutViewController startCheckoutWithNavigation:checkout useVCN:NO getReasonCodes:NO delegate:self];
+AffirmCheckoutViewController *checkoutViewController = [[AffirmCheckoutViewController alloc] initWithDelegate:self checkout:checkout useVCN:NO getReasonCodes:NO cardAuthWindow:10];
+UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:checkoutViewController];
 [self presentViewController:nav animated:YES completion:nil];
 
 // It is recommended that you round the total in the checkout request to two decimal places. Affirm SDK converts the float total to integer cents before initiating the checkout, so may round up or down depending on the decimal places. Ensure that the rounding in your app uses the same calculation across your other backend systems, otherwise, it may cause an error of 1 cent or more in the total validation on your end. 
@@ -127,6 +128,7 @@ If you have got the html raw string, you could show the promotional messaging us
                                   remoteFontURL:fontURL
                                    remoteCssURL:cssURL];
 ```
+**[Note: the amount fields passed to the promotional messaging configuration methods should be in dollars (no cents), so it is best practice to round up to the nearest dollar before passing.]**
 
 If you want to use local fonts, you need do following steps:
 > 1. Add the font files to your project (make sure that the files are targeted properly to your application)
