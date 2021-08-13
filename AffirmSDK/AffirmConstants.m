@@ -63,15 +63,11 @@ NSString * FormatAffirmPageTypeString(AffirmPageType type)
 NSString * FormatAffirmColorString(AffirmColorType type)
 {
     switch (type) {
-        case AffirmColorTypeBlue:
-            return @"blue";
         case AffirmColorTypeBlack:
             return @"black";
         case AffirmColorTypeWhite:
             return @"white";
-        case AffirmColorTypeBlueBlack:
+        default:
             return @"blue-black";
-        case AffirmColorTypeDefault:
-            return @"blue";
     }
 }
