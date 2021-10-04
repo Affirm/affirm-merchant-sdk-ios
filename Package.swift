@@ -16,7 +16,7 @@ let package = Package(
                 resources: [
                     .process("AffirmCardInfoViewController.xib"),
                     .process("AffirmEligibilityViewController.xib"),
-                    .process("AffirmHowToViewController"),
+                    .process("AffirmHowToViewController.xib"),
                     .process("AffirmSDK.bundle")
                 ], publicHeadersPath: "."),
         .testTarget(name: "AffirmSDKTests",
