@@ -48,6 +48,7 @@
 		08FA591F222D08E5007E5E4E /* AffirmSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA591E222D08E5007E5E4E /* AffirmSDKTests.m */; };
 		08FA592D222D1176007E5E4E /* AffirmUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA592B222D1176007E5E4E /* AffirmUtils.m */; };
 		08FA592E222D1176007E5E4E /* AffirmUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FA592B222D1176007E5E4E /* AffirmUtils.m */; };
+		57B7DD35270EC1E500C22C1D /* AffirmSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 57B7DD34270EC1E500C22C1D /* AffirmSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		79088B4D2238D20E0059D691 /* AffirmPrequalModalViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 79088B4B2238D20D0059D691 /* AffirmPrequalModalViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		79088B4E2238D20E0059D691 /* AffirmPrequalModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79088B4C2238D20D0059D691 /* AffirmPrequalModalViewController.m */; };
 		79088B512238DB840059D691 /* AffirmPromoModalViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 79088B4F2238DB840059D691 /* AffirmPromoModalViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -144,6 +145,7 @@
 		08FA5920222D08E5007E5E4E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		08FA592A222D1176007E5E4E /* AffirmUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmUtils.h; sourceTree = "<group>"; };
 		08FA592B222D1176007E5E4E /* AffirmUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmUtils.m; sourceTree = "<group>"; };
+		57B7DD34270EC1E500C22C1D /* AffirmSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AffirmSDK.h; sourceTree = "<group>"; };
 		79088B4B2238D20D0059D691 /* AffirmPrequalModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AffirmPrequalModalViewController.h; sourceTree = "<group>"; };
 		79088B4C2238D20D0059D691 /* AffirmPrequalModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AffirmPrequalModalViewController.m; sourceTree = "<group>"; };
 		79088B4F2238DB840059D691 /* AffirmPromoModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmPromoModalViewController.h; sourceTree = "<group>"; };
@@ -218,6 +220,7 @@
 		08FA5912222D08E5007E5E4E /* AffirmSDK */ = {
 			isa = PBXGroup;
 			children = (
+				57B7DD34270EC1E500C22C1D /* AffirmSDK.h */,
 				0876CA2922FA6803006F8062 /* AffirmReasonCode.h */,
 				0876CA2A22FA6803006F8062 /* AffirmReasonCode.m */,
 				0813712C2255A39400ACDD91 /* AffirmOrder.h */,
@@ -330,6 +333,7 @@
 				0827FF8B2325EB9200AEC14C /* AffirmDataHandler.h in Headers */,
 				7944D9C12248A84D0040525E /* AffirmUtils.h in Headers */,
 				7944D9B72240E2250040525E /* AffirmLogger.h in Headers */,
+				57B7DD35270EC1E500C22C1D /* AffirmSDK.h in Headers */,
 				08C6E8EF251E14E000FFBE8F /* AffirmHowToViewController.h in Headers */,
 				79088B4D2238D20E0059D691 /* AffirmPrequalModalViewController.h in Headers */,
 				79088B512238DB840059D691 /* AffirmPromoModalViewController.h in Headers */,
