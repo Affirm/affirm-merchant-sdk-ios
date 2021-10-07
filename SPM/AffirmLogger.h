@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmLogger.h
+../AffirmSDK/AffirmLogger.h

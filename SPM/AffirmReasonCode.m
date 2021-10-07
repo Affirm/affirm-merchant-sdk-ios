@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmReasonCode.m
+../AffirmSDK/AffirmReasonCode.m

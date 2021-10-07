@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmOrderTrackerViewController.m
+../AffirmSDK/AffirmOrderTrackerViewController.m

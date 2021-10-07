@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmCardValidator.m
+../AffirmSDK/AffirmCardValidator.m

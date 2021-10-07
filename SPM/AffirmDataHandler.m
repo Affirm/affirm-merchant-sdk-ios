@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmDataHandler.m
+../AffirmSDK/AffirmDataHandler.m

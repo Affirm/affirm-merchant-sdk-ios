@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmProtocol.h
+../AffirmSDK/AffirmProtocol.h

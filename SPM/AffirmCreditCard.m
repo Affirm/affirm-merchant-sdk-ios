@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmCreditCard.m
+../AffirmSDK/AffirmCreditCard.m

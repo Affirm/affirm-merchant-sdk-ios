@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmShippingDetail.m
+../AffirmSDK/AffirmShippingDetail.m

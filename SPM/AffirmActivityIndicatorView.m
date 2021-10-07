@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmActivityIndicatorView.m
+../AffirmSDK/AffirmActivityIndicatorView.m

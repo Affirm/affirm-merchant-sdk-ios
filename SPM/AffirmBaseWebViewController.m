@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmBaseWebViewController.m
+../AffirmSDK/AffirmBaseWebViewController.m

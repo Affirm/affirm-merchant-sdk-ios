@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmCheckout.m
+../AffirmSDK/AffirmCheckout.m

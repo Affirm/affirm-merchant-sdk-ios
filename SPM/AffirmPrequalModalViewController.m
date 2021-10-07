@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmPrequalModalViewController.m
+../AffirmSDK/AffirmPrequalModalViewController.m

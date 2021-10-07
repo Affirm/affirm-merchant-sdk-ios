@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmRequest.m
+../AffirmSDK/AffirmRequest.m

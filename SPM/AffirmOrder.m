@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmOrder.m
+../AffirmSDK/AffirmOrder.m

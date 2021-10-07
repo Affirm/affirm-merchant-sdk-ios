@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmPopupViewController.h
+../AffirmSDK/AffirmPopupViewController.h

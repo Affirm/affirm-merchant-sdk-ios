@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmPromotionalButton.m
+../AffirmSDK/AffirmPromotionalButton.m

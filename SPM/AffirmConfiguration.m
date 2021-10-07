@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmConfiguration.m
+../AffirmSDK/AffirmConfiguration.m

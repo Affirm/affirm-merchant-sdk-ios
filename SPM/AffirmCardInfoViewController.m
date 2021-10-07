@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmCardInfoViewController.m
+../AffirmSDK/AffirmCardInfoViewController.m

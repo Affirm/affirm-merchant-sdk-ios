@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmHowToViewController.m
+../AffirmSDK/AffirmHowToViewController.m

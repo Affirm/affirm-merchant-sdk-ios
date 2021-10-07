@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmConstants.m
+../AffirmSDK/AffirmConstants.m

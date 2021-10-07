@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmProtocol.m
+../AffirmSDK/AffirmProtocol.m

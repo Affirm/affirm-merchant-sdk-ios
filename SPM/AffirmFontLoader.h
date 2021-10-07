@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmFontLoader.h
+../AffirmSDK/AffirmFontLoader.h

@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmCheckoutViewController.m
+../AffirmSDK/AffirmCheckoutViewController.m

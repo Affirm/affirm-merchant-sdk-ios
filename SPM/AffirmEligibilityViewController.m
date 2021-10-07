@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmEligibilityViewController.m
+../AffirmSDK/AffirmEligibilityViewController.m

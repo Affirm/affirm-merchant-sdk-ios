@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmActivityIndicatorView.h
+../AffirmSDK/AffirmActivityIndicatorView.h

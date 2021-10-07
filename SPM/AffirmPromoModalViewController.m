@@ -1,1 +1,1 @@
-../../AffirmSDK/AffirmPromoModalViewController.m
+../AffirmSDK/AffirmPromoModalViewController.m
