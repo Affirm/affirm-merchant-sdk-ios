@@ -23,6 +23,25 @@ Add the following to your Cartfile and follow the setup instructions [here](http
 ```
 github "Affirm/affirm-merchant-sdk-ios"
 ```
+
+<strong>Swift Package Manager<strong>
+
+From Xcode 11+ :
+
+1. Select File > Swift Packages > Add Package Dependency. Enter `https://github.com/Affirm/affirm-merchant-sdk-ios` in the "Choose Package Repository" dialog.
+2. In the next page, specify the version resolving rule as "Up to Next Major" with "5.0.19".
+3. After Xcode checked out the source and resolving the version, you can choose the "AffirmSDK" library and add it to your app target.
+
+For more info, read [Adding Package Dependencies to Your App](https://developer.apple.com/documentation/xcode/adding_package_dependencies_to_your_app) from Apple.
+
+Alternatively, you can also add AffirmSDK to your `Package.swift` file:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/Affirm/affirm-merchant-sdk-ios", .upToNextMajor(from: "5.0.19"))
+]
+```
+
 <strong> Manual </strong>
 
 Alternatively, if you do not want to use CocoaPods or Carthage, you may clone our [GitHub repository](https://github.com/Affirm/affirm-merchant-sdk-ios) and simply drag and drop the `AffirmSDK` folder into your XCode project.
