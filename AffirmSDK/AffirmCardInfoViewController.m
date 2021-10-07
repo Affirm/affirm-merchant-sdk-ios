@@ -108,8 +108,8 @@
 {
     [super viewDidLoad];
     [self.navigationItem setHidesBackButton:YES];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"close_grey" inBundle:[NSBundle resourceBundle]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"question_dark" inBundle:[NSBundle resourceBundle]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(question:)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"close_grey" ofType:@"png" inBundle:[NSBundle resourceBundle]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"question_dark" ofType:@"png" inBundle:[NSBundle resourceBundle]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(question:)];
 
     NSDecimalNumber *totalAmount = self.checkout.totalAmount;
     if (totalAmount && totalAmount != NSDecimalNumber.notANumber) {
@@ -119,7 +119,7 @@
         self.amountLabel.text = nil;
     }
 
-    self.logoView.image = [UIImage imageNamed:@"white_logo-transparent_bg" inBundle:[NSBundle resourceBundle]];
+    self.logoView.image = [UIImage imageNamed:@"white_logo-transparent_bg" ofType:@"png" inBundle:[NSBundle resourceBundle]];
     self.cardView.layer.masksToBounds = YES;
     self.cardView.layer.cornerRadius = 16.0f;
     self.cardView.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -136,8 +136,8 @@
     self.cardBackView.layer.shadowOpacity = 0.5;
     self.cardBackView.layer.shadowRadius = 5;
 
-    self.backLogoView.image = [UIImage imageNamed:@"blue-black_logo-transparent_bg" inBundle:[NSBundle resourceBundle]];
-    [self.rightButton setImage:[UIImage imageNamed:@"right" inBundle:[NSBundle resourceBundle]] forState:UIControlStateNormal];
+    self.backLogoView.image = [UIImage imageNamed:@"blue-black_logo-transparent_bg" ofType:@"png" inBundle:[NSBundle resourceBundle]];
+    [self.rightButton setImage:[UIImage imageNamed:@"right" ofType:@"png" inBundle:[NSBundle resourceBundle]] forState:UIControlStateNormal];
     self.holderLabel.text = [NSString stringWithFormat:@"Authorized Cardholder: %@", self.creditCard.cardholderName];
 
     CAGradientLayer *gradient = [CAGradientLayer layer];
@@ -154,7 +154,7 @@
     [self setExpires:self.creditCard.expiration];
     self.cvvLabel.text = self.creditCard.cvv;
 
-    [self.infoButton setImage:[UIImage imageNamed:@"info" inBundle:[NSBundle resourceBundle]] forState:UIControlStateNormal];
+    [self.infoButton setImage:[UIImage imageNamed:@"info" ofType:@"png" inBundle:[NSBundle resourceBundle]] forState:UIControlStateNormal];
 
     AffirmActivityIndicatorView *activityIndicatorView = [[AffirmActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
     [self.view addSubview:activityIndicatorView];
@@ -194,7 +194,7 @@
     AffirmBrand *brand = [[AffirmCardValidator sharedCardValidator] brandForCardNumber:self.creditCard.number];
     if (brand) { type = brand.type; }
 
-    self.cardLogoView.image = [UIImage imageNamed:type == AffirmBrandTypeVisa ? @"visa" : @"mastercard" inBundle:[NSBundle resourceBundle]];
+    self.cardLogoView.image = [UIImage imageNamed:type == AffirmBrandTypeVisa ? @"visa" : @"mastercard" ofType:@"png" inBundle:[NSBundle resourceBundle]];
 
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName: [UIFont fontWithName:AffirmFontNameAlmaMonoBold size:24], NSForegroundColorAttributeName: [UIColor whiteColor]}];
     NSArray *cardNumberFormat = [AffirmCardValidator cardNumberFormatForBrand:type];

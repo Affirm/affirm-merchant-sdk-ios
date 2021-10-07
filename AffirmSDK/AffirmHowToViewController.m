@@ -25,7 +25,7 @@
     self.contentView.layer.masksToBounds = YES;
     self.contentView.layer.cornerRadius = 6.0f;
 
-    self.logoView.image = [UIImage imageNamed:@"online" inBundle:[NSBundle resourceBundle]];
+    self.logoView.image = [UIImage imageNamed:@"online" ofType:@"png" inBundle:[NSBundle resourceBundle]];
 
     self.gotItButton.layer.masksToBounds = YES;
     self.gotItButton.layer.cornerRadius = 6.0f;
