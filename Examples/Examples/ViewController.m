@@ -344,8 +344,8 @@
     // Configure promotionalButton with html styling automatically
     [self.promotionalButton configureByHtmlStylingWithAmount:dollarPrice
                                                        items:@[item]
-                                              affirmLogoType:AffirmLogoTypeSymbolHollow
-                                                 affirmColor:AffirmColorTypeBlue
+                                              affirmLogoType:AffirmLogoTypeName
+                                                 affirmColor:AffirmColorTypeBlueBlack
                                                remoteFontURL:fontURL
                                                 remoteCssURL:cssURL];
     
