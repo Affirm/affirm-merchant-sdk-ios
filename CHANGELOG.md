@@ -1,6 +1,11 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
+## Version 5.0.20 (October 12, 2021)
+- Updated the Affirm logo
+- Bug fixes
+- Added Swift Package Manager Support
+
 ## Version 5.0.19 (April 20, 2021)
 - Bug fixes
 - Added Swift Package Manager Support
