@@ -256,13 +256,18 @@ NS_SWIFT_NAME(init(delegate:checkout:creditCard:getReasonCodes:)) NS_DESIGNATED_
         if (_getReasonCodes) {
             
             NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:URL.absoluteString];
-            for (NSURLQueryItem *item in urlComponents.queryItems) {
-                
-                if([item.name isEqualToString:@"data"]) {
-                    [self.delegate checkoutCancelled:self
-                          checkoutCanceledWithReason:[AffirmReasonCode reasonCodeWithDict:item.value.convertToDictionary]];
-                    [[AffirmLogger sharedInstance] trackEvent:@"Checkout cancelled with reason" parameters:@{@"checkout_ari": self.checkoutARI, @"checkout_canceled_reason": item.value != nil ? item.value : @"false"}];
-                    break;
+            if (urlComponents.queryItems.count == 0) {
+                [self.delegate checkoutCancelled:self];
+                [[AffirmLogger sharedInstance] trackEvent:@"Checkout cancelled" parameters:@{@"checkout_ari": self.checkoutARI}];
+            } else {
+                for (NSURLQueryItem *item in urlComponents.queryItems) {
+                    
+                    if([item.name isEqualToString:@"data"]) {
+                        [self.delegate checkoutCancelled:self
+                              checkoutCanceledWithReason:[AffirmReasonCode reasonCodeWithDict:item.value.convertToDictionary]];
+                        [[AffirmLogger sharedInstance] trackEvent:@"Checkout cancelled with reason" parameters:@{@"checkout_ari": self.checkoutARI, @"checkout_canceled_reason": item.value != nil ? item.value : @"false"}];
+                        break;
+                    }
                 }
             }
         } else {
