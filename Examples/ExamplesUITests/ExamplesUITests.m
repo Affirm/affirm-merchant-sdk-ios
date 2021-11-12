@@ -33,7 +33,7 @@
 
     [alaElement tap];
 
-    XCUIElement *checkoutElement = self.app.staticTexts[@"Pay over time"];
+    XCUIElement *checkoutElement = self.app.staticTexts[@"Make easy monthly payments over 3, 6, or 12 months"];
     [self waitForElement:checkoutElement duration:10];
     XCTAssertTrue(checkoutElement.exists);
 }
@@ -46,20 +46,20 @@
 
     [alaElement tap];
 
-    XCUIElement *checkoutElement = self.app.buttons[@"Just select Affirm at checkout."];
+    XCUIElement *checkoutElement = self.app.buttons[@"See if you qualify"];
     [self waitForElement:checkoutElement duration:15];
     XCTAssertTrue(checkoutElement.exists);
 
     [checkoutElement tap];
 
-    XCUIElement *phoneElement = self.app.textFields[@"Your mobile number"];
+    XCUIElement *phoneElement = self.app.textFields[@"Mobile number"];
     [self waitForElement:phoneElement duration:10];
     XCTAssertTrue(phoneElement.exists);
 
     [phoneElement tap];
     [phoneElement typeText:@"3105551001"];
     [self.app.buttons[@"Done"] tap];
-    [self.app.buttons[@"Continue"] tap];
+    [self.app.buttons[@"Continue and open modal"] tap];
 
     XCUIElement *pinElement = self.app.textFields[@"0000"];
     [self waitForElement:pinElement duration:5];
@@ -69,7 +69,7 @@
     [pinElement typeText:@"1234"];
 
     XCUIElement *resultElement = [self.app.staticTexts softMatchingWithSubstring:@"You're prequalified for"];
-    [self waitForElement:resultElement duration:10];
+    [self waitForElement:resultElement duration:15];
     XCTAssertTrue(resultElement.exists);
 }
 
@@ -77,14 +77,14 @@
 {
     [self.app.buttons[@"Buy with Affirm"] tap];
 
-    XCUIElement *phoneElement = self.app.textFields[@"Your mobile number"];
+    XCUIElement *phoneElement = self.app.textFields[@"Mobile number"];
     [self waitForElement:phoneElement duration:10];
     XCTAssertTrue(phoneElement.exists);
 
     [phoneElement tap];
     [phoneElement typeText:@"3105551001"];
     [self.app.buttons[@"Done"] tap];
-    [self.app.buttons[@"Continue"] tap];
+    [self.app.buttons[@"Continue and open modal"] tap];
 
     XCUIElement *pinElement = self.app.textFields[@"0000"];
     [self waitForElement:pinElement duration:5];
@@ -93,21 +93,28 @@
     [pinElement tap];
     [pinElement typeText:@"1234"];
 
-    XCUIElement *listElement = [self.app.buttons softMatchingWithSubstring:@"per month for"];
-    [self waitForElement:listElement duration:10];
+    XCUIElement *listElement = [self.app.buttons softMatchingWithSubstring:@"month 3 months APR"];
+    [self waitForElement:listElement duration:20];
     XCTAssertTrue(listElement.exists);
 
     [listElement tap];
+    
+    XCUIElement *switchElement = self.app.switches[@"Auto-Pay Enabled"];
+    [self waitForElement:switchElement duration:15];
+    XCTAssertTrue(switchElement.exists);
+    
+    [switchElement tap];
 
     XCUIElement *continueElement = self.app.buttons[@"Continue"];
-    [self waitForElement:continueElement duration:15];
     XCTAssertTrue(continueElement.exists);
-
     [continueElement tap];
-    [self.app.buttons[@"No, not now"] tap];
-    [self.app.staticTexts[@"I have reviewed and agree to the"] tap];
-    [self.app.staticTexts[@"Please review the following information and confirm your loan."] swipeUp];
-    [self.app.buttons[@"Confirm loan"] tap];
+    
+    XCUIElement *reviewedElement = self.app.staticTexts[@"I have reviewed and agree to the"];
+    [self waitForElement:reviewedElement duration:5];
+    XCTAssertTrue(reviewedElement.exists);
+    [reviewedElement tap];
+    
+    [self.app.buttons[@"Confirm purchase, you will be redirected back to the merchant when it is complete."] tap];
 
     XCUIElement *thanksElement = self.app.staticTexts[@"Thanks for buying with Affirm!"];
     [self waitForElement:thanksElement duration:10];
@@ -129,14 +136,14 @@
 {
     [self.app.buttons[@"VCN Checkout"] tap];
 
-    XCUIElement *phoneElement = self.app.textFields[@"Your mobile number"];
-    [self waitForElement:phoneElement duration:10];
+    XCUIElement *phoneElement = self.app.textFields[@"Mobile number"];
+    [self waitForElement:phoneElement duration:15];
     XCTAssertTrue(phoneElement.exists);
 
     [phoneElement tap];
     [phoneElement typeText:@"3105551001"];
     [self.app.buttons[@"Done"] tap];
-    [self.app.buttons[@"Continue"] tap];
+    [self.app.buttons[@"Continue and open modal"] tap];
 
     XCUIElement *pinElement = self.app.textFields[@"0000"];
     [self waitForElement:pinElement duration:5];
@@ -145,22 +152,34 @@
     [pinElement tap];
     [pinElement typeText:@"1234"];
 
-    XCUIElement *listElement = [self.app.buttons softMatchingWithSubstring:@"per month for"];
-    [self waitForElement:listElement duration:10];
+    XCUIElement *listElement = [self.app.buttons softMatchingWithSubstring:@"month 3 months APR"];
+    [self waitForElement:listElement duration:20];
     XCTAssertTrue(listElement.exists);
 
     [listElement tap];
 
+    XCUIElement *review = self.app.staticTexts[@"Review your payment plan"];
+     [self waitForElement:review duration:10];
+     XCTAssertTrue(review.exists);
+     [review swipeUp];
+    
+    XCUIElement *switchElement = self.app.switches[@"Auto-Pay Enabled"];
+    [self waitForElement:switchElement duration:15];
+    XCTAssertTrue(switchElement.exists);
+    [switchElement swipeRight];
+    
     XCUIElement *continueElement = self.app.buttons[@"Continue"];
-    [self waitForElement:continueElement duration:15];
-    XCTAssertTrue(continueElement.exists);
-
     [continueElement tap];
-    [self.app.buttons[@"No, not now"] tap];
-    [self.app.staticTexts[@"I have reviewed and agree to the"] tap];
-    [self.app.staticTexts[@"Please review the following information and confirm your loan."] swipeUp];
-    [self.app.buttons[@"Confirm loan"] tap];
 
+    XCUIElement *reviewedElement = self.app.staticTexts[@"I have reviewed and agree to the"];
+    [self waitForElement:reviewedElement duration:5];
+    XCTAssertTrue(reviewedElement.exists);
+    [reviewedElement tap];
+    [reviewedElement pressForDuration:0 thenDragToElement:self.app.staticTexts[@"Complete your purchase"]];
+
+    XCUIElement *confirm = self.app.buttons[@"Confirm purchase, you will be redirected back to the merchant when it is complete."];
+    [[confirm coordinateWithNormalizedOffset:CGVectorMake(0.5, 0.5)] tap];
+    
     XCUIElement *thanksElement = self.app.staticTexts[@"Thanks for buying with Affirm!"];
     [self waitForElement:thanksElement duration:10];
     XCTAssertTrue(thanksElement.exists);
