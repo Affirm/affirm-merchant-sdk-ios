@@ -173,4 +173,12 @@
     }
 }
 
++ (void)checkURLScheme:(NSURL *)value
+               name:(NSString *)name
+{
+    if ([value isFileURL]) {
+        [[AffirmLogger sharedInstance] logException:[NSString stringWithFormat:@"%@ is not valid", name]];
+    }
+}
+
 @end
