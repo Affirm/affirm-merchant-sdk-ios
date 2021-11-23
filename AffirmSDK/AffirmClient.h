@@ -15,46 +15,39 @@ typedef enum : NSUInteger {
     AffirmHTTPMethodPOST,
 } AffirmHTTPMethod;
 
-@protocol AffirmRequestProtocol <NSObject>
+@interface AffirmRequest : NSObject
 
 - (NSString *)path;
 - (AffirmHTTPMethod)method;
 - (NSDictionary *)parameters;
-
-@optional
 - (Class)responseClass;
-
-@optional
 - (NSDictionary *)headers;
 
 @end
 
-@protocol AffirmResponseProtocol <NSObject>
+@interface AffirmResponse : NSObject
 
-@optional
-+ (id <AffirmResponseProtocol>)parse:(NSData *)data;
-+ (nullable id <AffirmResponseProtocol>)parseError:(NSData *)data;
++ (AffirmResponse *)parse:(NSData *)data;
++ (nullable AffirmResponse *)parseError:(NSData *)data;
 
 @end
 
-typedef void (^AffirmRequestHandler)(id <AffirmResponseProtocol> _Nullable response, NSError * _Nullable error);
+typedef void (^AffirmRequestHandler)(AffirmResponse * _Nullable response, NSError * _Nullable error);
 
-@protocol AffirmClientProtocol <NSObject>
+@interface AffirmClient : NSObject
 
 + (NSString *)host;
-@optional
-+ (void)send:(id <AffirmRequestProtocol>)request handler:(AffirmRequestHandler)handler;
++ (void)send:(AffirmRequest *)request handler:(AffirmRequestHandler)handler;
 
 @end
 
-@interface AffirmTrackerClient : NSObject <AffirmClientProtocol>
+@interface AffirmTrackerClient : AffirmClient
 @end
 
-@interface AffirmPromoClient : NSObject <AffirmClientProtocol>
-
+@interface AffirmPromoClient : AffirmClient
 @end
 
-@interface AffirmCheckoutClient : NSObject <AffirmClientProtocol>
+@interface AffirmCheckoutClient : AffirmClient
 @end
 
 NS_ASSUME_NONNULL_END

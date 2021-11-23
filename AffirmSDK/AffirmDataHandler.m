@@ -133,7 +133,7 @@
                                                                        logoType:nil
                                                                       logoColor:FormatAffirmColorString(logoColor)
                                                                           items:items];
-    [AffirmPromoClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
+    [AffirmPromoClient send:request handler:^(AffirmResponse * _Nullable response, NSError * _Nullable error) {
         NSAttributedString *attributedString = nil;
         NSString *htmlValue = nil;
         UIViewController *viewController = nil;

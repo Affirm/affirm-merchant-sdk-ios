@@ -160,7 +160,7 @@ NS_SWIFT_NAME(init(delegate:checkout:creditCard:getReasonCodes:)) NS_DESIGNATED_
                                                                              checkout:self.checkout
                                                                                useVCN:self.useVCN
                                                                        cardAuthWindow:self.cardAuthWindow];
-    [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nullable error) {
+    [AffirmCheckoutClient send:request handler:^(AffirmResponse * _Nullable response, NSError * _Nullable error) {
         if (response && [response isKindOfClass:[AffirmCheckoutResponse class]]) {
             AffirmCheckoutResponse *checkoutResponse = (AffirmCheckoutResponse *)response;
             NSURL *redirectURL = checkoutResponse.redirectURL;
