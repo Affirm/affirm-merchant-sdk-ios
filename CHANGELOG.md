@@ -1,6 +1,9 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
+## Version 5.0.22 (November 23, 2021)
+- Bug fixes
+
 ## Version 5.0.21 (November 12, 2021)
 - Added tests
 - Bug fixes
