@@ -298,7 +298,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
                                                                        logoType:FormatAffirmDataTypeString(affirmLogoType)
                                                                       logoColor:FormatAffirmColorString(logoColor)
                                                                           items:items];
-    [AffirmPromoClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
+    [AffirmPromoClient send:request handler:^(AffirmResponse * _Nullable response, NSError * _Nullable error) {
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
             AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
             self.showPrequal = promoResponse.showPrequal;
@@ -366,7 +366,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
                                                                        logoType:nil
                                                                       logoColor:FormatAffirmColorString(logoColor)
                                                                           items:items];
-    [AffirmPromoClient send:request handler:^(id<AffirmResponseProtocol> _Nullable response, NSError * _Nullable error) {
+    [AffirmPromoClient send:request handler:^(AffirmResponse * _Nullable response, NSError * _Nullable error) {
         NSAttributedString *attributedString = nil;
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
             NSString *template = AFFIRM_DEFAULT_ALA_TEMPLATE;
@@ -386,7 +386,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
 }
 
 - (void)configureWithAttributedText:(nullable NSAttributedString *)attributedText
-                           response:(nullable id<AffirmResponseProtocol>)response
+                           response:(nullable AffirmResponse *)response
                               error:(nullable NSError *)error
 {
     self.webView.hidden = YES;

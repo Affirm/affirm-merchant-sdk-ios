@@ -8,13 +8,12 @@
 
 #import "AffirmClient.h"
 #import "AffirmConstants.h"
-#import "AffirmProtocol.h"
 #import "AffirmRequest.h"
 #import "AffirmLogger.h"
 #import "AffirmConfiguration.h"
 #import "AffirmUtils.h"
 
-@defs(AffirmRequestProtocol)
+@implementation AffirmRequest
 
 - (NSString *)path
 {
@@ -47,15 +46,15 @@
 
 @end
 
-@defs(AffirmResponseProtocol)
+@implementation AffirmResponse
 
-+ (id <AffirmResponseProtocol>)parse:(NSData *)data
++ (AffirmResponse *)parse:(NSData *)data
 {
     [[AffirmLogger sharedInstance] logException:@"parse method require override"];
     return nil;
 }
 
-+ (nullable id <AffirmResponseProtocol>)parseError:(NSData *)data
++ (nullable AffirmResponse *)parseError:(NSData *)data
 {
     NSError *error = nil;
     id responseObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
@@ -71,7 +70,7 @@
 
 @end
 
-@defs(AffirmClientProtocol)
+@implementation AffirmClient
 
 + (NSString *)host
 {
@@ -79,7 +78,7 @@
     return nil;
 }
 
-+ (void)send:(id <AffirmRequestProtocol>)request handler:(AffirmRequestHandler)handler
++ (void)send:(AffirmRequest *)request handler:(AffirmRequestHandler)handler
 {
     NSString *method;
     NSURL *url;

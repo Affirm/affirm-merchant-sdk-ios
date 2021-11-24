@@ -13,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AffirmLogRequest : NSObject <AffirmRequestProtocol>
+@interface AffirmLogRequest : AffirmRequest
 
 @property (nonatomic, readonly) NSInteger logCount;
 @property (nonatomic, copy, readonly) NSDictionary *eventParameters;
@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface AffirmPromoRequest : NSObject <AffirmRequestProtocol>
+@interface AffirmPromoRequest : AffirmRequest
 
 @property (nonatomic, copy, readonly) NSString *publicKey;
 @property (nonatomic, copy, readonly) NSString *promoId;
@@ -58,7 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface AffirmCheckoutRequest : NSObject <AffirmRequestProtocol>
+@interface AffirmCheckoutRequest : AffirmRequest
 
 @property (nonatomic, copy, readonly) NSString *publicKey;
 @property (nonatomic, copy, readonly) AffirmCheckout *checkout;
@@ -74,7 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface AffirmPromoResponse : NSObject <AffirmResponseProtocol>
+@interface AffirmPromoResponse : AffirmResponse
 
 @property (nonatomic, copy, readonly) NSString *htmlAla;
 @property (nonatomic, copy, readonly) NSString *ala;
@@ -82,7 +82,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface AffirmCheckoutResponse : NSObject <AffirmResponseProtocol>
+@interface AffirmCheckoutResponse : AffirmResponse
 
 @property (nonatomic, copy, readonly) NSURL *redirectURL;
 
@@ -90,7 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface AffirmErrorResponse : NSObject <AffirmResponseProtocol>
+@interface AffirmErrorResponse : AffirmResponse
 
 @property (nonatomic, copy, readonly) NSString *message;
 @property (nonatomic, copy, readonly) NSString *code;

@@ -220,7 +220,7 @@
     return self;
 }
 
-+ (id <AffirmResponseProtocol>)parse:(NSData *)data
++ (AffirmResponse *)parse:(NSData *)data
 {
     NSError *error = nil;
     id responseObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
@@ -249,7 +249,7 @@
     return @{@"redirect_url": self.redirectURL};
 }
 
-+ (id <AffirmResponseProtocol>)parse:(NSData *)data
++ (AffirmResponse *)parse:(NSData *)data
 {
     NSError *error = nil;
     id responseObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
