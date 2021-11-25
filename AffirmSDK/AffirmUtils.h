@@ -49,9 +49,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)checkNotNegative:(NSDecimalNumber *)value
                     name:(NSString *)name;
 
-+ (void)checkURLScheme:(NSURL *)value
-                  name:(NSString *)name;
-
 @end
 
 @interface UIImage (Utils)
