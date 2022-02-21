@@ -1,0 +1,26 @@
+name: Run Tests
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [ opened, synchronize ]
+  push:
+    branches:
+      - master
+      - feature/ci
+
+jobs:
+  build:
+    runs-on: macos-10.15
+    steps:
+    - name: Checkout project
+      uses: actions/checkout@v2
+    
+    - name: Cocoapods
+      run: cd Examples && pod install --verbose --repo-update && cd ..
+      
+    - name: Build
+      run: xcodebuild build-for-testing -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "platform=iOS Simulator,name=iPhone 12"
+      
+    - name: Test
+      run: xcodebuild -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "platform=iOS Simulator,name=iPhone 12" test

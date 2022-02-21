@@ -25,19 +25,6 @@
     [self.app launch];
 }
 
-- (void)testAlaData
-{
-    XCUIElement *alaElement = [self.app.buttons elementBoundByIndex:0];
-    [self waitForElement:alaElement duration:10];
-    XCTAssertTrue(alaElement.exists);
-
-    [alaElement tap];
-
-    XCUIElement *checkoutElement = self.app.staticTexts[@"Make easy monthly payments over 3, 6, or 12 months"];
-    [self waitForElement:checkoutElement duration:10];
-    XCTAssertTrue(checkoutElement.exists);
-}
-
 - (void)testAla
 {
     XCUIElement *alaElement = [self.app.buttons softMatchingWithSubstring:@"Starting at"];

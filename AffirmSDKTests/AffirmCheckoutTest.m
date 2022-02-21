@@ -65,7 +65,7 @@
     AffirmCheckoutRequest *request = [[AffirmCheckoutRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
                                                                              checkout:self.checkout
                                                                                useVCN:NO cardAuthWindow:0];
-    [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nonnull error) {
+    [AffirmCheckoutClient send:request handler:^(AffirmResponse *  _Nullable response, NSError * _Nonnull error) {
         XCTAssertTrue([response isKindOfClass:[AffirmCheckoutResponse class]]);
         XCTAssertNil(error);
         [expectation fulfill];
@@ -82,7 +82,7 @@
     AffirmCheckoutRequest *request = [[AffirmCheckoutRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
                                                                              checkout:self.checkout
                                                                                useVCN:YES cardAuthWindow:0];
-    [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nonnull error) {
+    [AffirmCheckoutClient send:request handler:^(AffirmResponse *  _Nullable response, NSError * _Nonnull error) {
         XCTAssertTrue([response isKindOfClass:[AffirmCheckoutResponse class]]);
         XCTAssertNil(error);
         [expectation fulfill];
@@ -103,7 +103,7 @@
     AffirmCheckoutRequest *request = [[AffirmCheckoutRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
                                                                              checkout:checkout
                                                                                useVCN:NO cardAuthWindow:0];
-    [AffirmCheckoutClient send:request handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nonnull error) {
+    [AffirmCheckoutClient send:request handler:^(AffirmResponse *  _Nullable response, NSError * _Nonnull error) {
         XCTAssertTrue([response isKindOfClass:[AffirmErrorResponse class]]);
         XCTAssertNil(error);
         [expectation fulfill];
