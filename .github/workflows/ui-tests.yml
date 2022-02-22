@@ -23,4 +23,4 @@ jobs:
       run: xcodebuild build-for-testing -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "platform=iOS Simulator,name=iPhone 12"
       
     - name: Test
-      run: xcodebuild clean test -workspace Examples/Examples.xcworkspace -scheme Examples -destination "platform=iOS Simulator,name=iPhone 12"
+      run: xcodebuild -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "platform=iOS Simulator,name=iPhone 12" test
