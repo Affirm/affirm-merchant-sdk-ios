@@ -112,7 +112,6 @@
                  completionHandler:(void (^)(NSAttributedString * _Nullable, NSString * _Nullable, UIViewController * _Nullable, NSError * _Nullable))completionHandler
 {
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
-    NSDecimalNumber *decimal = amount.toIntegerCents;
     
     if (amount.doubleValue > [NSDecimalNumber decimalNumberWithString:AFFIRM_MAX_PROMO_AMOUNT].doubleValue) {
         completionHandler(nil, nil, nil, nil);
@@ -127,7 +126,7 @@
 
     AffirmPromoRequest *request = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
                                                                         promoId:promoID
-                                                                         amount:decimal
+                                                                         amount:amount
                                                                         showCTA:showCTA
                                                                        pageType:FormatAffirmPageTypeString(pageType)
                                                                        logoType:nil
@@ -156,7 +155,7 @@
             if (promoResponse.showPrequal) {
                 NSMutableDictionary *params = [@{
                     @"public_api_key": [AffirmConfiguration sharedInstance].publicKey,
-                    @"unit_price": [decimal stringValue],
+                    @"unit_price": [amount toIntegerCents],
                     @"use_promo": @"true",
                     @"referring_url": AFFIRM_PREQUAL_REFERRING_URL,
                 } mutableCopy];
@@ -173,7 +172,7 @@
                 viewController = [[AffirmPrequalModalViewController alloc] initWithURL:requestURL delegate:delegate];
             } else {
                 viewController = [[AffirmPromoModalViewController alloc] initWithPromoId:promoID
-                                                                                  amount:decimal
+                                                                                  amount:amount
                                                                                 pageType:pageType
                                                                                 delegate:delegate];
             }

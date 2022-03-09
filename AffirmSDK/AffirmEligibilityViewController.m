@@ -80,7 +80,6 @@
     self.logoView.image = [UIImage imageNamed:@"blue-black_logo-transparent_bg" ofType:@"png" inBundle:[NSBundle resourceBundle]];
     NSDecimalNumber *totalAmount = self.checkout.totalAmount;
     if (totalAmount && totalAmount != NSDecimalNumber.notANumber) {
-        totalAmount = [totalAmount decimalNumberByDividingBy:[NSDecimalNumber decimalNumberWithString:@"100"]];
         self.amountField.text = [totalAmount formattedString];
     } else {
         self.amountField.text = nil;
@@ -114,7 +113,7 @@
     NSCAssert(self.navigationController != nil, @"The current view controller is not contained in a navigation controller.");
 
     NSDecimalNumber *totalAmount = [self.amountField.text currencyDecimal];
-    self.checkout.totalAmount = [totalAmount decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:@"100"]];
+    self.checkout.totalAmount = totalAmount;
 
     AffirmCheckoutViewController *controller = [AffirmCheckoutViewController startCheckout:self.checkout useVCN:YES getReasonCodes:self.getReasonCodes delegate:self.delegate];
     [self.navigationController pushViewController:controller animated:YES];

@@ -86,9 +86,8 @@
 - (IBAction)showProductModal:(id)sender
 {
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
-
     AffirmPromoModalViewController *viewController = [[AffirmPromoModalViewController alloc] initWithPromoId:self.promoIDTextField.text
-                                                                                                      amount:[dollarPrice toIntegerCents]
+                                                                                                      amount:dollarPrice
                                                                                                     pageType:AffirmPageTypeProduct
                                                                                                     delegate:self];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:viewController];
@@ -117,7 +116,7 @@
     // Checkout
     AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item]
                                                         shipping:shipping
-                                                     totalAmount:[dollarPrice toIntegerCents]
+                                                     totalAmount:dollarPrice
                                                         metadata:metadata];
 
     // Billing
@@ -163,7 +162,7 @@
     // Checkout
     AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item]
                                                         shipping:shipping
-                                                     totalAmount:[dollarPrice toIntegerCents]];
+                                                     totalAmount:dollarPrice];
 
     // CAAS
     if (self.caasTextfield.text) {
@@ -202,7 +201,7 @@
     // Checkout
     AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item]
                                                         shipping:shipping
-                                                     totalAmount:[dollarPrice toIntegerCents]];
+                                                     totalAmount:dollarPrice];
 
     // Billing
     AffirmBillingDetail *billing = [AffirmBillingDetail billingDetailWithName:nil
