@@ -1,0 +1,22 @@
+name: Run Tests
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [ opened, synchronize ]
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: macos-10.15
+    steps:
+    - name: Checkout project
+      uses: actions/checkout@v2
+
+    - name: Build
+      run: xcodebuild build-for-testing -project AffirmSDK.xcodeproj -scheme AffirmSDK -destination "platform=iOS Simulator,name=iPhone 12"
+      
+    - name: Test
+      run: xcodebuild clean test -project AffirmSDK.xcodeproj -scheme AffirmSDK -destination "platform=iOS Simulator,name=iPhone 12"

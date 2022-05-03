@@ -27,11 +27,10 @@
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"track test"];
     AffirmLogRequest *request = [[AffirmLogRequest alloc] initWithEventName:@"Test" eventParameters:@{} logCount:0];
-    [AffirmTrackerClient send:request
-                      handler:^(id<AffirmResponseProtocol>  _Nullable response, NSError * _Nonnull error) {
-                          XCTAssertNil(error);
-                          [expectation fulfill];
-                      }];
+    [AffirmTrackerClient send:request handler:^(AffirmResponse * _Nullable response, NSError * _Nullable error) {
+        XCTAssertNil(error);
+        [expectation fulfill];
+    }];
     [self waitForExpectationsWithTimeout:10 handler:nil];
 }
 

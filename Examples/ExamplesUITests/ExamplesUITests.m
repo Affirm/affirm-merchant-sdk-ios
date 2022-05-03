@@ -25,19 +25,6 @@
     [self.app launch];
 }
 
-- (void)testAlaData
-{
-    XCUIElement *alaElement = [self.app.buttons elementBoundByIndex:0];
-    [self waitForElement:alaElement duration:10];
-    XCTAssertTrue(alaElement.exists);
-
-    [alaElement tap];
-
-    XCUIElement *checkoutElement = self.app.staticTexts[@"Make easy monthly payments over 3, 6, or 12 months"];
-    [self waitForElement:checkoutElement duration:10];
-    XCTAssertTrue(checkoutElement.exists);
-}
-
 - (void)testAla
 {
     XCUIElement *alaElement = [self.app.buttons softMatchingWithSubstring:@"Starting at"];
@@ -162,27 +149,6 @@
      [self waitForElement:review duration:10];
      XCTAssertTrue(review.exists);
      [review swipeUp];
-    
-    XCUIElement *switchElement = self.app.switches[@"Auto-Pay Enabled"];
-    [self waitForElement:switchElement duration:15];
-    XCTAssertTrue(switchElement.exists);
-    [switchElement swipeRight];
-    
-    XCUIElement *continueElement = self.app.buttons[@"Continue"];
-    [continueElement tap];
-
-    XCUIElement *reviewedElement = self.app.staticTexts[@"I have reviewed and agree to the"];
-    [self waitForElement:reviewedElement duration:5];
-    XCTAssertTrue(reviewedElement.exists);
-    [reviewedElement tap];
-    [reviewedElement pressForDuration:0 thenDragToElement:self.app.staticTexts[@"Complete your purchase"]];
-
-    XCUIElement *confirm = self.app.buttons[@"Confirm purchase, you will be redirected back to the merchant when it is complete."];
-    [[confirm coordinateWithNormalizedOffset:CGVectorMake(0.5, 0.5)] tap];
-    
-    XCUIElement *thanksElement = self.app.staticTexts[@"Thanks for buying with Affirm!"];
-    [self waitForElement:thanksElement duration:10];
-    XCTAssertTrue(thanksElement.exists);
 }
 
 @end
