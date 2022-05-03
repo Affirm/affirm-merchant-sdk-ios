@@ -277,7 +277,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
                             remoteCssURL:(nullable NSURL *)remoteCssURL
 {
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
-    self.amount = amount.toIntegerCents;
+    self.amount = amount;
     
     if (amount.doubleValue > [NSDecimalNumber decimalNumberWithString:AFFIRM_MAX_PROMO_AMOUNT].doubleValue) {
         [self configureWithAttributedText:nil response:nil error:nil];
@@ -345,7 +345,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
                   textColor:(UIColor *)textColor
 {
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
-    self.amount = amount.toIntegerCents;
+    self.amount = amount;
     
     if (amount.doubleValue > [NSDecimalNumber decimalNumberWithString:AFFIRM_MAX_PROMO_AMOUNT].doubleValue) {
         [self configureWithAttributedText:nil response:nil error:nil];
@@ -421,7 +421,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
                    remoteCssURL:(nullable NSURL *)remoteCssURL
 {
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
-    self.amount = amount.toIntegerCents;
+    self.amount = amount;
 
     BOOL hasRemoteCss = remoteCssURL != nil;
     NSString *jsURL = [AffirmConfiguration sharedInstance].jsURL;
@@ -490,7 +490,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
     if (self.showPrequal) {
         NSMutableDictionary *params = [@{
             @"public_api_key": [AffirmConfiguration sharedInstance].publicKey,
-            @"unit_price": self.amount,
+            @"unit_price": [self.amount toIntegerCents],
             @"use_promo": @"true",
             @"referring_url": AFFIRM_PREQUAL_REFERRING_URL,
         } mutableCopy];

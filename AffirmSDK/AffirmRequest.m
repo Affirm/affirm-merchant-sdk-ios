@@ -11,6 +11,7 @@
 #import "AffirmConfiguration.h"
 #import "AffirmCheckout.h"
 #import "AffirmItem.h"
+#import "AffirmUtils.h"
 
 @implementation AffirmLogRequest
 
@@ -114,7 +115,7 @@
     NSMutableDictionary *_parameters = [@{@"is_sdk": @"true",
                                           @"field": @"ala",
                                           @"show_cta": self.showCTA ? @"true" : @"false",
-                                          @"amount": self.amount.stringValue
+                                          @"amount": [self.amount toIntegerCents]
                                           } mutableCopy];
     if (self.promoId) {
         _parameters[@"promo_external_id"] = self.promoId;

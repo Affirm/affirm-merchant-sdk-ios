@@ -237,7 +237,7 @@
     if (_totalAmount) {
         return _totalAmount;
     }
-    return [[self calculatedTotalAmount] toIntegerCents];
+    return [self calculatedTotalAmount];
 }
 
 - (NSDecimalNumber *)payoutAmount
@@ -259,7 +259,7 @@
     
     NSMutableDictionary *dict = [@{
                                    @"items": items,
-                                   @"total": self.totalAmount,
+                                   @"total": [self.totalAmount toIntegerCents],
                                    @"currency": [AffirmConfiguration sharedInstance].currency,
                                    @"api_version" :@"v2"
                                    } mutableCopy];

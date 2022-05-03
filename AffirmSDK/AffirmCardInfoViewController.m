@@ -113,7 +113,6 @@
 
     NSDecimalNumber *totalAmount = self.checkout.totalAmount;
     if (totalAmount && totalAmount != NSDecimalNumber.notANumber) {
-        totalAmount = [totalAmount decimalNumberByDividingBy:[NSDecimalNumber decimalNumberWithString:@"100"]];
         self.amountLabel.text = totalAmount.formattedString;
     } else {
         self.amountLabel.text = nil;

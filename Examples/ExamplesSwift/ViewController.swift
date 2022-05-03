@@ -83,7 +83,7 @@ class ViewController: UIViewController {
         let shipping = AffirmShippingDetail(name: "Test Tester", email: "testtester@test.com", phoneNumber: "1111111111", line1: "633 Folsom Street", line2: "", city: "San Francisco", state: "CA", zipCode: "94107", countryCode: "USA")
 
         // Checkout
-        let checkout = AffirmCheckout.checkout(items: [item], shipping: shipping, payoutAmount: dollarPrice.toIntegerCents())
+        let checkout = AffirmCheckout.checkout(items: [item], shipping: shipping, payoutAmount: dollarPrice)
 
         // CAAS
         if let caas = caasTextfield.text, !caas.isEmpty {
@@ -100,7 +100,7 @@ class ViewController: UIViewController {
         let shipping = AffirmShippingDetail(name: "Chester Cheetah", email: nil, phoneNumber: nil, line1: "633 Folsom Street", line2: "", city: "San Francisco", state: "CA", zipCode: "94107", countryCode: "USA")
 
         // Checkout
-        let checkout = AffirmCheckout.checkout(items: [item], shipping: shipping, payoutAmount: dollarPrice.toIntegerCents())
+        let checkout = AffirmCheckout.checkout(items: [item], shipping: shipping, payoutAmount: dollarPrice)
 
         // CAAS
         if let caas = caasTextfield.text, !caas.isEmpty {
