@@ -73,23 +73,6 @@
     [self waitForExpectationsWithTimeout:10 handler:nil];
 }
 
-- (void)testCheckoutWithVCNSuccessCase
-{
-    XCTestExpectation *expectation = [self expectationWithDescription:@"checkout response error format"];
-    [[AffirmConfiguration sharedInstance] configureWithPublicKey:@"2G9MNM7462PB1TAV"
-                                                     environment:AffirmEnvironmentSandbox
-                                                    merchantName:@"Affirm Example"];
-    AffirmCheckoutRequest *request = [[AffirmCheckoutRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
-                                                                             checkout:self.checkout
-                                                                               useVCN:YES cardAuthWindow:0];
-    [AffirmCheckoutClient send:request handler:^(AffirmResponse *  _Nullable response, NSError * _Nonnull error) {
-        XCTAssertTrue([response isKindOfClass:[AffirmCheckoutResponse class]]);
-        XCTAssertNil(error);
-        [expectation fulfill];
-    }];
-    [self waitForExpectationsWithTimeout:10 handler:nil];
-}
-
 - (void)testCheckoutFailedCase
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"checkout response error format"];

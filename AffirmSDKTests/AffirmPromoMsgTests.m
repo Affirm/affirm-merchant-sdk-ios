@@ -25,7 +25,7 @@
 - (void)testCalculatePrice
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"start calculate price 500"];
-    AffirmPromoRequest *request = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey promoId:@"promo_set_ios" amount:[NSDecimalNumber decimalNumberWithString:@"50000"] showCTA:YES pageType:nil logoType:@"text" logoColor:@"blue"];
+    AffirmPromoRequest *request = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey promoId:@"promo_set_ios" amount:[NSDecimalNumber decimalNumberWithString:@"500"] showCTA:YES pageType:nil logoType:@"text" logoColor:@"blue"];
     [AffirmCheckoutClient send:request handler:^(AffirmResponse *  _Nullable response, NSError * _Nonnull error) {
         XCTAssertNil(error);
         XCTAssertTrue([response isKindOfClass:[AffirmPromoResponse class]]);
@@ -35,7 +35,7 @@
     [self waitForExpectationsWithTimeout:10 handler:nil];
     
     XCTestExpectation *expectation2 = [self expectationWithDescription:@"start calculate price 100"];
-    AffirmPromoRequest *request2 = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey promoId:@"promo_set_ios" amount:[NSDecimalNumber decimalNumberWithString:@"10000"] showCTA:YES pageType:nil logoType:@"text" logoColor:@"blue"];
+    AffirmPromoRequest *request2 = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey promoId:@"promo_set_ios" amount:[NSDecimalNumber decimalNumberWithString:@"100"] showCTA:YES pageType:nil logoType:@"text" logoColor:@"blue"];
     [AffirmCheckoutClient send:request2 handler:^(AffirmResponse *  _Nullable response, NSError * _Nonnull error) {
         XCTAssertNil(error);
         XCTAssertTrue([response isKindOfClass:[AffirmPromoResponse class]]);
@@ -48,7 +48,7 @@
 - (void)testRequestPromoFailed
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"start calculate price 50000"];
-    AffirmPromoRequest *request = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey promoId:@"promo_set_ios" amount:[NSDecimalNumber decimalNumberWithString:@"5000000"] showCTA:YES pageType:nil logoType:@"text" logoColor:@"blue"];
+    AffirmPromoRequest *request = [[AffirmPromoRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey promoId:@"promo_set_ios" amount:[NSDecimalNumber decimalNumberWithString:@"50000"] showCTA:YES pageType:nil logoType:@"text" logoColor:@"blue"];
     [AffirmCheckoutClient send:request handler:^(AffirmResponse *  _Nullable response, NSError * _Nonnull error) {
         XCTAssertNil(error);
         XCTAssertNotNil(response);
