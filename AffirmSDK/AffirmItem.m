@@ -23,7 +23,7 @@
     [AffirmValidationUtils checkNotNegative:unitPrice name:@"unitPrice"];
     [AffirmValidationUtils checkNotNegative:[NSDecimalNumber decimalNumberWithDecimal:[[NSNumber numberWithInteger:quantity] decimalValue]] name:@"quantity"];
     [AffirmValidationUtils checkNotNil:URL name:@"URL"];
-    
+
     if (self = [super init]) {
         _name = [name copy];
         _SKU = [SKU copy];
@@ -49,13 +49,16 @@
 
 - (NSDictionary *)toJSONDictionary
 {
-    return @{
-             @"display_name": self.name,
-             @"sku": self.SKU,
-             @"unit_price": self.unitPrice.toIntegerCents,
-             @"qty": @(self.quantity),
-             @"item_url": [self.URL absoluteString],
-             };
+    NSMutableDictionary *json = [@{
+        @"display_name": self.name,
+        @"sku": self.SKU,
+        @"unit_price": self.unitPrice.toIntegerCents,
+        @"qty": @(self.quantity)
+    } mutableCopy];
+    if (![self.URL isFileURL] && ([self.URL.scheme isEqualToString:@"http"] || [self.URL.scheme isEqualToString:@"https"] || [self.URL.scheme length] == 0)) {
+        json[@"item_url"] = [self.URL absoluteString];
+    }
+    return json;
 }
 
 - (id)copyWithZone:(NSZone *)zone
