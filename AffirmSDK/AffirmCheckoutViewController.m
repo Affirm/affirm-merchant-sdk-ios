@@ -171,7 +171,7 @@ NS_SWIFT_NAME(init(delegate:checkout:creditCard:getReasonCodes:)) NS_DESIGNATED_
             } else {
                 [[AffirmLogger sharedInstance] trackEvent:@"Checkout redirect missing"];
                 [self.activityIndicatorView stopAnimating];
-                [self.delegate checkout:self didFailWithError:checkoutResponse.dictionary.convertToNSError];
+                [self.delegate checkout:self didFailWithError:[NSError errorWithDomain:AffirmSDKErrorDomain code:303 userInfo:@{NSLocalizedDescriptionKey: @"Checkout redirect missing"}]];
             }
         } else if (response && [response isKindOfClass:[AffirmErrorResponse class]]) {
             AffirmErrorResponse *errorResponse = (AffirmErrorResponse *)response;
