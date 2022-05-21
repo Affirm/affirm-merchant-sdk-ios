@@ -75,9 +75,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly, nullable) NSString *number;
 
 /**
- Call back id. Required
+ Call back id. Optional
  */
-@property (nonatomic, copy, readonly, nonnull) NSString *callbackId;
+@property (nonatomic, copy, readonly, nullable) NSString *callbackId;
 
 /**
  Card holder name. Optional
@@ -90,9 +90,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly, nullable) NSString *expiration;
 
 /**
- id. Required
+ id. Optional
  */
-@property (nonatomic, copy, readonly, nonnull) NSString *creditCardId;
+@property (nonatomic, copy, readonly, nullable) NSString *creditCardId;
 
 /**
  expiredDate. Optional
