@@ -106,7 +106,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
         NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
         attachment.image = logo;
         CGSize logoSize = [self sizeForLogoType:logoType logoSize:logo.size height:font.pointSize];
-        attachment.bounds = CGRectMake(0, -logoSize.height/5, logoSize.width, logoSize.height);
+        attachment.bounds = CGRectMake(0, 0, logoSize.width, logoSize.height);
         NSAttributedString *attributedLogo = [NSAttributedString attributedStringWithAttachment:attachment];
         [attributedText replaceCharactersInRange:[attributedText.mutableString rangeOfString:@"Affirm"] withAttributedString:attributedLogo];
     }
