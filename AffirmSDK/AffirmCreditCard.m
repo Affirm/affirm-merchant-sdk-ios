@@ -35,8 +35,6 @@
 - (instancetype)initWithDict:(NSDictionary *)dict
 {
     [AffirmValidationUtils checkNotNil:dict[@"checkout_token"] name:@"checkout_token"];
-    [AffirmValidationUtils checkNotNil:dict[@"callback_id"] name:@"callback_id"];
-    [AffirmValidationUtils checkNotNil:dict[@"id"] name:@"creditCard_id"];
     
     if (self = [super init]) {
         if (dict[@"billing_address"] != nil && [dict[@"billing_address"] isKindOfClass:[NSDictionary class]]) {
