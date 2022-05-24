@@ -25,9 +25,17 @@
     [self.app launch];
 }
 
+- (void)clearCookies
+{
+    [self.app.buttons[@"Clear Cookies"] tap];
+    [self.app.buttons[@"OK"] tap];
+}
+
 - (void)testAla
 {
-    XCUIElement *alaElement = [self.app.buttons softMatchingWithSubstring:@"Starting at"];
+    [self clearCookies];
+    
+    XCUIElement *alaElement = [self.app.buttons softMatchingWithSubstring:@"/mo with"];
     [self waitForElement:alaElement duration:10];
     XCTAssertTrue(alaElement.exists);
 
@@ -55,48 +63,56 @@
     [pinElement tap];
     [pinElement typeText:@"1234"];
 
-    XCUIElement *resultElement = [self.app.staticTexts softMatchingWithSubstring:@"You're prequalified for"];
+    XCUIElement *resultElement = [self.app.staticTexts softMatchingWithSubstring:@"You're prequalified"];
     [self waitForElement:resultElement duration:15];
     XCTAssertTrue(resultElement.exists);
 }
 
 - (void)testBuyWithAffirm
 {
+    [self clearCookies];
+
     [self.app.buttons[@"Buy with Affirm"] tap];
 
-    XCUIElement *phoneElement = self.app.textFields[@"Mobile number"];
-    [self waitForElement:phoneElement duration:10];
-    XCTAssertTrue(phoneElement.exists);
+    if (true) {
+        XCUIElement *errorElement = self.app.staticTexts[@"Error"];
+        [self waitForElement:errorElement duration:15];
+        XCTAssertTrue(errorElement.exists);
 
-    [phoneElement tap];
-    [phoneElement typeText:@"3105551001"];
-    [self.app.buttons[@"Done"] tap];
-    [self.app.buttons[@"Continue and open modal"] tap];
+        [self.app.buttons[@"OK"] tap];
+    } else {
+        XCUIElement *phoneElement = self.app.textFields[@"Mobile number"];
+        [self waitForElement:phoneElement duration:10];
+        XCTAssertTrue(phoneElement.exists);
 
-    XCUIElement *pinElement = self.app.textFields[@"0000"];
-    [self waitForElement:pinElement duration:5];
-    XCTAssertTrue(pinElement.exists);
+        [phoneElement tap];
+        [phoneElement typeText:@"3105551001"];
+        [self.app.buttons[@"Done"] tap];
+        [self.app.buttons[@"Continue and open modal"] tap];
 
-    [pinElement tap];
-    [pinElement typeText:@"1234"];
+        XCUIElement *pinElement = self.app.textFields[@"0000"];
+        [self waitForElement:pinElement duration:5];
+        XCTAssertTrue(pinElement.exists);
 
-    XCUIElement *listElement = [self.app.buttons softMatchingWithSubstring:@"month 3 months APR"];
-    [self waitForElement:listElement duration:20];
-    XCTAssertTrue(listElement.exists);
+        [pinElement tap];
+        [pinElement typeText:@"1234"];
 
-    [listElement tap];
-    
-    XCUIElement *switchElement = self.app.switches[@"Auto-Pay Enabled"];
-    [self waitForElement:switchElement duration:15];
-    XCTAssertTrue(switchElement.exists);
-    
-    [switchElement tap];
+        XCUIElement *listElement = [self.app.buttons softMatchingWithSubstring:@"month 3 months APR"];
+        [self waitForElement:listElement duration:20];
+        XCTAssertTrue(listElement.exists);
 
-    XCUIElement *continueElement = self.app.buttons[@"Continue"];
-    XCTAssertTrue(continueElement.exists);
-    [continueElement tap];
-    
-    if (false) {
+        [listElement tap];
+        
+        XCUIElement *switchElement = self.app.switches[@"Auto-Pay Enabled"];
+        [self waitForElement:switchElement duration:15];
+        XCTAssertTrue(switchElement.exists);
+        
+        [switchElement tap];
+
+        XCUIElement *continueElement = self.app.buttons[@"Continue"];
+        XCTAssertTrue(continueElement.exists);
+        [continueElement tap];
+        
         XCUIElement *reviewedElement = self.app.staticTexts[@"I have reviewed and agree to the"];
         [self waitForElement:reviewedElement duration:5];
         XCTAssertTrue(reviewedElement.exists);
@@ -123,9 +139,11 @@
 
 - (void)testVCNCheckout
 {
+    [self clearCookies];
+
     [self.app.buttons[@"VCN Checkout"] tap];
     
-    if (true) {
+    if (false) {
         XCUIElement *errorElement = self.app.staticTexts[@"Error"];
         [self waitForElement:errorElement duration:15];
         XCTAssertTrue(errorElement.exists);
