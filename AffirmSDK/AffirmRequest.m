@@ -136,6 +136,7 @@
         }
         _parameters[@"items"] = items;
     }
+    _parameters[@"locale"] = [AffirmConfiguration sharedInstance].locale;
     return _parameters;
 }
 
