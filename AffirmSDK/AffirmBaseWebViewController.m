@@ -96,9 +96,6 @@
 {
     [[AffirmLogger sharedInstance] trackEvent:@"Web load failed"
                                    parameters:@{@"error_description": error.localizedDescription}];
-    NSString *errorDescription = [error.localizedDescription stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-    NSString *url = [NSString stringWithFormat:@"https://www.%@/u/#/error?main=Error&sub=%@", [AffirmConfiguration sharedInstance].domain, errorDescription];
-    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
 }
 
 - (void)dismiss

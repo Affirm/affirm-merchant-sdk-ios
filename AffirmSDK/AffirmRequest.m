@@ -162,6 +162,16 @@
     return self;
 }
 
+- (NSDictionary *)headers
+{
+    return @{@"Content-Type": @"application/json",
+             @"Affirm-User-Agent": @"Affirm-iOS-SDK",
+             @"Affirm-User-Agent-Version": [AffirmConfiguration affirmSDKVersion],
+             @"affirm-locale": [AffirmConfiguration sharedInstance].locale,
+             @"country-code": [AffirmConfiguration sharedInstance].countryCode
+    };
+}
+
 - (NSString *)path
 {
     return @"/api/v2/checkout/";

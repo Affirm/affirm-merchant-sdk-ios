@@ -15,9 +15,9 @@
 
 @interface AffirmConfiguration ()
 
-@property (nonatomic, copy, readwrite) NSString *publicKey;
+@property (nonatomic, copy, readwrite) NSString *publicKey, *countryCode, *currency;
 @property (nonatomic, readwrite) AffirmEnvironment environment;
-@property (nonatomic, readwrite) AffirmLocale locale;
+@property (nonatomic, readwrite) NSString *locale;
 @property (nonatomic, copy, readwrite, nullable) NSString *merchantName;
 @property (nonatomic, strong, readwrite) WKProcessPool *pool;
 @property (nonatomic, strong, readwrite, nullable) AffirmCreditCard *creditCard;
@@ -47,7 +47,9 @@
 {
     if (self = [super init]) {
         _environment = AffirmEnvironmentSandbox;
-        _locale = AffirmLocaleUS;
+        _locale = AFFIRM_DEFAULT_LOCALE;
+        _countryCode = AFFIRM_DEFAULT_COUNTRY_CODE;
+        _currency = AFFIRM_DEFAULT_CURRENCY;
     }
     return self;
 }
@@ -79,12 +81,16 @@
 
 - (void)configureWithPublicKey:(NSString *)publicKey
                    environment:(AffirmEnvironment)environment
-                        locale:(AffirmLocale)locale
+                        locale:(NSString *)locale
+                    coutryCode:(NSString *)coutryCode
+                      currency:(NSString *)currency
                   merchantName:(NSString * _Nullable )merchantName
 {
     self.publicKey = [publicKey copy];
     self.environment = environment;
     self.locale = locale;
+    self.countryCode = coutryCode;
+    self.currency = currency;
     self.merchantName = [merchantName copy];
 }
 
@@ -101,39 +107,48 @@
     return _publicKey;
 }
 
-- (NSString *)currency
-{
-    switch (self.locale) {
-        case AffirmLocaleUS:
-            return @"USD";
-        case AffirmLocaleCA:
-            return @"CAD";
-    }
-}
-
 + (NSString *)affirmSDKVersion
 {
     return [[NSBundle resourceBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-}
-
-- (NSString *)domain
-{
-    switch (self.locale) {
-        case AffirmLocaleUS:
-            return AFFIRM_US_DOMAIN;
-        case AffirmLocaleCA:
-            return AFFIRM_CA_DOMAIN;
-    }
 }
 
 - (NSString *)jsURL
 {
     switch (self.environment) {
         case AffirmEnvironmentSandbox:
-            return [NSString stringWithFormat:@"https://cdn1-sandbox.%@/js/v2/affirm.js", self.domain];
+            return AFFIRM_JS_SANDBOX_URL;
         case AffirmEnvironmentProduction:
-            return [NSString stringWithFormat:@"https://cdn1.%@/js/v2/affirm.js", self.domain];
+            return AFFIRM_JS_PRODUCTION_URL;
     }
+}
+
+- (NSString *)promosDomain
+{
+    if ([self.countryCode isEqualToString:@"CAN"]) {
+        return AFFIRM_PROMOS_CA_DOMAIN;
+    }
+    return AFFIRM_PROMOS_US_DOMAIN;
+}
+
+- (NSString *)promosURL
+{
+    NSString *prefix = self.isProductionEnvironment ? @"www" : @"sandbox";
+    return [NSString stringWithFormat:@"https://%@.%@", prefix, self.promosDomain];
+}
+
+- (NSString *)checkoutURL
+{
+    switch (self.environment) {
+        case AffirmEnvironmentSandbox:
+            return AFFIRM_CHECKOUT_SANDBOX_URL;
+        case AffirmEnvironmentProduction:
+            return AFFIRM_CHECKOUT_PRODUCTION_URL;
+    }
+}
+
+- (NSString *)trackerURL
+{
+    return [NSString stringWithFormat:@"https://tracker.%@", self.promosDomain];
 }
 
 - (NSString *)environmentDescription
@@ -160,9 +175,12 @@
 {
     NSMutableArray *ownedCookies = [NSMutableArray array];
     NSArray *cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage].cookies;
+    NSArray *urls = @[AFFIRM_PROMOS_US_DOMAIN, AFFIRM_PROMOS_CA_DOMAIN];
     for (NSHTTPCookie *cookie in cookies) {
-        if ([cookie.domain rangeOfString:[AffirmConfiguration sharedInstance].domain].location != NSNotFound) {
-            [ownedCookies addObject:cookie];
+        for (NSString *url in urls) {
+            if ([cookie.domain rangeOfString:url].location != NSNotFound) {
+                [ownedCookies addObject:cookie];
+            }
         }
     }
     return ownedCookies;
