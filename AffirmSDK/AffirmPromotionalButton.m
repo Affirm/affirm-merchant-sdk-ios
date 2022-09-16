@@ -502,6 +502,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
         if (self.pageType) {
             params[@"page_type"] = FormatAffirmPageTypeString(self.pageType);
         }
+        params[@"locale"] = [AffirmConfiguration sharedInstance].locale;
 
         NSString *url = [NSString stringWithFormat:@"%@/apps/prequal/", [AffirmPromoClient host]];
         NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"?%@", [params queryURLEncoding]]
