@@ -38,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSDecimalNumber *)toIntegerCents;
 - (NSString *)formattedString;
+- (NSString *)formattedStringWithFractionDigits:(NSInteger)fractionDigits;
 
 @end
 
