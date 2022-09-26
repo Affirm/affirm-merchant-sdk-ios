@@ -236,12 +236,34 @@
 {
     NSError *error = nil;
     id responseObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-    NSString *ala = (NSString *)[responseObject valueForKeyPath:@"promo.ala"];
-    ala = [ala stringByReplacingOccurrencesOfString:@"{affirm_logo}" withString:@"Affirm"];
-    NSString *htmlAla = [responseObject valueForKeyPath:@"promo.html_ala"];
-    NSString *style = [responseObject valueForKeyPath:@"promo.config.promo_style"];
-    BOOL showPrequal = ![style isEqualToString:@"fast"];
-    return [[AffirmPromoResponse alloc] initWithAla:ala htmlAla:htmlAla showPrequal:showPrequal];
+    if (!error) {
+        NSDictionary *promo = responseObject[@"promo"];
+        if (promo && [promo isKindOfClass:[NSDictionary class]]) {
+            NSString *ala = promo[@"ala"];
+            if ([ala isEqual:[NSNull null]]) {
+                ala = @"";
+            }
+            
+            if ([ala isKindOfClass:[NSString class]] && ala.length > 0) {
+                ala = [ala stringByReplacingOccurrencesOfString:@"{affirm_logo}" withString:@"Affirm"];
+            }
+            
+            NSString *htmlAla = promo[@"html_ala"];
+            if ([htmlAla isEqual:[NSNull null]]) {
+                htmlAla = @"";
+            }
+            
+            BOOL showPrequal = NO;
+            NSDictionary *config = promo[@"config"];
+            if (config) {
+                NSString *style = config[@"promo_style"];
+                showPrequal = ![style isEqualToString:@"fast"];
+            }
+            
+            return [[AffirmPromoResponse alloc] initWithAla:ala htmlAla:htmlAla showPrequal:showPrequal];
+        }
+    }
+    return [[AffirmErrorResponse alloc] initWithMessage:@"Failed to parse promo api response." code:@"" type:@"" statusCode:@-1];
 }
 
 @end
