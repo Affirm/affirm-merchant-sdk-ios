@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -35,26 +35,26 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Cb3-MS-oHw">
-                    <rect key="frame" x="20" y="84" width="120" height="36.5"/>
+                    <rect key="frame" x="20" y="88" width="120" height="36.5"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="120" id="fk0-76-ZRr"/>
                         <constraint firstAttribute="width" secondItem="Cb3-MS-oHw" secondAttribute="height" multiplier="79:24" id="izU-jV-RqH"/>
                     </constraints>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="In proud partnership with XXX" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yMA-th-HII">
-                    <rect key="frame" x="20" y="155.5" width="374" height="26.5"/>
+                    <rect key="frame" x="20" y="159.5" width="374" height="26.5"/>
                     <fontDescription key="fontDescription" name="Calibre-Regular" family="Calibre" pointSize="22"/>
                     <color key="textColor" red="0.43137254901960786" green="0.4392156862745098" blue="0.44313725490196076" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Enter an amount. Remember to add shipping and tax. You'll get back any amount that you don't use." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LoL-iu-YcV">
-                    <rect key="frame" x="20" y="217" width="374" height="40.5"/>
+                    <rect key="frame" x="20" y="221" width="374" height="40.5"/>
                     <fontDescription key="fontDescription" name="Calibre-Regular" family="Calibre" pointSize="17"/>
                     <color key="textColor" red="0.22745098039215686" green="0.23529411764705882" blue="0.23921568627450979" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f2L-A1-rCz" userLabel="Field">
-                    <rect key="frame" x="20" y="338.5" width="374" height="60"/>
+                    <rect key="frame" x="20" y="331.5" width="374" height="60"/>
                     <subviews>
                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="$*" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BM8-MK-m5W">
                             <rect key="frame" x="15" y="0.0" width="344" height="60"/>
@@ -78,7 +78,7 @@
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l0b-2i-9CY">
-                    <rect key="frame" x="20" y="433.5" width="374" height="60"/>
+                    <rect key="frame" x="20" y="415.5" width="374" height="60"/>
                     <color key="backgroundColor" red="0.058823529411764705" green="0.62745098039215685" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="60" id="t72-Aa-pQm"/>
@@ -92,7 +92,7 @@
                     </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="How much is your purchase?" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gVI-ij-vDq">
-                    <rect key="frame" x="20" y="272.5" width="374" height="31"/>
+                    <rect key="frame" x="20" y="276.5" width="374" height="31"/>
                     <fontDescription key="fontDescription" name="Calibre-Bold" family="Calibre" pointSize="26"/>
                     <color key="textColor" red="0.12549019607843137" green="0.13333333333333333" blue="0.13725490196078433" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
@@ -106,9 +106,9 @@
                 <constraint firstItem="Cb3-MS-oHw" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="2sy-S4-wMS"/>
                 <constraint firstItem="LoL-iu-YcV" firstAttribute="top" secondItem="yMA-th-HII" secondAttribute="bottom" constant="35" id="AWT-nT-2Zb"/>
                 <constraint firstItem="l0b-2i-9CY" firstAttribute="trailing" secondItem="f2L-A1-rCz" secondAttribute="trailing" id="CLu-Ln-LCa"/>
-                <constraint firstItem="l0b-2i-9CY" firstAttribute="top" secondItem="f2L-A1-rCz" secondAttribute="bottom" constant="35" id="Dkt-JD-09E"/>
+                <constraint firstItem="l0b-2i-9CY" firstAttribute="top" secondItem="f2L-A1-rCz" secondAttribute="bottom" constant="24" id="Dkt-JD-09E"/>
                 <constraint firstItem="LoL-iu-YcV" firstAttribute="trailing" secondItem="yMA-th-HII" secondAttribute="trailing" id="IvM-qW-DaO"/>
-                <constraint firstItem="f2L-A1-rCz" firstAttribute="top" secondItem="gVI-ij-vDq" secondAttribute="bottom" constant="35" id="Kgz-yM-Alk"/>
+                <constraint firstItem="f2L-A1-rCz" firstAttribute="top" secondItem="gVI-ij-vDq" secondAttribute="bottom" constant="24" id="Kgz-yM-Alk"/>
                 <constraint firstItem="f2L-A1-rCz" firstAttribute="trailing" secondItem="gVI-ij-vDq" secondAttribute="trailing" id="LL7-Ff-qFh"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="yMA-th-HII" secondAttribute="trailing" constant="20" id="S4s-Kz-F6x"/>
                 <constraint firstItem="Cb3-MS-oHw" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="40" id="U9x-pX-oux"/>

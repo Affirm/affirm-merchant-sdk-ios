@@ -94,7 +94,7 @@
     }
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
     urlRequest.HTTPMethod = method;
-
+    
     NSDictionary *headers = request.headers;
     for (NSString *key in headers) {
         [urlRequest setValue:headers[key] forHTTPHeaderField:key];
@@ -102,7 +102,7 @@
     if (request.parameters && [NSJSONSerialization isValidJSONObject:request.parameters] && request.method == AffirmHTTPMethodPOST) {
         urlRequest.HTTPBody = [NSJSONSerialization dataWithJSONObject:request.parameters options:NSJSONWritingPrettyPrinted error:nil];
     }
-
+    
     NSURLSessionDataTask *task = [[NSURLSession sharedSession] dataTaskWithRequest:urlRequest completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (handler) {
             NSHTTPURLResponse *result = (NSHTTPURLResponse *)response;
@@ -136,7 +136,7 @@
 
 + (NSString *)host
 {
-    return [NSString stringWithFormat:@"https://tracker.%@", [AffirmConfiguration sharedInstance].domain];
+    return [AffirmConfiguration sharedInstance].trackerURL;
 }
 
 @end
@@ -145,8 +145,7 @@
 
 + (NSString *)host
 {
-    NSString *prefix = [AffirmConfiguration sharedInstance].isProductionEnvironment ? @"www" : @"sandbox";
-    return [NSString stringWithFormat:@"https://%@.%@", prefix, [AffirmConfiguration sharedInstance].domain];
+    return [AffirmConfiguration sharedInstance].promosURL;
 }
 
 @end
@@ -155,8 +154,7 @@
 
 + (NSString *)host
 {
-    NSString *prefix = [AffirmConfiguration sharedInstance].isProductionEnvironment ? @"api" : @"sandbox";
-    return [NSString stringWithFormat:@"https://%@.%@", prefix, [AffirmConfiguration sharedInstance].domain];
+    return [AffirmConfiguration sharedInstance].checkoutURL;
 }
 
 @end

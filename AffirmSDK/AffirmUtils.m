@@ -136,11 +136,16 @@
 
 - (NSString *)formattedString
 {
+    return [self formattedStringWithFractionDigits:2];
+}
+
+- (NSString *)formattedStringWithFractionDigits:(NSInteger)fractionDigits
+{
     NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
     numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
     numberFormatter.usesGroupingSeparator = YES;
-    numberFormatter.minimumFractionDigits = 2;
-    numberFormatter.maximumFractionDigits = 2;
+    numberFormatter.minimumFractionDigits = fractionDigits;
+    numberFormatter.maximumFractionDigits = fractionDigits;
     return [numberFormatter stringFromNumber:self];
 }
 

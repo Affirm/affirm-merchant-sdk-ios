@@ -435,6 +435,8 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
     matchedKeys[@"{{REMOTE_CSS_URL}}"] = remoteCssURL.absoluteString ?: @"";
     matchedKeys[@"{{PUBLIC_KEY}}"] = [AffirmConfiguration sharedInstance].publicKey;
     matchedKeys[@"{{JS_URL}}"] = jsURL;
+    matchedKeys[@"{{LOCALE}}"] = [AffirmConfiguration sharedInstance].locale;
+    matchedKeys[@"{COUNTRY_CODE}"] = [AffirmConfiguration sharedInstance].countryCode;
 
     NSString *filePath = [[NSBundle resourceBundle] pathForResource:@"affirm_promo"
                                                              ofType:@"html"];
@@ -500,6 +502,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
         if (self.pageType) {
             params[@"page_type"] = FormatAffirmPageTypeString(self.pageType);
         }
+        params[@"locale"] = [AffirmConfiguration sharedInstance].locale;
 
         NSString *url = [NSString stringWithFormat:@"%@/apps/prequal/", [AffirmPromoClient host]];
         NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"?%@", [params queryURLEncoding]]

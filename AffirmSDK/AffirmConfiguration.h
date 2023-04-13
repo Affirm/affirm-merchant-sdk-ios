@@ -30,9 +30,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) AffirmEnvironment environment;
 
 /**
- environment User locale. (US, CA)
+ environment User locale. (en_US, en_CA, fr_CA , etc.)
  */
-@property (nonatomic, readonly) AffirmLocale locale;
+@property (nonatomic, readonly) NSString *locale;
+
+/**
+ environment User country code. (USA, CAN , etc.)
+ */
+@property (nonatomic, readonly) NSString *countryCode;
 
 /**
  environment Currency. (USD, CAD)
@@ -50,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL isProductionEnvironment;
 
 /**
-  creditCard Return an existing credit card.
+ creditCard Return an existing credit card.
  */
 @property (nonatomic, readonly, strong, nullable) AffirmCreditCard *creditCard;
 
@@ -94,13 +99,15 @@ NS_SWIFT_NAME(configure(publicKey:environment:));
 NS_SWIFT_NAME(configure(publicKey:environment:merchantName:));
 
 /**
-Convenience constructor. See properties for more details.
-*/
+ Convenience constructor. See properties for more details.
+ */
 - (void)configureWithPublicKey:(NSString *)publicKey
                    environment:(AffirmEnvironment)environment
-                        locale:(AffirmLocale)locale
+                        locale:(NSString *)locale
+                    coutryCode:(NSString *)coutryCode
+                      currency:(NSString *)currency
                   merchantName:(NSString * _Nullable )merchantName
-NS_SWIFT_NAME(configure(publicKey:environment:locale:merchantName:));
+NS_SWIFT_NAME(configure(publicKey:environment:locale:coutryCode:currency:merchantName:));
 
 /**
  affirmSDKVersion Current Affirm SDK version.
@@ -108,14 +115,24 @@ NS_SWIFT_NAME(configure(publicKey:environment:locale:merchantName:));
 + (NSString *)affirmSDKVersion;
 
 /**
-domain Based on currenct locale
-*/
-- (NSString *)domain;
+ jsURL Affirm js file url
+ */
+- (NSString *)jsURL;
 
 /**
-jsURL Affirm js file url
-*/
-- (NSString *)jsURL;
+ promosURL Promos endpoint url
+ */
+- (NSString *)promosURL;
+
+/**
+ checkoutURL Checkout endpoint url
+ */
+- (NSString *)checkoutURL;
+
+/**
+ trackerURL Tracker endpoint url
+ */
+- (NSString *)trackerURL;
 
 /**
  environmentDescription Current environment.

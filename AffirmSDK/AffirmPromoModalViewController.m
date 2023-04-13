@@ -59,7 +59,7 @@
 
     NSString *promoIdString = promoId ?: @"";
     NSString *pageTypeString = FormatAffirmPageTypeString(pageType) ?: @"";
-    _htmlString = [NSString stringWithFormat:rawContent, [AffirmConfiguration sharedInstance].publicKey, jsURL, [amount toIntegerCents], promoIdString, pageTypeString, promoIdString, AFFIRM_PREQUAL_REFERRING_URL];
+    _htmlString = [NSString stringWithFormat:rawContent, [AffirmConfiguration sharedInstance].publicKey, jsURL, [AffirmConfiguration sharedInstance].locale, [AffirmConfiguration sharedInstance].countryCode, [amount toIntegerCents], promoIdString, pageTypeString, promoIdString, AFFIRM_PREQUAL_REFERRING_URL];
     _delegate = delegate;
 }
 
@@ -78,7 +78,7 @@
 - (WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures
 {
     NSURL *url = navigationAction.request.URL;
-    if (navigationAction.targetFrame == nil && [url.absoluteString rangeOfString:@"affirm.com/apps/prequal"].location != NSNotFound) {
+    if (navigationAction.targetFrame == nil && [url.absoluteString rangeOfString:@"/apps/prequal"].location != NSNotFound) {
         NSString *fullURL = [url.absoluteString stringByAppendingString:[NSString stringWithFormat:@"&referring_url=%@", AFFIRM_PREQUAL_REFERRING_URL]];
         [webView loadRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:fullURL]]];
     }
