@@ -252,7 +252,7 @@
             return [[AffirmPromoResponse alloc] initWithAla:ala htmlAla:htmlAla showPrequal:showPrequal];
         }
     }
-    return [[AffirmErrorResponse alloc] initWithMessage:@"Failed to parse promo api response." code:@"" type:@"" statusCode:@-1];
+    return [[AffirmErrorResponse alloc] initWithMessage:@"Failed to parse promo api response." code:@"" field:@"" type:@"" statusCode:@-1];
 }
 
 @end
@@ -286,12 +286,14 @@
 
 - (instancetype)initWithMessage:(NSString *)message
                            code:(NSString *)code
+                           field:(NSString *)field
                            type:(NSString *)type
                      statusCode:(NSNumber *)statusCode
 {
     if (self = [super init]) {
         _message = [message copy];
         _code = [code copy];
+        _field = [field copy];
         _type = [type copy];
         _statusCode = [statusCode copy];
     }
@@ -303,6 +305,7 @@
     return @{
              @"message": self.message,
              @"code": self.code ?: @"",
+             @"field": self.field ?: @"",
              @"type": self.type,
              @"statusCode": self.statusCode,
              };
