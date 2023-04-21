@@ -94,11 +94,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy, readonly) NSString *message;
 @property (nonatomic, copy, readonly) NSString *code;
+@property (nonatomic, copy, readonly) NSString *field;
 @property (nonatomic, copy, readonly) NSString *type;
 @property (nonatomic, copy, readonly) NSNumber *statusCode;
 
 - (instancetype)initWithMessage:(NSString *)message
                            code:(NSString *)code
+                          field:(NSString *)field
                            type:(NSString *)type
                      statusCode:(NSNumber *)statusCode;
 - (instancetype)init NS_UNAVAILABLE;
