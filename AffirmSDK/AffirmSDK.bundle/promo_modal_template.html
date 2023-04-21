@@ -68,6 +68,7 @@
             var onCloseProductModal = function() {
                 window.location.href = "%@"
             }
+            affirm.events.on('prequal:close', onCloseProductModal);
             affirm.setAffirmConfig(elem, {onCloseModal: onCloseProductModal});
         });
         // END AFFIRM.JS EMBED CODE
