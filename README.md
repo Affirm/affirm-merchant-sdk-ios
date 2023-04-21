@@ -1,7 +1,7 @@
 
 Affirm iOS SDK
 ==============
-[![CocoaPods](https://img.shields.io/cocoapods/v/AffirmSDK.svg)](https://cocoapods.org/pods/AffirmSDK) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![license](https://img.shields.io/cocoapods/l/AffirmSDK.svg)]()
+[![CocoaPods](https://img.shields.io/badge/pod-v5.0.26-blue)](https://cocoapods.org/pods/AffirmSDK) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 The Affirm iOS SDK allows you to offer Affirm in your own app.
 
