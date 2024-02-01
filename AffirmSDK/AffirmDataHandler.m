@@ -137,51 +137,56 @@
         NSString *htmlValue = nil;
         UIViewController *viewController = nil;
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
-            AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
-            htmlValue = withHtmlValue ? promoResponse.htmlAla : nil;
+                AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
+                htmlValue = withHtmlValue ? promoResponse.htmlAla : nil;
 
-            NSString *template = nil;
-            if (promoResponse.ala != nil && promoResponse.ala.length > 0) {
-                template = promoResponse.ala;
-            }
-            if (template) {
-                UIImage *logo = nil;
-                if (logoType != AffirmLogoTypeText) {
-                    logo = [AffirmPromotionalButton getAffirmDisplayForLogoType:logoType colorType:colorType];
+                NSString *template = nil;
+                if (promoResponse.ala != nil && promoResponse.ala.length > 0) {
+                    template = promoResponse.ala;
                 }
-                attributedString = [AffirmPromotionalButton appendLogo:logo toText:template font:font textColor:textColor logoType:logoType];
-            }
-
-            if (promoResponse.showPrequal) {
-                NSMutableDictionary *params = [@{
-                    @"public_api_key": [AffirmConfiguration sharedInstance].publicKey,
-                    @"unit_price": [amount toIntegerCents],
-                    @"use_promo": @"true",
-                    @"referring_url": AFFIRM_PREQUAL_REFERRING_URL,
-                } mutableCopy];
-                if (promoID) {
-                    params[@"promo_external_id"] = promoID;
-                }
-                if (pageType) {
-                    params[@"page_type"] = FormatAffirmPageTypeString(pageType);
+                if (template) {
+                    UIImage *logo = nil;
+                    if (logoType != AffirmLogoTypeText) {
+                        logo = [AffirmPromotionalButton getAffirmDisplayForLogoType:logoType colorType:colorType];
+                    }
+                    attributedString = [AffirmPromotionalButton appendLogo:logo toText:template font:font textColor:textColor logoType:logoType];
                 }
 
-                NSString *url = [NSString stringWithFormat:@"%@/apps/prequal/", [AffirmPromoClient host]];
-                NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"?%@", [params queryURLEncoding]]
-                                           relativeToURL:[NSURL URLWithString:url]];
-                viewController = [[AffirmPrequalModalViewController alloc] initWithURL:requestURL delegate:delegate];
-            } else {
-                viewController = [[AffirmPromoModalViewController alloc] initWithPromoId:promoID
-                                                                                  amount:amount
-                                                                                pageType:pageType
-                                                                                delegate:delegate];
+                if (promoResponse.showPrequal) {
+                    NSMutableDictionary *params = [@{
+                        @"public_api_key": [AffirmConfiguration sharedInstance].publicKey,
+                        @"unit_price": [amount toIntegerCents],
+                        @"use_promo": @"true",
+                        @"referring_url": AFFIRM_PREQUAL_REFERRING_URL,
+                    } mutableCopy];
+                    if (promoID) {
+                        params[@"promo_external_id"] = promoID;
+                    }
+                    if (pageType) {
+                        params[@"page_type"] = FormatAffirmPageTypeString(pageType);
+                    }
+
+                    NSString *url = [NSString stringWithFormat:@"%@/apps/prequal/", [AffirmPromoClient host]];
+                    NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"?%@", [params queryURLEncoding]]
+                                               relativeToURL:[NSURL URLWithString:url]];
+                    viewController = [[AffirmPrequalModalViewController alloc] initWithURL:requestURL delegate:delegate];
+                } else {
+                    viewController = [[AffirmPromoModalViewController alloc] initWithPromoId:promoID
+                                                                                      amount:amount
+                                                                                    pageType:pageType
+                                                                                    delegate:delegate];
             }
+        }
+        NSError *_error;
+        if ([response isKindOfClass:[AffirmErrorResponse class]]) {
+            AffirmErrorResponse *errorResponse = (AffirmErrorResponse *)response;
+            _error = [errorResponse.dictionary convertToNSErrorWithCode:errorResponse.statusCode];
         }
         if (viewController && withNavigation) {
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
-            completionHandler(attributedString, htmlValue, navigationController, error);
+            completionHandler(attributedString, htmlValue, navigationController, error ?: _error);
         } else {
-            completionHandler(attributedString, htmlValue, viewController, error);
+            completionHandler(attributedString, htmlValue, viewController, error ?: _error);
         }
     }];
 }
