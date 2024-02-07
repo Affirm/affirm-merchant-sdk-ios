@@ -1,7 +1,7 @@
 
 Affirm iOS SDK
 ==============
-[![CocoaPods](https://img.shields.io/badge/pod-v5.0.26-blue)](https://cocoapods.org/pods/AffirmSDK) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![CocoaPods](https://img.shields.io/badge/pod-v5.0.27-blue)](https://cocoapods.org/pods/AffirmSDK) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 The Affirm iOS SDK allows you to offer Affirm in your own app.
 
@@ -29,7 +29,7 @@ github "Affirm/affirm-merchant-sdk-ios"
 From Xcode 11+ :
 
 1. Select File > Swift Packages > Add Package Dependency. Enter `https://github.com/Affirm/affirm-merchant-sdk-ios` in the "Choose Package Repository" dialog.
-2. In the next page, specify the version resolving rule as "Up to Next Major" with "5.0.26".
+2. In the next page, specify the version resolving rule as "Up to Next Major" with "5.0.27".
 3. After Xcode checked out the source and resolving the version, you can choose the "AffirmSDK" library and add it to your app target.
 
 For more info, read [Adding Package Dependencies to Your App](https://developer.apple.com/documentation/xcode/adding_package_dependencies_to_your_app) from Apple.
@@ -38,7 +38,7 @@ Alternatively, you can also add AffirmSDK to your `Package.swift` file:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/Affirm/affirm-merchant-sdk-ios", .upToNextMajor(from: "5.0.26"))
+    .package(url: "https://github.com/Affirm/affirm-merchant-sdk-ios", .upToNextMajor(from: "5.0.27"))
 ]
 ```
 
