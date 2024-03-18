@@ -212,11 +212,16 @@
                                                                                 delegate:delegate];
             }
         }
+        NSError *_error;
+        if ([response isKindOfClass:[AffirmErrorResponse class]]) {
+            AffirmErrorResponse *errorResponse = (AffirmErrorResponse *)response;
+            _error = [errorResponse.dictionary convertToNSErrorWithCode:errorResponse.statusCode];
+        }
         if (viewController && withNavigation) {
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
-            completionHandler(attributedString, htmlValue, accessibilityLabel, navigationController, error);
+            completionHandler(attributedString, htmlValue, accessibilityLabel, navigationController, error ?: _error);
         } else {
-            completionHandler(attributedString, htmlValue, accessibilityLabel, viewController, error);
+            completionHandler(attributedString, htmlValue, accessibilityLabel, viewController, error ?: _error);
         }
     }];
 }
