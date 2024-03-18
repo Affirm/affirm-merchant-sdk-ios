@@ -302,6 +302,9 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
         if (response && [response isKindOfClass:[AffirmPromoResponse class]]) {
             AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
             self.showPrequal = promoResponse.showPrequal;
+            if (promoResponse.ala != nil && promoResponse.ala.length > 0) {
+                self.accessibilityLabel = [promoResponse.ala stringByReplacingOccurrencesOfString:@"{Affirm}" withString:@"Affirm"];
+            }
             if (promoResponse.htmlAla != nil && promoResponse.htmlAla.length > 0) {
                 [self configureWithHtmlString:promoResponse.htmlAla amount:amount remoteFontURL:remoteFontURL remoteCssURL:remoteCssURL];
                 return;
@@ -373,6 +376,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
             AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
             if (promoResponse.ala != nil && promoResponse.ala.length > 0) {
                 template = promoResponse.ala;
+                self.accessibilityLabel = [promoResponse.ala stringByReplacingOccurrencesOfString:@"{Affirm}" withString:@"Affirm"];
             }
             self.showPrequal = promoResponse.showPrequal;
             UIImage *logo = nil;
