@@ -142,6 +142,7 @@
 		08FA592A222D1176007E5E4E /* AffirmUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmUtils.h; sourceTree = "<group>"; };
 		08FA592B222D1176007E5E4E /* AffirmUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmUtils.m; sourceTree = "<group>"; };
 		57B7DD34270EC1E500C22C1D /* AffirmSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AffirmSDK.h; sourceTree = "<group>"; };
+		57F8CD7C2BABCF7500CD9D9E /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		79088B4B2238D20D0059D691 /* AffirmPrequalModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AffirmPrequalModalViewController.h; sourceTree = "<group>"; };
 		79088B4C2238D20D0059D691 /* AffirmPrequalModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AffirmPrequalModalViewController.m; sourceTree = "<group>"; };
 		79088B4F2238DB840059D691 /* AffirmPromoModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmPromoModalViewController.h; sourceTree = "<group>"; };
@@ -282,6 +283,7 @@
 				08C6E8EC251E14E000FFBE8F /* AffirmHowToViewController.h */,
 				08C6E8ED251E14E000FFBE8F /* AffirmHowToViewController.m */,
 				08C6E8EE251E14E000FFBE8F /* AffirmHowToViewController.xib */,
+				57F8CD7C2BABCF7500CD9D9E /* PrivacyInfo.xcprivacy */,
 			);
 			path = AffirmSDK;
 			sourceTree = "<group>";

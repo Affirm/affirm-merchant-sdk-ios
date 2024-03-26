@@ -10,5 +10,5 @@ Pod::Spec.new do |s|
   s.source_files				= 'AffirmSDK/*.{h,m}'
   s.public_header_files			= 'AffirmSDK/*.h'
   s.frameworks					= 'UIKit', 'Foundation', 'Security', 'WebKit'
-  s.resources					= ['AffirmSDK/*.xib', 'AffirmSDK/*.bundle']
+  s.resources					= ['AffirmSDK/*.xib', 'AffirmSDK/*.bundle', 'AffirmSDK/*.xcprivacy']
 end
