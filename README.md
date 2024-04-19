@@ -56,7 +56,7 @@ Before you can use these components, you must first set the AffirmSDK with your 
 [[AffirmConfiguration sharedInstance] configureWithPublicKey:@"PUBLIC_API_KEY"
                                                  environment:AffirmEnvironmentSandbox
                                                       locale:@"en_US"
-                                                  coutryCode:@"USA"
+                                                 countryCode:@"USA"
                                                     currency:@"USD"
                                                 merchantName:@"Affirm Example"];
 ```
