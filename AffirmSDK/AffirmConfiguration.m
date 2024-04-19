@@ -82,14 +82,14 @@
 - (void)configureWithPublicKey:(NSString *)publicKey
                    environment:(AffirmEnvironment)environment
                         locale:(NSString *)locale
-                    coutryCode:(NSString *)coutryCode
+                    countryCode:(NSString *)countryCode
                       currency:(NSString *)currency
                   merchantName:(NSString * _Nullable )merchantName
 {
     self.publicKey = [publicKey copy];
     self.environment = environment;
     self.locale = locale;
-    self.countryCode = coutryCode;
+    self.countryCode = countryCode;
     self.currency = currency;
     self.merchantName = [merchantName copy];
 }
