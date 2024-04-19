@@ -31,6 +31,10 @@ class ViewController: UIViewController {
         // Configure Textfields
         publicKeyTextfield.text = AffirmConfiguration.shared.publicKey
         configureTextField()
+        
+        async {
+            await getPromoMessage()
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -154,6 +158,15 @@ class ViewController: UIViewController {
                                          affirmColor: .blueBlack,
                                          font: UIFont.italicSystemFont(ofSize: 15),
                                          textColor: .gray)
+    }
+    
+    func getPromoMessage() async {
+        guard let affirmData = try? await AffirmDataHandler.getPromoMessage(promoID: nil, amount: NSDecimalNumber(string: "4000.00"), showCTA: true, pageType: .product, logoType: .name, colorType: .blueBlack, font: .systemFont(ofSize: 15), textColor: .gray, presentingViewController: self, withNavigation: true, withHtmlValue: true) else {
+            return
+        }
+        
+        let html = affirmData.1
+        let afirmViewController = affirmData.2
     }
 }
 

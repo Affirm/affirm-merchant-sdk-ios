@@ -61,11 +61,13 @@
     if (responseObject == nil) {
         return nil;
     }
-    NSString *message = [responseObject valueForKey:@"message"];
     NSString *code = [responseObject valueForKey:@"code"];
-    NSString *type = [responseObject valueForKey:@"type"];
+    NSString *field = [responseObject valueForKey:@"field"];
+    NSString *message = [responseObject valueForKey:@"message"];
     NSNumber *statusCode = [responseObject valueForKey:@"status_code"];
-    return [[AffirmErrorResponse alloc] initWithMessage:message code:code type:type statusCode:statusCode];
+    NSString *type = [responseObject valueForKey:@"type"];
+
+    return [[AffirmErrorResponse alloc] initWithMessage:message code:code field:field type:type statusCode:statusCode];
 }
 
 @end

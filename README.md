@@ -1,7 +1,7 @@
 
 Affirm iOS SDK
 ==============
-[![CocoaPods](https://img.shields.io/cocoapods/v/AffirmSDK.svg)](http://cocoadocs.org/docsets/AffirmSDK) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![license](https://img.shields.io/cocoapods/l/AffirmSDK.svg)]()
+[![CocoaPods](https://img.shields.io/badge/pod-v5.0.28-blue)](https://cocoapods.org/pods/AffirmSDK) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 The Affirm iOS SDK allows you to offer Affirm in your own app.
 
@@ -29,7 +29,7 @@ github "Affirm/affirm-merchant-sdk-ios"
 From Xcode 11+ :
 
 1. Select File > Swift Packages > Add Package Dependency. Enter `https://github.com/Affirm/affirm-merchant-sdk-ios` in the "Choose Package Repository" dialog.
-2. In the next page, specify the version resolving rule as "Up to Next Major" with "5.0.23".
+2. In the next page, specify the version resolving rule as "Up to Next Major" with "5.0.28".
 3. After Xcode checked out the source and resolving the version, you can choose the "AffirmSDK" library and add it to your app target.
 
 For more info, read [Adding Package Dependencies to Your App](https://developer.apple.com/documentation/xcode/adding_package_dependencies_to_your_app) from Apple.
@@ -38,7 +38,7 @@ Alternatively, you can also add AffirmSDK to your `Package.swift` file:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/Affirm/affirm-merchant-sdk-ios", .upToNextMajor(from: "5.0.23"))
+    .package(url: "https://github.com/Affirm/affirm-merchant-sdk-ios", .upToNextMajor(from: "5.0.28"))
 ]
 ```
 
@@ -177,7 +177,7 @@ font-weight: normal;
 
 Tapping on the Promotional button automatically opens a modal in an `AffirmPrequalModalViewController` with more information, including (if you have it configured) a button that prompts the user to prequalify for Affirm financing.
 
-**[Note: The AffirmPrequalModalViewController is deprecated as of SDK version 4.0.13.]** To display the AffirmPromoModal outside of tapping on the AffirmPromotionalButton, you may initialize and display an instance of the promo modal viewController as follows:
+To display the AffirmPromoModal outside of tapping on the AffirmPromotionalButton, you may initialize and display an instance of the promo modal viewController as follows:
 
 ```
 AffirmPromoModalViewController *viewController = [[AffirmPromoModalViewController alloc] initWithPromoId:@"promo_id" amount:amount delegate:delegate];

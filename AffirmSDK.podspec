@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name						= 'AffirmSDK'
   s.authors						= "Affirm, Inc."
-  s.version						= '5.0.23'
+  s.version						= '5.0.28'
   s.summary						= 'Integrate Affirm into your iOS app'
   s.homepage					= 'https://github.com/Affirm/affirm-merchant-sdk-ios'
   s.license						= { :type => "BSD-3-Clause", :file => "LICENSE" }
@@ -10,5 +10,5 @@ Pod::Spec.new do |s|
   s.source_files				= 'AffirmSDK/*.{h,m}'
   s.public_header_files			= 'AffirmSDK/*.h'
   s.frameworks					= 'UIKit', 'Foundation', 'Security', 'WebKit'
-  s.resources					= ['AffirmSDK/*.xib', 'AffirmSDK/*.bundle']
+  s.resources					= ['AffirmSDK/*.xib', 'AffirmSDK/*.bundle', 'AffirmSDK/*.xcprivacy']
 end

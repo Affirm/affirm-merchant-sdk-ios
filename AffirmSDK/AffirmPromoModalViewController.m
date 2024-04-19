@@ -6,6 +6,7 @@
 //  Copyright © 2019 Affirm, Inc. All rights reserved.
 //
 
+#import <SafariServices/SafariServices.h>
 #import "AffirmPromoModalViewController.h"
 #import "AffirmPromotionalButton.h"
 #import "AffirmConfiguration.h"
@@ -26,7 +27,7 @@
 {
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     [AffirmValidationUtils checkNotNil:delegate name:@"delegate"];
-
+    
     if (self = [super initWithNibName:nil bundle:nil]) {
         [self initializeHtmlWithPromoId:promoId amount:amount pageType:AffirmPageTypeNone delegate:delegate];
     }
@@ -40,7 +41,7 @@
 {
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     [AffirmValidationUtils checkNotNil:delegate name:@"delegate"];
-
+    
     if (self = [super initWithNibName:nil bundle:nil]) {
         [self initializeHtmlWithPromoId:promoId amount:amount pageType:pageType delegate:delegate];
     }
@@ -56,7 +57,7 @@
     NSString *filePath = [[NSBundle resourceBundle] pathForResource:@"promo_modal_template"
                                                              ofType:@"html"];
     NSString *rawContent = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-
+    
     NSString *promoIdString = promoId ?: @"";
     NSString *pageTypeString = FormatAffirmPageTypeString(pageType) ?: @"";
     _htmlString = [NSString stringWithFormat:rawContent, [AffirmConfiguration sharedInstance].publicKey, jsURL, [AffirmConfiguration sharedInstance].locale, [AffirmConfiguration sharedInstance].countryCode, [amount toIntegerCents], promoIdString, pageTypeString, promoIdString, AFFIRM_PREQUAL_REFERRING_URL];
@@ -78,9 +79,14 @@
 - (WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures
 {
     NSURL *url = navigationAction.request.URL;
-    if (navigationAction.targetFrame == nil && [url.absoluteString rangeOfString:@"/apps/prequal"].location != NSNotFound) {
-        NSString *fullURL = [url.absoluteString stringByAppendingString:[NSString stringWithFormat:@"&referring_url=%@", AFFIRM_PREQUAL_REFERRING_URL]];
-        [webView loadRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:fullURL]]];
+    if (navigationAction.targetFrame == nil) {
+        if ([url.absoluteString rangeOfString:@"affirm.com/apps/prequal"].location != NSNotFound) {
+            NSString *fullURL = [url.absoluteString stringByAppendingString:[NSString stringWithFormat:@"&referring_url=%@", AFFIRM_PREQUAL_REFERRING_URL]];
+            [webView loadRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:fullURL]]];
+        } else {
+            SFSafariViewController *controller = [[SFSafariViewController alloc] initWithURL:navigationAction.request.URL];
+            [self presentViewController:controller animated:YES completion:nil];
+        }
     }
     return nil;
 }

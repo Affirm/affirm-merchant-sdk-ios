@@ -6,6 +6,7 @@
 //  Copyright © 2019 Affirm, Inc. All rights reserved.
 //
 
+#import <SafariServices/SafariServices.h>
 #import "AffirmPrequalModalViewController.h"
 #import "AffirmPrequalDelegate.h"
 #import "AffirmConstants.h"
@@ -24,7 +25,7 @@
 {
     [AffirmValidationUtils checkNotNil:URL name:@"URL"];
     [AffirmValidationUtils checkNotNil:delegate name:@"delegate"];
-
+    
     if (self = [super initWithNibName:nil bundle:nil]) {
         _requestURL = URL;
         _delegate = delegate;
@@ -39,8 +40,8 @@
                                                                               style:UIBarButtonItemStyleDone
                                                                              target:self
                                                                              action:@selector(dismiss)];
-
-
+    
+    
     [self.webView loadRequest:[NSURLRequest requestWithURL:self.requestURL
                                                cachePolicy:NSURLRequestUseProtocolCachePolicy
                                            timeoutInterval:30]];
@@ -51,7 +52,8 @@
 - (WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures
 {
     if (navigationAction.targetFrame == nil) {
-        [webView loadRequest:navigationAction.request];
+        SFSafariViewController *controller = [[SFSafariViewController alloc] initWithURL:navigationAction.request.URL];
+        [self presentViewController:controller animated:YES completion:nil];
     }
     return nil;
 }
