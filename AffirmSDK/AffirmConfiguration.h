@@ -104,10 +104,10 @@ NS_SWIFT_NAME(configure(publicKey:environment:merchantName:));
 - (void)configureWithPublicKey:(NSString *)publicKey
                    environment:(AffirmEnvironment)environment
                         locale:(NSString *)locale
-                    coutryCode:(NSString *)coutryCode
+                    countryCode:(NSString *)countryCode
                       currency:(NSString *)currency
                   merchantName:(NSString * _Nullable )merchantName
-NS_SWIFT_NAME(configure(publicKey:environment:locale:coutryCode:currency:merchantName:));
+NS_SWIFT_NAME(configure(publicKey:environment:locale:countryCode:currency:merchantName:));
 
 /**
  affirmSDKVersion Current Affirm SDK version.
