@@ -15,7 +15,9 @@
 {
     [[AffirmConfiguration sharedInstance] configureWithPublicKey:@"Y8CQXFF044903JC0"
                                                      environment:AffirmEnvironmentSandbox
-                                                          locale:AffirmLocaleUS
+                                                          locale:@"en_US"
+                                                     countryCode:@"USA"
+                                                        currency:@"USD"
                                                     merchantName:@"Affirm Example"];
     [AffirmConfiguration sharedInstance].cardTip = @"We've added these card details to Rakuten Autofill for quick, easy checkout.";
     return YES;

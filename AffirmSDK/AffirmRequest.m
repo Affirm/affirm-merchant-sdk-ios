@@ -136,6 +136,7 @@
         }
         _parameters[@"items"] = items;
     }
+    _parameters[@"locale"] = [AffirmConfiguration sharedInstance].locale;
     return _parameters;
 }
 
@@ -160,6 +161,16 @@
         _cardAuthWindow = cardAuthWindow;
     }
     return self;
+}
+
+- (NSDictionary *)headers
+{
+    return @{@"Content-Type": @"application/json",
+             @"Affirm-User-Agent": @"Affirm-iOS-SDK",
+             @"Affirm-User-Agent-Version": [AffirmConfiguration affirmSDKVersion],
+             @"affirm-locale": [AffirmConfiguration sharedInstance].locale,
+             @"country-code": [AffirmConfiguration sharedInstance].countryCode
+    };
 }
 
 - (NSString *)path

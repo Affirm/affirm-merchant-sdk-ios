@@ -80,7 +80,7 @@
     self.logoView.image = [UIImage imageNamed:@"blue-black_logo-transparent_bg" ofType:@"png" inBundle:[NSBundle resourceBundle]];
     NSDecimalNumber *totalAmount = self.checkout.totalAmount;
     if (totalAmount && totalAmount != NSDecimalNumber.notANumber) {
-        self.amountField.text = [totalAmount formattedString];
+        self.amountField.text = [totalAmount formattedStringWithFractionDigits:0];
     } else {
         self.amountField.text = nil;
     }
@@ -108,11 +108,22 @@
     [self presentViewController:controller animated:YES completion:nil];
 }
 
+- (NSDecimalNumber *)verifyAmount
+{
+    NSDecimalNumber *totalAmount = [self.amountField.text currencyDecimal];
+    if (!totalAmount || totalAmount == [NSDecimalNumber notANumber]) {
+        return [NSDecimalNumber zero];
+    }
+    return totalAmount;
+}
+
 - (IBAction)getStarted:(id)sender
 {
     NSCAssert(self.navigationController != nil, @"The current view controller is not contained in a navigation controller.");
 
-    NSDecimalNumber *totalAmount = [self.amountField.text currencyDecimal];
+    [self.amountField resignFirstResponder];
+    NSDecimalNumber *totalAmount = [self verifyAmount];
+    
     self.checkout.totalAmount = totalAmount;
 
     AffirmCheckoutViewController *controller = [AffirmCheckoutViewController startCheckout:self.checkout useVCN:YES getReasonCodes:self.getReasonCodes delegate:self.delegate];
@@ -130,7 +141,7 @@
 
     NSDecimalNumber *number = [term currencyDecimal];
     if (number && number != [NSDecimalNumber notANumber]) {
-        textField.text = [number formattedString];
+        textField.text = [number formattedStringWithFractionDigits:0];
     } else {
         textField.text = nil;
     }

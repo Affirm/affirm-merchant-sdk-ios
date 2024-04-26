@@ -53,7 +53,12 @@ An Affirm integration consists of two components: checkout and promotional messa
 
 Before you can use these components, you must first set the AffirmSDK with your public API key from your sandbox [Merchant Dashboard](https://sandbox.affirm.com/dashboard). You must set this key to the shared AffirmConfiguration once (preferably in your AppDelegate) as follows:
 ```
-[[AffirmConfiguration sharedInstance] configureWithPublicKey:@"PUBLIC_API_KEY" locale:AffirmLocaleUS environment:AffirmEnvironmentSandbox merchantName:@"Affirm Example"];
+[[AffirmConfiguration sharedInstance] configureWithPublicKey:@"PUBLIC_API_KEY"
+                                                 environment:AffirmEnvironmentSandbox
+                                                      locale:@"en_US"
+                                                 countryCode:@"USA"
+                                                    currency:@"USD"
+                                                merchantName:@"Affirm Example"];
 ```
 
 ## Checkout
@@ -99,6 +104,8 @@ UINavigationController *nav = [[UINavigationController alloc] initWithRootViewCo
 
 // It is recommended that you round the total in the checkout request to two decimal places. Affirm SDK converts the float total to integer cents before initiating the checkout, so may round up or down depending on the decimal places. Ensure that the rounding in your app uses the same calculation across your other backend systems, otherwise, it may cause an error of 1 cent or more in the total validation on your end. 
 ```
+
+**[Note: the amount fields passed to the checkout object should be in dollars (no cents), so it is best practice to round up to the nearest dollar before passing.]**
 
 The flow ends once the user has successfully confirmed the checkout or vcn checkout, canceled the checkout, or encountered an error in the process. In each of these cases, Affirm will send a message to the AffirmCheckoutDelegate along with additional information about the result.
 

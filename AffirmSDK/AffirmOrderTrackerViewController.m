@@ -91,6 +91,8 @@
 
     [@{@"{{PUBLIC_KEY}}": [AffirmConfiguration sharedInstance].publicKey,
        @"{{JS_URL}}": jsURL,
+       @"{{LOCALE}}": [AffirmConfiguration sharedInstance].locale,
+       @"{{COUNTRY_CODE}}": [AffirmConfiguration sharedInstance].countryCode,
        @"{{TRACK_ORDER_OBJECT}}": orderString,
        @"{{TRACK_PRODUCTS_OBJECT}}": productsString}
      enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, NSString *  _Nonnull obj, BOOL * _Nonnull stop) {

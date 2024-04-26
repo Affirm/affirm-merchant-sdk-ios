@@ -37,7 +37,7 @@
     self.promotionalButton = [[AffirmPromotionalButton alloc] initWithShowCTA:YES
                                                                      pageType:AffirmPageTypeProduct
                                                      presentingViewController:self
-                                                                        frame:CGRectMake(0, 0, 315, 34)];
+                                                                        frame:CGRectMake(0, 0, 315, 40)];
     [self.stackView insertArrangedSubview:self.promotionalButton atIndex:0];
     
     // Using AffirmDataHandler for second button (See more in configurPromotionalMessage)

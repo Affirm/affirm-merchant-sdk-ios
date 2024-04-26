@@ -61,7 +61,7 @@
     if (!self.name && !self.email && !self.phoneNumber && (!self.line1 || !self.line2 || !self.city || !self.state || !self.zipCode || !self.countryCode)) {
         return @{};
     }
-
+    
     return @{
         @"billing": [self getBillingJSONDictionary]
     };
@@ -71,14 +71,13 @@
 {
     NSMutableDictionary *jsonDic = [@{} mutableCopy];
     if (self.line1 && self.line2 && self.city && self.state && self.zipCode && self.countryCode) {
-        BOOL usingInternationalRule = [AffirmConfiguration sharedInstance].locale == AffirmLocaleCA;
         NSDictionary *address =  @{
-            usingInternationalRule ? @"street1" : @"line1": self.line1,
-            usingInternationalRule ? @"street2" : @"line2": self.line2,
+            @"street1": self.line1,
+            @"street2": self.line2,
             @"city": self.city,
-            usingInternationalRule ? @"region1_code" : @"state": self.state,
-            usingInternationalRule ? @"postal_code" : @"zipcode": self.zipCode,
-            usingInternationalRule ? @"country_code" : @"country": self.countryCode
+            @"region1_code": self.state,
+            @"postal_code": self.zipCode,
+            @"country_code": self.countryCode
         };
         jsonDic[@"address"] = address;
     }
