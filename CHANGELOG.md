@@ -1,6 +1,12 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
+## Version 5.0.31 (May 13, 2024)
+- Update version 
+
+## Version 5.0.30 (May 6, 2024)
+- Bug fixes
+
 ## Version 5.0.29 (April 26, 2024)
 - Bug fixes
 
