@@ -25,6 +25,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor whiteColor];
     
     WKWebViewConfiguration *configuration = [WKWebViewConfiguration new];
     configuration.preferences.javaScriptCanOpenWindowsAutomatically = YES;
@@ -37,7 +38,6 @@
     webView.multipleTouchEnabled = NO;
     webView.navigationDelegate = self;
     webView.UIDelegate = self;
-    [webView addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];
     [self.view addSubview:webView];
     self.webView = webView;
 
@@ -64,34 +64,6 @@
     }
 }
 
-- (void)dealloc
-{
-    if (self.webView) {
-        [self.webView removeObserver:self
-                          forKeyPath:@"estimatedProgress"
-                             context:nil];
-    }
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath
-                      ofObject:(id)object
-                        change:(NSDictionary<NSString *,id> *)change
-                       context:(void *)context
-{
-    if ([keyPath isEqualToString:@"estimatedProgress"]) {
-        if ([[change valueForKey:@"new"] floatValue] >= 1.0) {
-            [self.activityIndicatorView stopAnimating];
-        } else {
-            [self.activityIndicatorView startAnimating];
-        }
-    } else {
-        [super observeValueForKeyPath:keyPath
-                             ofObject:object
-                               change:change
-                              context:context];
-    }
-}
-
 - (void)loadErrorPage:(NSError *)error
 {
     [[AffirmLogger sharedInstance] trackEvent:@"Web load failed"
@@ -101,6 +73,19 @@
 - (void)dismiss
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - WKUIDelegate
+- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation
+{
+    [self.activityIndicatorView startAnimating];
+    webView.hidden = YES;
+}
+
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
+{
+    [self.activityIndicatorView stopAnimating];
+    webView.hidden = NO;
 }
 
 #pragma mark - WKNavigationDelegate
