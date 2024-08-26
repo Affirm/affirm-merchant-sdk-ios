@@ -66,7 +66,7 @@
     NSString *message = [responseObject valueForKey:@"message"];
     NSNumber *statusCode = [responseObject valueForKey:@"status_code"];
     NSString *type = [responseObject valueForKey:@"type"];
-
+    
     return [[AffirmErrorResponse alloc] initWithMessage:message code:code field:field type:type statusCode:statusCode];
 }
 

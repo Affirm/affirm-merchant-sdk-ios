@@ -50,8 +50,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, readonly) NSURL *imageURL;
 
 /**
- Convenience constructor. See properties for more details.
+ An array of lists that indicate the various categories that apply to this product, and the hierarchy of those category definitions. Each list in the array contains one or more comma-separated strings, with the first string being the highest-level (widest) category. Optional.
+ */
+@property(nonatomic, copy, readonly, nullable) NSArray<NSArray<NSString *> *> *categories;
 
+/**
+ Convenience constructor. See properties for more details.
+ 
  @param name Item name.
  @param SKU Item SKU.
  @param unitPrice Price per item.
@@ -67,8 +72,27 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(item(name:sku:unitPrice:quantity:url:));
 
 /**
- Initializer. See properties for more details.
+ Convenience constructor. See properties for more details.
+ 
+ @param name Item name.
+ @param SKU Item SKU.
+ @param unitPrice Price per item.
+ @param quantity Number of items purchased.
+ @param URL URL of the item.
+ @param categories An array of lists that indicate the various categories that apply to this product, and the hierarchy of those category definitions.
+ @return The newly created item.
+ */
++ (AffirmItem *)itemWithName:(NSString *)name
+                         SKU:(NSString *)SKU
+                   unitPrice:(NSDecimalNumber *)unitPrice
+                    quantity:(NSInteger)quantity
+                         URL:(NSURL *)URL
+                  categories:(nullable NSArray<NSArray<NSString *> *> *)categories
+NS_SWIFT_NAME(item(name:sku:unitPrice:quantity:url:categories:));
 
+/**
+ Initializer. See properties for more details.
+ 
  @param name Item name.
  @param SKU Item SKU.
  @param unitPrice Price per item.
@@ -82,6 +106,25 @@ NS_SWIFT_NAME(item(name:sku:unitPrice:quantity:url:));
                     quantity:(NSInteger)quantity
                          URL:(NSURL *)URL
 NS_SWIFT_NAME(init(name:sku:unitPrice:quantity:url:));
+
+/**
+ Initializer. See properties for more details.
+ 
+ @param name Item name.
+ @param SKU Item SKU.
+ @param unitPrice Price per item.
+ @param quantity Number of items purchased.
+ @param URL URL of the item.
+ @param categories An array of lists that indicate the various categories that apply to this product, and the hierarchy of those category definitions.
+ @return The initialized item.
+ */
+- (instancetype)initWithName:(NSString *)name
+                         SKU:(NSString *)SKU
+                   unitPrice:(NSDecimalNumber *)unitPrice
+                    quantity:(NSInteger)quantity
+                         URL:(NSURL *)URL
+                  categories:(nullable NSArray<NSArray<NSString *> *> *)categories
+NS_SWIFT_NAME(init(name:sku:unitPrice:quantity:url:categories:));
 
 @end
 
