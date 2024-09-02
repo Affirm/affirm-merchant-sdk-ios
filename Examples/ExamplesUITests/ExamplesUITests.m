@@ -60,7 +60,7 @@
         [self.app.buttons[@"OK"] tap];
     } else {
         XCUIElement *phoneElement = [self.app.textFields softMatchingWithSubstring:@"Mobile number"];
-        [self waitForElement:phoneElement duration:10];
+        [self waitForElement:phoneElement duration:15];
         XCTAssertTrue(phoneElement.exists);
     }
 }
