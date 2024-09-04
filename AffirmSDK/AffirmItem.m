@@ -9,6 +9,34 @@
 #import "AffirmItem.h"
 #import "AffirmUtils.h"
 
+@implementation AffirmCategory
+
+- (instancetype)initWithName:(NSString *)name
+               subCategories:(NSArray<NSString *> *)subCategories
+{
+    [AffirmValidationUtils checkNotNil:subCategories name:@"subCategories"];
+    
+    if (self = [super init]) {
+        _name = [name copy];
+        _subCategories = [subCategories copy];
+    }
+    return self;
+}
+
++ (AffirmCategory *)categoryWithName:(NSString *)name
+                       subCategories:(NSArray<NSString *> *)subCategories
+{
+    return [[self alloc] initWithName:name subCategories:subCategories];
+}
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    return [[self class] categoryWithName:self.name
+                            subCategories:self.subCategories];
+}
+
+@end
+
 @implementation AffirmItem
 
 - (instancetype)initWithName:(NSString *)name
@@ -39,7 +67,7 @@
                    unitPrice:(NSDecimalNumber *)unitPrice
                     quantity:(NSInteger)quantity
                          URL:(NSURL *)URL
-                  categories:(nullable NSArray<NSArray<NSString *> *> *)categories
+                  categories:(nullable NSArray<AffirmCategory *> *)categories
 {
     [AffirmValidationUtils checkNotNil:name name:@"name"];
     [AffirmValidationUtils checkNotNil:SKU name:@"SKU"];
@@ -77,7 +105,7 @@
                    unitPrice:(NSDecimalNumber *)unitPrice
                     quantity:(NSInteger)quantity
                          URL:(NSURL *)URL
-                  categories:(nullable NSArray<NSArray<NSString *> *> *)categories
+                  categories:(nullable NSArray<AffirmCategory *> *)categories
 {
     return [[self alloc] initWithName:name
                                   SKU:SKU
@@ -99,7 +127,11 @@
         json[@"item_url"] = [self.URL absoluteString];
     }
     if (self.categories) {
-        json[@"categories"] = self.categories;
+        NSMutableArray *allSubcategories = [NSMutableArray array];
+        for (AffirmCategory *category in self.categories) {
+            [allSubcategories addObject:category.subCategories];
+        }
+        json[@"categories"] = allSubcategories;
     }
     return json;
 }

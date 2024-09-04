@@ -12,6 +12,47 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ An AffirmCategory object represents the details of categories.
+ */
+@interface AffirmCategory : NSObject <NSCopying>
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
+/**
+ The name of the categories. Optional.
+ */
+@property (nonatomic, copy, readonly, nullable) NSString *name;
+
+/**
+ The sub categories. Required.
+ */
+@property (nonatomic, copy, readonly) NSArray<NSString *> *subCategories;
+
+/**
+ Initializer. See properties for more details.
+ 
+ @param name Categories name.
+ @param subCategories All of sub categories.
+ @return The initialized category.
+ */
+- (instancetype)initWithName:(NSString *)name
+               subCategories:(NSArray<NSString *> *)subCategories
+NS_SWIFT_NAME(init(name:subCategories:));
+
+/**
+ Convenience constructor. See properties for more details.
+ 
+ @param name Item name.
+ @param subCategories All of sub categories.
+ @return The newly created category.
+ */
++ (AffirmCategory *)categoryWithName:(NSString *)name
+                       subCategories:(NSArray<NSString *> *)subCategories;
+
+@end
+
+/**
  An AffirmItem object represents an item that is purchased.
  */
 @interface AffirmItem : NSObject <AffirmJSONifiable, NSCopying>
@@ -52,7 +93,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  An array of lists that indicate the various categories that apply to this product, and the hierarchy of those category definitions. Each list in the array contains one or more comma-separated strings, with the first string being the highest-level (widest) category. Optional.
  */
-@property(nonatomic, copy, readonly, nullable) NSArray<NSArray<NSString *> *> *categories;
+@property(nonatomic, copy, readonly, nullable) NSArray<AffirmCategory *> *categories;
 
 /**
  Convenience constructor. See properties for more details.
@@ -87,7 +128,7 @@ NS_SWIFT_NAME(item(name:sku:unitPrice:quantity:url:));
                    unitPrice:(NSDecimalNumber *)unitPrice
                     quantity:(NSInteger)quantity
                          URL:(NSURL *)URL
-                  categories:(nullable NSArray<NSArray<NSString *> *> *)categories
+                  categories:(nullable NSArray<AffirmCategory *> *)categories
 NS_SWIFT_NAME(item(name:sku:unitPrice:quantity:url:categories:));
 
 /**
@@ -123,7 +164,7 @@ NS_SWIFT_NAME(init(name:sku:unitPrice:quantity:url:));
                    unitPrice:(NSDecimalNumber *)unitPrice
                     quantity:(NSInteger)quantity
                          URL:(NSURL *)URL
-                  categories:(nullable NSArray<NSArray<NSString *> *> *)categories
+                  categories:(nullable NSArray<AffirmCategory *> *)categories
 NS_SWIFT_NAME(init(name:sku:unitPrice:quantity:url:categories:));
 
 @end
