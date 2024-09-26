@@ -103,7 +103,10 @@
                                             SKU:@"test_item"
                                       unitPrice:dollarPrice
                                        quantity:1
-                                            URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
+                                            URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]
+                                     categories:@[[AffirmCategory categoryWithName:@"Category 1" subCategories:@[@"Apparel", @"Pants"]],
+                                                  [AffirmCategory categoryWithName:@"Category 2" subCategories:@[@"Mens", @"Apparel", @"Pants"]]]];
+    
     AffirmShippingDetail *shipping = [AffirmShippingDetail shippingDetailWithName:@"Chester Cheetah"
                                                                  addressWithLine1:@"633 Folsom Street"
                                                                             line2:@""
@@ -148,7 +151,9 @@
                                             SKU:@"test_item"
                                       unitPrice:dollarPrice
                                        quantity:1
-                                            URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
+                                            URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]
+                                     categories:@[[AffirmCategory categoryWithName:@"Category 1" subCategories:@[@"Apparel", @"Pants"]],
+                                                  [AffirmCategory categoryWithName:@"Category 2" subCategories:@[@"Mens", @"Apparel", @"Pants"]]]];
     AffirmShippingDetail *shipping = [AffirmShippingDetail shippingDetailWithName:@"Test Tester"
                                                                             email:@"testtester@test.com"
                                                                       phoneNumber:@"1111111111"
@@ -336,6 +341,7 @@
                                       unitPrice:dollarPrice
                                        quantity:1
                                             URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
+    
     
     NSURL *fontURL = [NSURL URLWithString:@"https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap"];
     NSURL *cssURL = [[NSBundle mainBundle] URLForResource:@"css_promo_sample" withExtension:@"css"];
