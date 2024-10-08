@@ -26,13 +26,13 @@
 		0876CA2B22FA6804006F8062 /* AffirmReasonCode.h in Headers */ = {isa = PBXBuildFile; fileRef = 0876CA2922FA6803006F8062 /* AffirmReasonCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0876CA2C22FA6804006F8062 /* AffirmReasonCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 0876CA2A22FA6803006F8062 /* AffirmReasonCode.m */; };
 		08A4D3EB23264FE0003A4BEB /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 08A4D3EA23264FE0003A4BEB /* README.md */; };
-		08A81F49223F986D00FAA8D2 /* AffirmClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A81F47223F986D00FAA8D2 /* AffirmClient.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		08A81F49223F986D00FAA8D2 /* AffirmClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A81F47223F986D00FAA8D2 /* AffirmClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		08A81F4A223F986D00FAA8D2 /* AffirmClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A81F48223F986D00FAA8D2 /* AffirmClient.m */; };
 		08A81F4D223FF61300FAA8D2 /* AffirmConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 08A81F4B223FF61300FAA8D2 /* AffirmConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		08A81F4E223FF61300FAA8D2 /* AffirmConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A81F4C223FF61300FAA8D2 /* AffirmConfiguration.m */; };
 		08AF89FC251B20230011DE0A /* AffirmCardValidator.h in Headers */ = {isa = PBXBuildFile; fileRef = 08AF89FA251B20230011DE0A /* AffirmCardValidator.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		08AF89FD251B20230011DE0A /* AffirmCardValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 08AF89FB251B20230011DE0A /* AffirmCardValidator.m */; };
-		08C4306C223B7C640009E045 /* AffirmRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 08C4306A223B7C640009E045 /* AffirmRequest.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		08C4306C223B7C640009E045 /* AffirmRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 08C4306A223B7C640009E045 /* AffirmRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		08C4306D223B7C640009E045 /* AffirmRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C4306B223B7C640009E045 /* AffirmRequest.m */; };
 		08C6E8EF251E14E000FFBE8F /* AffirmHowToViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 08C6E8EC251E14E000FFBE8F /* AffirmHowToViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		08C6E8F0251E14E000FFBE8F /* AffirmHowToViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C6E8ED251E14E000FFBE8F /* AffirmHowToViewController.m */; };
