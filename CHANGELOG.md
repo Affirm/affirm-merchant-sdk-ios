@@ -1,6 +1,9 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
+## Version 5.0.35 (Nov 26, 2024)
+- Remove the promo messaging restriction for requests above $17,500
+
 ## Version 5.0.34 (Oct 9, 2024)
 - Bug fixes
 
