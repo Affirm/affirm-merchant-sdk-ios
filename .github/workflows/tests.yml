@@ -10,13 +10,13 @@ on:
 
 jobs:
   build:
-    runs-on: macos-12
+    runs-on: macos-14
     steps:
     - name: Checkout project
       uses: actions/checkout@v2
 
     - name: Build
-      run: xcodebuild build-for-testing -project AffirmSDK.xcodeproj -scheme AffirmSDK -destination "platform=iOS Simulator,name=iPhone 12"
+      run: xcodebuild build-for-testing -project AffirmSDK.xcodeproj -scheme AffirmSDK -destination "platform=iOS Simulator,name=iPhone 15"
       
     - name: Test
-      run: xcodebuild clean test -project AffirmSDK.xcodeproj -scheme AffirmSDK -destination "platform=iOS Simulator,name=iPhone 12"
+      run: xcodebuild clean test -project AffirmSDK.xcodeproj -scheme AffirmSDK -destination "platform=iOS Simulator,name=iPhone 15"

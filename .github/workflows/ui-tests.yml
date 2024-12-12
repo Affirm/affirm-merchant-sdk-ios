@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-12
+    runs-on: macos-14
     steps:
     - name: Checkout project
       uses: actions/checkout@v2
@@ -19,7 +19,7 @@ jobs:
       run: cd Examples && pod install --verbose --repo-update && cd ..
       
     - name: Build
-      run: xcodebuild build-for-testing -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "platform=iOS Simulator,name=iPhone 12"
+      run: xcodebuild build-for-testing -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "platform=iOS Simulator,name=iPhone 15"
       
     - name: Test
-      run: xcodebuild -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "platform=iOS Simulator,name=iPhone 12" test
+      run: xcodebuild -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "platform=iOS Simulator,name=iPhone 15" test
