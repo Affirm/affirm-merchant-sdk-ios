@@ -126,6 +126,8 @@
 {
     if ([self.countryCode isEqualToString:@"CAN"]) {
         return AFFIRM_PROMOS_CA_DOMAIN;
+    } else if ([self.countryCode isEqualToString:@"GBR"]) {
+        return AFFIRM_PROMOS_UK_DOMAIN;
     }
     return AFFIRM_PROMOS_US_DOMAIN;
 }
@@ -175,7 +177,7 @@
 {
     NSMutableArray *ownedCookies = [NSMutableArray array];
     NSArray *cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage].cookies;
-    NSArray *urls = @[AFFIRM_PROMOS_US_DOMAIN, AFFIRM_PROMOS_CA_DOMAIN];
+    NSArray *urls = @[AFFIRM_PROMOS_US_DOMAIN, AFFIRM_PROMOS_CA_DOMAIN, AFFIRM_PROMOS_UK_DOMAIN];
     for (NSHTTPCookie *cookie in cookies) {
         for (NSString *url in urls) {
             if ([cookie.domain rangeOfString:url].location != NSNotFound) {

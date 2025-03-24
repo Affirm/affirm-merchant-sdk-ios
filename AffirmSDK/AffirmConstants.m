@@ -33,6 +33,7 @@ NSString *const AFFIRM_CHECKOUT_PRODUCTION_URL = @"https://api.global.affirm.com
 // Promos & Prequal URL
 NSString *const AFFIRM_PROMOS_US_DOMAIN = @"affirm.com";
 NSString *const AFFIRM_PROMOS_CA_DOMAIN = @"affirm.ca";
+NSString *const AFFIRM_PROMOS_UK_DOMAIN = @"uk.affirm.com";
 
 NSString *const AFFIRM_PREQUAL_REFERRING_URL = @"https://iossdk/";
 NSString *const AFFIRM_CHECKOUT_CONFIRMATION_URL = @"affirm://checkout/confirmed";
