@@ -122,20 +122,24 @@
     }
 }
 
-- (NSString *)promosDomain
-{
-    if ([self.countryCode isEqualToString:@"CAN"]) {
-        return AFFIRM_PROMOS_CA_DOMAIN;
-    } else if ([self.countryCode isEqualToString:@"GBR"]) {
-        return AFFIRM_PROMOS_UK_DOMAIN;
-    }
-    return AFFIRM_PROMOS_US_DOMAIN;
-}
-
 - (NSString *)promosURL
 {
-    NSString *prefix = self.isProductionEnvironment ? @"www" : @"sandbox";
-    return [NSString stringWithFormat:@"https://%@.%@", prefix, self.promosDomain];
+    switch (self.environment) {
+        case AffirmEnvironmentSandbox:
+            if ([self.countryCode isEqualToString:@"CAN"]) {
+                return AFFIRM_PROMOS_CA_SANDBOX_URL;
+            } else if ([self.countryCode isEqualToString:@"GBR"]) {
+                return AFFIRM_PROMOS_UK_SANDBOX_URL;
+            }
+            return AFFIRM_PROMOS_US_SANDBOX_URL;
+        case AffirmEnvironmentProduction:
+            if ([self.countryCode isEqualToString:@"CAN"]) {
+                return AFFIRM_PROMOS_CA_PRODUCTION_URL;
+            } else if ([self.countryCode isEqualToString:@"GBR"]) {
+                return AFFIRM_PROMOS_UK_PRODUCTION_URL;
+            }
+            return AFFIRM_PROMOS_US_PRODUCTION_URL;
+    }
 }
 
 - (NSString *)checkoutURL
@@ -150,7 +154,12 @@
 
 - (NSString *)trackerURL
 {
-    return [NSString stringWithFormat:@"https://tracker.%@", self.promosDomain];
+    if ([self.countryCode isEqualToString:@"CAN"]) {
+        return AFFIRM_TRACKER_CA_URL;
+    } else if ([self.countryCode isEqualToString:@"GBR"]) {
+        return AFFIRM_TRACKER_UK_URL;
+    }
+    return AFFIRM_TRACKER_US_URL;
 }
 
 - (NSString *)environmentDescription
@@ -177,7 +186,7 @@
 {
     NSMutableArray *ownedCookies = [NSMutableArray array];
     NSArray *cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage].cookies;
-    NSArray *urls = @[AFFIRM_PROMOS_US_DOMAIN, AFFIRM_PROMOS_CA_DOMAIN, AFFIRM_PROMOS_UK_DOMAIN];
+    NSArray *urls = @[AFFIRM_PROMOS_US_SANDBOX_URL, AFFIRM_PROMOS_US_PRODUCTION_URL, AFFIRM_PROMOS_CA_SANDBOX_URL, AFFIRM_PROMOS_CA_PRODUCTION_URL, AFFIRM_PROMOS_UK_SANDBOX_URL, AFFIRM_PROMOS_UK_PRODUCTION_URL];
     for (NSHTTPCookie *cookie in cookies) {
         for (NSString *url in urls) {
             if ([cookie.domain rangeOfString:url].location != NSNotFound) {
