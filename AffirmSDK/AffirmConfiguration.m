@@ -10,7 +10,6 @@
 #import "AffirmUtils.h"
 #import "AffirmLogger.h"
 #import <WebKit/WebKit.h>
-#import "AffirmFontLoader.h"
 #import "AffirmCreditCard.h"
 
 @interface AffirmConfiguration ()
@@ -34,13 +33,6 @@
         _sharedInstance = [[self alloc] init];
     });
     return _sharedInstance;
-}
-
-+ (void)initialize
-{
-    if (self == [AffirmConfiguration class]) {
-        [AffirmFontLoader loadFontIfNeeded];
-    }
 }
 
 - (instancetype)init
