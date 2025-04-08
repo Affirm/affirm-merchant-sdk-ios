@@ -43,14 +43,13 @@
                          SKU:(NSString *)SKU
                    unitPrice:(NSDecimalNumber *)unitPrice
                     quantity:(NSInteger)quantity
-                         URL:(NSURL *)URL
+                         URL:(nullable NSURL *)URL
 {
     [AffirmValidationUtils checkNotNil:name name:@"name"];
     [AffirmValidationUtils checkNotNil:SKU name:@"SKU"];
     [AffirmValidationUtils checkNotNil:unitPrice name:@"unitPrice"];
     [AffirmValidationUtils checkNotNegative:unitPrice name:@"unitPrice"];
     [AffirmValidationUtils checkNotNegative:[NSDecimalNumber decimalNumberWithDecimal:[[NSNumber numberWithInteger:quantity] decimalValue]] name:@"quantity"];
-    [AffirmValidationUtils checkNotNil:URL name:@"URL"];
     
     if (self = [super init]) {
         _name = [name copy];
@@ -66,7 +65,7 @@
                          SKU:(NSString *)SKU
                    unitPrice:(NSDecimalNumber *)unitPrice
                     quantity:(NSInteger)quantity
-                         URL:(NSURL *)URL
+                         URL:(nullable NSURL *)URL
                   categories:(nullable NSArray<AffirmCategory *> *)categories
 {
     [AffirmValidationUtils checkNotNil:name name:@"name"];
@@ -74,7 +73,6 @@
     [AffirmValidationUtils checkNotNil:unitPrice name:@"unitPrice"];
     [AffirmValidationUtils checkNotNegative:unitPrice name:@"unitPrice"];
     [AffirmValidationUtils checkNotNegative:[NSDecimalNumber decimalNumberWithDecimal:[[NSNumber numberWithInteger:quantity] decimalValue]] name:@"quantity"];
-    [AffirmValidationUtils checkNotNil:URL name:@"URL"];
     
     if (self = [super init]) {
         _name = [name copy];
@@ -91,7 +89,7 @@
                          SKU:(NSString *)SKU
                    unitPrice:(NSDecimalNumber *)unitPrice
                     quantity:(NSInteger)quantity
-                         URL:(NSURL *)URL
+                         URL:(nullable NSURL *)URL
 {
     return [[self alloc] initWithName:name
                                   SKU:SKU
@@ -104,7 +102,7 @@
                          SKU:(NSString *)SKU
                    unitPrice:(NSDecimalNumber *)unitPrice
                     quantity:(NSInteger)quantity
-                         URL:(NSURL *)URL
+                         URL:(nullable NSURL *)URL
                   categories:(nullable NSArray<AffirmCategory *> *)categories
 {
     return [[self alloc] initWithName:name
@@ -123,8 +121,10 @@
         @"unit_price": self.unitPrice.toIntegerCents,
         @"qty": @(self.quantity)
     } mutableCopy];
-    if (![self.URL isFileURL] && ([self.URL.scheme isEqualToString:@"http"] || [self.URL.scheme isEqualToString:@"https"] || [self.URL.scheme length] == 0)) {
-        json[@"item_url"] = [self.URL absoluteString];
+    if (self.URL) {
+        if (![self.URL isFileURL] && ([self.URL.scheme isEqualToString:@"http"] || [self.URL.scheme isEqualToString:@"https"] || [self.URL.scheme length] == 0)) {
+            json[@"item_url"] = [self.URL absoluteString];
+        }
     }
     if (self.categories) {
         NSMutableArray *allSubcategories = [NSMutableArray array];

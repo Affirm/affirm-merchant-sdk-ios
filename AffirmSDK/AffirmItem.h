@@ -81,14 +81,14 @@ NS_SWIFT_NAME(init(name:subCategories:));
 @property(nonatomic, readonly) NSInteger quantity;
 
 /**
- The URL of the item page. Required.
+ The URL of the item page. Optional.
  */
 @property(nonatomic, copy, readonly) NSURL *URL;
 
 /**
- The URL of the item image. Required.
+ The URL of the item image. Optional.
  */
-@property(nonatomic, copy, readonly) NSURL *imageURL;
+@property(nonatomic, copy, readonly, nullable) NSURL *imageURL;
 
 /**
  An array of lists that indicate the various categories that apply to this product, and the hierarchy of those category definitions. Each list in the array contains one or more comma-separated strings, with the first string being the highest-level (widest) category. Optional.
@@ -109,7 +109,7 @@ NS_SWIFT_NAME(init(name:subCategories:));
                          SKU:(NSString *)SKU
                    unitPrice:(NSDecimalNumber *)unitPrice
                     quantity:(NSInteger)quantity
-                         URL:(NSURL *)URL
+                         URL:(nullable NSURL *)URL
 NS_SWIFT_NAME(item(name:sku:unitPrice:quantity:url:));
 
 /**
@@ -127,7 +127,7 @@ NS_SWIFT_NAME(item(name:sku:unitPrice:quantity:url:));
                          SKU:(NSString *)SKU
                    unitPrice:(NSDecimalNumber *)unitPrice
                     quantity:(NSInteger)quantity
-                         URL:(NSURL *)URL
+                         URL:(nullable NSURL *)URL
                   categories:(nullable NSArray<AffirmCategory *> *)categories
 NS_SWIFT_NAME(item(name:sku:unitPrice:quantity:url:categories:));
 
@@ -145,7 +145,7 @@ NS_SWIFT_NAME(item(name:sku:unitPrice:quantity:url:categories:));
                          SKU:(NSString *)SKU
                    unitPrice:(NSDecimalNumber *)unitPrice
                     quantity:(NSInteger)quantity
-                         URL:(NSURL *)URL
+                         URL:(nullable NSURL *)URL
 NS_SWIFT_NAME(init(name:sku:unitPrice:quantity:url:));
 
 /**
@@ -163,7 +163,7 @@ NS_SWIFT_NAME(init(name:sku:unitPrice:quantity:url:));
                          SKU:(NSString *)SKU
                    unitPrice:(NSDecimalNumber *)unitPrice
                     quantity:(NSInteger)quantity
-                         URL:(NSURL *)URL
+                         URL:(nullable NSURL *)URL
                   categories:(nullable NSArray<AffirmCategory *> *)categories
 NS_SWIFT_NAME(init(name:sku:unitPrice:quantity:url:categories:));
 
