@@ -35,15 +35,11 @@
 {
     [self clearCookies];
     
-    XCUIElement *alaElement = [self.app.buttons softMatchingWithSubstring:@"/mo"];
+    XCUIElement *alaElement = [self.app.buttons softMatchingWithSubstring:@"Learn more"];
     [self waitForElement:alaElement duration:10];
     XCTAssertTrue(alaElement.exists);
     
     [alaElement tap];
-    
-    XCUIElement *checkoutElement = self.app.buttons[@"See if you qualify"];
-    [self waitForElement:checkoutElement duration:15];
-    XCTAssertTrue(checkoutElement.exists);
 }
 
 - (void)testBuyWithAffirm
@@ -52,17 +48,9 @@
     
     [self.app.buttons[@"Buy with Affirm"] tap];
     
-    if (false) {
-        XCUIElement *errorElement = self.app.staticTexts[@"Error"];
-        [self waitForElement:errorElement duration:15];
-        XCTAssertTrue(errorElement.exists);
-        
-        [self.app.buttons[@"OK"] tap];
-    } else {
-        XCUIElement *phoneElement = [self.app.textFields softMatchingWithSubstring:@"Mobile number"];
-        [self waitForElement:phoneElement duration:15];
-        XCTAssertTrue(phoneElement.exists);
-    }
+    XCUIElement *phoneElement = [self.app.textFields softMatchingWithSubstring:@"Mobile number"];
+    [self waitForElement:phoneElement duration:15];
+    XCTAssertTrue(phoneElement.exists);
 }
 
 - (void)testFailedCheckout

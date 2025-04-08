@@ -139,7 +139,8 @@
         checkout.caas = self.caasTextfield.text;
     }
     
-    AffirmCheckoutViewController *checkoutViewController = [[AffirmCheckoutViewController alloc] initWithDelegate:self checkout:checkout useVCN:NO getReasonCodes:NO cardAuthWindow:10];
+    AffirmCheckout *_checkout = [self generateVCNCheckout];
+    AffirmCheckoutViewController *checkoutViewController = [[AffirmCheckoutViewController alloc] initWithDelegate:self checkout:_checkout useVCN:NO getReasonCodes:NO cardAuthWindow:10];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:checkoutViewController];
     [self presentViewController:nav animated:YES completion:nil];
 }
