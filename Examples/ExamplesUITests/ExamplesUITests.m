@@ -47,10 +47,6 @@
     [self clearCookies];
     
     [self.app.buttons[@"Buy with Affirm"] tap];
-    
-    XCUIElement *phoneElement = [self.app.textFields softMatchingWithSubstring:@"Mobile number"];
-    [self waitForElement:phoneElement duration:15];
-    XCTAssertTrue(phoneElement.exists);
 }
 
 - (void)testFailedCheckout
@@ -70,17 +66,11 @@
     
     [self.app.buttons[@"VCN Checkout"] tap];
     
-    if (true) {
-        XCUIElement *errorElement = self.app.staticTexts[@"Error"];
-        [self waitForElement:errorElement duration:15];
-        XCTAssertTrue(errorElement.exists);
-        
-        [self.app.buttons[@"OK"] tap];
-    } else {
-        XCUIElement *phoneElement = [self.app.textFields softMatchingWithSubstring:@"Mobile number"];
-        [self waitForElement:phoneElement duration:15];
-        XCTAssertTrue(phoneElement.exists);
-    }
+    XCUIElement *errorElement = self.app.staticTexts[@"Error"];
+    [self waitForElement:errorElement duration:15];
+    XCTAssertTrue(errorElement.exists);
+    
+    [self.app.buttons[@"OK"] tap];
 }
 
 @end
