@@ -1,6 +1,9 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
+## Version 5.0.36 (Mar 14, 2025)
+- Support to add CountryCode, Local and Currency all to reflect the UK
+
 ## Version 5.0.35 (Nov 26, 2024)
 - Remove the promo messaging restriction for requests above $17,500
 
