@@ -113,7 +113,7 @@
                                                                              city:@"San Francisco"
                                                                             state:@"CA"
                                                                           zipCode:@"94107"
-                                                                      countryCode:@"USA"];
+                                                                      countryCode:@"GBR"];
     NSDictionary *metadata = @{@"shipping_type": @"UPS Ground", @"entity_name": @"internal-sub_brand-name", @"webhook_session_id": @"ABC123"};
     
     // Checkout
@@ -131,7 +131,7 @@
                                                                          city:@"San Francisco"
                                                                         state:@"CA"
                                                                       zipCode:@"94107"
-                                                                  countryCode:@"USA"];
+                                                                  countryCode:@"GBR"];
     checkout.billing = billing;
     
     // CAAS
@@ -139,7 +139,8 @@
         checkout.caas = self.caasTextfield.text;
     }
     
-    AffirmCheckoutViewController *checkoutViewController = [[AffirmCheckoutViewController alloc] initWithDelegate:self checkout:checkout useVCN:NO getReasonCodes:NO cardAuthWindow:10];
+    AffirmCheckout *_checkout = [self generateVCNCheckout];
+    AffirmCheckoutViewController *checkoutViewController = [[AffirmCheckoutViewController alloc] initWithDelegate:self checkout:_checkout useVCN:NO getReasonCodes:NO cardAuthWindow:10];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:checkoutViewController];
     [self presentViewController:nav animated:YES completion:nil];
 }
@@ -162,7 +163,7 @@
                                                                              city:@"San Francisco"
                                                                             state:@"CA"
                                                                           zipCode:@"94107"
-                                                                      countryCode:@"USA"];
+                                                                      countryCode:@"GBR"];
     
     // Checkout
     AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item]
@@ -201,7 +202,7 @@
                                                                              city:@"San Francisco"
                                                                             state:@"CA"
                                                                           zipCode:@"94107"
-                                                                      countryCode:@"USA"];
+                                                                      countryCode:@"GBR"];
     
     // Checkout
     AffirmCheckout *checkout = [AffirmCheckout checkoutWithItems:@[item]

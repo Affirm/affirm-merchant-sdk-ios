@@ -31,9 +31,21 @@ NSString *const AFFIRM_CHECKOUT_SANDBOX_URL = @"https://api.global-sandbox.affir
 NSString *const AFFIRM_CHECKOUT_PRODUCTION_URL = @"https://api.global.affirm.com";
 
 // Promos & Prequal URL
-NSString *const AFFIRM_PROMOS_US_DOMAIN = @"affirm.com";
-NSString *const AFFIRM_PROMOS_CA_DOMAIN = @"affirm.ca";
+NSString *const AFFIRM_PROMOS_US_SANDBOX_URL = @"https://sandbox.affirm.com";
+NSString *const AFFIRM_PROMOS_US_PRODUCTION_URL = @"https://www.affirm.com";
 
+NSString *const AFFIRM_PROMOS_CA_SANDBOX_URL = @"https://sandbox.affirm.ca";
+NSString *const AFFIRM_PROMOS_CA_PRODUCTION_URL = @"https://www.affirm.ca";
+
+NSString *const AFFIRM_PROMOS_UK_SANDBOX_URL = @"https://sandbox.uk.affirm.com";
+NSString *const AFFIRM_PROMOS_UK_PRODUCTION_URL = @"https://api.uk.affirm.com";
+
+// Tracker
+NSString *const AFFIRM_TRACKER_US_URL = @"https://tracker.affirm.com";
+NSString *const AFFIRM_TRACKER_CA_URL = @"https://tracker.affirm.ca";
+NSString *const AFFIRM_TRACKER_UK_URL = @"https://tracker.uk.affirm.com";
+
+// App Scheme
 NSString *const AFFIRM_PREQUAL_REFERRING_URL = @"https://iossdk/";
 NSString *const AFFIRM_CHECKOUT_CONFIRMATION_URL = @"affirm://checkout/confirmed";
 NSString *const AFFIRM_CHECKOUT_CANCELLATION_URL = @"affirm://checkout/cancelled";
