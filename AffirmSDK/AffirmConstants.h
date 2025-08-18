@@ -45,15 +45,6 @@ FOUNDATION_EXPORT NSString *const AFFIRM_CHECKOUT_CONFIRMATION_URL;
 FOUNDATION_EXPORT NSString *const AFFIRM_CHECKOUT_CANCELLATION_URL;
 FOUNDATION_EXPORT NSString *const AFFIRM_PREQUAL_REFERRING_URL;
 
-FOUNDATION_EXPORT NSString *const AffirmFontFamilyNameCalibre;
-FOUNDATION_EXPORT NSString *const AffirmFontNameCalibreMedium;
-FOUNDATION_EXPORT NSString *const AffirmFontNameCalibreBold;
-FOUNDATION_EXPORT NSString *const AffirmFontNameCalibreSemibold;
-FOUNDATION_EXPORT NSString *const AffirmFontNameCalibreRegular;
-
-FOUNDATION_EXPORT NSString *const AffirmFontFamilyNameAlmaMono;
-FOUNDATION_EXPORT NSString *const AffirmFontNameAlmaMonoBold;
-
 typedef NS_ENUM(NSInteger, AffirmEnvironment) {
     AffirmEnvironmentProduction,
     AffirmEnvironmentSandbox
