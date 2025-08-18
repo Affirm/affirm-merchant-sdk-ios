@@ -1,6 +1,9 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
+## Version 5.0.37 (Aug 18, 2025)
+- Bug fixes
+
 ## Version 5.0.36 (Mar 14, 2025)
 - Support to add CountryCode, Local and Currency all to reflect the UK
 
