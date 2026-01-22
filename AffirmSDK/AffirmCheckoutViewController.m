@@ -6,7 +6,6 @@
 //  Copyright © 2019 Affirm, Inc. All rights reserved.
 //
 
-#import <SafariServices/SafariServices.h>
 #import "AffirmCheckoutViewController.h"
 #import "AffirmEligibilityViewController.h"
 #import "AffirmCardInfoViewController.h"
@@ -214,8 +213,9 @@ NS_SWIFT_NAME(init(delegate:checkout:creditCard:getReasonCodes:)) NS_DESIGNATED_
 - (WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures
 {
     if (navigationAction.targetFrame == nil) {
-        SFSafariViewController *controller = [[SFSafariViewController alloc] initWithURL:navigationAction.request.URL];
-        [self presentViewController:controller animated:YES completion:nil];
+        AffirmPopupViewController *viewController = [[AffirmPopupViewController alloc] initWithURL:navigationAction.request.URL];
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
+        [self presentViewController:navController animated:YES completion:nil];
     }
     return nil;
 }
