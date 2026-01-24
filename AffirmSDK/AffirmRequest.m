@@ -314,11 +314,11 @@
 - (NSDictionary *)dictionary
 {
     return @{
-             @"message": self.message,
+             @"message": self.message ?: @"",
              @"code": self.code ?: @"",
              @"field": self.field ?: @"",
-             @"type": self.type,
-             @"statusCode": self.statusCode,
+             @"type": self.type ?: @"",
+             @"statusCode": self.statusCode ?: @(-1),
              };
 }
 
