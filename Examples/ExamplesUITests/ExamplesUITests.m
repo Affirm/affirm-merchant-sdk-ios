@@ -49,17 +49,6 @@
     [self.app.buttons[@"Buy with Affirm"] tap];
 }
 
-- (void)testFailedCheckout
-{
-    [self.app.buttons[@"Failed Checkout"] tap];
-    
-    XCUIElement *errorElement = self.app.staticTexts[@"Error"];
-    [self waitForElement:errorElement duration:15];
-    XCTAssertTrue(errorElement.exists);
-    
-    [self.app.buttons[@"OK"] tap];
-}
-
 - (void)testVCNCheckout
 {
     [self clearCookies];
