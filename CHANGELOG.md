@@ -1,6 +1,9 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
+## Version 5.0.40 (Jan 29, 2026)
+- Use WKWebView instead of Safari for external links
+
 ## Version 5.0.39 (Jan 26, 2026)
 - Fix app crash caused by malformed API error JSON response parsing (nil-safety improvements)
 
