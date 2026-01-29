@@ -10,21 +10,21 @@ Installation
 
 [CocoaPods](https://cocoapods.org/) and [Carthage](https://github.com/Carthage/Carthage) are the recommended methods for installing the Affirm SDK. 
 
-<strong> CocoaPods </strong>
+**CocoaPods**
 
 Add the following to your Podfile and run `pod install`
 ```ruby
 pod 'AffirmSDK'
 ```
 
-<strong> Carthage </strong>
+**Carthage**
 
 Add the following to your Cartfile and follow the setup instructions [here](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application).
 ```
 github "Affirm/affirm-merchant-sdk-ios"
 ```
 
-<strong>Swift Package Manager<strong>
+**Swift Package Manager**
 
 From Xcode 11+ :
 
@@ -42,7 +42,7 @@ dependencies: [
 ]
 ```
 
-<strong> Manual </strong>
+**Manual**
 
 Alternatively, if you do not want to use CocoaPods or Carthage, you may clone our [GitHub repository](https://github.com/Affirm/affirm-merchant-sdk-ios) and simply drag and drop the `AffirmSDK` folder into your XCode project.
 
