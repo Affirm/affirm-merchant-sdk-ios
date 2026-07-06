@@ -417,22 +417,34 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
 {
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     self.amount = amount;
-    
-    BOOL hasRemoteCss = remoteCssURL != nil;
+
     NSString *jsURL = [AffirmConfiguration sharedInstance].jsURL;
     NSURL *baseURL = [NSURL URLWithString:jsURL].baseURL;
     NSMutableDictionary *matchedKeys = [@{@"{{HTML_FRAGMENT}}": htmlString} mutableCopy];
-    
-    if (hasRemoteCss) {
-        baseURL = remoteCssURL.isFileURL ? [NSBundle mainBundle].bundleURL : remoteCssURL.baseURL;
+
+    // Always load bundled badge CSS first
+    NSString *bundledCssPath = [[NSBundle resourceBundle] pathForResource:@"badge_styles"
+                                                                   ofType:@"css"];
+    NSURL *bundledCssURL = nil;
+    if (bundledCssPath) {
+        bundledCssURL = [NSURL fileURLWithPath:bundledCssPath];
     }
-    matchedKeys[@"{{REMOTE_FONT_URL}}"] = remoteFontURL.absoluteString ?: @"";
+
+    // Set baseURL based on CSS source priority
+    if (remoteCssURL != nil) {
+        baseURL = remoteCssURL.isFileURL ? [NSBundle mainBundle].bundleURL : remoteCssURL.baseURL;
+    } else if (bundledCssURL != nil) {
+        baseURL = [[NSBundle resourceBundle] bundleURL];
+    }
+
+    matchedKeys[@"{{BUNDLED_CSS_URL}}"] = bundledCssURL.absoluteString ?: @"";
     matchedKeys[@"{{REMOTE_CSS_URL}}"] = remoteCssURL.absoluteString ?: @"";
+    matchedKeys[@"{{REMOTE_FONT_URL}}"] = remoteFontURL.absoluteString ?: @"";
     matchedKeys[@"{{PUBLIC_KEY}}"] = [AffirmConfiguration sharedInstance].publicKey;
     matchedKeys[@"{{JS_URL}}"] = jsURL;
     matchedKeys[@"{{LOCALE}}"] = [AffirmConfiguration sharedInstance].locale;
     matchedKeys[@"{COUNTRY_CODE}"] = [AffirmConfiguration sharedInstance].countryCode;
-    
+
     NSString *filePath = [[NSBundle resourceBundle] pathForResource:@"affirm_promo"
                                                              ofType:@"html"];
     __block NSString *rawContent = [NSString stringWithContentsOfFile:filePath

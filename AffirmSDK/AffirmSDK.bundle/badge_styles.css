@@ -1,0 +1,55 @@
+/* Affirm Badge Styles - copied from zeroPercentAprBadge.scss */
+
+.__apr_badge {
+  display: inline-flex;
+  height: 1.5em;
+  padding: 0.125em 0.5em;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25em;
+  border-radius: 0.5em;
+  font-family: inherit;
+  font-style: normal;
+  font-weight: medium;
+  font-size: 1em;
+  margin-right: 0.25em;
+  vertical-align: -0.12em;
+}
+
+.__apr_badge::before {
+  content: '';
+  width: 1em;
+  height: 1em;
+  left: 0.25em;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.__apr_badge.__apr_badge_indigo {
+  background: var(--bg-surface-brand-indigo, #e2e2ff);
+  color: var(--text-brand-indigo-oncolor, #4242cf);
+}
+
+.__apr_badge.__apr_badge_indigo::before {
+  background-image: url('https://cdn-assets.affirm.com/upfunnel/assets/zero_percent_badge_icon_indigo.svg');
+}
+
+.__apr_badge.__apr_badge_neutral {
+  background: var(--bg-surface-tertiary, #e5e5e9);
+  color: var(--text-default, #0c0c14);
+}
+
+.__apr_badge.__apr_badge_neutral::before {
+  background-image: url('https://cdn-assets.affirm.com/upfunnel/assets/zero_percent_badge_icon_black.svg');
+}
+
+.__apr_badge.__badge_no_icon {
+  background: var(--bg-surface-brand-indigo, #e2e2ff);
+  color: var(--text-brand-indigo-oncolor, #4242cf);
+  border-radius: 0.75em;
+  vertical-align: 0.06em;
+}
+
+.__apr_badge.__badge_no_icon::before {
+  display: none;
+}
