@@ -1,6 +1,9 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
+## Version 5.0.41 (Jul 16, 2026)
+- Add badge CSS to webview mode
+
 ## Version 5.0.40 (Jan 29, 2026)
 - Use WKWebView instead of Safari for external links
 
