@@ -83,6 +83,7 @@
 		DA7762A3223F975400FB2DB3 /* AffirmCreditCard.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7762A1223F975400FB2DB3 /* AffirmCreditCard.m */; };
 		DA7762A4223F975400FB2DB3 /* AffirmCreditCard.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7762A1223F975400FB2DB3 /* AffirmCreditCard.m */; };
 		DAE186B322437D380088B34D /* AffirmCheckoutTest.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE186B222437D380088B34D /* AffirmCheckoutTest.m */; };
+		AA0000012026042700000001 /* AffirmPromoLogoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0000002026042700000001 /* AffirmPromoLogoTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -168,6 +169,7 @@
 		DA7762A0223F975400FB2DB3 /* AffirmCreditCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmCreditCard.h; sourceTree = "<group>"; };
 		DA7762A1223F975400FB2DB3 /* AffirmCreditCard.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmCreditCard.m; sourceTree = "<group>"; };
 		DAE186B222437D380088B34D /* AffirmCheckoutTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmCheckoutTest.m; sourceTree = "<group>"; };
+		AA0000002026042700000001 /* AffirmPromoLogoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmPromoLogoTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -286,6 +288,7 @@
 				08FA591E222D08E5007E5E4E /* AffirmSDKTests.m */,
 				7944D9BD224212AE0040525E /* AffirmConfigurationTests.m */,
 				DAE186B222437D380088B34D /* AffirmCheckoutTest.m */,
+				AA0000002026042700000001 /* AffirmPromoLogoTests.m */,
 				08FA5920222D08E5007E5E4E /* Info.plist */,
 			);
 			path = AffirmSDKTests;
@@ -476,6 +479,7 @@
 				08FA591F222D08E5007E5E4E /* AffirmSDKTests.m in Sources */,
 				DA33DCF9223A30ED009D73CA /* AffirmItem.m in Sources */,
 				7944D9BE224212AE0040525E /* AffirmConfigurationTests.m in Sources */,
+				AA0000012026042700000001 /* AffirmPromoLogoTests.m in Sources */,
 				DA77629F223F959F00FB2DB3 /* AffirmPopupViewController.m in Sources */,
 				DA33DCFE223A3191009D73CA /* AffirmCheckout.m in Sources */,
 				DA776294223F33EC00FB2DB3 /* AffirmCheckoutViewController.m in Sources */,

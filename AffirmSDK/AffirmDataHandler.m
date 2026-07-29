@@ -13,6 +13,8 @@
 #import "AffirmPrequalModalViewController.h"
 #import "AffirmPromoModalViewController.h"
 
+static NSString *const AFFIRM_LOGO_PLACEHOLDER = @"{affirm_logo}";
+
 @implementation AffirmDataHandler
 
 + (void)getPromoMessageWithPromoID:(nullable NSString *)promoID
@@ -172,7 +174,8 @@
             NSString *template = nil;
             if (promoResponse.ala != nil && promoResponse.ala.length > 0) {
                 template = promoResponse.ala;
-                accessibilityLabel = withAccessibility ? [promoResponse.ala stringByReplacingOccurrencesOfString:@"{Affirm}" withString:@"Affirm"] : nil;
+                NSString *cleanedAla = [promoResponse.ala stringByReplacingOccurrencesOfString:AFFIRM_LOGO_PLACEHOLDER withString:@"Affirm"];
+                accessibilityLabel = withAccessibility ? [cleanedAla stringByReplacingOccurrencesOfString:@"{Affirm}" withString:@"Affirm"] : nil;
             }
             if (template) {
                 UIImage *logo = nil;

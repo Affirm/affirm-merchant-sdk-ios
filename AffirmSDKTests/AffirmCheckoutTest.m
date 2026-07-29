@@ -30,7 +30,7 @@
 - (void)setUp
 {
     self.continueAfterFailure = NO;
-    _item = [AffirmItem itemWithName:@"Affirm Test Item" SKU:@"test_item" unitPrice:[NSDecimalNumber decimalNumberWithString:@"15.00"] quantity:1 URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
+    _item = [AffirmItem itemWithName:@"Affirm Test Item" SKU:@"test_item" unitPrice:[NSDecimalNumber decimalNumberWithString:@"100.00"] quantity:1 URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
     _shipping = [AffirmShippingDetail shippingDetailWithName:@"Test Tester" addressWithLine1:@"325 Pacific Ave." line2:@"" city:@"San Francisco" state:@"CA" zipCode:@"94111" countryCode:@"USA"];
     _discount = [AffirmDiscount discountWithName:@"Affirm Test Discount" amount:[NSDecimalNumber decimalNumberWithString:@"3.00"]];
     _checkout = [AffirmCheckout checkoutWithItems:@[_item] shipping:_shipping taxAmount:[NSDecimalNumber decimalNumberWithString:@"1.00"] shippingAmount:[NSDecimalNumber decimalNumberWithString:@"5.00"]];
@@ -40,7 +40,7 @@
     NSDictionary *item = @{
                            @"display_name": @"Affirm Test Item",
                            @"sku": @"test_item",
-                           @"unit_price": @1500,
+                           @"unit_price": @10000,
                            @"qty": @1,
                            @"item_url": @"http://sandbox.affirm.com/item"
                            };

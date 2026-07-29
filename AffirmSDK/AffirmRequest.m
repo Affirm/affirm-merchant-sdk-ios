@@ -244,8 +244,8 @@
                 ala = @"";
             }
             
-            if ([ala isKindOfClass:[NSString class]] && ala.length > 0) {
-                ala = [ala stringByReplacingOccurrencesOfString:@"{affirm_logo}" withString:@"Affirm"];
+            if (![ala isKindOfClass:[NSString class]]) {
+                ala = @"";
             }
             
             NSString *htmlAla = promo[@"html_ala"];
