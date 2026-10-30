@@ -479,6 +479,28 @@
 {
     // The checkout process failed
     NSLog(@"Checkout failed with error: %@", error);
+    // VCN creation can fail before the modal transition finishes. Presenting
+    // during that transition drops the alert, so wait until the checkout is on screen.
+    [self presentCheckoutError:error from:checkoutViewController];
+}
+
+- (void)presentCheckoutError:(NSError *)error from:(AffirmCheckoutViewController *)checkoutViewController
+{
+    UIViewController *presenter = checkoutViewController.navigationController ?: checkoutViewController;
+    id<UIViewControllerTransitionCoordinator> coordinator = presenter.transitionCoordinator;
+    if (presenter.view.window == nil || coordinator != nil) {
+        if (coordinator) {
+            [coordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+                [self presentCheckoutError:error from:checkoutViewController];
+            }];
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self presentCheckoutError:error from:checkoutViewController];
+            });
+        }
+        return;
+    }
+    
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error"
                                                                              message:error.localizedDescription
                                                                       preferredStyle:UIAlertControllerStyleAlert];
@@ -487,7 +509,7 @@
                                                       handler:^(UIAlertAction * _Nonnull action) {
         [checkoutViewController dismissViewControllerAnimated:YES completion:nil];
     }]];
-    [checkoutViewController presentViewController:alertController animated:YES completion:nil];
+    [presenter presentViewController:alertController animated:YES completion:nil];
 }
 
 @end

@@ -99,13 +99,13 @@ Request/response objects for:
 
 ### Distribution Methods
 
-The SDK supports multiple distribution methods, with source duplicated across:
+The SDK supports multiple distribution methods:
 1. **CocoaPods**: Uses `AffirmSDK/` directory
 2. **Carthage**: Uses `AffirmSDK/` directory
 3. **Swift Package Manager**: Uses `SPM/` directory (includes XIBs and bundle resources)
 4. **Manual Integration**: Direct drag-and-drop of `AffirmSDK/` folder
 
-**IMPORTANT**: When making code changes, update BOTH `AffirmSDK/` and `SPM/` directories to maintain consistency across distribution methods.
+**IMPORTANT**: `SPM/` is not a copy. Every entry under `SPM/` is a git symlink (mode `120000`) pointing back into `AffirmSDK/` — for example `SPM/include/AffirmRequest.h -> ../../AffirmSDK/AffirmRequest.h`. Editing a file in `AffirmSDK/` automatically updates the SPM distribution, so only edit `AffirmSDK/`. Do **not** replace an `SPM/` symlink with a real file to "sync" it; that is what would actually make the two copies diverge.
 
 ## Key Implementation Notes
 

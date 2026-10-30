@@ -13,11 +13,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [[AffirmConfiguration sharedInstance] configureWithPublicKey:@"3HCWTVU5BYWZB9RK"
+    // US sandbox publicKey: the previous GB key no longer works for this example.
+    [[AffirmConfiguration sharedInstance] configureWithPublicKey:@"Y8CQXFF044903JC0"
                                                      environment:AffirmEnvironmentSandbox
-                                                          locale:@"en_GB"
-                                                     countryCode:@"GBR"
-                                                        currency:@"GBP"
+                                                          locale:@"en_US"
+                                                     countryCode:@"USA"
+                                                        currency:@"USD"
                                                     merchantName:@"Affirm Example"];
     [AffirmConfiguration sharedInstance].cardTip = @"We've added these card details to Rakuten Autofill for quick, easy checkout.";
     return YES;

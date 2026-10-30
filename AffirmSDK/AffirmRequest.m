@@ -263,7 +263,7 @@
             return [[AffirmPromoResponse alloc] initWithAla:ala htmlAla:htmlAla showPrequal:showPrequal];
         }
     }
-    return [[AffirmErrorResponse alloc] initWithMessage:@"Failed to parse promo api response." code:@"" field:@"" type:@"" statusCode:@-1];
+    return [[AffirmErrorResponse alloc] initWithMessage:@"Failed to parse promo api response." code:@"" field:@"" type:@"" statusCode:@-1 ui:nil];
 }
 
 @end
@@ -293,20 +293,16 @@
 
 @end
 
-@implementation AffirmErrorResponse
+@implementation AffirmErrorUI
 
-- (instancetype)initWithMessage:(NSString *)message
-                           code:(NSString *)code
-                           field:(NSString *)field
-                           type:(NSString *)type
-                     statusCode:(NSNumber *)statusCode
+- (instancetype)initWithMain:(NSString *)main
+                         sub:(NSString *)sub
+                    subExtra:(NSArray<NSString *> *)subExtra
 {
     if (self = [super init]) {
-        _message = [message copy];
-        _code = [code copy];
-        _field = [field copy];
-        _type = [type copy];
-        _statusCode = [statusCode copy];
+        _main = [main copy];
+        _sub = [sub copy];
+        _subExtra = [subExtra copy];
     }
     return self;
 }
@@ -314,12 +310,47 @@
 - (NSDictionary *)dictionary
 {
     return @{
-             @"message": self.message ?: @"",
-             @"code": self.code ?: @"",
-             @"field": self.field ?: @"",
-             @"type": self.type ?: @"",
-             @"statusCode": self.statusCode ?: @(-1),
+             @"main": self.main ?: @"",
+             @"sub": self.sub ?: @"",
+             @"sub_extra": self.subExtra ?: @[],
              };
+}
+
+@end
+
+@implementation AffirmErrorResponse
+
+- (instancetype)initWithMessage:(NSString *)message
+                           code:(NSString *)code
+                          field:(NSString *)field
+                           type:(NSString *)type
+                     statusCode:(NSNumber *)statusCode
+                             ui:(AffirmErrorUI *)ui
+{
+    if (self = [super init]) {
+        _message = [message copy];
+        _code = [code copy];
+        _field = [field copy];
+        _type = [type copy];
+        _statusCode = [statusCode copy];
+        _ui = ui;
+    }
+    return self;
+}
+
+- (NSDictionary *)dictionary
+{
+    NSMutableDictionary *dictionary = [@{
+                                         @"message": self.message ?: @"",
+                                         @"code": self.code ?: @"",
+                                         @"field": self.field ?: @"",
+                                         @"type": self.type ?: @"",
+                                         @"statusCode": self.statusCode ?: @(-1),
+                                         } mutableCopy];
+    if (self.ui) {
+        dictionary[@"ui"] = [self.ui dictionary];
+    }
+    return [dictionary copy];
 }
 
 @end

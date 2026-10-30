@@ -42,6 +42,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface AffirmJSONValue : NSObject
+
++ (NSString *)stringFromValue:(nullable id)value fallback:(NSString *)fallback;
++ (nullable NSString *)nullableStringFromValue:(nullable id)value;
++ (NSNumber *)numberFromValue:(nullable id)value fallback:(NSNumber *)fallback;
++ (nullable NSArray<NSString *> *)stringArrayFromValue:(nullable id)value;
+
+@end
+
 @interface AffirmValidationUtils : NSObject
 
 + (void)checkNotNil:(id)value

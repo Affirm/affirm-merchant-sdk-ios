@@ -49,6 +49,50 @@
     XCTAssertNil([jsonStringError convertToDictionary]);
 }
 
+- (void)testErrorResponseUI
+{
+    NSString *jsonString = @"{\"status_code\":400,\"type\":\"invalid_request\",\"code\":\"no-eligible-financing-program\",\"field\":\"total\",\"message\":\"Invalid Request\",\"ui\":{\"main\":\"We can't offer financing\",\"sub\":\"Try a different amount\",\"sub_extra\":[\"extra one\",\"extra two\"]}}";
+    AffirmResponse *response = [AffirmErrorResponse parseError:[jsonString dataUsingEncoding:NSUTF8StringEncoding]];
+    XCTAssertTrue([response isKindOfClass:[AffirmErrorResponse class]]);
+    
+    AffirmErrorResponse *errorResponse = (AffirmErrorResponse *)response;
+    XCTAssertEqualObjects(errorResponse.message, @"Invalid Request");
+    XCTAssertEqualObjects(errorResponse.code, @"no-eligible-financing-program");
+    XCTAssertEqualObjects(errorResponse.field, @"total");
+    XCTAssertEqualObjects(errorResponse.type, @"invalid_request");
+    XCTAssertEqualObjects(errorResponse.statusCode, @400);
+    XCTAssertEqualObjects(errorResponse.ui.main, @"We can't offer financing");
+    XCTAssertEqualObjects(errorResponse.ui.sub, @"Try a different amount");
+    XCTAssertEqualObjects(errorResponse.ui.subExtra, (@[@"extra one", @"extra two"]));
+    XCTAssertEqualObjects([errorResponse.ui dictionary], (@{@"main": @"We can't offer financing",
+                                                            @"sub": @"Try a different amount",
+                                                            @"sub_extra": @[@"extra one", @"extra two"]}));
+    XCTAssertEqualObjects([errorResponse dictionary][@"ui"], [errorResponse.ui dictionary]);
+}
+
+- (void)testErrorResponseUIRejectsNonStringValues
+{
+    NSString *jsonString = @"{\"message\":{\"unexpected\":true},\"status_code\":\"400\",\"ui\":{\"main\":1,\"sub\":false,\"sub_extra\":[\"ok\", 2]}}";
+    AffirmResponse *response = [AffirmErrorResponse parseError:[jsonString dataUsingEncoding:NSUTF8StringEncoding]];
+    AffirmErrorResponse *errorResponse = (AffirmErrorResponse *)response;
+    XCTAssertEqualObjects(errorResponse.message, @"");
+    XCTAssertEqualObjects(errorResponse.statusCode, @(-1));
+    XCTAssertNil(errorResponse.ui.main);
+    XCTAssertNil(errorResponse.ui.sub);
+    XCTAssertNil(errorResponse.ui.subExtra);
+}
+
+- (void)testErrorResponseWithoutUI
+{
+    NSString *jsonString = @"{\"status_code\":400,\"type\":\"invalid_request\",\"message\":\"Invalid Request: Must be valid Amount\"}";
+    AffirmResponse *response = [AffirmErrorResponse parseError:[jsonString dataUsingEncoding:NSUTF8StringEncoding]];
+    AffirmErrorResponse *errorResponse = (AffirmErrorResponse *)response;
+    XCTAssertEqualObjects(errorResponse.message, @"Invalid Request: Must be valid Amount");
+    XCTAssertEqualObjects(errorResponse.code, @"");
+    XCTAssertNil(errorResponse.ui);
+    XCTAssertNil([errorResponse dictionary][@"ui"]);
+}
+
 - (void)testVisaCard
 {
     AffirmBrand *brand = [[AffirmCardValidator sharedCardValidator] brandForCardNumber:@"4242 4242 4242 4242"];
