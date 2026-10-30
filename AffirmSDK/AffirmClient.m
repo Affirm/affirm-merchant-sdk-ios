@@ -61,22 +61,23 @@
     if (responseObject == nil) {
         return nil;
     }
-    id codeValue = [responseObject valueForKey:@"code"];
-    NSString *code = (codeValue == nil || [codeValue isEqual:[NSNull null]]) ? @"" : codeValue;
+    NSString *code = [AffirmJSONValue stringFromValue:[responseObject valueForKey:@"code"] fallback:@""];
+    NSString *field = [AffirmJSONValue stringFromValue:[responseObject valueForKey:@"field"] fallback:@""];
+    NSString *message = [AffirmJSONValue stringFromValue:[responseObject valueForKey:@"message"] fallback:@""];
+    NSNumber *statusCode = [AffirmJSONValue numberFromValue:[responseObject valueForKey:@"status_code"] fallback:@(-1)];
+    NSString *type = [AffirmJSONValue stringFromValue:[responseObject valueForKey:@"type"] fallback:@""];
     
-    id fieldValue = [responseObject valueForKey:@"field"];
-    NSString *field = (fieldValue == nil || [fieldValue isEqual:[NSNull null]]) ? @"" : fieldValue;
+    AffirmErrorUI *ui = nil;
+    id uiValue = [responseObject valueForKey:@"ui"];
+    if ([uiValue isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *uiDictionary = (NSDictionary *)uiValue;
+        NSString *main = [AffirmJSONValue nullableStringFromValue:uiDictionary[@"main"]];
+        NSString *sub = [AffirmJSONValue nullableStringFromValue:uiDictionary[@"sub"]];
+        NSArray<NSString *> *subExtra = [AffirmJSONValue stringArrayFromValue:uiDictionary[@"sub_extra"]];
+        ui = [[AffirmErrorUI alloc] initWithMain:main sub:sub subExtra:subExtra];
+    }
     
-    id messageValue = [responseObject valueForKey:@"message"];
-    NSString *message = (messageValue == nil || [messageValue isEqual:[NSNull null]]) ? @"" : messageValue;
-    
-    id statusCodeValue = [responseObject valueForKey:@"status_code"];
-    NSNumber *statusCode = (statusCodeValue == nil || [statusCodeValue isEqual:[NSNull null]]) ? @(-1) : statusCodeValue;
-    
-    id typeValue = [responseObject valueForKey:@"type"];
-    NSString *type = (typeValue == nil || [typeValue isEqual:[NSNull null]]) ? @"" : typeValue;
-    
-    return [[AffirmErrorResponse alloc] initWithMessage:message code:code field:field type:type statusCode:statusCode];
+    return [[AffirmErrorResponse alloc] initWithMessage:message code:code field:field type:type statusCode:statusCode ui:ui];
 }
 
 @end

@@ -90,6 +90,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface AffirmErrorUI : NSObject
+
+@property (nonatomic, copy, readonly, nullable) NSString *main;
+@property (nonatomic, copy, readonly, nullable) NSString *sub;
+@property (nonatomic, copy, readonly, nullable) NSArray<NSString *> *subExtra;
+
+- (instancetype)initWithMain:(nullable NSString *)main
+                         sub:(nullable NSString *)sub
+                    subExtra:(nullable NSArray<NSString *> *)subExtra;
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+- (NSDictionary *)dictionary;
+
+@end
+
 @interface AffirmErrorResponse : AffirmResponse
 
 @property (nonatomic, copy, readonly) NSString *message;
@@ -97,12 +112,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *field;
 @property (nonatomic, copy, readonly) NSString *type;
 @property (nonatomic, copy, readonly) NSNumber *statusCode;
+@property (nonatomic, strong, readonly, nullable) AffirmErrorUI *ui;
 
 - (instancetype)initWithMessage:(NSString *)message
                            code:(NSString *)code
                           field:(NSString *)field
                            type:(NSString *)type
-                     statusCode:(NSNumber *)statusCode;
+                     statusCode:(NSNumber *)statusCode
+                             ui:(nullable AffirmErrorUI *)ui;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 - (NSDictionary *)dictionary;

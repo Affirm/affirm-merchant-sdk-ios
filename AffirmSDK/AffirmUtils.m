@@ -160,6 +160,38 @@
 
 @end
 
+@implementation AffirmJSONValue
+
++ (NSString *)stringFromValue:(id)value fallback:(NSString *)fallback
+{
+    return [value isKindOfClass:[NSString class]] ? value : fallback;
+}
+
++ (nullable NSString *)nullableStringFromValue:(id)value
+{
+    return [value isKindOfClass:[NSString class]] ? value : nil;
+}
+
++ (NSNumber *)numberFromValue:(id)value fallback:(NSNumber *)fallback
+{
+    return [value isKindOfClass:[NSNumber class]] ? value : fallback;
+}
+
++ (nullable NSArray<NSString *> *)stringArrayFromValue:(id)value
+{
+    if (![value isKindOfClass:[NSArray class]]) {
+        return nil;
+    }
+    for (id element in (NSArray *)value) {
+        if (![element isKindOfClass:[NSString class]]) {
+            return nil;
+        }
+    }
+    return [(NSArray *)value copy];
+}
+
+@end
+
 @implementation AffirmValidationUtils
 
 + (void)checkNotNil:(id)value
