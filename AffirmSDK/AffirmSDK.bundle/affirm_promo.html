@@ -1,20 +1,178 @@
 <html>
     <head>
         <meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,minimal-ui">
-        <link href="{{BUNDLED_CSS_URL}}" rel="stylesheet">
-        <link href="{{REMOTE_CSS_URL}}" rel="stylesheet">
-        <link href="{{REMOTE_FONT_URL}}" rel="stylesheet">
     </head>
     <body>
+        <!-- Inert payload. DOMPurify is injected at document start, not string-replaced into this file. -->
+        <script type="application/json" id="affirm-promo-payload">{{AFFIRM_PROMO_PAYLOAD}}</script>
+        <p id="affirm-promo-root"></p>
         <script>
-            _affirm_config = {
-                public_api_key:  "{{PUBLIC_KEY}}",
-                script:          "{{JS_URL}}",
-                locale:          "{{LOCALE}}",
-                country_code:    "{{COUNTRY_CODE}}"
-            };
-            (function(l,g,m,e,a,f,b){var d,c=l[m]||{},h=document.createElement(f),n=document.getElementsByTagName(f)[0],k=function(a,b,c){return function(){a[b]._.push([c,arguments])}};c[e]=k(c,e,"set");d=c[e];c[a]={};c[a]._=[];d._=[];c[a][b]=k(c,a,b);a=0;for(b="set add save post open empty reset on off trigger ready setProduct".split(" ");a<b.length;a++)d[b[a]]=k(c,e,b[a]);a=0;for(b=["get","token","url","items"];a<b.length;a++)d[b[a]]=function(){};h.async=!0;h.src=g[f];n.parentNode.insertBefore(h,n);delete g[f];d(g);l[m]=c})(window,_affirm_config,"affirm","checkout","ui","script","ready");
+            (function () {
+                var host = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.affirmPromo;
+                var settled = false;
+                var payload = null;
+                try {
+                    payload = JSON.parse(document.getElementById('affirm-promo-payload').textContent);
+                } catch (e) {
+                    payload = null;
+                }
+                function post(body) {
+                    if (!host || !payload) {
+                        return;
+                    }
+                    body.renderId = payload.renderId;
+                    try {
+                        host.postMessage(body);
+                    } catch (e) {}
+                }
+                function fail(reason) {
+                    if (!settled) {
+                        settled = true;
+                        post({ event: 'failure', reason: reason });
+                    }
+                }
+                if (!payload) {
+                    fail('template_error');
+                    return;
+                }
+                setTimeout(function () { fail('html_timeout'); }, payload.timeoutMs || 5000);
+
+                window._affirm_config = {
+                    public_api_key: payload.publicKey || '',
+                    script: payload.jsURL || '',
+                    locale: payload.locale || '',
+                    country_code: payload.countryCode || ''
+                };
+                (function(l,g,m,e,a,f,b){var d,c=l[m]||{},h=document.createElement(f),n=document.getElementsByTagName(f)[0],k=function(a,b,c){return function(){a[b]._.push([c,arguments])}};c[e]=k(c,e,"set");d=c[e];c[a]={};c[a]._=[];d._=[];c[a][b]=k(c,a,b);a=0;for(b="set add save post open empty reset on off trigger ready setProduct".split(" ");a<b.length;a++)d[b[a]]=k(c,e,b[a]);a=0;for(b=["get","token","url","items"];a<b.length;a++)d[b[a]]=function(){};h.async=!0;h.src=g[f];n.parentNode.insertBefore(h,n);delete g[f];d(g);l[m]=c})(window,window._affirm_config,"affirm","checkout","ui","script","ready");
+
+                function isHttps(url) {
+                    return /^https:\/\//i.test(url);
+                }
+                function isAllowedStylesheet(url) {
+                    return isHttps(url) || /^file:\/\//i.test(url);
+                }
+                function contentHeight() {
+                    var root = document.getElementById('affirm-promo-root');
+                    var height = root ? root.getBoundingClientRect().height : 0;
+                    var bodyStyle = window.getComputedStyle(document.body);
+                    height += parseFloat(bodyStyle.marginTop) || 0;
+                    height += parseFloat(bodyStyle.marginBottom) || 0;
+                    return Math.ceil(height);
+                }
+                function whenLoaded(element, isLoaded, reason) {
+                    return new Promise(function (resolve) {
+                        if (isLoaded) {
+                            if (isLoaded(element)) {
+                                resolve();
+                                return;
+                            }
+                            if (element.complete) {
+                                fail(reason);
+                                return;
+                            }
+                        }
+                        element.addEventListener('load', function () {
+                            if (isLoaded && !isLoaded(element)) {
+                                fail(reason);
+                            } else {
+                                resolve();
+                            }
+                        });
+                        element.addEventListener('error', function () { fail(reason); });
+                    });
+                }
+                function waitForStylesheet(url) {
+                    if (!url) {
+                        return Promise.resolve();
+                    }
+                    if (!isAllowedStylesheet(url)) {
+                        fail('resource_failed');
+                        return Promise.resolve();
+                    }
+                    var link = document.createElement('link');
+                    link.rel = 'stylesheet';
+                    var wait = whenLoaded(link, null, 'resource_failed');
+                    link.href = url;
+                    document.head.appendChild(link);
+                    return wait;
+                }
+
+                var style = document.createElement('style');
+                style.textContent = payload.bundledCSS || '';
+                document.head.appendChild(style);
+
+                var purify = window.DOMPurify;
+                if (!purify || !purify.isSupported) {
+                    fail('sanitizer_unavailable');
+                    return;
+                }
+                purify.addHook('uponSanitizeAttribute', function (node, data) {
+                    if ((data.attrName === 'href' || data.attrName === 'src') && !isHttps(data.attrValue)) {
+                        data.keepAttr = false;
+                    }
+                });
+                var root = document.getElementById('affirm-promo-root');
+                try {
+                    root.innerHTML = purify.sanitize(payload.html || '', {
+                        ALLOWED_TAGS: ['a', 'b', 'strong', 'em', 'i', 'u', 'small', 'sup', 'sub',
+                            'br', 'span', 'p', 'div', 'img', 'svg', 'g', 'path', 'circle', 'rect',
+                            'ellipse', 'line', 'polygon', 'polyline', 'title'],
+                        ALLOWED_ATTR: ['class', 'href', 'src', 'alt', 'title', 'width', 'height',
+                            'viewBox', 'd', 'fill', 'fill-rule', 'clip-rule', 'stroke',
+                            'stroke-width', 'transform', 'x', 'y', 'cx', 'cy', 'r', 'rx', 'ry',
+                            'x1', 'y1', 'x2', 'y2', 'points', 'xmlns'],
+                        ALLOW_ARIA_ATTR: false,
+                        ALLOW_DATA_ATTR: false
+                    });
+                } catch (e) {
+                    fail('sanitizer_unavailable');
+                    return;
+                }
+                var usable = !!(root.textContent.trim() || root.querySelector('img[src], svg'));
+                post({ event: 'sanitized', usable: usable });
+                if (!usable) {
+                    fail('html_empty');
+                    return;
+                }
+
+                var waits = [];
+                waits.push(waitForStylesheet(payload.remoteCssURL || ''));
+                if (settled) {
+                    return;
+                }
+                waits.push(waitForStylesheet(payload.remoteFontURL || ''));
+                if (settled) {
+                    return;
+                }
+                var images = root.querySelectorAll('img');
+                for (var i = 0; i < images.length; i++) {
+                    if (!images[i].getAttribute('src')) {
+                        continue;
+                    }
+                    waits.push(whenLoaded(images[i],
+                        function (el) { return el.complete && el.naturalWidth > 0; },
+                        'image_failed'));
+                }
+                if (document.fonts && document.fonts.ready) {
+                    waits.push(document.fonts.ready);
+                }
+                Promise.all(waits).then(function () {
+                    requestAnimationFrame(function () {
+                        if (settled) {
+                            return;
+                        }
+                        settled = true;
+                        post({ event: 'ready', height: contentHeight() });
+                        if (window.ResizeObserver) {
+                            new ResizeObserver(function () {
+                                post({ event: 'height', height: contentHeight() });
+                            }).observe(document.body);
+                        }
+                    });
+                }, function () {
+                    fail('resource_failed');
+                });
+            })();
         </script>
-        <p>{{HTML_FRAGMENT}}</p>
     </body>
 </html>
