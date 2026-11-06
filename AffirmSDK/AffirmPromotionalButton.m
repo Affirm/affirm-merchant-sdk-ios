@@ -14,6 +14,7 @@
 #import "AffirmClient.h"
 #import "AffirmRequest.h"
 #import "AffirmLogger.h"
+#import "AffirmPromoRendering.h"
 
 static NSString *const AFFIRM_DEFAULT_ALA_TEMPLATE = @"Pay over time with Affirm";
 
@@ -44,7 +45,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
     }
 }
 
-@interface AffirmPromotionalButton() <WKNavigationDelegate>
+@interface AffirmPromotionalButton() <WKNavigationDelegate, WKScriptMessageHandler>
 
 @property (nonatomic, strong) NSDecimalNumber *amount;
 @property (nonatomic) BOOL showPrequal;
@@ -53,6 +54,16 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
 @property (nonatomic, strong) UIButton *button;
 @property (nonatomic, strong) WKWebView *webView;
 @property (nonatomic, strong) NSLayoutConstraint *webViewHeightConstraint;
+@property (nonatomic, strong) AffirmPromoScriptMessageProxy *scriptMessageProxy;
+@property (nonatomic) BOOL sanitizerAvailable;
+@property (nonatomic) BOOL htmlReady;
+@property (nonatomic, copy, nullable) NSURL *htmlBaseURL;
+@property (nonatomic, copy, nullable) NSString *htmlRenderID;
+@property (nonatomic, strong, nullable) WKNavigation *htmlNavigation;
+@property (nonatomic, strong, nullable) NSTimer *htmlTimeoutTimer;
+@property (nonatomic, copy, nullable) NSString *loadedHTML;
+@property (nonatomic, copy, nullable) NSString *loadedCSS;
+@property (nonatomic, copy, nullable) NSString *loadedFont;
 
 @end
 
@@ -180,10 +191,23 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
 - (void)setup
 {
     self.isAccessibilityElement = YES;
+    self.accessibilityTraits = UIAccessibilityTraitButton;
     self.showPrequal = YES;
     self.clickable = NO;
     [self configureWebView];
     [self configureButton];
+}
+
+- (void)dealloc
+{
+    [self.htmlTimeoutTimer invalidate];
+    self.scriptMessageProxy.target = nil;
+}
+
+- (BOOL)accessibilityActivate
+{
+    [self showALAModal:nil];
+    return YES;
 }
 
 - (void)setClickable:(BOOL)clickable
@@ -195,10 +219,24 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
 - (void)configureWebView
 {
     WKWebViewConfiguration *configuration = [WKWebViewConfiguration new];
+    NSString *sanitizer = AffirmPromoSanitizerSource();
+    self.sanitizerAvailable = sanitizer.length > 0;
+    if (self.sanitizerAvailable) {
+        WKUserScript *userScript = [[WKUserScript alloc] initWithSource:sanitizer
+                                                          injectionTime:WKUserScriptInjectionTimeAtDocumentStart
+                                                       forMainFrameOnly:YES];
+        [configuration.userContentController addUserScript:userScript];
+    }
+    self.scriptMessageProxy = [AffirmPromoScriptMessageProxy new];
+    self.scriptMessageProxy.target = self;
+    [configuration.userContentController addScriptMessageHandler:self.scriptMessageProxy
+                                                            name:AffirmPromoScriptMessageName];
+
     WKWebView *webView = [[WKWebView alloc] initWithFrame:self.bounds configuration:configuration];
     webView.translatesAutoresizingMaskIntoConstraints = NO;
     webView.navigationDelegate = self;
     webView.hidden = YES;
+    webView.allowsLinkPreview = NO;
     [self addSubview:self.webView = webView];
     NSDictionary *views = NSDictionaryOfVariableBindings(webView);
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[webView]|" options:0 metrics:nil views:views]];
@@ -384,6 +422,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
                            response:(nullable AffirmResponse *)response
                               error:(nullable NSError *)error
 {
+    [self supersedeHTMLRender];
     self.webView.hidden = YES;
     self.clickable = NO;
     if (attributedText) {
@@ -418,73 +457,208 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
     [AffirmValidationUtils checkNotNil:amount name:@"amount"];
     self.amount = amount;
 
-    NSString *jsURL = [AffirmConfiguration sharedInstance].jsURL;
-    NSURL *baseURL = [NSURL URLWithString:jsURL].baseURL;
-    NSMutableDictionary *matchedKeys = [@{@"{{HTML_FRAGMENT}}": htmlString} mutableCopy];
-
-    // Always load bundled badge CSS first
-    NSString *bundledCssPath = [[NSBundle resourceBundle] pathForResource:@"badge_styles"
-                                                                   ofType:@"css"];
-    NSURL *bundledCssURL = nil;
-    if (bundledCssPath) {
-        bundledCssURL = [NSURL fileURLWithPath:bundledCssPath];
+    NSString *css = remoteCssURL.absoluteString ?: @"";
+    NSString *font = remoteFontURL.absoluteString ?: @"";
+    if (!self.hidden && !self.webView.hidden && self.htmlReady
+        && [self.loadedHTML isEqualToString:htmlString ?: @""]
+        && [self.loadedCSS isEqualToString:css]
+        && [self.loadedFont isEqualToString:font]) {
+        return;
     }
 
-    // Set baseURL based on CSS source priority
-    if (remoteCssURL != nil) {
-        baseURL = remoteCssURL.isFileURL ? [NSBundle mainBundle].bundleURL : remoteCssURL.baseURL;
-    } else if (bundledCssURL != nil) {
-        baseURL = [[NSBundle resourceBundle] bundleURL];
+    [self supersedeHTMLRender];
+    self.loadedHTML = htmlString ?: @"";
+    self.loadedCSS = css;
+    self.loadedFont = font;
+    self.webView.hidden = YES;
+    self.htmlReady = NO;
+    self.clickable = NO;
+
+    NSString *renderID = [NSUUID UUID].UUIDString;
+    self.htmlRenderID = renderID;
+    if (!self.sanitizerAvailable) {
+        [self failHTMLRenderWithReason:AffirmPromoRenderReasonSanitizerUnavailable renderID:renderID];
+        return;
+    }
+    if (!AffirmPromoPermittedStylesheetURL(remoteCssURL) || !AffirmPromoPermittedStylesheetURL(remoteFontURL)) {
+        [self failHTMLRenderWithReason:AffirmPromoRenderReasonResourceFailed renderID:renderID];
+        return;
     }
 
-    matchedKeys[@"{{BUNDLED_CSS_URL}}"] = bundledCssURL.absoluteString ?: @"";
-    matchedKeys[@"{{REMOTE_CSS_URL}}"] = remoteCssURL.absoluteString ?: @"";
-    matchedKeys[@"{{REMOTE_FONT_URL}}"] = remoteFontURL.absoluteString ?: @"";
-    matchedKeys[@"{{PUBLIC_KEY}}"] = [AffirmConfiguration sharedInstance].publicKey;
-    matchedKeys[@"{{JS_URL}}"] = jsURL;
-    matchedKeys[@"{{LOCALE}}"] = [AffirmConfiguration sharedInstance].locale;
-    matchedKeys[@"{COUNTRY_CODE}"] = [AffirmConfiguration sharedInstance].countryCode;
+    AffirmConfiguration *configuration = [AffirmConfiguration sharedInstance];
+    NSDictionary *payload = @{
+        @"renderId": renderID,
+        @"html": htmlString ?: @"",
+        @"remoteCssURL": css,
+        @"remoteFontURL": font,
+        @"publicKey": configuration.publicKey ?: @"",
+        @"jsURL": configuration.jsURL ?: @"",
+        @"locale": configuration.locale ?: @"",
+        @"countryCode": configuration.countryCode ?: @"",
+        @"bundledCSS": AffirmPromoBundledCSS(),
+        @"timeoutMs": @((NSInteger)(AffirmPromoHTMLTimeoutSeconds * 1000))
+    };
+    NSString *page = AffirmPromoHTMLDocumentWithPayload(payload);
+    if (page.length == 0) {
+        [self failHTMLRenderWithReason:AffirmPromoRenderReasonTemplateError renderID:renderID];
+        return;
+    }
 
-    NSString *filePath = [[NSBundle resourceBundle] pathForResource:@"affirm_promo"
-                                                             ofType:@"html"];
-    __block NSString *rawContent = [NSString stringWithContentsOfFile:filePath
-                                                             encoding:NSUTF8StringEncoding error:nil];
-    [matchedKeys enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, NSString *  _Nonnull obj, BOOL * _Nonnull stop) {
-        rawContent = [rawContent stringByReplacingOccurrencesOfString:key
-                                                           withString:obj
-                                                              options:NSLiteralSearch
-                                                                range:[rawContent rangeOfString:key]];
+    NSURL *baseURL = nil;
+    if (remoteCssURL.isFileURL) {
+        baseURL = remoteCssURL.URLByDeletingLastPathComponent;
+    } else if (remoteFontURL.isFileURL) {
+        baseURL = remoteFontURL.URLByDeletingLastPathComponent;
+    }
+    self.htmlBaseURL = baseURL;
+    self.htmlNavigation = [self.webView loadHTMLString:page baseURL:baseURL];
+    [self scheduleHTMLTimeoutForRenderID:renderID];
+}
+
+- (void)supersedeHTMLRender
+{
+    [self.htmlTimeoutTimer invalidate];
+    self.htmlTimeoutTimer = nil;
+    self.htmlRenderID = nil;
+    self.htmlNavigation = nil;
+    self.htmlReady = NO;
+    self.htmlBaseURL = nil;
+    [self.webView stopLoading];
+}
+
+- (BOOL)isExpectedHTMLLoadURL:(nullable NSURL *)url
+{
+    if (self.htmlRenderID.length == 0 || url == nil) {
+        return NO;
+    }
+    NSURL *expected = self.htmlBaseURL ?: [NSURL URLWithString:@"about:blank"];
+    return [url.absoluteString isEqualToString:expected.absoluteString];
+}
+
+- (void)scheduleHTMLTimeoutForRenderID:(NSString *)renderID
+{
+    __weak typeof(self) weakSelf = self;
+    self.htmlTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:AffirmPromoHTMLTimeoutSeconds
+                                                             repeats:NO
+                                                               block:^(NSTimer *timer) {
+        [weakSelf failHTMLRenderWithReason:AffirmPromoRenderReasonHTMLTimeout renderID:renderID];
     }];
-    [self.webView loadHTMLString:rawContent baseURL:baseURL];
+}
+
+- (void)failHTMLRenderWithReason:(NSString *)reason renderID:(nullable NSString *)renderID
+{
+    if (renderID.length == 0 || ![renderID isEqualToString:self.htmlRenderID]) {
+        return;
+    }
+    [self.htmlTimeoutTimer invalidate];
+    self.htmlTimeoutTimer = nil;
+    self.htmlRenderID = nil;
+    self.htmlNavigation = nil;
+    self.htmlReady = NO;
+    self.htmlBaseURL = nil;
+    self.loadedHTML = nil;
+    self.loadedCSS = nil;
+    self.loadedFont = nil;
+    self.webView.hidden = YES;
+    self.clickable = NO;
+    [[NSNotificationCenter defaultCenter] postNotificationName:AffirmPromoHTMLRenderDidFinishNotification
+                                                        object:self
+                                                      userInfo:@{@"outcome": @"failure", @"reason": reason ?: @""}];
+}
+
+- (void)applyContentHeight:(double)cssHeight
+{
+    CGFloat height = AffirmPromoHeightForCSSPixels(cssHeight);
+    if (height <= 0 || self.webViewHeightConstraint.constant == height) {
+        return;
+    }
+    self.webViewHeightConstraint.constant = height;
+    [self layoutIfNeeded];
+}
+
+- (BOOL)isCurrentHTMLNavigation:(WKNavigation *)navigation
+{
+    return navigation != nil && navigation == self.htmlNavigation;
 }
 
 #pragma mark - WKWebView navigation delegate
 
+- (void)webView:(WKWebView *)webView
+decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction
+decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
+{
+    // loadHTMLString is the only main-frame load we start, and its request URL is the base URL
+    // (or about:blank). Matching on that, rather than a one-shot flag, stays correct when a
+    // second render starts before the first render's policy callback has run.
+    BOOL isMainFrameLoad = navigationAction.navigationType == WKNavigationTypeOther
+        && navigationAction.targetFrame.mainFrame;
+    if (isMainFrameLoad && [self isExpectedHTMLLoadURL:navigationAction.request.URL]) {
+        decisionHandler(WKNavigationActionPolicyAllow);
+        return;
+    }
+    if (navigationAction.navigationType == WKNavigationTypeLinkActivated && self.clickable) {
+        [self showALAModal:nil];
+    }
+    decisionHandler(WKNavigationActionPolicyCancel);
+}
+
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
-    [webView evaluateJavaScript:@"Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight)"
-              completionHandler:^(id _Nullable result, NSError * _Nullable error) {
-        if (!error && [result isKindOfClass:[NSNumber class]]) {
-            NSNumber *height = result;
-            self.webViewHeightConstraint.constant = height.floatValue;
-            [self layoutIfNeeded];
-        }
-    }];
-    webView.hidden = NO;
-    [self.button setAttributedTitle:nil forState:UIControlStateNormal];
-    self.clickable = YES;
+    // Readiness comes from the page, after sanitizing and loading stylesheets, images and fonts.
 }
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
-    webView.hidden = YES;
-    self.clickable = NO;
+    if (![self isCurrentHTMLNavigation:navigation] || error.code == NSURLErrorCancelled) {
+        return;
+    }
+    [self failHTMLRenderWithReason:AffirmPromoRenderReasonLoadError renderID:self.htmlRenderID];
 }
 
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
-    webView.hidden = YES;
-    self.clickable = NO;
+    if (![self isCurrentHTMLNavigation:navigation] || error.code == NSURLErrorCancelled) {
+        return;
+    }
+    [self failHTMLRenderWithReason:AffirmPromoRenderReasonLoadError renderID:self.htmlRenderID];
+}
+
+- (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView
+{
+    [self failHTMLRenderWithReason:AffirmPromoRenderReasonRenderProcessGone renderID:self.htmlRenderID];
+}
+
+- (void)userContentController:(WKUserContentController *)userContentController
+      didReceiveScriptMessage:(WKScriptMessage *)message
+{
+    if (![message.name isEqualToString:AffirmPromoScriptMessageName] || ![message.body isKindOfClass:[NSDictionary class]]) {
+        return;
+    }
+    NSDictionary *body = message.body;
+    NSString *renderID = [body[@"renderId"] isKindOfClass:[NSString class]] ? body[@"renderId"] : nil;
+    if (renderID.length == 0 || ![renderID isEqualToString:self.htmlRenderID]) {
+        return;
+    }
+    NSString *event = [body[@"event"] isKindOfClass:[NSString class]] ? body[@"event"] : nil;
+    if ([event isEqualToString:@"ready"]) {
+        [self.htmlTimeoutTimer invalidate];
+        self.htmlTimeoutTimer = nil;
+        self.htmlReady = YES;
+        [self applyContentHeight:[body[@"height"] doubleValue]];
+        self.webView.hidden = NO;
+        [self.button setAttributedTitle:nil forState:UIControlStateNormal];
+        self.clickable = YES;
+        [[NSNotificationCenter defaultCenter] postNotificationName:AffirmPromoHTMLRenderDidFinishNotification
+                                                            object:self
+                                                          userInfo:@{@"outcome": @"ready"}];
+    } else if ([event isEqualToString:@"height"]) {
+        if (self.htmlReady) {
+            [self applyContentHeight:[body[@"height"] doubleValue]];
+        }
+    } else if ([event isEqualToString:@"failure"]) {
+        NSString *reason = [body[@"reason"] isKindOfClass:[NSString class]] ? body[@"reason"] : nil;
+        [self failHTMLRenderWithReason:AffirmPromoRenderReasonFromPage(reason) renderID:renderID];
+    }
 }
 
 #pragma mark - Event Response
