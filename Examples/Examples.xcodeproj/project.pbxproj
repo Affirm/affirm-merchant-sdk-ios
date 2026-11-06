@@ -29,6 +29,8 @@
 		0854F69D2251EB9A008807A6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0854F69B2251EB9A008807A6 /* LaunchScreen.storyboard */; };
 		0892050E2265B64200E8FD86 /* XCTestCase+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0892050D2265B64200E8FD86 /* XCTestCase+Utils.m */; };
 		089205112265C20300E8FD86 /* XCUIElementQuery+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 089205102265C20300E8FD86 /* XCUIElementQuery+Utils.m */; };
+		08A1B2C2222E45D600C7068D /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A1B2C1222E45D600C7068D /* SceneDelegate.m */; };
+		08A1B2C4222E45D600C7068D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A1B2C3222E45D600C7068D /* SceneDelegate.swift */; };
 		46281B108FE699EF409CF545 /* Pods_Examples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE33D4310D7CEBE4F3547984 /* Pods_Examples.framework */; };
 		DE047A2AB2D4F4C96B7951B4 /* Pods_ExamplesSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 490636410DEE2CAF8A198501 /* Pods_ExamplesSwift.framework */; };
 /* End PBXBuildFile section */
@@ -74,6 +76,9 @@
 		0892050D2265B64200E8FD86 /* XCTestCase+Utils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "XCTestCase+Utils.m"; sourceTree = "<group>"; };
 		0892050F2265C20300E8FD86 /* XCUIElementQuery+Utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "XCUIElementQuery+Utils.h"; sourceTree = "<group>"; };
 		089205102265C20300E8FD86 /* XCUIElementQuery+Utils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "XCUIElementQuery+Utils.m"; sourceTree = "<group>"; };
+		08A1B2C0222E45D600C7068D /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
+		08A1B2C1222E45D600C7068D /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
+		08A1B2C3222E45D600C7068D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		2674BED8D62AA6DE25D06046 /* Pods-ExamplesSwift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExamplesSwift.debug.xcconfig"; path = "Target Support Files/Pods-ExamplesSwift/Pods-ExamplesSwift.debug.xcconfig"; sourceTree = "<group>"; };
 		42077A2F0647A33E6684C886 /* Pods-Examples.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Examples.debug.xcconfig"; path = "Target Support Files/Pods-Examples/Pods-Examples.debug.xcconfig"; sourceTree = "<group>"; };
 		490636410DEE2CAF8A198501 /* Pods_ExamplesSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExamplesSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -137,6 +142,8 @@
 				0815CCF922F2998300ABB7CB /* Fonts */,
 				081439AC222E45D600C7068D /* AppDelegate.h */,
 				081439AD222E45D600C7068D /* AppDelegate.m */,
+				08A1B2C0222E45D600C7068D /* SceneDelegate.h */,
+				08A1B2C1222E45D600C7068D /* SceneDelegate.m */,
 				081439AF222E45D600C7068D /* ViewController.h */,
 				081439B0222E45D600C7068D /* ViewController.m */,
 				081439B2222E45D600C7068D /* Main.storyboard */,
@@ -178,6 +185,7 @@
 			isa = PBXGroup;
 			children = (
 				0854F6922251EB99008807A6 /* AppDelegate.swift */,
+				08A1B2C3222E45D600C7068D /* SceneDelegate.swift */,
 				0854F6942251EB99008807A6 /* ViewController.swift */,
 				0854F6962251EB99008807A6 /* Main.storyboard */,
 				0854F6992251EB9A008807A6 /* Assets.xcassets */,
@@ -435,6 +443,7 @@
 				081439B1222E45D600C7068D /* ViewController.m in Sources */,
 				081439BC222E45D800C7068D /* main.m in Sources */,
 				081439AE222E45D600C7068D /* AppDelegate.m in Sources */,
+				08A1B2C2222E45D600C7068D /* SceneDelegate.m in Sources */,
 				08385F42225AFE580022FFA8 /* Button.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -455,6 +464,7 @@
 			files = (
 				0854F6952251EB99008807A6 /* ViewController.swift in Sources */,
 				0854F6932251EB99008807A6 /* AppDelegate.swift in Sources */,
+				08A1B2C4222E45D600C7068D /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -555,7 +565,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -608,7 +618,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -625,7 +635,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6AM6RAJ294;
 				INFOPLIST_FILE = Examples/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -644,7 +653,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6AM6RAJ294;
 				INFOPLIST_FILE = Examples/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -699,7 +707,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6AM6RAJ294;
 				INFOPLIST_FILE = ExamplesSwift/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -721,7 +728,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6AM6RAJ294;
 				INFOPLIST_FILE = ExamplesSwift/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
