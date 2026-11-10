@@ -42,6 +42,7 @@
     
     // Using AffirmDataHandler for second button (See more in configurPromotionalMessage)
     self.promoButton.titleLabel.numberOfLines = 0;
+    self.promoButton.accessibilityIdentifier = @"affirm_live_promo_native_button";
     
     // Configure Textfields
     self.publicKeyTextfield.text = [AffirmConfiguration sharedInstance].publicKey;

@@ -75,3 +75,38 @@
 }
 
 @end
+
+// This class is selected only by the Thor-backed workflow dispatch. Ordinary
+// sandbox UI coverage above keeps its existing behavior.
+@interface LivePromoThorTests : XCTestCase
+@end
+@implementation LivePromoThorTests
+- (void)testRendersPromoFromLiveThor
+{
+    self.continueAfterFailure = NO;
+    NSDictionary *inputs = [[NSProcessInfo processInfo] environment];
+    NSString *url = inputs[@"AFFIRM_PROMO_BASE_URL"];
+    NSString *key = inputs[@"AFFIRM_PUBLIC_KEY"];
+    NSString *expected = inputs[@"AFFIRM_EXPECTED_PROMO_TEXT"];
+    XCTAssertTrue(url.length > 0 && key.length > 0 && expected.length > 0,
+                  @"The live SDK test requires Thor URL, public key and expected text");
+    NSURL *thor = [NSURL URLWithString:url];
+    XCTAssertEqualObjects(thor.scheme, @"https");
+    XCTAssertTrue([thor.host hasSuffix:@".affirm-thor.com"]);
+    XCUIApplication *app = [[XCUIApplication alloc] init];
+    app.launchEnvironment = @{@"AFFIRM_PROMO_BASE_URL": url,
+                              @"AFFIRM_PUBLIC_KEY": key,
+                              @"AFFIRM_EXPECTED_PROMO_TEXT": expected};
+    [app launch];
+    XCUIElement *promo = app.buttons[@"affirm_live_promo_native_button"];
+    NSPredicate *rendered = [NSPredicate predicateWithFormat:@"exists == YES AND label CONTAINS %@", expected];
+    [self expectationForPredicate:rendered evaluatedWithObject:promo handler:nil];
+    [self waitForExpectationsWithTimeout:30 handler:nil];
+    XCTAssertTrue([promo.label containsString:expected]);
+    XCTAttachment *screenshot = [XCTAttachment attachmentWithScreenshot:[app screenshot]];
+    screenshot.name = @"live-thor-promo";
+    screenshot.lifetime = XCTAttachmentLifetimeKeepAlways;
+    [self addAttachment:screenshot];
+    [app terminate];
+}
+@end

@@ -1,0 +1,18 @@
+# The existing SDK PR pipeline uploads this file on every PR update.
+env:
+  SDK_PROMO_PLATFORM: ios
+  FE_REPO: ux
+steps:
+  - label: ':pipeline: Generate live SDK promo tests'
+    agents:
+      queue: android
+    command: |
+      set -eu
+      git clone --depth 1 --branch "$${FE_BUILDKITE_BRANCH:-production}" git@github.com:Affirm/frontend-buildkite.git .sdk-promo-pipeline
+      node .sdk-promo-pipeline/dispatch.cjs upfunnel-sdk-promo-tests
+    plugins:
+      - docker#v5.11.0:
+          image: node:24-bookworm
+          propagate-environment: true
+          mount-buildkite-agent: true
+          mount-ssh-agent: true
