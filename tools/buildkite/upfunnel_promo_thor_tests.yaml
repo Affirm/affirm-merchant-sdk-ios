@@ -1,5 +1,9 @@
 # The existing SDK PR pipeline uploads this file on every PR update.
+# Validation-only dependency refs; remove after UX merges and the generator is released.
 env:
+  FE_BUILDKITE_BRANCH: preview/sdk-live-20261110
+  UPFUNNEL_SDK_PROMO_HARNESS_REF: codex/fix-upfunnel-sdk-thor-fixture
+  IOS_SDK_WORKFLOW_REF: codex/sdk-promo-pr-checks
   SDK_PROMO_PLATFORM: ios
   FE_REPO: ux
 steps:
@@ -9,7 +13,7 @@ steps:
     command: |
       set -eu
       git clone --depth 1 --branch "$${FE_BUILDKITE_BRANCH:-production}" git@github.com:Affirm/frontend-buildkite.git .sdk-promo-pipeline
-      node .sdk-promo-pipeline/dispatch.cjs upfunnel-sdk-promo-tests
+      node .sdk-promo-pipeline/dist/dispatch.cjs upfunnel-sdk-promo-tests
     plugins:
       - docker#v5.11.0:
           image: node:24-bookworm
