@@ -28,6 +28,7 @@ on:
 jobs:
   build:
     runs-on: macos-26
+    timeout-minutes: 45
     steps:
     - name: Checkout project
       uses: actions/checkout@v4
@@ -50,7 +51,7 @@ jobs:
       
     - name: Test
       if: ${{ !inputs.run_live_promo }}
-      run: xcodebuild -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5" test
+      run: xcodebuild -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5" -skip-testing:ExamplesUITests/LivePromoThorTests test
 
     - name: Live Thor promo simulator test
       if: ${{ inputs.run_live_promo }}
