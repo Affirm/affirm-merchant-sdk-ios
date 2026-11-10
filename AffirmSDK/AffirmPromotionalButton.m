@@ -202,6 +202,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
 {
     [self.htmlTimeoutTimer invalidate];
     self.scriptMessageProxy.target = nil;
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:AffirmPromoScriptMessageName];
 }
 
 - (BOOL)accessibilityActivate
