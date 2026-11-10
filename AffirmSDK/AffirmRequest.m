@@ -218,49 +218,84 @@
 
 @end
 
+NSString *const AffirmPromoRenderFlagKey = @"ios_sdk_migrate_native_to_html_render";
+
+static AffirmPromoRenderFlagStatus AffirmPromoRenderFlagStatusFromConfig(id config)
+{
+    if (![config isKindOfClass:[NSDictionary class]]) {
+        return AffirmPromoRenderFlagStatusMissing;
+    }
+    id value = ((NSDictionary *)config)[AffirmPromoRenderFlagKey];
+    if (value == nil) {
+        return AffirmPromoRenderFlagStatusMissing;
+    }
+    if (value == [NSNull null]) {
+        return AffirmPromoRenderFlagStatusNull;
+    }
+    // NSJSONSerialization returns NSNumber for both `true` and `1`; only a JSON boolean counts.
+    if ([value isKindOfClass:[NSNumber class]] && CFGetTypeID((__bridge CFTypeRef)value) == CFBooleanGetTypeID()) {
+        return [value boolValue] ? AffirmPromoRenderFlagStatusTrue : AffirmPromoRenderFlagStatusFalse;
+    }
+    return AffirmPromoRenderFlagStatusMalformed;
+}
+
+static NSString * AffirmPromoStringValue(id value)
+{
+    return [value isKindOfClass:[NSString class]] ? value : @"";
+}
+
 @implementation AffirmPromoResponse
 
 - (instancetype)initWithAla:(NSString *)ala
                     htmlAla:(NSString *)htmlAla
                 showPrequal:(BOOL)showPrequal
+           renderFlagStatus:(AffirmPromoRenderFlagStatus)renderFlagStatus
 {
     if (self = [super init]) {
         _ala = [ala copy];
         _htmlAla = [htmlAla copy];
         _showPrequal = showPrequal;
+        _renderFlagStatus = renderFlagStatus;
     }
     return self;
+}
+
+- (BOOL)renderFlagEnabled
+{
+    return self.renderFlagStatus == AffirmPromoRenderFlagStatusTrue;
 }
 
 + (AffirmResponse *)parse:(NSData *)data
 {
     NSError *error = nil;
     id responseObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-    if (!error) {
+    if (!error && [responseObject isKindOfClass:[NSDictionary class]]) {
         NSDictionary *promo = responseObject[@"promo"];
         if (promo && [promo isKindOfClass:[NSDictionary class]]) {
-            NSString *ala = promo[@"ala"];
-            if ([ala isEqual:[NSNull null]]) {
-                ala = @"";
-            }
-            
-            if ([ala isKindOfClass:[NSString class]] && ala.length > 0) {
+            NSString *ala = AffirmPromoStringValue(promo[@"ala"]);
+            if (ala.length > 0) {
                 ala = [ala stringByReplacingOccurrencesOfString:@"{affirm_logo}" withString:@"Affirm"];
             }
-            
-            NSString *htmlAla = promo[@"html_ala"];
-            if ([htmlAla isEqual:[NSNull null]]) {
-                htmlAla = @"";
-            }
-            
+            NSString *htmlAla = AffirmPromoStringValue(promo[@"html_ala"]);
+
+            id config = promo[@"config"];
+            AffirmPromoRenderFlagStatus flagStatus = AffirmPromoRenderFlagStatusFromConfig(config);
+
+            // A config that only carries the render flag is not a promo config, so taps keep
+            // opening the promo modal instead of switching to prequal.
             BOOL showPrequal = NO;
-            NSDictionary *config = promo[@"config"];
-            if (config) {
-                NSString *style = config[@"promo_style"];
-                showPrequal = ![style isEqualToString:@"fast"];
+            if ([config isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *configDictionary = config;
+                BOOL onlyRenderFlag = configDictionary.count == 1 && configDictionary[AffirmPromoRenderFlagKey] != nil;
+                if (!onlyRenderFlag) {
+                    showPrequal = ![configDictionary[@"promo_style"] isEqual:@"fast"];
+                }
             }
-            
-            return [[AffirmPromoResponse alloc] initWithAla:ala htmlAla:htmlAla showPrequal:showPrequal];
+
+            return [[AffirmPromoResponse alloc] initWithAla:ala
+                                                    htmlAla:htmlAla
+                                                showPrequal:showPrequal
+                                           renderFlagStatus:flagStatus];
         }
     }
     return [[AffirmErrorResponse alloc] initWithMessage:@"Failed to parse promo api response." code:@"" field:@"" type:@"" statusCode:@-1 ui:nil];

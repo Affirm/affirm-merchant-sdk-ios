@@ -396,7 +396,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
                                                                          amount:self.amount
                                                                         showCTA:self.showCTA
                                                                        pageType:FormatAffirmPageTypeString(self.pageType)
-                                                                       logoType:nil
+                                                                       logoType:affirmLogoType == AffirmLogoTypeName ? nil : FormatAffirmDataTypeString(affirmLogoType)
                                                                       logoColor:FormatAffirmColorString(logoColor)
                                                                           items:items];
     [AffirmPromoClient send:request handler:^(AffirmResponse * _Nullable response, NSError * _Nullable error) {

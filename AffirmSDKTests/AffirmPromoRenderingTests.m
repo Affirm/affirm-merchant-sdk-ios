@@ -9,6 +9,7 @@
 #import "../AffirmSDK/AffirmPromotionalButton.h"
 #import "../AffirmSDK/AffirmConfiguration.h"
 #import "../AffirmSDK/AffirmUtils.h"
+#import "../AffirmSDK/AffirmRequest.h"
 
 @class AffirmResponse;
 
@@ -35,6 +36,122 @@
     self.window.hidden = YES;
     self.window = nil;
     [super tearDown];
+}
+
+- (AffirmResponse *)responseForJSON:(NSString *)json
+{
+    return [AffirmPromoResponse parse:[json dataUsingEncoding:NSUTF8StringEncoding]];
+}
+
+- (AffirmPromoResponse *)promoResponseWithConfig:(NSString *)config
+{
+    NSString *json = [NSString stringWithFormat:
+                      @"{\"promo\": {\"ala\": \"Native message\", \"html_ala\": \"<span>HTML</span>\"%@}}",
+                      config ? [@", \"config\": " stringByAppendingString:config] : @""];
+    AffirmResponse *response = [self responseForJSON:json];
+    XCTAssertTrue([response isKindOfClass:[AffirmPromoResponse class]], @"%@", json);
+    return (AffirmPromoResponse *)response;
+}
+
+- (AffirmPromoResponse *)promoResponseWithFlag:(NSString *)flagJSON
+{
+    return [self promoResponseWithConfig:[NSString stringWithFormat:@"{\"ios_sdk_migrate_native_to_html_render\": %@}", flagJSON]];
+}
+
+- (void)testRenderFlagKeyIsTheDocumentedKey
+{
+    XCTAssertEqualObjects(AffirmPromoRenderFlagKey, @"ios_sdk_migrate_native_to_html_render");
+}
+
+- (void)testRenderFlagAcceptsOnlyAJSONBooleanTrue
+{
+    AffirmPromoResponse *flagOn = [self promoResponseWithFlag:@"true"];
+    XCTAssertEqual(flagOn.renderFlagStatus, AffirmPromoRenderFlagStatusTrue);
+    XCTAssertTrue(flagOn.renderFlagEnabled);
+
+    AffirmPromoResponse *flagOff = [self promoResponseWithFlag:@"false"];
+    XCTAssertEqual(flagOff.renderFlagStatus, AffirmPromoRenderFlagStatusFalse);
+    XCTAssertFalse(flagOff.renderFlagEnabled);
+
+    AffirmPromoResponse *flagNull = [self promoResponseWithFlag:@"null"];
+    XCTAssertEqual(flagNull.renderFlagStatus, AffirmPromoRenderFlagStatusNull);
+    XCTAssertFalse(flagNull.renderFlagEnabled);
+
+    for (NSString *malformed in @[@"\"true\"", @"1", @"0", @"1.0", @"{}", @"{\"value\": true}", @"[]", @"[true]"]) {
+        AffirmPromoResponse *response = [self promoResponseWithFlag:malformed];
+        XCTAssertEqual(response.renderFlagStatus, AffirmPromoRenderFlagStatusMalformed, @"%@", malformed);
+        XCTAssertFalse(response.renderFlagEnabled, @"%@", malformed);
+    }
+}
+
+- (void)testRenderFlagIsMissingWithoutTheExactKey
+{
+    XCTAssertEqual([self promoResponseWithConfig:nil].renderFlagStatus, AffirmPromoRenderFlagStatusMissing);
+    XCTAssertEqual([self promoResponseWithConfig:@"{}"].renderFlagStatus, AffirmPromoRenderFlagStatusMissing);
+    XCTAssertEqual([self promoResponseWithConfig:@"null"].renderFlagStatus, AffirmPromoRenderFlagStatusMissing);
+    XCTAssertEqual([self promoResponseWithConfig:@"\"config\""].renderFlagStatus, AffirmPromoRenderFlagStatusMissing);
+    XCTAssertEqual([self promoResponseWithConfig:@"[true]"].renderFlagStatus, AffirmPromoRenderFlagStatusMissing);
+    for (NSString *key in @[@"ios_sdk_migrate_native_to_html", @"IOS_SDK_MIGRATE_NATIVE_TO_HTML_RENDER",
+                            @"android_sdk_migrate_native_to_html_render", @"migrate_native_to_html_render"]) {
+        NSString *config = [NSString stringWithFormat:@"{\"%@\": true}", key];
+        AffirmPromoResponse *response = [self promoResponseWithConfig:config];
+        XCTAssertEqual(response.renderFlagStatus, AffirmPromoRenderFlagStatusMissing, @"%@", key);
+        XCTAssertFalse(response.renderFlagEnabled, @"%@", key);
+    }
+}
+
+- (void)testResponseKeepsBothMessagesWhateverTheFlag
+{
+    for (NSString *flag in @[@"true", @"false", @"null", @"\"yes\"", @"[]"]) {
+        AffirmPromoResponse *response = [self promoResponseWithFlag:flag];
+        XCTAssertEqualObjects(response.ala, @"Native message", @"%@", flag);
+        XCTAssertEqualObjects(response.htmlAla, @"<span>HTML</span>", @"%@", flag);
+    }
+}
+
+- (void)testRenderFlagAloneDoesNotTurnOnPrequal
+{
+    XCTAssertFalse([self promoResponseWithConfig:nil].showPrequal);
+    XCTAssertFalse([self promoResponseWithFlag:@"true"].showPrequal);
+    XCTAssertFalse([self promoResponseWithFlag:@"false"].showPrequal);
+    XCTAssertFalse([self promoResponseWithFlag:@"\"malformed\""].showPrequal);
+
+    XCTAssertTrue([self promoResponseWithConfig:@"{}"].showPrequal);
+    XCTAssertTrue([self promoResponseWithConfig:@"{\"promo_style\": \"simple\"}"].showPrequal);
+    XCTAssertTrue([self promoResponseWithConfig:@"{\"promo_style\": \"simple\", \"ios_sdk_migrate_native_to_html_render\": true}"].showPrequal);
+    XCTAssertFalse([self promoResponseWithConfig:@"{\"promo_style\": \"fast\"}"].showPrequal);
+    XCTAssertFalse([self promoResponseWithConfig:@"{\"promo_style\": \"fast\", \"ios_sdk_migrate_native_to_html_render\": true}"].showPrequal);
+    XCTAssertTrue([self promoResponseWithConfig:@"{\"promo_style\": 1}"].showPrequal);
+}
+
+- (void)testParserToleratesUnexpectedTypes
+{
+    XCTAssertFalse([[self promoResponseWithConfig:@"null"] showPrequal]);
+    XCTAssertFalse([[self promoResponseWithConfig:@"\"config\""] showPrequal]);
+    XCTAssertFalse([[self promoResponseWithConfig:@"[{\"promo_style\": \"simple\"}]"] showPrequal]);
+
+    AffirmPromoResponse *wrongTypes = (AffirmPromoResponse *)[self responseForJSON:
+                                                              @"{\"promo\": {\"ala\": 42, \"html_ala\": [\"<b>x</b>\"], \"config\": {\"ios_sdk_migrate_native_to_html_render\": true}}}"];
+    XCTAssertTrue([wrongTypes isKindOfClass:[AffirmPromoResponse class]]);
+    XCTAssertEqualObjects(wrongTypes.ala, @"");
+    XCTAssertEqualObjects(wrongTypes.htmlAla, @"");
+    XCTAssertTrue(wrongTypes.renderFlagEnabled);
+
+    AffirmPromoResponse *nulls = (AffirmPromoResponse *)[self responseForJSON:@"{\"promo\": {\"ala\": null, \"html_ala\": null}}"];
+    XCTAssertEqualObjects(nulls.ala, @"");
+    XCTAssertEqualObjects(nulls.htmlAla, @"");
+
+    XCTAssertTrue([[self responseForJSON:@"{\"promo\": \"text\"}"] isKindOfClass:[AffirmErrorResponse class]]);
+    XCTAssertTrue([[self responseForJSON:@"{\"promo\": [1, 2]}"] isKindOfClass:[AffirmErrorResponse class]]);
+    XCTAssertTrue([[self responseForJSON:@"[{\"promo\": {}}]"] isKindOfClass:[AffirmErrorResponse class]]);
+    XCTAssertTrue([[self responseForJSON:@"not json"] isKindOfClass:[AffirmErrorResponse class]]);
+}
+
+- (void)testAffirmLogoPlaceholderStillBecomesAffirm
+{
+    AffirmPromoResponse *response = (AffirmPromoResponse *)[self responseForJSON:
+                                                            @"{\"promo\": {\"ala\": \"Pay with {affirm_logo}\", \"config\": {\"ios_sdk_migrate_native_to_html_render\": true}}}"];
+    XCTAssertEqualObjects(response.ala, @"Pay with Affirm");
 }
 
 - (void)testPageReasonsStayAndUnknownCodesBecomeScriptError
