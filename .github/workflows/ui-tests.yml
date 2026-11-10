@@ -42,16 +42,19 @@ jobs:
         git rev-parse HEAD | tee sdk-revision.txt
         if [ -n "$EXPECTED_COMMIT" ]; then test "$(git rev-parse HEAD)" = "$EXPECTED_COMMIT"; fi
     
+    - name: Select available iOS simulator
+      run: echo "IOS_DESTINATION=$(python3 tools/buildkite/select-ios-simulator.py)" >> "$GITHUB_ENV"
+
     - name: Cocoapods
       run: cd Examples && pod install --verbose --repo-update && cd ..
       
     - name: Build
       if: ${{ !inputs.run_live_promo }}
-      run: xcodebuild build-for-testing -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5"
+      run: xcodebuild build-for-testing -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "$IOS_DESTINATION"
       
     - name: Test
       if: ${{ !inputs.run_live_promo }}
-      run: xcodebuild -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5" -skip-testing:ExamplesUITests/LivePromoThorTests test
+      run: xcodebuild -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "$IOS_DESTINATION" -skip-testing:ExamplesUITests/LivePromoThorTests test
 
     - name: Live Thor promo simulator test
       if: ${{ inputs.run_live_promo }}

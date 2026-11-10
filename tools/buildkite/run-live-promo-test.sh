@@ -4,7 +4,7 @@ set -euo pipefail
 : "${AFFIRM_PUBLIC_KEY:?Live merchant key required}"
 : "${AFFIRM_EXPECTED_PROMO_TEXT:?Expected live promo text required}"
 export AFFIRM_PROMO_BASE_URL AFFIRM_PUBLIC_KEY AFFIRM_EXPECTED_PROMO_TEXT
-DESTINATION="${IOS_DESTINATION:-platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5}"
+DESTINATION="${IOS_DESTINATION:?Select an available simulator before running the live test}"
 xcodebuild build-for-testing -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests \
   -destination "$DESTINATION" -derivedDataPath build/live-derived
 shopt -s nullglob
