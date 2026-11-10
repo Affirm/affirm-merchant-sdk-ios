@@ -5,6 +5,8 @@
 
 #import <XCTest/XCTest.h>
 #import <WebKit/WebKit.h>
+#import <objc/runtime.h>
+#import "../AffirmSDK/AffirmClient.h"
 #import "../AffirmSDK/AffirmPromoRendering.h"
 #import "../AffirmSDK/AffirmPromotionalButton.h"
 #import "../AffirmSDK/AffirmConfiguration.h"
@@ -21,6 +23,8 @@
 
 @interface AffirmPromoRenderingTests : XCTestCase
 @property (nonatomic, strong) UIWindow *window;
+@property (nonatomic, strong) NSMutableArray<AffirmRequestHandler> *promoHandlers;
+@property (nonatomic) IMP originalSendIMP;
 @end
 
 @implementation AffirmPromoRenderingTests
@@ -29,13 +33,307 @@
 {
     [super setUp];
     [[AffirmConfiguration sharedInstance] configureWithPublicKey:@"PKNCHBIVYOT8JSOZ" environment:AffirmEnvironmentSandbox];
+
+    // Promo requests are held so each test decides when, and with what, they complete.
+    // Every other request (tracking) is dropped.
+    NSMutableArray<AffirmRequestHandler> *handlers = [NSMutableArray array];
+    self.promoHandlers = handlers;
+    Method send = class_getClassMethod([AffirmClient class], @selector(send:handler:));
+    self.originalSendIMP = method_setImplementation(send, imp_implementationWithBlock(^(id client, AffirmRequest *request, AffirmRequestHandler handler) {
+        if ([request isKindOfClass:[AffirmPromoRequest class]] && handler) {
+            [handlers addObject:[handler copy]];
+        }
+    }));
 }
 
 - (void)tearDown
 {
+    Method send = class_getClassMethod([AffirmClient class], @selector(send:handler:));
+    method_setImplementation(send, self.originalSendIMP);
+    self.promoHandlers = nil;
     self.window.hidden = YES;
     self.window = nil;
     [super tearDown];
+}
+
+#pragma mark - Render ownership
+
+- (NSDecimalNumber *)amount
+{
+    return [NSDecimalNumber decimalNumberWithString:@"50"];
+}
+
+- (void)completePromoRequestAtIndex:(NSUInteger)index json:(NSString *)json
+{
+    self.promoHandlers[index]([self responseForJSON:json], nil);
+}
+
+- (void)configureNative:(AffirmPromotionalButton *)button
+{
+    [button configureWithAmount:[self amount]
+                 affirmLogoType:AffirmLogoTypeText
+                    affirmColor:AffirmColorTypeBlue
+                           font:[UIFont systemFontOfSize:15]
+                      textColor:[UIColor blackColor]];
+}
+
+- (void)configureExplicitHTML:(AffirmPromotionalButton *)button
+{
+    [button configureByHtmlStylingWithAmount:[self amount]
+                              affirmLogoType:AffirmLogoTypeName
+                                 affirmColor:AffirmColorTypeBlue];
+}
+
+- (XCTestExpectation *)expectRenderOf:(AffirmPromotionalButton *)button
+                          finishingIn:(NSString *)state
+                               reason:(nullable NSString *)reason
+{
+    return [self expectationForNotification:AffirmPromoRenderDidFinishNotification
+                                     object:button
+                                    handler:^BOOL(NSNotification *note) {
+        AffirmPromoRenderOperation *operation = note.userInfo[AffirmPromoRenderOperationKey];
+        XCTAssertEqualObjects(operation.terminalState, state);
+        XCTAssertEqualObjects(operation.reason, reason);
+        return YES;
+    }];
+}
+
+- (NSString *)nativeTitleOf:(AffirmPromotionalButton *)button
+{
+    UIButton *nativeButton = [button valueForKey:@"button"];
+    return [nativeButton attributedTitleForState:UIControlStateNormal].string;
+}
+
+- (void)testOperationChoosesOnceAndFinishesOnce
+{
+    AffirmPromoRenderOperation *operation = [[AffirmPromoRenderOperation alloc] initWithRequestedMode:AffirmPromoRenderModeNative];
+    XCTAssertNil(operation.terminalState);
+    XCTAssertFalse([operation selectMode:AffirmPromoRenderModeNone]);
+    XCTAssertTrue([operation selectMode:AffirmPromoRenderModeNative]);
+    XCTAssertFalse([operation selectMode:AffirmPromoRenderModeHTML]);
+    XCTAssertEqual(operation.selectedMode, AffirmPromoRenderModeNative);
+
+    XCTAssertTrue([operation finishWithOutcome:AffirmPromoRenderOutcomeSuccess actualRenderer:AffirmPromoRenderModeNative reason:nil]);
+    XCTAssertFalse([operation finishWithOutcome:AffirmPromoRenderOutcomeCancelled actualRenderer:AffirmPromoRenderModeNone reason:AffirmPromoRenderReasonSuperseded]);
+    XCTAssertEqual(operation.outcome, AffirmPromoRenderOutcomeSuccess);
+    XCTAssertNil(operation.reason);
+    XCTAssertEqualObjects(operation.terminalState, @"T1");
+    XCTAssertFalse([operation selectMode:AffirmPromoRenderModeHTML]);
+}
+
+- (void)testOperationMapsEveryTerminalState
+{
+    NSString *(^state)(AffirmPromoRenderMode, AffirmPromoRenderMode, AffirmPromoRenderOutcome, AffirmPromoRenderMode, NSString *) =
+    ^NSString *(AffirmPromoRenderMode requested, AffirmPromoRenderMode selected, AffirmPromoRenderOutcome outcome, AffirmPromoRenderMode actual, NSString *reason) {
+        AffirmPromoRenderOperation *operation = [[AffirmPromoRenderOperation alloc] initWithRequestedMode:requested];
+        [operation selectMode:selected];
+        [operation finishWithOutcome:outcome actualRenderer:actual reason:reason];
+        return operation.terminalState;
+    };
+    AffirmPromoRenderMode none = AffirmPromoRenderModeNone, native = AffirmPromoRenderModeNative, html = AffirmPromoRenderModeHTML;
+    XCTAssertEqualObjects(state(native, native, AffirmPromoRenderOutcomeSuccess, native, nil), @"T1");
+    XCTAssertEqualObjects(state(html, html, AffirmPromoRenderOutcomeSuccess, html, nil), @"T2");
+    XCTAssertEqualObjects(state(native, html, AffirmPromoRenderOutcomeSuccess, native, nil), @"T3");
+    XCTAssertEqualObjects(state(native, none, AffirmPromoRenderOutcomeFailure, none, AffirmPromoRenderReasonFetchError), @"T4");
+    XCTAssertEqualObjects(state(html, html, AffirmPromoRenderOutcomeFailure, none, AffirmPromoRenderReasonHTMLTimeout), @"T5");
+    XCTAssertEqualObjects(state(native, html, AffirmPromoRenderOutcomeFailure, none, AffirmPromoRenderReasonHTMLTimeout), @"T6");
+    XCTAssertEqualObjects(state(html, html, AffirmPromoRenderOutcomeEmptyContent, none, AffirmPromoRenderReasonMissingHTML), @"T7");
+    XCTAssertEqualObjects(state(native, native, AffirmPromoRenderOutcomeFailure, none, AffirmPromoRenderReasonNativeError), @"T8");
+    XCTAssertEqualObjects(state(html, none, AffirmPromoRenderOutcomeCancelled, none, AffirmPromoRenderReasonSuperseded), @"T9");
+    XCTAssertEqualObjects(state(native, native, AffirmPromoRenderOutcomeCancelled, none, AffirmPromoRenderReasonHostDestroyed), @"T9");
+}
+
+- (void)testNativeRenderFinishesAsT1
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T1" reason:nil];
+    [self configureNative:button];
+    XCTAssertEqual(self.promoHandlers.count, 1u);
+    [self completePromoRequestAtIndex:0 json:@"{\"promo\": {\"ala\": \"Native message\"}}"];
+    [self waitForExpectations:@[finished] timeout:1];
+    XCTAssertEqualObjects([self nativeTitleOf:button], @"Native message");
+    XCTAssertFalse(button.hidden);
+}
+
+- (void)testFetchErrorFinishesAsT4
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T4" reason:AffirmPromoRenderReasonFetchError];
+    [self configureNative:button];
+    self.promoHandlers[0](nil, [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorTimedOut userInfo:nil]);
+    [self waitForExpectations:@[finished] timeout:1];
+    XCTAssertTrue(button.hidden);
+}
+
+- (void)testExplicitHTMLReadyFinishesAsT2
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T2" reason:nil];
+    [self configureExplicitHTML:button];
+    [self completePromoRequestAtIndex:0 json:@"{\"promo\": {\"ala\": \"Native\", \"html_ala\": \"<span>HTML</span>\"}}"];
+    [self waitForExpectations:@[finished] timeout:10];
+    XCTAssertFalse(button.hidden);
+    XCTAssertFalse([[button valueForKey:@"webView"] isHidden]);
+}
+
+- (void)testExplicitHTMLFailureFinishesAsT5AndStaysHidden
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T5" reason:AffirmPromoRenderReasonHTMLEmpty];
+    [self configureExplicitHTML:button];
+    [self completePromoRequestAtIndex:0 json:@"{\"promo\": {\"ala\": \"Native\", \"html_ala\": \"<script>x()</script>\"}}"];
+    [self waitForExpectations:@[finished] timeout:10];
+    XCTAssertTrue(button.hidden);
+    XCTAssertNil([self nativeTitleOf:button]);
+}
+
+- (void)testExplicitHTMLWithoutHTMLFinishesAsT7
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T7" reason:AffirmPromoRenderReasonMissingHTML];
+    [self configureExplicitHTML:button];
+    [self completePromoRequestAtIndex:0 json:@"{\"promo\": {\"ala\": \"Native\", \"html_ala\": \"\"}}"];
+    [self waitForExpectations:@[finished] timeout:1];
+    XCTAssertTrue(button.hidden);
+}
+
+- (void)testNewConfigureSupersedesOldRenderAndIgnoresItsLateReply
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    NSMutableArray<AffirmPromoRenderOperation *> *finishedOperations = [NSMutableArray array];
+    id observer = [[NSNotificationCenter defaultCenter] addObserverForName:AffirmPromoRenderDidFinishNotification
+                                                                    object:button
+                                                                     queue:nil
+                                                                usingBlock:^(NSNotification *note) {
+        [finishedOperations addObject:note.userInfo[AffirmPromoRenderOperationKey]];
+    }];
+
+    [self configureNative:button];
+    [self configureNative:button];
+    XCTAssertEqual(finishedOperations.count, 1u);
+    AffirmPromoRenderOperation *first = finishedOperations.firstObject;
+    XCTAssertEqualObjects(first.terminalState, @"T9");
+    XCTAssertEqualObjects(first.reason, AffirmPromoRenderReasonSuperseded);
+
+    [self completePromoRequestAtIndex:1 json:@"{\"promo\": {\"ala\": \"Newer\"}}"];
+    [self completePromoRequestAtIndex:0 json:@"{\"promo\": {\"ala\": \"Older\"}}"];
+    [[NSNotificationCenter defaultCenter] removeObserver:observer];
+
+    XCTAssertEqual(finishedOperations.count, 2u);
+    XCTAssertEqualObjects(finishedOperations.lastObject.terminalState, @"T1");
+    XCTAssertEqualObjects([self nativeTitleOf:button], @"Newer");
+}
+
+- (void)testNewConfigureStopsTheOldRendersPageLoad
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    [self configureExplicitHTML:button];
+    [self completePromoRequestAtIndex:0 json:@"{\"promo\": {\"html_ala\": \"<span>Older</span>\"}}"];
+    NSString *staleRenderID = [button valueForKey:@"htmlRenderID"];
+    XCTAssertNotNil(staleRenderID);
+
+    XCTestExpectation *pageOutcome = [self expectationForNotification:AffirmPromoHTMLRenderDidFinishNotification
+                                                               object:button
+                                                              handler:nil];
+    pageOutcome.inverted = YES;
+    [self configureNative:button];
+    XCTAssertNil([button valueForKey:@"htmlRenderID"]);
+    XCTAssertNil([button valueForKey:@"htmlTimeoutTimer"]);
+    [self waitForExpectations:@[pageOutcome] timeout:2];
+}
+
+- (void)testUnmanagedHTMLSupersedesAManagedRender
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *cancelled = [self expectRenderOf:button finishingIn:@"T9" reason:AffirmPromoRenderReasonSuperseded];
+    [self configureNative:button];
+    [button configureWithHtmlString:@"<span>direct</span>" amount:[self amount] remoteFontURL:nil remoteCssURL:nil];
+    [self waitForExpectations:@[cancelled] timeout:1];
+
+    XCTestExpectation *lateReport = [self expectationForNotification:AffirmPromoRenderDidFinishNotification
+                                                              object:button
+                                                             handler:nil];
+    lateReport.inverted = YES;
+    [self completePromoRequestAtIndex:0 json:@"{\"promo\": {\"ala\": \"Late\"}}"];
+    XCTAssertNil([self nativeTitleOf:button]);
+    [self waitForExpectations:@[lateReport] timeout:0.5];
+}
+
+- (void)testDeallocatedViewFinishesAsHostDestroyedAndIgnoresTheReply
+{
+    __weak AffirmPromotionalButton *weakButton = nil;
+    XCTestExpectation *destroyed = [self expectationForNotification:AffirmPromoRenderDidFinishNotification
+                                                             object:nil
+                                                            handler:^BOOL(NSNotification *note) {
+        AffirmPromoRenderOperation *operation = note.userInfo[AffirmPromoRenderOperationKey];
+        XCTAssertNil(note.object);
+        XCTAssertEqualObjects(operation.terminalState, @"T9");
+        XCTAssertEqualObjects(operation.reason, AffirmPromoRenderReasonHostDestroyed);
+        return YES;
+    }];
+    @autoreleasepool {
+        AffirmPromotionalButton *button = [self promoButton];
+        weakButton = button;
+        [self configureNative:button];
+        [button removeFromSuperview];
+    }
+    XCTAssertNil(weakButton);
+    [self waitForExpectations:@[destroyed] timeout:1];
+
+    XCTestExpectation *lateReport = [self expectationForNotification:AffirmPromoRenderDidFinishNotification
+                                                              object:nil
+                                                             handler:nil];
+    lateReport.inverted = YES;
+    [self completePromoRequestAtIndex:0 json:@"{\"promo\": {\"ala\": \"Late\"}}"];
+    [self waitForExpectations:@[lateReport] timeout:0.5];
+}
+
+- (void)testLeavingTheWindowDoesNotCancelTheRender
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T1" reason:nil];
+    [self configureNative:button];
+    [button removeFromSuperview];
+    XCTAssertNil(button.window);
+    [self completePromoRequestAtIndex:0 json:@"{\"promo\": {\"ala\": \"Offscreen\"}}"];
+    [self waitForExpectations:@[finished] timeout:1];
+    XCTAssertEqualObjects([self nativeTitleOf:button], @"Offscreen");
+}
+
+- (void)testContentProcessLossBeforeReadyFailsTheRender
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T5" reason:AffirmPromoRenderReasonRenderProcessGone];
+    [self configureExplicitHTML:button];
+    [self completePromoRequestAtIndex:0 json:@"{\"promo\": {\"html_ala\": \"<span>HTML</span>\"}}"];
+    WKWebView *webView = [button valueForKey:@"webView"];
+    [(id<WKNavigationDelegate>)button webViewWebContentProcessDidTerminate:webView];
+    [self waitForExpectations:@[finished] timeout:1];
+    XCTAssertTrue(button.hidden);
+}
+
+- (void)testContentProcessLossAfterReadyHidesWithoutReporting
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T2" reason:nil];
+    [self configureExplicitHTML:button];
+    [self completePromoRequestAtIndex:0 json:@"{\"promo\": {\"html_ala\": \"<span>HTML</span>\"}}"];
+    [self waitForExpectations:@[finished] timeout:10];
+    XCTAssertFalse(button.hidden);
+
+    XCTestExpectation *renderReport = [self expectationForNotification:AffirmPromoRenderDidFinishNotification
+                                                                object:button
+                                                               handler:nil];
+    renderReport.inverted = YES;
+    XCTestExpectation *pageReport = [self expectationForNotification:AffirmPromoHTMLRenderDidFinishNotification
+                                                              object:button
+                                                             handler:nil];
+    pageReport.inverted = YES;
+    WKWebView *webView = [button valueForKey:@"webView"];
+    [(id<WKNavigationDelegate>)button webViewWebContentProcessDidTerminate:webView];
+    XCTAssertTrue(button.hidden);
+    XCTAssertTrue(webView.hidden);
+    [self waitForExpectations:@[renderReport, pageReport] timeout:0.5];
 }
 
 - (AffirmResponse *)responseForJSON:(NSString *)json

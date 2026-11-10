@@ -136,3 +136,85 @@ NSString *AffirmPromoHTMLDocumentWithPayload(NSDictionary *payload) {
 }
 
 @end
+
+NSNotificationName const AffirmPromoRenderDidFinishNotification = @"AffirmPromoRenderDidFinish";
+NSString *const AffirmPromoRenderOperationKey = @"operation";
+
+NSString *const AffirmPromoRenderReasonFetchError = @"fetch_error";
+NSString *const AffirmPromoRenderReasonMissingHTML = @"missing_html";
+NSString *const AffirmPromoRenderReasonNativeError = @"native_error";
+NSString *const AffirmPromoRenderReasonSuperseded = @"superseded";
+NSString *const AffirmPromoRenderReasonHostDestroyed = @"host_destroyed";
+
+@implementation AffirmPromoRenderOperation
+
+- (instancetype)initWithRequestedMode:(AffirmPromoRenderMode)requestedMode
+{
+    if (self = [super init]) {
+        _renderID = [NSUUID UUID].UUIDString;
+        _requestedMode = requestedMode;
+        _selectedMode = AffirmPromoRenderModeNone;
+        _actualRenderer = AffirmPromoRenderModeNone;
+    }
+    return self;
+}
+
+- (BOOL)selectMode:(AffirmPromoRenderMode)mode
+{
+    if (self.finished || self.selectedMode != AffirmPromoRenderModeNone || mode == AffirmPromoRenderModeNone) {
+        return NO;
+    }
+    _selectedMode = mode;
+    return YES;
+}
+
+- (BOOL)finishWithOutcome:(AffirmPromoRenderOutcome)outcome
+           actualRenderer:(AffirmPromoRenderMode)actualRenderer
+                   reason:(nullable NSString *)reason
+{
+    if (self.finished) {
+        return NO;
+    }
+    _finished = YES;
+    _outcome = outcome;
+    _actualRenderer = actualRenderer;
+    _reason = [reason copy];
+    return YES;
+}
+
+- (nullable NSString *)terminalState
+{
+    if (!self.finished) {
+        return nil;
+    }
+    switch (self.outcome) {
+        case AffirmPromoRenderOutcomeCancelled:
+            return @"T9";
+        case AffirmPromoRenderOutcomeEmptyContent:
+            return @"T7";
+        case AffirmPromoRenderOutcomeSuccess:
+            if (self.selectedMode == AffirmPromoRenderModeNative && self.actualRenderer == AffirmPromoRenderModeNative) {
+                return @"T1";
+            }
+            if (self.selectedMode == AffirmPromoRenderModeHTML && self.actualRenderer == AffirmPromoRenderModeHTML) {
+                return @"T2";
+            }
+            if (self.selectedMode == AffirmPromoRenderModeHTML && self.actualRenderer == AffirmPromoRenderModeNative) {
+                return @"T3";
+            }
+            return nil;
+        case AffirmPromoRenderOutcomeFailure:
+            if ([self.reason isEqualToString:AffirmPromoRenderReasonNativeError]) {
+                return @"T8";
+            }
+            if (self.selectedMode == AffirmPromoRenderModeNone) {
+                return @"T4";
+            }
+            if (self.selectedMode == AffirmPromoRenderModeHTML) {
+                return self.requestedMode == AffirmPromoRenderModeHTML ? @"T5" : @"T6";
+            }
+            return nil;
+    }
+}
+
+@end

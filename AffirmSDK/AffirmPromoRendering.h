@@ -48,4 +48,59 @@ FOUNDATION_EXPORT NSString *_Nullable AffirmPromoHTMLDocumentWithPayload(NSDicti
 @property (nonatomic, weak, nullable) id<WKScriptMessageHandler> target;
 @end
 
+typedef NS_ENUM(NSInteger, AffirmPromoRenderMode) {
+    AffirmPromoRenderModeNone,
+    AffirmPromoRenderModeNative,
+    AffirmPromoRenderModeHTML
+};
+
+typedef NS_ENUM(NSInteger, AffirmPromoRenderOutcome) {
+    AffirmPromoRenderOutcomeSuccess,
+    AffirmPromoRenderOutcomeFailure,
+    AffirmPromoRenderOutcomeEmptyContent,
+    AffirmPromoRenderOutcomeCancelled
+};
+
+/// Posted once per managed render when it reaches its terminal state. The object is the promo
+/// view, or nil when the view was deallocated; `AffirmPromoRenderOperationKey` holds the render.
+FOUNDATION_EXPORT NSNotificationName const AffirmPromoRenderDidFinishNotification;
+FOUNDATION_EXPORT NSString *const AffirmPromoRenderOperationKey;
+
+FOUNDATION_EXPORT NSString *const AffirmPromoRenderReasonFetchError;
+FOUNDATION_EXPORT NSString *const AffirmPromoRenderReasonMissingHTML;
+FOUNDATION_EXPORT NSString *const AffirmPromoRenderReasonNativeError;
+FOUNDATION_EXPORT NSString *const AffirmPromoRenderReasonSuperseded;
+FOUNDATION_EXPORT NSString *const AffirmPromoRenderReasonHostDestroyed;
+
+/// State for one managed render, from a configure… call to exactly one terminal state (T1–T9).
+/// Main thread only.
+@interface AffirmPromoRenderOperation : NSObject
+
+@property (nonatomic, copy, readonly) NSString *renderID;
+@property (nonatomic, readonly) AffirmPromoRenderMode requestedMode;
+@property (nonatomic, readonly) AffirmPromoRenderMode selectedMode;
+/// The page load this render owns, so page results from other loads are not attributed to it.
+@property (nonatomic, copy, nullable) NSString *htmlRenderID;
+
+@property (nonatomic, readonly, getter=isFinished) BOOL finished;
+@property (nonatomic, readonly) AffirmPromoRenderOutcome outcome;
+@property (nonatomic, readonly) AffirmPromoRenderMode actualRenderer;
+@property (nonatomic, copy, readonly, nullable) NSString *reason;
+
+- (instancetype)initWithRequestedMode:(AffirmPromoRenderMode)requestedMode NS_DESIGNATED_INITIALIZER;
+- (instancetype)init NS_UNAVAILABLE;
+
+/// The renderer is chosen once. Returns NO, and changes nothing, if it was already chosen or the render finished.
+- (BOOL)selectMode:(AffirmPromoRenderMode)mode;
+
+/// Returns NO, and changes nothing, if the render already finished.
+- (BOOL)finishWithOutcome:(AffirmPromoRenderOutcome)outcome
+           actualRenderer:(AffirmPromoRenderMode)actualRenderer
+                   reason:(nullable NSString *)reason;
+
+/// "T1" … "T9" for a finished render, nil before that.
+- (nullable NSString *)terminalState;
+
+@end
+
 NS_ASSUME_NONNULL_END
