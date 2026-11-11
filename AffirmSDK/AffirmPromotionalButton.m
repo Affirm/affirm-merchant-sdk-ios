@@ -17,9 +17,6 @@
 #import "AffirmPromoRendering.h"
 
 static NSString *const AFFIRM_DEFAULT_ALA_TEMPLATE = @"Pay over time with Affirm";
-// Cold start of the web process can exceed the render budget before any script runs.
-// Keep the 5s budget for a document that has committed, and allow longer for one that never does.
-static const NSTimeInterval AffirmPromoHTMLLoadTimeoutSeconds = 15;
 
 static NSString * FormatAffirmLogoString(AffirmLogoType type)
 {
@@ -516,7 +513,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
     }
     self.htmlBaseURL = baseURL;
     self.htmlNavigation = [self.webView loadHTMLString:page baseURL:baseURL];
-    [self scheduleHTMLTimeoutForRenderID:renderID interval:AffirmPromoHTMLLoadTimeoutSeconds];
+    [self scheduleHTMLTimeoutForRenderID:renderID];
 }
 
 - (void)supersedeHTMLRender
@@ -539,15 +536,11 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
     return [url.absoluteString isEqualToString:expected.absoluteString];
 }
 
-- (void)scheduleHTMLTimeoutForRenderID:(NSString *)renderID interval:(NSTimeInterval)interval
+- (void)scheduleHTMLTimeoutForRenderID:(NSString *)renderID
 {
     [self.htmlTimeoutTimer invalidate];
-    self.htmlTimeoutTimer = nil;
-    if (renderID.length == 0) {
-        return;
-    }
     __weak typeof(self) weakSelf = self;
-    self.htmlTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:interval
+    self.htmlTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:AffirmPromoHTMLTimeoutSeconds
                                                              repeats:NO
                                                                block:^(NSTimer *timer) {
         [weakSelf failHTMLRenderWithReason:AffirmPromoRenderReasonHTMLTimeout renderID:renderID];
@@ -609,16 +602,6 @@ decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
         [self showALAModal:nil];
     }
     decisionHandler(WKNavigationActionPolicyCancel);
-}
-
-- (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation
-{
-    // The render budget starts once the document is executing. Time spent launching WebContent
-    // is not part of that budget; a process that never commits still hits the load watchdog.
-    if (self.htmlReady || ![self isCurrentHTMLNavigation:navigation]) {
-        return;
-    }
-    [self scheduleHTMLTimeoutForRenderID:self.htmlRenderID interval:AffirmPromoHTMLTimeoutSeconds];
 }
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation

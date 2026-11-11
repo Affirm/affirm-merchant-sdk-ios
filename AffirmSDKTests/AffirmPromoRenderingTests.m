@@ -24,6 +24,23 @@
 
 @implementation AffirmPromoRenderingTests
 
++ (void)setUp
+{
+    [super setUp];
+    // The first WebView in the process pays for launching WebKit's helper processes. On CI that
+    // alone can exceed the 5s render budget, so pay it once here instead of in the first test.
+    WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
+    __block BOOL done = NO;
+    [webView loadHTMLString:@"<p>warm</p>" baseURL:nil];
+    [webView evaluateJavaScript:@"document.readyState" completionHandler:^(id result, NSError *error) {
+        done = YES;
+    }];
+    NSDate *deadline = [NSDate dateWithTimeIntervalSinceNow:30];
+    while (!done && [deadline timeIntervalSinceNow] > 0) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    }
+}
+
 - (void)setUp
 {
     [super setUp];
@@ -181,7 +198,10 @@
     NSString *html = @"<span>ok</span>";
     XCTestExpectation *finished = [self expectationForNotification:AffirmPromoHTMLRenderDidFinishNotification
                                                             object:button
-                                                           handler:nil];
+                                                           handler:^BOOL(NSNotification *note) {
+        XCTAssertEqualObjects(note.userInfo[@"outcome"], @"ready", @"first render failed: %@", note.userInfo[@"reason"]);
+        return YES;
+    }];
     [button configureWithHtmlString:html
                              amount:[NSDecimalNumber decimalNumberWithString:@"50"]
                       remoteFontURL:nil

@@ -8,6 +8,7 @@
         <p id="affirm-promo-root"></p>
         <script>
             (function () {
+                var host = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.affirmPromo;
                 var settled = false;
                 var payload = null;
                 try {
@@ -16,25 +17,19 @@
                     payload = null;
                 }
                 function post(body) {
-                    var bridge = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.affirmPromo;
-                    if (!bridge || !payload) {
+                    if (!host || !payload) {
                         return;
                     }
                     body.renderId = payload.renderId;
                     try {
-                        bridge.postMessage(body);
+                        host.postMessage(body);
                     } catch (e) {}
                 }
                 function fail(reason) {
-                    if (settled) {
-                        return;
-                    }
-                    settled = true;
-                    // Post after this turn. A failure reported during the initial parse can be
-                    // dropped, and the native timeout then wins with html_timeout.
-                    setTimeout(function () {
+                    if (!settled) {
+                        settled = true;
                         post({ event: 'failure', reason: reason });
-                    }, 0);
+                    }
                 }
                 if (!payload) {
                     fail('template_error');
@@ -162,7 +157,9 @@
                     waits.push(document.fonts.ready);
                 }
                 Promise.all(waits).then(function () {
-                    requestAnimationFrame(function () {
+                    // The WebView stays hidden until ready, and a hidden view may never get an
+                    // animation frame. getBoundingClientRect forces layout, so no frame is needed.
+                    setTimeout(function () {
                         if (settled) {
                             return;
                         }
