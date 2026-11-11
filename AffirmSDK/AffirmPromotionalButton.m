@@ -64,6 +64,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
 @property (nonatomic, copy, nullable) NSString *loadedHTML;
 @property (nonatomic, copy, nullable) NSString *loadedCSS;
 @property (nonatomic, copy, nullable) NSString *loadedFont;
+@property (nonatomic) BOOL loadedMigrated;
 @property (nonatomic, strong, nullable) AffirmPromoRenderOperation *currentOperation;
 @property (nonatomic, strong, nullable) UIColor *defaultWebViewBackgroundColor;
 @property (nonatomic, strong, nullable) UIColor *defaultWebViewScrollBackgroundColor;
@@ -587,10 +588,12 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
     [self applyWebViewBackgroundForOperation:operation];
     NSString *css = remoteCssURL.absoluteString ?: @"";
     NSString *font = remoteFontURL.absoluteString ?: @"";
+    BOOL migrated = operation.requestedMode == AffirmPromoRenderModeNative;
     if (!self.hidden && !self.webView.hidden && self.htmlReady
         && [self.loadedHTML isEqualToString:htmlString ?: @""]
         && [self.loadedCSS isEqualToString:css]
-        && [self.loadedFont isEqualToString:font]) {
+        && [self.loadedFont isEqualToString:font]
+        && self.loadedMigrated == migrated) {
         operation.htmlRenderID = self.htmlRenderID;
         [self finishOperation:operation
                   withOutcome:AffirmPromoRenderOutcomeSuccess
@@ -603,6 +606,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
     self.loadedHTML = htmlString ?: @"";
     self.loadedCSS = css;
     self.loadedFont = font;
+    self.loadedMigrated = migrated;
     self.webView.hidden = YES;
     self.htmlReady = NO;
     self.clickable = NO;
@@ -630,6 +634,8 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
         @"locale": configuration.locale ?: @"",
         @"countryCode": configuration.countryCode ?: @"",
         @"bundledCSS": AffirmPromoBundledCSS(),
+        // Migrated calls match the native button's zero inset; explicit HTML keeps the browser margin.
+        @"zeroMargin": @(migrated),
         @"timeoutMs": @((NSInteger)(AffirmPromoHTMLTimeoutSeconds * 1000))
     };
     NSString *page = AffirmPromoHTMLDocumentWithPayload(payload);

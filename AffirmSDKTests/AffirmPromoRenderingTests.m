@@ -1062,4 +1062,241 @@
     XCTAssertEqualObjects([nativeButton attributedTitleForState:UIControlStateNormal].string, @"native");
 }
 
+#pragma mark - Sanitization and fallback
+
+// Real sandbox responses, read from the source tree; tests run on the simulator only.
+- (NSDictionary<NSString *, NSDictionary *> *)promoFixtures
+{
+    NSString *directory = [[NSString stringWithUTF8String:__FILE__] stringByDeletingLastPathComponent];
+    NSData *data = [NSData dataWithContentsOfFile:[directory stringByAppendingPathComponent:@"Fixtures/promo-responses.json"]];
+    XCTAssertNotNil(data);
+    NSMutableDictionary *fixtures = [[NSJSONSerialization JSONObjectWithData:data options:0 error:nil] mutableCopy];
+    [fixtures removeObjectForKey:@"_source"];
+    return fixtures;
+}
+
+- (id)evaluate:(NSString *)script in:(AffirmPromotionalButton *)button
+{
+    WKWebView *webView = [button valueForKey:@"webView"];
+    XCTestExpectation *done = [self expectationWithDescription:script];
+    __block id value;
+    [webView evaluateJavaScript:script completionHandler:^(id result, NSError *error) {
+        XCTAssertNil(error, @"%@", script);
+        value = result;
+        [done fulfill];
+    }];
+    [self waitForExpectations:@[done] timeout:5];
+    return value;
+}
+
+- (XCTestExpectation *)expectPageReadyOf:(AffirmPromotionalButton *)button
+{
+    return [self expectationForNotification:AffirmPromoHTMLRenderDidFinishNotification
+                                     object:button
+                                    handler:^BOOL(NSNotification *note) {
+        XCTAssertEqualObjects(note.userInfo[@"outcome"], @"ready", @"%@", note.userInfo[@"reason"]);
+        return YES;
+    }];
+}
+
+- (void)showHTML:(NSString *)html in:(AffirmPromotionalButton *)button remoteCssURL:(nullable NSURL *)css
+{
+    XCTestExpectation *ready = [self expectPageReadyOf:button];
+    [button configureWithHtmlString:html amount:[self amount] remoteFontURL:nil remoteCssURL:css];
+    [self waitForExpectations:@[ready] timeout:10];
+}
+
+- (void)testRealPromoResponsesKeepEveryElementAfterSanitizing
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    NSMutableSet<NSString *> *seen = [NSMutableSet set];
+    [[self promoFixtures] enumerateKeysAndObjectsUsingBlock:^(NSString *name, NSDictionary *response, BOOL *stop) {
+        NSString *html = response[@"promo"][@"html_ala"];
+        // The same HTML on a visible button is reused without a new page load.
+        if ([seen containsObject:html]) {
+            return;
+        }
+        [seen addObject:html];
+        [self showHTML:html in:button remoteCssURL:nil];
+        NSData *source = [NSJSONSerialization dataWithJSONObject:@[html] options:0 error:nil];
+        NSString *script = [NSString stringWithFormat:
+            @"(function (source) {"
+            @"  var reference = document.createElement('div');"
+            @"  reference.innerHTML = source;"
+            @"  return reference.innerHTML === document.getElementById('affirm-promo-root').innerHTML;"
+            @"})(%@[0])", [[NSString alloc] initWithData:source encoding:NSUTF8StringEncoding]];
+        XCTAssertEqualObjects([self evaluate:script in:button], @YES, @"%@", name);
+        NSString *root = [self evaluate:@"document.getElementById('affirm-promo-root').innerHTML" in:button];
+        XCTAssertTrue([root containsString:@"class=\"affirm-ala-price\""], @"%@", name);
+        XCTAssertTrue([root containsString:@"class=\"affirm-modal-trigger\""], @"%@", name);
+        if ([html containsString:@"__apr_badge"]) {
+            XCTAssertTrue([root containsString:@"class=\"__apr_badge __apr_badge_indigo\""], @"%@", name);
+        }
+    }];
+}
+
+- (void)testMigratedRealResponseRendersAsHTMLWithoutBodyMargin
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T2"
+                                        decisionReason:AffirmPromoDecisionReasonFlagTrue fallbackReason:nil];
+    [self configureNative:button];
+    NSData *json = [NSJSONSerialization dataWithJSONObject:[self promoFixtures][@"installment_badge_logo_flag_on"] options:0 error:nil];
+    [self completePromoRequestAtIndex:0 json:[[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding]];
+    [self waitForExpectations:@[finished] timeout:10];
+    XCTAssertEqualObjects([self evaluate:@"getComputedStyle(document.body).marginTop" in:button], @"0px");
+    NSString *root = [self evaluate:@"document.getElementById('affirm-promo-root').innerHTML" in:button];
+    XCTAssertTrue([root containsString:@"__apr_badge_indigo"]);
+}
+
+- (void)testExplicitHTMLKeepsTheBrowserBodyMargin
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    [self showHTML:@"<span>ok</span>" in:button remoteCssURL:nil];
+    XCTAssertEqualObjects([self evaluate:@"getComputedStyle(document.body).marginTop" in:button], @"8px");
+}
+
+- (void)testSameHTMLReloadsWhenSwitchingBetweenMigratedAndExplicit
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *migrated = [self expectRenderOf:button finishingIn:@"T2"
+                                        decisionReason:AffirmPromoDecisionReasonFlagTrue fallbackReason:nil];
+    [self configureNative:button];
+    [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<span>HTML</span>" flag:@"true"]];
+    [self waitForExpectations:@[migrated] timeout:10];
+
+    [self showHTML:@"<span>HTML</span>" in:button remoteCssURL:nil];
+    XCTAssertEqualObjects([self evaluate:@"getComputedStyle(document.body).marginTop" in:button], @"8px");
+}
+
+- (void)testRejectedMarkupNeverReachesWebKit
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    NSString *html = @"<span class=\"keep\">keep</span>"
+        @"<iframe src=\"https://frame.test\"></iframe><frameset><frame src=\"https://frame.test\"></frameset>"
+        @"<form action=\"https://evil.test\"><input name=\"x\"></form>"
+        @"<style>body{display:none}</style>"
+        @"<span style=\"color:red\" aria-label=\"a\" data-x=\"d\" onclick=\"window.pwned=1\">s</span>"
+        @"<a id=\"clobber\" name=\"cookie\" href=\"http://evil.test\">h</a>"
+        @"<a href=\"javascript:window.pwned=2\">j</a><a href=\"data:text/html,x\">d</a>"
+        @"<img src=\"data:image/png;base64,AA\"><img src=\"http://evil.test/x.png\">"
+        @"<svg onload=\"window.pwned=3\"></svg>";
+    [self showHTML:html in:button remoteCssURL:nil];
+    NSDictionary *result = [self evaluate:
+        @"(function () {"
+        @"  var root = document.getElementById('affirm-promo-root');"
+        @"  var all = Array.prototype.slice.call(root.querySelectorAll('*'));"
+        @"  return {"
+        @"    blocked: root.querySelectorAll('iframe, frame, frameset, form, input, style, script').length,"
+        @"    attrs: all.filter(function (el) {"
+        @"      return Array.prototype.some.call(el.attributes, function (a) {"
+        @"        return /^(style|id|name|on|aria-|data-)/.test(a.name);"
+        @"      });"
+        @"    }).length,"
+        @"    urls: all.filter(function (el) { return el.hasAttribute('href') || el.hasAttribute('src'); }).length,"
+        @"    clobbered: typeof window.clobber !== 'undefined' || typeof document.cookie !== 'string',"
+        @"    pwned: typeof window.pwned !== 'undefined',"
+        @"    visible: getComputedStyle(document.body).display !== 'none',"
+        @"    keep: !!root.querySelector('span.keep')"
+        @"  };"
+        @"})()" in:button];
+    XCTAssertEqualObjects(result[@"blocked"], @0);
+    XCTAssertEqualObjects(result[@"attrs"], @0);
+    XCTAssertEqualObjects(result[@"urls"], @0);
+    XCTAssertEqualObjects(result[@"clobbered"], @NO);
+    XCTAssertEqualObjects(result[@"pwned"], @NO);
+    XCTAssertEqualObjects(result[@"visible"], @YES);
+    XCTAssertEqualObjects(result[@"keep"], @YES);
+}
+
+- (void)testMerchantStylesheetLoadsAfterTheBundledCSS
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    NSURL *css = [[NSBundle resourceBundle] URLForResource:@"badge_styles" withExtension:@"css"];
+    XCTAssertNotNil(css);
+    [self showHTML:@"<span>ok</span>" in:button remoteCssURL:css];
+    // affirm.js may append its own <style> later, so compare only the first style with the link.
+    NSArray *order = [self evaluate:
+        @"Array.prototype.map.call(document.head.querySelectorAll('style, link'), function (el) {"
+        @"  return el.tagName === 'STYLE' ? 'bundled' : 'merchant';"
+        @"}).slice(0, 2)" in:button];
+    XCTAssertEqualObjects(order, (@[@"bundled", @"merchant"]));
+}
+
+- (void)testHeightFollowsContentChanges
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    [self showHTML:@"<span>ok</span>" in:button remoteCssURL:nil];
+    NSLayoutConstraint *height = [button valueForKey:@"webViewHeightConstraint"];
+    CGFloat before = height.constant;
+    [self evaluate:@"document.getElementById('affirm-promo-root').style.paddingBottom = '120px'" in:button];
+    NSPredicate *grew = [NSPredicate predicateWithBlock:^BOOL(NSLayoutConstraint *constraint, NSDictionary *bindings) {
+        return constraint.constant >= before + 100;
+    }];
+    [self waitForExpectations:@[[self expectationForPredicate:grew evaluatedWithObject:height handler:nil]] timeout:5];
+}
+
+- (void)testMigratedImageFailureFallsBackToNativeText
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T3"
+                                        decisionReason:AffirmPromoDecisionReasonFlagTrue
+                                        fallbackReason:AffirmPromoRenderReasonImageFailed];
+    [self configureNative:button];
+    [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native"
+                                                               html:@"<span>ok</span><img src='https://127.0.0.1:1/x.png'>"
+                                                               flag:@"true"]];
+    [self waitForExpectations:@[finished] timeout:10];
+    XCTAssertEqualObjects([self nativeTitleOf:button], @"Native");
+    XCTAssertTrue([[button valueForKey:@"webView"] isHidden]);
+}
+
+- (void)testMigratedProcessLossBeforeReadyFallsBackToNativeText
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T3"
+                                        decisionReason:AffirmPromoDecisionReasonFlagTrue
+                                        fallbackReason:AffirmPromoRenderReasonRenderProcessGone];
+    [self configureNative:button];
+    [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<span>HTML</span>" flag:@"true"]];
+    WKWebView *webView = [button valueForKey:@"webView"];
+    [(id<WKNavigationDelegate>)button webViewWebContentProcessDidTerminate:webView];
+    [self waitForExpectations:@[finished] timeout:1];
+    XCTAssertEqualObjects([self nativeTitleOf:button], @"Native");
+}
+
+- (void)configureNativeWithoutTextColor:(AffirmPromotionalButton *)button
+{
+    UIColor *missingColor = nil;
+    [button configureWithAmount:[self amount]
+                 affirmLogoType:AffirmLogoTypeText
+                    affirmColor:AffirmColorTypeBlue
+                           font:[UIFont systemFontOfSize:15]
+                      textColor:missingColor];
+}
+
+- (void)testNativeTextErrorFinishesAsT8
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T8"
+                                        decisionReason:AffirmPromoDecisionReasonFlagMissing fallbackReason:nil];
+    [self configureNativeWithoutTextColor:button];
+    [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:nil flag:nil]];
+    [self waitForExpectations:@[finished] timeout:1];
+    XCTAssertTrue(button.hidden);
+}
+
+- (void)testMigratedFallbackErrorFinishesAsT8
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T8"
+                                        decisionReason:AffirmPromoDecisionReasonFlagTrue
+                                        fallbackReason:AffirmPromoRenderReasonHTMLEmpty];
+    [self configureNativeWithoutTextColor:button];
+    [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<script>x()</script>" flag:@"true"]];
+    [self waitForExpectations:@[finished] timeout:10];
+    XCTAssertTrue(button.hidden);
+    XCTAssertTrue([[button valueForKey:@"webView"] isHidden]);
+}
+
 @end
