@@ -65,6 +65,8 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
 @property (nonatomic, copy, nullable) NSString *loadedCSS;
 @property (nonatomic, copy, nullable) NSString *loadedFont;
 @property (nonatomic, strong, nullable) AffirmPromoRenderOperation *currentOperation;
+@property (nonatomic, strong, nullable) UIColor *defaultWebViewBackgroundColor;
+@property (nonatomic, strong, nullable) UIColor *defaultWebViewScrollBackgroundColor;
 
 @end
 
@@ -247,6 +249,8 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
     webView.navigationDelegate = self;
     webView.hidden = YES;
     webView.allowsLinkPreview = NO;
+    self.defaultWebViewBackgroundColor = webView.backgroundColor;
+    self.defaultWebViewScrollBackgroundColor = webView.scrollView.backgroundColor;
     [self addSubview:self.webView = webView];
     NSDictionary *views = NSDictionaryOfVariableBindings(webView);
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[webView]|" options:0 metrics:nil views:views]];
@@ -342,7 +346,10 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
                                                                        logoType:FormatAffirmDataTypeString(affirmLogoType)
                                                                       logoColor:FormatAffirmColorString(logoColor)
                                                                           items:items];
-    AffirmPromoRenderOperation *operation = [self beginOperationWithRequestedMode:AffirmPromoRenderModeHTML];
+    AffirmPromoRenderPolicy *policy = [[AffirmPromoRenderPolicy alloc] initWithRequestedMode:AffirmPromoRenderModeHTML
+                                                                                      optOut:[AffirmConfiguration sharedInstance].useLegacyNativeRendering
+                                                                                        font:nil];
+    AffirmPromoRenderOperation *operation = [self beginOperationWithPolicy:policy];
     __weak typeof(self) weakSelf = self;
     [AffirmPromoClient send:request handler:^(AffirmResponse * _Nullable response, NSError * _Nullable error) {
         AffirmPromotionalButton *strongSelf = weakSelf;
@@ -362,7 +369,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
         if (promoResponse.ala.length > 0) {
             strongSelf.accessibilityLabel = [promoResponse.ala stringByReplacingOccurrencesOfString:@"{Affirm}" withString:@"Affirm"];
         }
-        [operation selectMode:AffirmPromoRenderModeHTML];
+        [operation decideWithFlagStatus:promoResponse.renderFlagStatus];
         if (promoResponse.htmlAla.length == 0) {
             [strongSelf configureWithAttributedText:nil response:response error:error];
             [strongSelf finishOperation:operation
@@ -428,7 +435,10 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
                                                                        logoType:affirmLogoType == AffirmLogoTypeName ? nil : FormatAffirmDataTypeString(affirmLogoType)
                                                                       logoColor:FormatAffirmColorString(logoColor)
                                                                           items:items];
-    AffirmPromoRenderOperation *operation = [self beginOperationWithRequestedMode:AffirmPromoRenderModeNative];
+    AffirmPromoRenderPolicy *policy = [[AffirmPromoRenderPolicy alloc] initWithRequestedMode:AffirmPromoRenderModeNative
+                                                                                      optOut:[AffirmConfiguration sharedInstance].useLegacyNativeRendering
+                                                                                        font:font];
+    AffirmPromoRenderOperation *operation = [self beginOperationWithPolicy:policy];
     __weak typeof(self) weakSelf = self;
     [AffirmPromoClient send:request handler:^(AffirmResponse * _Nullable response, NSError * _Nullable error) {
         AffirmPromotionalButton *strongSelf = weakSelf;
@@ -450,14 +460,20 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
             strongSelf.accessibilityLabel = [promoResponse.ala stringByReplacingOccurrencesOfString:@"{Affirm}" withString:@"Affirm"];
         }
         strongSelf.showPrequal = promoResponse.showPrequal;
-        [operation selectMode:AffirmPromoRenderModeNative];
-        @try {
+        NSAttributedString *(^nativeText)(void) = ^NSAttributedString *{
             UIImage *logo = nil;
             if (affirmLogoType != AffirmLogoTypeText) {
                 logo = [AffirmPromotionalButton getAffirmDisplayForLogoType:affirmLogoType colorType:affirmColor];
             }
-            NSAttributedString *attributedString = [AffirmPromotionalButton appendLogo:logo toText:template font:font textColor:textColor logoType:affirmLogoType];
-            [strongSelf configureWithAttributedText:attributedString response:response error:error];
+            return [AffirmPromotionalButton appendLogo:logo toText:template font:font textColor:textColor logoType:affirmLogoType];
+        };
+        if ([operation decideWithFlagStatus:promoResponse.renderFlagStatus] == AffirmPromoRenderModeHTML) {
+            operation.nativeFallback = promoResponse.ala.length > 0 ? nativeText : nil;
+            [strongSelf renderMigratedHTMLString:promoResponse.htmlAla operation:operation];
+            return;
+        }
+        @try {
+            [strongSelf configureWithAttributedText:nativeText() response:response error:error];
         } @catch (NSException *exception) {
             [strongSelf hidePromo];
             [strongSelf finishOperation:operation
@@ -516,11 +532,59 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
     [self renderHTMLString:htmlString remoteFontURL:remoteFontURL remoteCssURL:remoteCssURL operation:nil];
 }
 
+- (void)renderMigratedHTMLString:(NSString *)htmlString operation:(AffirmPromoRenderOperation *)operation
+{
+    if (htmlString.length == 0) {
+        [self fallBackToNativeForOperation:operation reason:AffirmPromoRenderReasonMissingHTML];
+        return;
+    }
+    // remoteFontURL and remoteCssURL belong to explicit HTML styling; a migrated call has neither.
+    [self renderHTMLString:htmlString remoteFontURL:nil remoteCssURL:nil operation:operation];
+}
+
+- (void)fallBackToNativeForOperation:(AffirmPromoRenderOperation *)operation reason:(NSString *)reason
+{
+    operation.fallbackReason = reason;
+    if (operation.nativeFallback == nil) {
+        [self hidePromo];
+        BOOL nothingToTry = [reason isEqualToString:AffirmPromoRenderReasonMissingHTML];
+        [self finishOperation:operation
+                  withOutcome:nothingToTry ? AffirmPromoRenderOutcomeEmptyContent : AffirmPromoRenderOutcomeFailure
+               actualRenderer:AffirmPromoRenderModeNone
+                       reason:reason];
+        return;
+    }
+    @try {
+        [self configureWithAttributedText:operation.nativeFallback() response:nil error:nil];
+    } @catch (NSException *exception) {
+        [self hidePromo];
+        [self finishOperation:operation
+                  withOutcome:AffirmPromoRenderOutcomeFailure
+               actualRenderer:AffirmPromoRenderModeNone
+                       reason:AffirmPromoRenderReasonNativeError];
+        return;
+    }
+    [self finishOperation:operation
+              withOutcome:AffirmPromoRenderOutcomeSuccess
+           actualRenderer:AffirmPromoRenderModeNative
+                   reason:nil];
+}
+
+- (void)applyWebViewBackgroundForOperation:(nullable AffirmPromoRenderOperation *)operation
+{
+    // Migrated calls let the container show through; explicit HTML keeps the web view defaults.
+    BOOL transparent = operation.requestedMode == AffirmPromoRenderModeNative;
+    self.webView.opaque = !transparent;
+    self.webView.backgroundColor = transparent ? [UIColor clearColor] : self.defaultWebViewBackgroundColor;
+    self.webView.scrollView.backgroundColor = transparent ? [UIColor clearColor] : self.defaultWebViewScrollBackgroundColor;
+}
+
 - (void)renderHTMLString:(NSString *)htmlString
            remoteFontURL:(nullable NSURL *)remoteFontURL
             remoteCssURL:(nullable NSURL *)remoteCssURL
                operation:(nullable AffirmPromoRenderOperation *)operation
 {
+    [self applyWebViewBackgroundForOperation:operation];
     NSString *css = remoteCssURL.absoluteString ?: @"";
     NSString *font = remoteFontURL.absoluteString ?: @"";
     if (!self.hidden && !self.webView.hidden && self.htmlReady
@@ -587,10 +651,10 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
 
 #pragma mark - Render ownership
 
-- (AffirmPromoRenderOperation *)beginOperationWithRequestedMode:(AffirmPromoRenderMode)requestedMode
+- (AffirmPromoRenderOperation *)beginOperationWithPolicy:(AffirmPromoRenderPolicy *)policy
 {
     [self supersedeCurrentOperation];
-    AffirmPromoRenderOperation *operation = [[AffirmPromoRenderOperation alloc] initWithRequestedMode:requestedMode];
+    AffirmPromoRenderOperation *operation = [[AffirmPromoRenderOperation alloc] initWithPolicy:policy];
     self.currentOperation = operation;
     return operation;
 }
@@ -645,6 +709,8 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
                   withOutcome:AffirmPromoRenderOutcomeSuccess
                actualRenderer:AffirmPromoRenderModeHTML
                        reason:nil];
+    } else if (operation.requestedMode == AffirmPromoRenderModeNative) {
+        [self fallBackToNativeForOperation:operation reason:reason];
     } else {
         [self finishOperation:operation
                   withOutcome:AffirmPromoRenderOutcomeFailure

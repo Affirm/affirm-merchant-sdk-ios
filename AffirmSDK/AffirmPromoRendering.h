@@ -7,7 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import <WebKit/WebKit.h>
+#import "AffirmRequest.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -72,26 +74,82 @@ FOUNDATION_EXPORT NSString *const AffirmPromoRenderReasonNativeError;
 FOUNDATION_EXPORT NSString *const AffirmPromoRenderReasonSuperseded;
 FOUNDATION_EXPORT NSString *const AffirmPromoRenderReasonHostDestroyed;
 
+FOUNDATION_EXPORT NSString *const AffirmPromoDecisionReasonExplicitHTML;
+FOUNDATION_EXPORT NSString *const AffirmPromoDecisionReasonOptOut;
+FOUNDATION_EXPORT NSString *const AffirmPromoDecisionReasonUnsupportedFont;
+FOUNDATION_EXPORT NSString *const AffirmPromoDecisionReasonFlagTrue;
+FOUNDATION_EXPORT NSString *const AffirmPromoDecisionReasonFlagFalse;
+FOUNDATION_EXPORT NSString *const AffirmPromoDecisionReasonFlagMissing;
+FOUNDATION_EXPORT NSString *const AffirmPromoDecisionReasonFlagNull;
+FOUNDATION_EXPORT NSString *const AffirmPromoDecisionReasonFlagMalformed;
+
+/// One of the twelve fonts that have an HTML mapping: the system, serif and monospaced designs,
+/// each in regular, bold, italic and bold-italic.
+@interface AffirmPromoFontStyle : NSObject
+/// `system-ui`, `ui-serif` or `ui-monospace`.
+@property (nonatomic, copy, readonly) NSString *cssFamily;
+@property (nonatomic, readonly, getter=isBold) BOOL bold;
+@property (nonatomic, readonly, getter=isItalic) BOOL italic;
+@property (nonatomic, readonly) CGFloat pointSize;
+@end
+
+/// nil when the font has no supported HTML mapping (other weights, the rounded design, named OS
+/// fonts, app fonts). Matches by name against fonts UIKit builds at the same size and moment.
+FOUNDATION_EXPORT AffirmPromoFontStyle *_Nullable AffirmPromoFontStyleForFont(UIFont *_Nullable font);
+
+/// The renderer decision's inputs, captured when configure… starts so later configuration
+/// changes cannot affect the render.
+@interface AffirmPromoRenderPolicy : NSObject
+
+@property (nonatomic, readonly) AffirmPromoRenderMode requestedMode;
+@property (nonatomic, readonly) BOOL optOut;
+/// nil for explicit HTML (it takes no UIFont) and for native fonts without an HTML mapping.
+@property (nonatomic, strong, readonly, nullable) AffirmPromoFontStyle *fontStyle;
+
+- (instancetype)initWithRequestedMode:(AffirmPromoRenderMode)requestedMode
+                               optOut:(BOOL)optOut
+                                 font:(nullable UIFont *)font NS_DESIGNATED_INITIALIZER;
+- (instancetype)init NS_UNAVAILABLE;
+
+/// The first matching rule: explicit HTML, opt-out, unsupported font, flag true, otherwise native.
+- (AffirmPromoRenderMode)modeForFlagStatus:(AffirmPromoRenderFlagStatus)flagStatus
+                                    reason:(NSString *_Nullable *_Nullable)reason;
+
+@end
+
 /// State for one managed render, from a configure… call to exactly one terminal state (T1–T9).
 /// Main thread only.
 @interface AffirmPromoRenderOperation : NSObject
 
 @property (nonatomic, copy, readonly) NSString *renderID;
+@property (nonatomic, strong, readonly) AffirmPromoRenderPolicy *policy;
 @property (nonatomic, readonly) AffirmPromoRenderMode requestedMode;
 @property (nonatomic, readonly) AffirmPromoRenderMode selectedMode;
+@property (nonatomic, copy, readonly, nullable) NSString *decisionReason;
 /// The page load this render owns, so page results from other loads are not attributed to it.
 @property (nonatomic, copy, nullable) NSString *htmlRenderID;
+/// Builds the native text from the same response, shown if a migrated HTML render fails.
+/// nil when `ala` is empty. Built only when needed, because building it can throw.
+@property (nonatomic, copy, nullable) NSAttributedString *(^nativeFallback)(void);
+/// Why a migrated HTML render fell back (or tried to) to native.
+@property (nonatomic, copy, nullable) NSString *fallbackReason;
 
 @property (nonatomic, readonly, getter=isFinished) BOOL finished;
 @property (nonatomic, readonly) AffirmPromoRenderOutcome outcome;
 @property (nonatomic, readonly) AffirmPromoRenderMode actualRenderer;
 @property (nonatomic, copy, readonly, nullable) NSString *reason;
 
-- (instancetype)initWithRequestedMode:(AffirmPromoRenderMode)requestedMode NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithPolicy:(AffirmPromoRenderPolicy *)policy NS_DESIGNATED_INITIALIZER;
+/// A policy with no opt-out and no font.
+- (instancetype)initWithRequestedMode:(AffirmPromoRenderMode)requestedMode;
 - (instancetype)init NS_UNAVAILABLE;
 
 /// The renderer is chosen once. Returns NO, and changes nothing, if it was already chosen or the render finished.
 - (BOOL)selectMode:(AffirmPromoRenderMode)mode;
+
+/// Applies the policy to the response's flag once and records the reason. Later calls return the
+/// first choice. AffirmPromoRenderModeNone if the render already finished.
+- (AffirmPromoRenderMode)decideWithFlagStatus:(AffirmPromoRenderFlagStatus)flagStatus;
 
 /// Returns NO, and changes nothing, if the render already finished.
 - (BOOL)finishWithOutcome:(AffirmPromoRenderOutcome)outcome

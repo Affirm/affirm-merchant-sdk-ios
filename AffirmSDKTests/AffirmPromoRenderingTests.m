@@ -51,6 +51,7 @@
     Method send = class_getClassMethod([AffirmClient class], @selector(send:handler:));
     method_setImplementation(send, self.originalSendIMP);
     self.promoHandlers = nil;
+    [AffirmConfiguration sharedInstance].useLegacyNativeRendering = NO;
     self.window.hidden = YES;
     self.window = nil;
     [super tearDown];
@@ -102,6 +103,260 @@
 {
     UIButton *nativeButton = [button valueForKey:@"button"];
     return [nativeButton attributedTitleForState:UIControlStateNormal].string;
+}
+
+#pragma mark - Renderer selection
+
+- (void)configureNative:(AffirmPromotionalButton *)button font:(UIFont *)font
+{
+    [button configureWithAmount:[self amount]
+                 affirmLogoType:AffirmLogoTypeText
+                    affirmColor:AffirmColorTypeBlue
+                           font:font
+                      textColor:[UIColor blackColor]];
+}
+
+- (NSString *)promoJSONWithAla:(NSString *)ala html:(NSString *)html flag:(NSString *)flag
+{
+    NSMutableArray *fields = [NSMutableArray array];
+    if (ala) {
+        [fields addObject:[NSString stringWithFormat:@"\"ala\": \"%@\"", ala]];
+    }
+    if (html) {
+        [fields addObject:[NSString stringWithFormat:@"\"html_ala\": \"%@\"", html]];
+    }
+    if (flag) {
+        [fields addObject:[NSString stringWithFormat:@"\"config\": {\"ios_sdk_migrate_native_to_html_render\": %@}", flag]];
+    }
+    return [NSString stringWithFormat:@"{\"promo\": {%@}}", [fields componentsJoinedByString:@", "]];
+}
+
+- (XCTestExpectation *)expectRenderOf:(AffirmPromotionalButton *)button
+                          finishingIn:(NSString *)state
+                       decisionReason:(NSString *)decisionReason
+                       fallbackReason:(nullable NSString *)fallbackReason
+{
+    return [self expectationForNotification:AffirmPromoRenderDidFinishNotification
+                                     object:button
+                                    handler:^BOOL(NSNotification *note) {
+        AffirmPromoRenderOperation *operation = note.userInfo[AffirmPromoRenderOperationKey];
+        XCTAssertEqualObjects(operation.terminalState, state);
+        XCTAssertEqualObjects(operation.decisionReason, decisionReason);
+        XCTAssertEqualObjects(operation.fallbackReason, fallbackReason);
+        return YES;
+    }];
+}
+
+- (UIFont *)font:(UIFont *)font withTraits:(UIFontDescriptorSymbolicTraits)traits
+{
+    return [UIFont fontWithDescriptor:[font.fontDescriptor fontDescriptorWithSymbolicTraits:traits] size:font.pointSize];
+}
+
+- (void)assertFont:(UIFont *)font mapsTo:(NSString *)family bold:(BOOL)bold italic:(BOOL)italic
+{
+    AffirmPromoFontStyle *style = AffirmPromoFontStyleForFont(font);
+    XCTAssertNotNil(style, @"%@", font.fontName);
+    XCTAssertEqualObjects(style.cssFamily, family, @"%@", font.fontName);
+    XCTAssertEqual(style.bold, bold, @"%@", font.fontName);
+    XCTAssertEqual(style.italic, italic, @"%@", font.fontName);
+    XCTAssertEqual(style.pointSize, font.pointSize, @"%@", font.fontName);
+}
+
+- (void)testTheTwelveBuiltInFontsMapToHTML
+{
+    UIFont *system = [UIFont systemFontOfSize:17];
+    UIFont *serif = [UIFont fontWithDescriptor:[system.fontDescriptor fontDescriptorWithDesign:UIFontDescriptorSystemDesignSerif] size:17];
+    UIFont *mono = [UIFont monospacedSystemFontOfSize:17 weight:UIFontWeightRegular];
+    NSDictionary<NSString *, UIFont *> *designs = @{@"system-ui": system, @"ui-serif": serif, @"ui-monospace": mono};
+    for (NSString *family in designs) {
+        UIFont *base = designs[family];
+        [self assertFont:base mapsTo:family bold:NO italic:NO];
+        [self assertFont:[self font:base withTraits:UIFontDescriptorTraitBold] mapsTo:family bold:YES italic:NO];
+        [self assertFont:[self font:base withTraits:UIFontDescriptorTraitItalic] mapsTo:family bold:NO italic:YES];
+        [self assertFont:[self font:base withTraits:UIFontDescriptorTraitBold | UIFontDescriptorTraitItalic] mapsTo:family bold:YES italic:YES];
+    }
+    [self assertFont:[UIFont boldSystemFontOfSize:13] mapsTo:@"system-ui" bold:YES italic:NO];
+    [self assertFont:[UIFont italicSystemFontOfSize:13] mapsTo:@"system-ui" bold:NO italic:YES];
+    [self assertFont:[UIFont preferredFontForTextStyle:UIFontTextStyleBody] mapsTo:@"system-ui" bold:NO italic:NO];
+}
+
+- (void)testOtherFontsHaveNoHTMLMapping
+{
+    UIFont *system = [UIFont systemFontOfSize:17];
+    UIFont *rounded = [UIFont fontWithDescriptor:[system.fontDescriptor fontDescriptorWithDesign:UIFontDescriptorSystemDesignRounded] size:17];
+    NSArray<UIFont *> *fonts = @[
+        rounded,
+        [UIFont systemFontOfSize:17 weight:UIFontWeightLight],
+        [UIFont systemFontOfSize:17 weight:UIFontWeightHeavy],
+        [UIFont monospacedSystemFontOfSize:17 weight:UIFontWeightLight],
+        [UIFont fontWithName:@"Georgia" size:17],
+        [UIFont fontWithName:@"Helvetica" size:17],
+        [UIFont fontWithName:@"Courier" size:17],
+    ];
+    for (UIFont *font in fonts) {
+        XCTAssertNil(AffirmPromoFontStyleForFont(font), @"%@", font.fontName);
+    }
+    XCTAssertNil(AffirmPromoFontStyleForFont(nil));
+}
+
+- (void)testDecisionAppliesTheFirstMatchingRule
+{
+    UIFont *supported = [UIFont systemFontOfSize:15];
+    UIFont *unsupported = [UIFont fontWithName:@"Georgia" size:15];
+    AffirmPromoRenderMode native = AffirmPromoRenderModeNative, html = AffirmPromoRenderModeHTML;
+
+    void (^check)(AffirmPromoRenderMode, BOOL, UIFont *, AffirmPromoRenderFlagStatus, AffirmPromoRenderMode, NSString *) =
+    ^(AffirmPromoRenderMode requested, BOOL optOut, UIFont *font, AffirmPromoRenderFlagStatus flag, AffirmPromoRenderMode expected, NSString *expectedReason) {
+        AffirmPromoRenderPolicy *policy = [[AffirmPromoRenderPolicy alloc] initWithRequestedMode:requested optOut:optOut font:font];
+        NSString *reason = nil;
+        XCTAssertEqual([policy modeForFlagStatus:flag reason:&reason], expected, @"%@", expectedReason);
+        XCTAssertEqualObjects(reason, expectedReason);
+    };
+    // 1. Explicit HTML beats the opt-out, the font and the flag.
+    check(html, YES, nil, AffirmPromoRenderFlagStatusFalse, html, AffirmPromoDecisionReasonExplicitHTML);
+    check(html, NO, unsupported, AffirmPromoRenderFlagStatusMissing, html, AffirmPromoDecisionReasonExplicitHTML);
+    // 2. Opt-out beats the font and the flag.
+    check(native, YES, unsupported, AffirmPromoRenderFlagStatusTrue, native, AffirmPromoDecisionReasonOptOut);
+    check(native, YES, supported, AffirmPromoRenderFlagStatusTrue, native, AffirmPromoDecisionReasonOptOut);
+    // 3. An unsupported font beats the flag.
+    check(native, NO, unsupported, AffirmPromoRenderFlagStatusTrue, native, AffirmPromoDecisionReasonUnsupportedFont);
+    check(native, NO, nil, AffirmPromoRenderFlagStatusTrue, native, AffirmPromoDecisionReasonUnsupportedFont);
+    // 4. A true flag gives HTML. 5. Anything else gives native.
+    check(native, NO, supported, AffirmPromoRenderFlagStatusTrue, html, AffirmPromoDecisionReasonFlagTrue);
+    check(native, NO, supported, AffirmPromoRenderFlagStatusFalse, native, AffirmPromoDecisionReasonFlagFalse);
+    check(native, NO, supported, AffirmPromoRenderFlagStatusMissing, native, AffirmPromoDecisionReasonFlagMissing);
+    check(native, NO, supported, AffirmPromoRenderFlagStatusNull, native, AffirmPromoDecisionReasonFlagNull);
+    check(native, NO, supported, AffirmPromoRenderFlagStatusMalformed, native, AffirmPromoDecisionReasonFlagMalformed);
+}
+
+- (void)testDecisionIsMadeOncePerRender
+{
+    AffirmPromoRenderPolicy *policy = [[AffirmPromoRenderPolicy alloc] initWithRequestedMode:AffirmPromoRenderModeNative
+                                                                                      optOut:NO
+                                                                                        font:[UIFont systemFontOfSize:15]];
+    AffirmPromoRenderOperation *operation = [[AffirmPromoRenderOperation alloc] initWithPolicy:policy];
+    XCTAssertEqual([operation decideWithFlagStatus:AffirmPromoRenderFlagStatusTrue], AffirmPromoRenderModeHTML);
+    XCTAssertEqual([operation decideWithFlagStatus:AffirmPromoRenderFlagStatusFalse], AffirmPromoRenderModeHTML);
+    XCTAssertEqualObjects(operation.decisionReason, AffirmPromoDecisionReasonFlagTrue);
+}
+
+- (void)testOptOutIsReadWhenConfigureStarts
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T2"
+                                        decisionReason:AffirmPromoDecisionReasonFlagTrue fallbackReason:nil];
+    [self configureNative:button font:[UIFont systemFontOfSize:15]];
+    [AffirmConfiguration sharedInstance].useLegacyNativeRendering = YES;
+    [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<span>HTML</span>" flag:@"true"]];
+    [self waitForExpectations:@[finished] timeout:10];
+
+    XCTestExpectation *optedOut = [self expectRenderOf:button finishingIn:@"T1"
+                                        decisionReason:AffirmPromoDecisionReasonOptOut fallbackReason:nil];
+    [self configureNative:button font:[UIFont systemFontOfSize:15]];
+    [AffirmConfiguration sharedInstance].useLegacyNativeRendering = NO;
+    [self completePromoRequestAtIndex:1 json:[self promoJSONWithAla:@"Native" html:@"<span>HTML</span>" flag:@"true"]];
+    [self waitForExpectations:@[optedOut] timeout:1];
+    XCTAssertEqualObjects([self nativeTitleOf:button], @"Native");
+}
+
+- (void)testUnsupportedFontStaysNativeWhenTheFlagIsOn
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T1"
+                                        decisionReason:AffirmPromoDecisionReasonUnsupportedFont fallbackReason:nil];
+    [self configureNative:button font:[UIFont fontWithName:@"Georgia" size:15]];
+    [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<span>HTML</span>" flag:@"true"]];
+    [self waitForExpectations:@[finished] timeout:1];
+    XCTAssertEqualObjects([self nativeTitleOf:button], @"Native");
+    XCTAssertTrue([[button valueForKey:@"webView"] isHidden]);
+}
+
+- (void)testFlagOffStaysNative
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T1"
+                                        decisionReason:AffirmPromoDecisionReasonFlagFalse fallbackReason:nil];
+    [self configureNative:button font:[UIFont systemFontOfSize:15]];
+    [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<span>HTML</span>" flag:@"false"]];
+    [self waitForExpectations:@[finished] timeout:1];
+    XCTAssertEqualObjects([self nativeTitleOf:button], @"Native");
+}
+
+- (void)testMigratedCallShowsHTMLOnATransparentWebView
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T2"
+                                        decisionReason:AffirmPromoDecisionReasonFlagTrue fallbackReason:nil];
+    [self configureNative:button font:[UIFont boldSystemFontOfSize:15]];
+    [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<span>HTML</span>" flag:@"true"]];
+    [self waitForExpectations:@[finished] timeout:10];
+    WKWebView *webView = [button valueForKey:@"webView"];
+    XCTAssertFalse(webView.hidden);
+    XCTAssertFalse(webView.opaque);
+    XCTAssertNil([self nativeTitleOf:button]);
+}
+
+- (void)testExplicitHTMLKeepsTheOpaqueWebView
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T2"
+                                        decisionReason:AffirmPromoDecisionReasonExplicitHTML fallbackReason:nil];
+    [AffirmConfiguration sharedInstance].useLegacyNativeRendering = YES;
+    [self configureExplicitHTML:button];
+    [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<span>HTML</span>" flag:@"false"]];
+    [self waitForExpectations:@[finished] timeout:10];
+    XCTAssertTrue([[button valueForKey:@"webView"] isOpaque]);
+}
+
+- (void)testMigratedHTMLFailureFallsBackToNativeText
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T3"
+                                        decisionReason:AffirmPromoDecisionReasonFlagTrue
+                                        fallbackReason:AffirmPromoRenderReasonHTMLEmpty];
+    [self configureNative:button font:[UIFont systemFontOfSize:15]];
+    [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<script>x()</script>" flag:@"true"]];
+    [self waitForExpectations:@[finished] timeout:10];
+    XCTAssertEqualObjects([self nativeTitleOf:button], @"Native");
+    XCTAssertFalse(button.hidden);
+    XCTAssertTrue([[button valueForKey:@"webView"] isHidden]);
+    XCTAssertEqual(self.promoHandlers.count, 1u);
+}
+
+- (void)testMigratedCallWithoutHTMLFallsBackToNativeText
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T3"
+                                        decisionReason:AffirmPromoDecisionReasonFlagTrue
+                                        fallbackReason:AffirmPromoRenderReasonMissingHTML];
+    [self configureNative:button font:[UIFont systemFontOfSize:15]];
+    [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"" flag:@"true"]];
+    [self waitForExpectations:@[finished] timeout:1];
+    XCTAssertEqualObjects([self nativeTitleOf:button], @"Native");
+}
+
+- (void)testMigratedHTMLFailureWithoutNativeTextHides
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T6"
+                                        decisionReason:AffirmPromoDecisionReasonFlagTrue
+                                        fallbackReason:AffirmPromoRenderReasonHTMLEmpty];
+    [self configureNative:button font:[UIFont systemFontOfSize:15]];
+    [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"" html:@"<script>x()</script>" flag:@"true"]];
+    [self waitForExpectations:@[finished] timeout:10];
+    XCTAssertTrue(button.hidden);
+}
+
+- (void)testMigratedCallWithNoContentFinishesAsT7
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T7"
+                                        decisionReason:AffirmPromoDecisionReasonFlagTrue
+                                        fallbackReason:AffirmPromoRenderReasonMissingHTML];
+    [self configureNative:button font:[UIFont systemFontOfSize:15]];
+    [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:nil html:nil flag:@"true"]];
+    [self waitForExpectations:@[finished] timeout:1];
+    XCTAssertTrue(button.hidden);
 }
 
 - (void)testOperationChoosesOnceAndFinishesOnce

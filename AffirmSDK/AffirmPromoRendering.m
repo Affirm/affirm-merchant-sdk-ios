@@ -146,17 +146,155 @@ NSString *const AffirmPromoRenderReasonNativeError = @"native_error";
 NSString *const AffirmPromoRenderReasonSuperseded = @"superseded";
 NSString *const AffirmPromoRenderReasonHostDestroyed = @"host_destroyed";
 
-@implementation AffirmPromoRenderOperation
+NSString *const AffirmPromoDecisionReasonExplicitHTML = @"explicit_html";
+NSString *const AffirmPromoDecisionReasonOptOut = @"opt_out";
+NSString *const AffirmPromoDecisionReasonUnsupportedFont = @"unsupported_font";
+NSString *const AffirmPromoDecisionReasonFlagTrue = @"flag_true";
+NSString *const AffirmPromoDecisionReasonFlagFalse = @"flag_false";
+NSString *const AffirmPromoDecisionReasonFlagMissing = @"flag_missing";
+NSString *const AffirmPromoDecisionReasonFlagNull = @"flag_null";
+NSString *const AffirmPromoDecisionReasonFlagMalformed = @"flag_malformed";
+
+@implementation AffirmPromoFontStyle
+
+- (instancetype)initWithCSSFamily:(NSString *)cssFamily bold:(BOOL)bold italic:(BOOL)italic pointSize:(CGFloat)pointSize
+{
+    if (self = [super init]) {
+        _cssFamily = [cssFamily copy];
+        _bold = bold;
+        _italic = italic;
+        _pointSize = pointSize;
+    }
+    return self;
+}
+
+@end
+
+AffirmPromoFontStyle *AffirmPromoFontStyleForFont(UIFont *font)
+{
+    if (font == nil || font.fontName.length == 0) {
+        return nil;
+    }
+    CGFloat size = font.pointSize;
+    UIFontDescriptor *system = [UIFont systemFontOfSize:size].fontDescriptor;
+    NSArray *designs = @[
+        @[@"system-ui", system],
+        @[@"ui-serif", [system fontDescriptorWithDesign:UIFontDescriptorSystemDesignSerif] ?: [NSNull null]],
+        @[@"ui-monospace", [UIFont monospacedSystemFontOfSize:size weight:UIFontWeightRegular].fontDescriptor],
+    ];
+    // Regular first, so a design that cannot produce a variant keeps the regular mapping for that name.
+    UIFontDescriptorSymbolicTraits variants[] = {
+        0,
+        UIFontDescriptorTraitBold,
+        UIFontDescriptorTraitItalic,
+        UIFontDescriptorTraitBold | UIFontDescriptorTraitItalic,
+    };
+    for (NSArray *design in designs) {
+        if (design[1] == [NSNull null]) {
+            continue;
+        }
+        UIFontDescriptor *base = design[1];
+        for (size_t i = 0; i < sizeof(variants) / sizeof(variants[0]); i++) {
+            UIFontDescriptor *descriptor = variants[i] == 0 ? base : [base fontDescriptorWithSymbolicTraits:variants[i]];
+            if (descriptor == nil) {
+                continue;
+            }
+            NSString *name = [UIFont fontWithDescriptor:descriptor size:size].fontName;
+            if ([name isEqualToString:font.fontName]) {
+                return [[AffirmPromoFontStyle alloc] initWithCSSFamily:design[0]
+                                                                  bold:(variants[i] & UIFontDescriptorTraitBold) != 0
+                                                                italic:(variants[i] & UIFontDescriptorTraitItalic) != 0
+                                                             pointSize:size];
+            }
+        }
+    }
+    return nil;
+}
+
+@implementation AffirmPromoRenderPolicy
 
 - (instancetype)initWithRequestedMode:(AffirmPromoRenderMode)requestedMode
+                               optOut:(BOOL)optOut
+                                 font:(nullable UIFont *)font
+{
+    if (self = [super init]) {
+        _requestedMode = requestedMode;
+        _optOut = optOut;
+        _fontStyle = requestedMode == AffirmPromoRenderModeNative ? AffirmPromoFontStyleForFont(font) : nil;
+    }
+    return self;
+}
+
+- (AffirmPromoRenderMode)modeForFlagStatus:(AffirmPromoRenderFlagStatus)flagStatus
+                                    reason:(NSString *_Nullable *_Nullable)reason
+{
+    NSString *decisionReason = nil;
+    AffirmPromoRenderMode mode = AffirmPromoRenderModeNative;
+    if (self.requestedMode == AffirmPromoRenderModeHTML) {
+        mode = AffirmPromoRenderModeHTML;
+        decisionReason = AffirmPromoDecisionReasonExplicitHTML;
+    } else if (self.optOut) {
+        decisionReason = AffirmPromoDecisionReasonOptOut;
+    } else if (self.fontStyle == nil) {
+        decisionReason = AffirmPromoDecisionReasonUnsupportedFont;
+    } else {
+        switch (flagStatus) {
+            case AffirmPromoRenderFlagStatusTrue:
+                mode = AffirmPromoRenderModeHTML;
+                decisionReason = AffirmPromoDecisionReasonFlagTrue;
+                break;
+            case AffirmPromoRenderFlagStatusFalse:
+                decisionReason = AffirmPromoDecisionReasonFlagFalse;
+                break;
+            case AffirmPromoRenderFlagStatusMissing:
+                decisionReason = AffirmPromoDecisionReasonFlagMissing;
+                break;
+            case AffirmPromoRenderFlagStatusNull:
+                decisionReason = AffirmPromoDecisionReasonFlagNull;
+                break;
+            case AffirmPromoRenderFlagStatusMalformed:
+                decisionReason = AffirmPromoDecisionReasonFlagMalformed;
+                break;
+        }
+    }
+    if (reason) {
+        *reason = decisionReason;
+    }
+    return mode;
+}
+
+@end
+
+@implementation AffirmPromoRenderOperation
+
+- (instancetype)initWithPolicy:(AffirmPromoRenderPolicy *)policy
 {
     if (self = [super init]) {
         _renderID = [NSUUID UUID].UUIDString;
-        _requestedMode = requestedMode;
+        _policy = policy;
+        _requestedMode = policy.requestedMode;
         _selectedMode = AffirmPromoRenderModeNone;
         _actualRenderer = AffirmPromoRenderModeNone;
     }
     return self;
+}
+
+- (instancetype)initWithRequestedMode:(AffirmPromoRenderMode)requestedMode
+{
+    return [self initWithPolicy:[[AffirmPromoRenderPolicy alloc] initWithRequestedMode:requestedMode optOut:NO font:nil]];
+}
+
+- (AffirmPromoRenderMode)decideWithFlagStatus:(AffirmPromoRenderFlagStatus)flagStatus
+{
+    if (self.selectedMode != AffirmPromoRenderModeNone || self.finished) {
+        return self.selectedMode;
+    }
+    NSString *reason = nil;
+    AffirmPromoRenderMode mode = [self.policy modeForFlagStatus:flagStatus reason:&reason];
+    if ([self selectMode:mode]) {
+        _decisionReason = [reason copy];
+    }
+    return self.selectedMode;
 }
 
 - (BOOL)selectMode:(AffirmPromoRenderMode)mode
