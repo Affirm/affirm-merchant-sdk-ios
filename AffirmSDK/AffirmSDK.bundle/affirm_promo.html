@@ -8,7 +8,6 @@
         <p id="affirm-promo-root"></p>
         <script>
             (function () {
-                var host = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.affirmPromo;
                 var settled = false;
                 var payload = null;
                 try {
@@ -17,33 +16,31 @@
                     payload = null;
                 }
                 function post(body) {
-                    if (!host || !payload) {
+                    var bridge = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.affirmPromo;
+                    if (!bridge || !payload) {
                         return;
                     }
                     body.renderId = payload.renderId;
                     try {
-                        host.postMessage(body);
+                        bridge.postMessage(body);
                     } catch (e) {}
                 }
                 function fail(reason) {
-                    if (!settled) {
-                        settled = true;
-                        post({ event: 'failure', reason: reason });
+                    if (settled) {
+                        return;
                     }
+                    settled = true;
+                    // Post after this turn. A failure reported during the initial parse can be
+                    // dropped, and the native timeout then wins with html_timeout.
+                    setTimeout(function () {
+                        post({ event: 'failure', reason: reason });
+                    }, 0);
                 }
                 if (!payload) {
                     fail('template_error');
                     return;
                 }
                 setTimeout(function () { fail('html_timeout'); }, payload.timeoutMs || 5000);
-
-                window._affirm_config = {
-                    public_api_key: payload.publicKey || '',
-                    script: payload.jsURL || '',
-                    locale: payload.locale || '',
-                    country_code: payload.countryCode || ''
-                };
-                (function(l,g,m,e,a,f,b){var d,c=l[m]||{},h=document.createElement(f),n=document.getElementsByTagName(f)[0],k=function(a,b,c){return function(){a[b]._.push([c,arguments])}};c[e]=k(c,e,"set");d=c[e];c[a]={};c[a]._=[];d._=[];c[a][b]=k(c,a,b);a=0;for(b="set add save post open empty reset on off trigger ready setProduct".split(" ");a<b.length;a++)d[b[a]]=k(c,e,b[a]);a=0;for(b=["get","token","url","items"];a<b.length;a++)d[b[a]]=function(){};h.async=!0;h.src=g[f];n.parentNode.insertBefore(h,n);delete g[f];d(g);l[m]=c})(window,window._affirm_config,"affirm","checkout","ui","script","ready");
 
                 function isHttps(url) {
                     return /^https:\/\//i.test(url);
@@ -134,6 +131,14 @@
                     fail('html_empty');
                     return;
                 }
+
+                window._affirm_config = {
+                    public_api_key: payload.publicKey || '',
+                    script: payload.jsURL || '',
+                    locale: payload.locale || '',
+                    country_code: payload.countryCode || ''
+                };
+                (function(l,g,m,e,a,f,b){var d,c=l[m]||{},h=document.createElement(f),n=document.getElementsByTagName(f)[0],k=function(a,b,c){return function(){a[b]._.push([c,arguments])}};c[e]=k(c,e,"set");d=c[e];c[a]={};c[a]._=[];d._=[];c[a][b]=k(c,a,b);a=0;for(b="set add save post open empty reset on off trigger ready setProduct".split(" ");a<b.length;a++)d[b[a]]=k(c,e,b[a]);a=0;for(b=["get","token","url","items"];a<b.length;a++)d[b[a]]=function(){};h.async=!0;h.src=g[f];n.parentNode.insertBefore(h,n);delete g[f];d(g);l[m]=c})(window,window._affirm_config,"affirm","checkout","ui","script","ready");
 
                 var waits = [];
                 waits.push(waitForStylesheet(payload.remoteCssURL || ''));
