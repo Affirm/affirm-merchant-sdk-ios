@@ -73,3 +73,4 @@ jobs:
           sdk-revision.txt
           build/live-promo.xcresult/**
           build/live-promo-result.json
+          build/live-promo-preflight.json

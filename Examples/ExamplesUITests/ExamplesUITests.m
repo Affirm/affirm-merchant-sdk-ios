@@ -100,13 +100,15 @@
     [app launch];
     XCUIElement *promo = app.buttons[@"affirm_live_promo_native_button"];
     NSPredicate *rendered = [NSPredicate predicateWithFormat:@"exists == YES AND label CONTAINS %@", expected];
-    [self expectationForPredicate:rendered evaluatedWithObject:promo handler:nil];
-    [self waitForExpectationsWithTimeout:30 handler:nil];
-    XCTAssertTrue([promo.label containsString:expected]);
+    XCTNSPredicateExpectation *expectation = [[XCTNSPredicateExpectation alloc] initWithPredicate:rendered object:promo];
+    XCTWaiterResult result = [XCTWaiter waitForExpectations:@[expectation] timeout:30];
+    NSLog(@"Live Thor promo hierarchy: %@", app.debugDescription);
     XCTAttachment *screenshot = [XCTAttachment attachmentWithScreenshot:[app screenshot]];
     screenshot.name = @"live-thor-promo";
     screenshot.lifetime = XCTAttachmentLifetimeKeepAlways;
     [self addAttachment:screenshot];
+    XCTAssertEqual(result, XCTWaiterResultCompleted, @"The native promo must render the live expected text");
+    XCTAssertTrue([promo.label containsString:expected]);
     [app terminate];
 }
 @end
