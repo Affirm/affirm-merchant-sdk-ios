@@ -107,7 +107,7 @@
     screenshot.name = @"live-thor-promo";
     screenshot.lifetime = XCTAttachmentLifetimeKeepAlways;
     [self addAttachment:screenshot];
-    XCTAssertEqual(result, XCTWaiterResultCompleted, @"The native promo must render the live expected text");
+    XCTAssertEqual(result, XCTWaiterResultCompleted, @"The native promo must render expected text %@; actual %@", expected, promo.label);
     XCTAssertTrue([promo.label containsString:expected]);
     [app terminate];
 }
