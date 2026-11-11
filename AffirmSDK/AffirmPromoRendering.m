@@ -211,18 +211,78 @@ AffirmPromoFontStyle *AffirmPromoFontStyleForFont(UIFont *font)
     return nil;
 }
 
+static CGFloat AffirmPromoClamp(CGFloat value) {
+    return MIN(MAX(value, 0), 1);
+}
+
+NSString *AffirmPromoCSSColor(UIColor *color, UITraitCollection *traits)
+{
+    UIColor *resolved = traits ? [color resolvedColorWithTraitCollection:traits] : color;
+    CGFloat red, green, blue, alpha;
+    if (resolved == nil || ![resolved getRed:&red green:&green blue:&blue alpha:&alpha]) {
+        return nil;
+    }
+    return [NSString stringWithFormat:@"rgba(%d, %d, %d, %g)",
+            (int)lround(AffirmPromoClamp(red) * 255),
+            (int)lround(AffirmPromoClamp(green) * 255),
+            (int)lround(AffirmPromoClamp(blue) * 255),
+            round(AffirmPromoClamp(alpha) * 1000) / 1000];
+}
+
+NSString *AffirmPromoNativeStyleCSS(AffirmPromoFontStyle *fontStyle, UIColor *textColor, UITraitCollection *traits)
+{
+    NSDictionary<NSString *, NSString *> *fallbacks = @{
+        @"system-ui": @"system-ui, -apple-system, sans-serif",
+        @"ui-serif": @"ui-serif, serif",
+        @"ui-monospace": @"ui-monospace, monospace",
+    };
+    NSMutableArray<NSString *> *root = [NSMutableArray arrayWithObjects:
+                                        @"margin: 0",
+                                        @"max-width: 100%",
+                                        @"text-align: left",
+                                        @"overflow-wrap: break-word",
+                                        nil];
+    if (fontStyle) {
+        CGFloat size = fontStyle.pointSize > 0 ? fontStyle.pointSize : 15;
+        [root addObject:[NSString stringWithFormat:@"font-family: %@", fallbacks[fontStyle.cssFamily] ?: fontStyle.cssFamily]];
+        [root addObject:[NSString stringWithFormat:@"font-size: %gpx", size]];
+        [root addObject:[NSString stringWithFormat:@"font-weight: %@", fontStyle.bold ? @"700" : @"400"]];
+        [root addObject:[NSString stringWithFormat:@"font-style: %@", fontStyle.italic ? @"italic" : @"normal"]];
+    }
+    NSString *color = AffirmPromoCSSColor(textColor, traits);
+    if (color) {
+        [root addObject:[NSString stringWithFormat:@"color: %@", color]];
+    }
+    // The body fills the view, so the flex column centers the promo the way UIButton centers its title.
+    return [NSString stringWithFormat:
+            @"html, body { height: 100%%; }\n"
+            @"body { margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; }\n"
+            @"#affirm-promo-root { %@; }\n",
+            [root componentsJoinedByString:@"; "]];
+}
+
 @implementation AffirmPromoRenderPolicy
 
 - (instancetype)initWithRequestedMode:(AffirmPromoRenderMode)requestedMode
                                optOut:(BOOL)optOut
                                  font:(nullable UIFont *)font
+                            textColor:(nullable UIColor *)textColor
 {
     if (self = [super init]) {
         _requestedMode = requestedMode;
         _optOut = optOut;
-        _fontStyle = requestedMode == AffirmPromoRenderModeNative ? AffirmPromoFontStyleForFont(font) : nil;
+        BOOL native = requestedMode == AffirmPromoRenderModeNative;
+        _fontStyle = native ? AffirmPromoFontStyleForFont(font) : nil;
+        _textColor = native ? textColor : nil;
     }
     return self;
+}
+
+- (instancetype)initWithRequestedMode:(AffirmPromoRenderMode)requestedMode
+                               optOut:(BOOL)optOut
+                                 font:(nullable UIFont *)font
+{
+    return [self initWithRequestedMode:requestedMode optOut:optOut font:font textColor:nil];
 }
 
 - (AffirmPromoRenderMode)modeForFlagStatus:(AffirmPromoRenderFlagStatus)flagStatus

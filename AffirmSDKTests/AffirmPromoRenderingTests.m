@@ -1299,4 +1299,241 @@
     XCTAssertTrue([[button valueForKey:@"webView"] isHidden]);
 }
 
+#pragma mark - Native style and accessibility
+
+- (void)configureNative:(AffirmPromotionalButton *)button font:(UIFont *)font textColor:(UIColor *)textColor
+{
+    [button configureWithAmount:[self amount]
+                 affirmLogoType:AffirmLogoTypeText
+                    affirmColor:AffirmColorTypeBlue
+                           font:font
+                      textColor:textColor];
+}
+
+- (void)showMigratedHTML:(NSString *)html
+                     ala:(NSString *)ala
+                      in:(AffirmPromotionalButton *)button
+                    font:(UIFont *)font
+               textColor:(UIColor *)textColor
+{
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T2"
+                                        decisionReason:AffirmPromoDecisionReasonFlagTrue fallbackReason:nil];
+    [self configureNative:button font:font textColor:textColor];
+    NSDictionary *json = @{@"promo": @{@"ala": ala, @"html_ala": html,
+                                       @"config": @{@"ios_sdk_migrate_native_to_html_render": @YES}}};
+    NSData *data = [NSJSONSerialization dataWithJSONObject:json options:0 error:nil];
+    [self completePromoRequestAtIndex:self.promoHandlers.count - 1
+                                 json:[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]];
+    [self waitForExpectations:@[finished] timeout:10];
+}
+
+- (NSDictionary *)rootStyleOf:(AffirmPromotionalButton *)button
+{
+    return [self evaluate:
+        @"(function () {"
+        @"  var root = document.getElementById('affirm-promo-root');"
+        @"  var style = getComputedStyle(root);"
+        @"  var rect = root.getBoundingClientRect();"
+        @"  return {"
+        @"    family: style.fontFamily, size: style.fontSize, weight: style.fontWeight,"
+        @"    fontStyle: style.fontStyle, color: style.color, align: style.textAlign,"
+        @"    margin: style.marginTop, bodyMargin: getComputedStyle(document.body).marginTop,"
+        @"    left: rect.left, right: document.documentElement.clientWidth - rect.right,"
+        @"    top: rect.top, bottom: document.documentElement.clientHeight - rect.bottom,"
+        @"    overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth"
+        @"  };"
+        @"})()" in:button];
+}
+
+- (void)testNativeStyleCSSCarriesFontSizeAndColor
+{
+    UIFont *serif = [UIFont fontWithDescriptor:[[UIFont systemFontOfSize:17].fontDescriptor
+                                                   fontDescriptorWithDesign:UIFontDescriptorSystemDesignSerif]
+                                          size:17];
+    UIFont *boldItalicSerif = [self font:serif withTraits:UIFontDescriptorTraitBold | UIFontDescriptorTraitItalic];
+    NSString *css = AffirmPromoNativeStyleCSS(AffirmPromoFontStyleForFont(boldItalicSerif), [UIColor redColor], nil);
+    XCTAssertTrue([css containsString:@"font-family: ui-serif, serif"], @"%@", css);
+    XCTAssertTrue([css containsString:@"font-size: 17px"], @"%@", css);
+    XCTAssertTrue([css containsString:@"font-weight: 700"], @"%@", css);
+    XCTAssertTrue([css containsString:@"font-style: italic"], @"%@", css);
+    XCTAssertTrue([css containsString:@"color: rgba(255, 0, 0, 1)"], @"%@", css);
+
+    NSString *regular = AffirmPromoNativeStyleCSS(AffirmPromoFontStyleForFont([UIFont monospacedSystemFontOfSize:12 weight:UIFontWeightRegular]), nil, nil);
+    XCTAssertTrue([regular containsString:@"font-family: ui-monospace, monospace"], @"%@", regular);
+    XCTAssertTrue([regular containsString:@"font-weight: 400"], @"%@", regular);
+    XCTAssertTrue([regular containsString:@"font-style: normal"], @"%@", regular);
+    XCTAssertFalse([regular containsString:@"color:"], @"%@", regular);
+}
+
+- (void)testZeroFontSizeFallsBackTo15
+{
+    NSString *css = AffirmPromoNativeStyleCSS(AffirmPromoFontStyleForFont([UIFont systemFontOfSize:0]), nil, nil);
+    XCTAssertTrue([css containsString:@"font-size: 15px"], @"%@", css);
+}
+
+- (void)testTextColorIsResolvedAgainstTheGivenTraits
+{
+    UIColor *dynamic = [UIColor colorWithDynamicProvider:^UIColor *(UITraitCollection *traits) {
+        return traits.userInterfaceStyle == UIUserInterfaceStyleDark ? [UIColor whiteColor] : [UIColor blackColor];
+    }];
+    UITraitCollection *dark = [UITraitCollection traitCollectionWithUserInterfaceStyle:UIUserInterfaceStyleDark];
+    UITraitCollection *light = [UITraitCollection traitCollectionWithUserInterfaceStyle:UIUserInterfaceStyleLight];
+    XCTAssertEqualObjects(AffirmPromoCSSColor(dynamic, dark), @"rgba(255, 255, 255, 1)");
+    XCTAssertEqualObjects(AffirmPromoCSSColor(dynamic, light), @"rgba(0, 0, 0, 1)");
+    XCTAssertEqualObjects(AffirmPromoCSSColor([[UIColor blueColor] colorWithAlphaComponent:0.5], nil), @"rgba(0, 0, 255, 0.5)");
+    XCTAssertEqualObjects(AffirmPromoCSSColor([UIColor colorWithWhite:0.2 alpha:1], nil), @"rgba(51, 51, 51, 1)");
+    UIImage *pattern = [[[UIGraphicsImageRenderer alloc] initWithSize:CGSizeMake(1, 1)] imageWithActions:^(UIGraphicsImageRendererContext *context) {}];
+    XCTAssertNil(AffirmPromoCSSColor([UIColor colorWithPatternImage:pattern], nil));
+}
+
+- (void)testMigratedPageUsesTheNativeFontSizeColorAndLayout
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    UIFont *boldSerif = [self font:[UIFont fontWithDescriptor:[[UIFont systemFontOfSize:17].fontDescriptor
+                                                                  fontDescriptorWithDesign:UIFontDescriptorSystemDesignSerif]
+                                                         size:17]
+                        withTraits:UIFontDescriptorTraitBold];
+    [self showMigratedHTML:@"<span>HTML</span>" ala:@"Native" in:button font:boldSerif textColor:[UIColor redColor]];
+    NSDictionary *style = [self rootStyleOf:button];
+    XCTAssertTrue([style[@"family"] containsString:@"ui-serif"], @"%@", style);
+    XCTAssertEqualObjects(style[@"size"], @"17px");
+    XCTAssertEqualObjects(style[@"weight"], @"700");
+    XCTAssertEqualObjects(style[@"fontStyle"], @"normal");
+    XCTAssertEqualObjects(style[@"color"], @"rgb(255, 0, 0)");
+    XCTAssertEqualObjects(style[@"align"], @"left");
+    XCTAssertEqualObjects(style[@"margin"], @"0px");
+    XCTAssertEqualObjects(style[@"bodyMargin"], @"0px");
+    // Centered as a block, both ways, like the native button title.
+    XCTAssertGreaterThan([style[@"left"] doubleValue], 50);
+    XCTAssertEqualWithAccuracy([style[@"left"] doubleValue], [style[@"right"] doubleValue], 1);
+    XCTAssertEqualWithAccuracy([style[@"top"] doubleValue], [style[@"bottom"] doubleValue], 1);
+}
+
+- (void)testMigratedLongTextWrapsInsideTheView
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    NSString *longText = [[@"" stringByPaddingToLength:400 withString:@"Paga en cuotas con Affirm " startingAtIndex:0]
+                          stringByAppendingString:@"Supercalifragilisticexpialidocious"];
+    [self showMigratedHTML:[NSString stringWithFormat:@"<span>%@</span>", longText]
+                       ala:@"Native" in:button font:[UIFont systemFontOfSize:15] textColor:[UIColor blackColor]];
+    NSDictionary *style = [self rootStyleOf:button];
+    XCTAssertLessThanOrEqual([style[@"overflow"] doubleValue], 0, @"%@", style);
+    XCTAssertEqualObjects(style[@"align"], @"left");
+    XCTAssertGreaterThan([[button valueForKey:@"webViewHeightConstraint"] constant], 44);
+}
+
+- (void)testMigratedHeightFollowsContentChanges
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    [self showMigratedHTML:@"<span>HTML</span>" ala:@"Native" in:button
+                      font:[UIFont systemFontOfSize:15] textColor:[UIColor blackColor]];
+    NSLayoutConstraint *height = [button valueForKey:@"webViewHeightConstraint"];
+    CGFloat before = height.constant;
+    [self evaluate:@"document.getElementById('affirm-promo-root').style.paddingBottom = '120px'" in:button];
+    NSPredicate *grew = [NSPredicate predicateWithBlock:^BOOL(NSLayoutConstraint *constraint, NSDictionary *bindings) {
+        return constraint.constant >= before + 100;
+    }];
+    [self waitForExpectations:@[[self expectationForPredicate:grew evaluatedWithObject:height handler:nil]] timeout:5];
+}
+
+- (void)testExplicitHTMLKeepsTheBrowserTextDefaults
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    [self showHTML:@"<span>ok</span>" in:button remoteCssURL:nil];
+    NSDictionary *style = [self rootStyleOf:button];
+    XCTAssertEqualObjects(style[@"size"], @"16px");
+    XCTAssertEqualObjects(style[@"margin"], @"16px");
+    XCTAssertEqualObjects(style[@"color"], @"rgb(0, 0, 0)");
+    XCTAssertEqualWithAccuracy([style[@"left"] doubleValue], 8, 0.5);
+}
+
+- (void)testNativeStyleChangeReloadsTheSameHTML
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    [self showMigratedHTML:@"<span>HTML</span>" ala:@"Native" in:button
+                      font:[UIFont systemFontOfSize:15] textColor:[UIColor blackColor]];
+    [self showMigratedHTML:@"<span>HTML</span>" ala:@"Native" in:button
+                      font:[UIFont systemFontOfSize:15] textColor:[UIColor redColor]];
+    XCTAssertEqualObjects([self rootStyleOf:button][@"color"], @"rgb(255, 0, 0)");
+}
+
+- (void)testMigratedViewIsOneButtonLabelledWithAla
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    [self showMigratedHTML:@"<span>HTML</span><a class='affirm-modal-trigger'>See if you qualify</a>"
+                       ala:@"From $50/mo with {Affirm}" in:button
+                      font:[UIFont systemFontOfSize:15] textColor:[UIColor blackColor]];
+    XCTAssertTrue(button.isAccessibilityElement);
+    XCTAssertTrue(button.accessibilityTraits & UIAccessibilityTraitButton);
+    XCTAssertEqualObjects(button.accessibilityLabel, @"From $50/mo with Affirm");
+}
+
+- (void)testLabelFallsBackToPageTextWithoutAla
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    [self showMigratedHTML:@"<span>From  $50</span>/mo with <b>Affirm</b>" ala:@"" in:button
+                      font:[UIFont systemFontOfSize:15] textColor:[UIColor blackColor]];
+    XCTAssertEqualObjects(button.accessibilityLabel, @"From $50/mo with Affirm");
+}
+
+- (void)testNewRenderDoesNotKeepTheOldLabel
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    [self showMigratedHTML:@"<span>Old HTML</span>" ala:@"Old ala" in:button
+                      font:[UIFont systemFontOfSize:15] textColor:[UIColor blackColor]];
+    XCTAssertEqualObjects(button.accessibilityLabel, @"Old ala");
+
+    [self showMigratedHTML:@"<span>New HTML</span>" ala:@"" in:button
+                      font:[UIFont systemFontOfSize:15] textColor:[UIColor blackColor]];
+    XCTAssertEqualObjects(button.accessibilityLabel, @"New HTML");
+
+    [self showHTML:@"<span>Unmanaged</span>" in:button remoteCssURL:nil];
+    XCTAssertEqualObjects(button.accessibilityLabel, @"Unmanaged");
+}
+
+- (void)testReusedPageStillGetsTheLabel
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    [self showMigratedHTML:@"<span>Same</span>" ala:@"" in:button
+                      font:[UIFont systemFontOfSize:15] textColor:[UIColor blackColor]];
+    [self showMigratedHTML:@"<span>Same</span>" ala:@"" in:button
+                      font:[UIFont systemFontOfSize:15] textColor:[UIColor blackColor]];
+    XCTAssertEqualObjects(button.accessibilityLabel, @"Same");
+}
+
+- (void)testNativeLabelUsesTheDefaultMessageWithoutAla
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T1"
+                                        decisionReason:AffirmPromoDecisionReasonFlagFalse fallbackReason:nil];
+    [self configureNative:button];
+    [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"" html:nil flag:@"false"]];
+    [self waitForExpectations:@[finished] timeout:1];
+    XCTAssertEqualObjects(button.accessibilityLabel, @"Pay over time with Affirm");
+}
+
+- (void)testActivationOpensTheModalOnlyOnceReady
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    UIViewController *host = self.window.rootViewController;
+    UIButton *overlay = [button valueForKey:@"button"];
+
+    [self configureNative:button];
+    XCTAssertFalse([button accessibilityActivate]);
+    [overlay sendActionsForControlEvents:UIControlEventTouchUpInside];
+    XCTAssertNil(host.presentedViewController);
+
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T2"
+                                        decisionReason:AffirmPromoDecisionReasonFlagTrue fallbackReason:nil];
+    [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<span>HTML</span>" flag:@"true"]];
+    [self waitForExpectations:@[finished] timeout:10];
+
+    XCTAssertTrue([button accessibilityActivate]);
+    UINavigationController *modal = (UINavigationController *)host.presentedViewController;
+    XCTAssertTrue([modal.topViewController isKindOfClass:NSClassFromString(@"AffirmPromoModalViewController")], @"%@", modal);
+    [overlay sendActionsForControlEvents:UIControlEventTouchUpInside];
+    XCTAssertEqual(host.presentedViewController, modal, @"a second activation must not replace the modal");
+    [host dismissViewControllerAnimated:NO completion:nil];
+}
+
 @end

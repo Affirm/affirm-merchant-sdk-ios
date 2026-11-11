@@ -34,7 +34,7 @@ after(async () => {
 
 const FIXTURES = JSON.parse(fs.readFileSync(path.join(__dirname, 'Fixtures/promo-responses.json'), 'utf8'));
 
-function fillTemplate({ html, remoteCss = '', remoteFont = '', extraCss = '', timeoutMs = 5000, zeroMargin = false }) {
+function fillTemplate({ html, remoteCss = '', remoteFont = '', extraCss = '', timeoutMs = 5000, nativeCSS = '' }) {
     const payload = {
         renderId: 'test-render',
         html,
@@ -45,7 +45,7 @@ function fillTemplate({ html, remoteCss = '', remoteFont = '', extraCss = '', ti
         locale: 'en_US',
         countryCode: 'USA',
         bundledCSS: BADGE_CSS + extraCss,
-        zeroMargin,
+        nativeCSS,
         timeoutMs,
     };
     const json = JSON.stringify(payload).replace(/</g, '\\u003c').replace(/>/g, '\\u003e');
@@ -54,12 +54,12 @@ function fillTemplate({ html, remoteCss = '', remoteFont = '', extraCss = '', ti
 
 async function render({
     html, remoteCss = '', remoteFont = '', extraCss = '', sanitizer = SANITIZER,
-    resources = {}, hang = [], width = 360, waitMs = 3000, timeoutMs = 5000, zeroMargin = false,
+    resources = {}, hang = [], width = 360, waitMs = 3000, timeoutMs = 5000, nativeCSS = '',
     beforeLoad = null,
 }) {
     const page = await browser.newPage();
     await page.setViewportSize({ width, height: 640 });
-    const filled = fillTemplate({ html, remoteCss, remoteFont, extraCss, timeoutMs, zeroMargin });
+    const filled = fillTemplate({ html, remoteCss, remoteFont, extraCss, timeoutMs, nativeCSS });
     await page.route('**/*', (route) => {
         const url = route.request().url();
         if (url === PAGE_URL) {
@@ -184,7 +184,7 @@ test('migrated pages have no body margin and explicit pages keep the browser def
     const resources = { 'https://cdn.test/logo.png': { type: 'image/png', body: PNG_1X1 } };
     const bodyMargin = (page) => page.evaluate(() => getComputedStyle(document.body).marginTop);
 
-    const migrated = await render({ html, resources, zeroMargin: true });
+    const migrated = await render({ html, resources, nativeCSS: 'body { margin: 0; }' });
     assert.equal(await bodyMargin(migrated.page), '0px');
     const explicit = await render({ html, resources });
     assert.equal(await bodyMargin(explicit.page), '8px');
@@ -192,6 +192,31 @@ test('migrated pages have no body margin and explicit pages keep the browser def
         'the reported height includes the body margin');
     await migrated.page.close();
     await explicit.page.close();
+});
+
+test('a migrated page whose body fills the view still reports content height changes', async () => {
+    const { page, calls } = await render({
+        html: '<span>ok</span>',
+        nativeCSS: 'html, body { height: 100%; } body { margin: 0; display: flex; flex-direction: column;'
+            + ' justify-content: center; align-items: center; } #affirm-promo-root { margin: 0; }',
+    });
+    assert.equal(calls[0].event, 'ready');
+    const before = calls[0].height;
+    await page.$eval('#affirm-promo-root', (root) => { root.style.paddingBottom = '120px'; });
+    await page.waitForFunction(
+        (initial) => window.hostCalls.some((call) => call.event === 'height' && call.height >= initial + 120),
+        before,
+        { timeout: 3000 });
+    await page.close();
+});
+
+test('ready carries the sanitized page text for the accessibility label', async () => {
+    const { page, calls } = await render({
+        html: '<span class="affirm-ala-price">$50</span>/mo\n   with  <b>Affirm</b><script>"hidden"</script>',
+    });
+    assert.equal(calls[0].event, 'ready');
+    assert.equal(calls[0].text, '$50/mo with Affirm');
+    await page.close();
 });
 
 test('an exception in the page script fails at once with script_error', async () => {

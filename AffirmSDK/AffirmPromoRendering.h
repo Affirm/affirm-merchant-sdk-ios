@@ -97,6 +97,16 @@ FOUNDATION_EXPORT NSString *const AffirmPromoDecisionReasonFlagMalformed;
 /// fonts, app fonts). Matches by name against fonts UIKit builds at the same size and moment.
 FOUNDATION_EXPORT AffirmPromoFontStyle *_Nullable AffirmPromoFontStyleForFont(UIFont *_Nullable font);
 
+/// `rgba()` for the color resolved against `traits`, or nil when it has no RGB form (pattern colors).
+FOUNDATION_EXPORT NSString *_Nullable AffirmPromoCSSColor(UIColor *_Nullable color, UITraitCollection *_Nullable traits);
+
+/// Page CSS that carries a native configure call's look into HTML: font, size (0 falls back to
+/// 15 pt, like the native path), text color, zero margins, and the native button's layout of a
+/// block centered in the view with lines left-aligned.
+FOUNDATION_EXPORT NSString *AffirmPromoNativeStyleCSS(AffirmPromoFontStyle *_Nullable fontStyle,
+                                                      UIColor *_Nullable textColor,
+                                                      UITraitCollection *_Nullable traits);
+
 /// The renderer decision's inputs, captured when configure… starts so later configuration
 /// changes cannot affect the render.
 @interface AffirmPromoRenderPolicy : NSObject
@@ -105,10 +115,16 @@ FOUNDATION_EXPORT AffirmPromoFontStyle *_Nullable AffirmPromoFontStyleForFont(UI
 @property (nonatomic, readonly) BOOL optOut;
 /// nil for explicit HTML (it takes no UIFont) and for native fonts without an HTML mapping.
 @property (nonatomic, strong, readonly, nullable) AffirmPromoFontStyle *fontStyle;
+/// The native text color, kept unresolved so it is resolved against the traits of the page build.
+@property (nonatomic, strong, readonly, nullable) UIColor *textColor;
 
 - (instancetype)initWithRequestedMode:(AffirmPromoRenderMode)requestedMode
                                optOut:(BOOL)optOut
-                                 font:(nullable UIFont *)font NS_DESIGNATED_INITIALIZER;
+                                 font:(nullable UIFont *)font
+                            textColor:(nullable UIColor *)textColor NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithRequestedMode:(AffirmPromoRenderMode)requestedMode
+                               optOut:(BOOL)optOut
+                                 font:(nullable UIFont *)font;
 - (instancetype)init NS_UNAVAILABLE;
 
 /// The first matching rule: explicit HTML, opt-out, unsupported font, flag true, otherwise native.

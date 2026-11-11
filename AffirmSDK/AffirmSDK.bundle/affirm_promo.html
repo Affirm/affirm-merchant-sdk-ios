@@ -92,7 +92,7 @@
                     }
 
                     var style = document.createElement('style');
-                    style.textContent = (payload.bundledCSS || '') + (payload.zeroMargin ? '\nbody { margin: 0; }' : '');
+                    style.textContent = (payload.bundledCSS || '') + '\n' + (payload.nativeCSS || '');
                     document.head.appendChild(style);
 
                     var purify = window.DOMPurify;
@@ -173,11 +173,18 @@
                                 return;
                             }
                             settled = true;
-                            post({ event: 'ready', height: height });
+                            post({
+                                event: 'ready',
+                                height: height,
+                                text: (root.textContent || '').replace(/\s+/g, ' ').trim()
+                            });
                             if (window.ResizeObserver) {
-                                new ResizeObserver(function () {
+                                // A migrated body fills the view, so only the root sees content changes.
+                                var observer = new ResizeObserver(function () {
                                     post({ event: 'height', height: contentHeight() });
-                                }).observe(document.body);
+                                });
+                                observer.observe(document.body);
+                                observer.observe(root, { box: 'border-box' });
                             }
                         });
                     }, function () {
