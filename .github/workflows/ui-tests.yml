@@ -1,24 +1,7 @@
 name: Run UITests
-run-name: "${{ inputs.request_id && format('Live Thor promo {0}', inputs.request_id) || 'SDK UI tests' }}"
 
 on:
   workflow_dispatch:
-    inputs:
-      run_live_promo:
-        type: boolean
-        default: false
-      sdk_commit:
-        description: Exact SDK commit to build
-        type: string
-      thor_url:
-        type: string
-      public_key:
-        type: string
-      expected_text:
-        type: string
-      request_id:
-        description: Unique Buildkite request identifier
-        type: string
   pull_request:
     types: [ opened, synchronize ]
   push:
@@ -32,16 +15,7 @@ jobs:
     steps:
     - name: Checkout project
       uses: actions/checkout@v4
-      with:
-        ref: ${{ inputs.sdk_commit || github.sha }}
 
-    - name: Verify SDK revision
-      env:
-        EXPECTED_COMMIT: ${{ inputs.sdk_commit }}
-      run: |
-        git rev-parse HEAD | tee sdk-revision.txt
-        if [ -n "$EXPECTED_COMMIT" ]; then test "$(git rev-parse HEAD)" = "$EXPECTED_COMMIT"; fi
-    
     - name: Select available iOS simulator
       run: echo "IOS_DESTINATION=$(python3 tools/buildkite/select-ios-simulator.py)" >> "$GITHUB_ENV"
 
@@ -49,28 +23,7 @@ jobs:
       run: cd Examples && pod install --verbose --repo-update && cd ..
       
     - name: Build
-      if: ${{ !inputs.run_live_promo }}
       run: xcodebuild build-for-testing -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "$IOS_DESTINATION"
       
     - name: Test
-      if: ${{ !inputs.run_live_promo }}
       run: xcodebuild -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "$IOS_DESTINATION" -skip-testing:ExamplesUITests/LivePromoThorTests test
-
-    - name: Live Thor promo simulator test
-      if: ${{ inputs.run_live_promo }}
-      env:
-        AFFIRM_PROMO_BASE_URL: ${{ inputs.thor_url }}
-        AFFIRM_PUBLIC_KEY: ${{ inputs.public_key }}
-        AFFIRM_EXPECTED_PROMO_TEXT: ${{ inputs.expected_text }}
-      run: tools/buildkite/run-live-promo-test.sh
-
-    - name: Save live simulator evidence
-      if: ${{ always() && inputs.run_live_promo }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: live-thor-promo-${{ inputs.request_id }}
-        path: |
-          sdk-revision.txt
-          build/live-promo.xcresult/**
-          build/live-promo-result.json
-          build/live-promo-preflight.json

@@ -2,8 +2,7 @@
 # Validation-only dependency refs; remove after UX merges and the generator is released.
 env:
   FE_BUILDKITE_BRANCH: preview/sdk-live-20261110
-  UPFUNNEL_SDK_PROMO_HARNESS_REF: b474d78e4398872cad8ce04729e33cace4f02998
-  SDK_PROMO_REUSE_FIXTURE_BUILD: 01a1c879-f149-4159-a0a9-4569ed4e3844
+  UPFUNNEL_SDK_PROMO_HARNESS_REF: 254fe92d01efe7816da177d4a26ba6c6d642cf9f
   SDK_PROMO_PLATFORM: ios
   FE_REPO: ux
 steps:
