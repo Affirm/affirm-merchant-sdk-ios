@@ -376,6 +376,93 @@
     XCTAssertTrue(button.hidden);
 }
 
+#pragma mark - Existing web view
+
+- (void)assertWebViewIsSetUpIn:(AffirmPromotionalButton *)button
+{
+    WKWebView *webView = [button valueForKey:@"webView"];
+    UIButton *overlay = [button valueForKey:@"button"];
+    XCTAssertNotNil(webView);
+    XCTAssertTrue(webView.hidden);
+    XCTAssertEqual(webView.superview, button);
+    XCTAssertEqual(overlay.superview, button);
+    XCTAssertGreaterThan([button.subviews indexOfObject:overlay], [button.subviews indexOfObject:webView]);
+    XCTAssertEqualObjects([overlay actionsForTarget:button forControlEvent:UIControlEventTouchUpInside], @[@"showALAModal:"]);
+
+    NSArray<WKUserScript *> *scripts = webView.configuration.userContentController.userScripts;
+    XCTAssertEqual(scripts.count, 1u);
+    XCTAssertEqual(scripts.firstObject.injectionTime, WKUserScriptInjectionTimeAtDocumentStart);
+    XCTAssertTrue(scripts.firstObject.isForMainFrameOnly);
+    XCTAssertEqualObjects(scripts.firstObject.source, AffirmPromoSanitizerSource());
+}
+
+- (void)testSetupCreatesTheWebViewAndOverlayBeforeAnyResponse
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    [self assertWebViewIsSetUpIn:button];
+    XCTAssertEqual(self.promoHandlers.count, 0u);
+}
+
+- (void)testNibLoadedViewGetsTheWebView
+{
+    NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initRequiringSecureCoding:NO];
+    [archiver setClassName:NSStringFromClass([AffirmPromotionalButton class]) forClass:[UIView class]];
+    [archiver encodeObject:[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)] forKey:NSKeyedArchiveRootObjectKey];
+    [archiver finishEncoding];
+    NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:archiver.encodedData error:nil];
+    unarchiver.requiresSecureCoding = NO;
+    AffirmPromotionalButton *button = [unarchiver decodeObjectForKey:NSKeyedArchiveRootObjectKey];
+    XCTAssertTrue([button isKindOfClass:[AffirmPromotionalButton class]]);
+    [button awakeFromNib];
+    [self assertWebViewIsSetUpIn:button];
+}
+
+- (void)testEveryRenderReusesTheSameWebView
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    WKWebView *webView = [button valueForKey:@"webView"];
+
+    XCTestExpectation *explicitReady = [self expectRenderOf:button finishingIn:@"T2" reason:nil];
+    [self configureExplicitHTML:button];
+    [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<span>Explicit</span>" flag:nil]];
+    [self waitForExpectations:@[explicitReady] timeout:10];
+    XCTAssertEqual([button valueForKey:@"webView"], webView);
+    XCTAssertTrue(webView.opaque);
+
+    XCTestExpectation *migratedReady = [self expectRenderOf:button finishingIn:@"T2" reason:nil];
+    [self configureNative:button font:[UIFont systemFontOfSize:15]];
+    [self completePromoRequestAtIndex:1 json:[self promoJSONWithAla:@"Native" html:@"<span>Migrated</span>" flag:@"true"]];
+    [self waitForExpectations:@[migratedReady] timeout:10];
+    XCTAssertEqual([button valueForKey:@"webView"], webView);
+    XCTAssertFalse(webView.opaque);
+    XCTAssertEqualObjects(webView.backgroundColor, [UIColor clearColor]);
+
+    XCTestExpectation *directReady = [self expectationForNotification:AffirmPromoHTMLRenderDidFinishNotification
+                                                               object:button
+                                                              handler:^BOOL(NSNotification *note) {
+        return [note.userInfo[@"outcome"] isEqualToString:@"ready"];
+    }];
+    [button configureWithHtmlString:@"<span>Direct</span>" amount:[self amount] remoteFontURL:nil remoteCssURL:nil];
+    [self waitForExpectations:@[directReady] timeout:10];
+    XCTAssertEqual([button valueForKey:@"webView"], webView);
+    XCTAssertTrue(webView.opaque);
+    XCTAssertEqualObjects(webView.backgroundColor, [button valueForKey:@"defaultWebViewBackgroundColor"]);
+    XCTAssertEqual(webView.configuration.userContentController.userScripts.count, 1u);
+}
+
+- (void)testOverlayReceivesTapsWhileHTMLIsShown
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T2" reason:nil];
+    [self configureNative:button font:[UIFont systemFontOfSize:15]];
+    [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<span>HTML</span>" flag:@"true"]];
+    [self waitForExpectations:@[finished] timeout:10];
+    [button layoutIfNeeded];
+
+    CGPoint center = CGPointMake(CGRectGetMidX(button.bounds), CGRectGetMidY(button.bounds));
+    XCTAssertEqual([button hitTest:center withEvent:nil], [button valueForKey:@"button"]);
+}
+
 - (void)testOperationChoosesOnceAndFinishesOnce
 {
     AffirmPromoRenderOperation *operation = [[AffirmPromoRenderOperation alloc] initWithRequestedMode:AffirmPromoRenderModeNative];
