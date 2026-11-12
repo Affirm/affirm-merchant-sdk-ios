@@ -8,7 +8,7 @@
 
 NSNotificationName const AffirmPromoHTMLRenderDidFinishNotification = @"AffirmPromoHTMLRenderDidFinish";
 NSString *const AffirmPromoScriptMessageName = @"affirmPromo";
-const NSTimeInterval AffirmPromoHTMLTimeoutSeconds = 5;
+NSTimeInterval AffirmPromoHTMLTimeoutSeconds = 5;
 
 NSString *const AffirmPromoRenderReasonLoadError = @"load_error";
 NSString *const AffirmPromoRenderReasonRenderProcessGone = @"render_process_gone";

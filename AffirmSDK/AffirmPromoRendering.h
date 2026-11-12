@@ -15,7 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 FOUNDATION_EXPORT NSNotificationName const AffirmPromoHTMLRenderDidFinishNotification;
 FOUNDATION_EXPORT NSString *const AffirmPromoScriptMessageName;
-FOUNDATION_EXPORT const NSTimeInterval AffirmPromoHTMLTimeoutSeconds;
+/// The HTML render budget, 5 s. Read when each page load starts; only tests change it.
+FOUNDATION_EXPORT NSTimeInterval AffirmPromoHTMLTimeoutSeconds;
 
 FOUNDATION_EXPORT NSString *const AffirmPromoRenderReasonLoadError;
 FOUNDATION_EXPORT NSString *const AffirmPromoRenderReasonRenderProcessGone;

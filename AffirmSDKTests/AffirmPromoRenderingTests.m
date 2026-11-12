@@ -21,6 +21,11 @@
                               error:(nullable NSError *)error;
 @end
 
+// CI simulators can take 9 s just to launch a WebContent process, so tests give pages a longer
+// budget than the 5 s production one, and wait longer still.
+static const NSTimeInterval AffirmPromoTestHTMLBudget = 20;
+static const NSTimeInterval AffirmPromoTestPageWait = 30;
+
 @interface AffirmPromoRenderingTests : XCTestCase
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) NSMutableArray<AffirmRequestHandler> *promoHandlers;
@@ -49,6 +54,7 @@
 - (void)setUp
 {
     [super setUp];
+    AffirmPromoHTMLTimeoutSeconds = AffirmPromoTestHTMLBudget;
     [[AffirmConfiguration sharedInstance] configureWithPublicKey:@"PKNCHBIVYOT8JSOZ" environment:AffirmEnvironmentSandbox];
 
     // Promo requests are held so each test decides when, and with what, they complete.
@@ -68,6 +74,7 @@
     Method send = class_getClassMethod([AffirmClient class], @selector(send:handler:));
     method_setImplementation(send, self.originalSendIMP);
     self.promoHandlers = nil;
+    AffirmPromoHTMLTimeoutSeconds = 5;
     [AffirmConfiguration sharedInstance].useLegacyNativeRendering = NO;
     self.window.hidden = YES;
     self.window = nil;
@@ -265,7 +272,7 @@
     [self configureNative:button font:[UIFont systemFontOfSize:15]];
     [AffirmConfiguration sharedInstance].useLegacyNativeRendering = YES;
     [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<span>HTML</span>" flag:@"true"]];
-    [self waitForExpectations:@[finished] timeout:10];
+    [self waitForExpectations:@[finished] timeout:AffirmPromoTestPageWait];
 
     XCTestExpectation *optedOut = [self expectRenderOf:button finishingIn:@"T1"
                                         decisionReason:AffirmPromoDecisionReasonOptOut fallbackReason:nil];
@@ -306,7 +313,7 @@
                                         decisionReason:AffirmPromoDecisionReasonFlagTrue fallbackReason:nil];
     [self configureNative:button font:[UIFont boldSystemFontOfSize:15]];
     [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<span>HTML</span>" flag:@"true"]];
-    [self waitForExpectations:@[finished] timeout:10];
+    [self waitForExpectations:@[finished] timeout:AffirmPromoTestPageWait];
     WKWebView *webView = [button valueForKey:@"webView"];
     XCTAssertFalse(webView.hidden);
     XCTAssertFalse(webView.opaque);
@@ -321,7 +328,7 @@
     [AffirmConfiguration sharedInstance].useLegacyNativeRendering = YES;
     [self configureExplicitHTML:button];
     [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<span>HTML</span>" flag:@"false"]];
-    [self waitForExpectations:@[finished] timeout:10];
+    [self waitForExpectations:@[finished] timeout:AffirmPromoTestPageWait];
     XCTAssertTrue([[button valueForKey:@"webView"] isOpaque]);
 }
 
@@ -333,7 +340,7 @@
                                         fallbackReason:AffirmPromoRenderReasonHTMLEmpty];
     [self configureNative:button font:[UIFont systemFontOfSize:15]];
     [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<script>x()</script>" flag:@"true"]];
-    [self waitForExpectations:@[finished] timeout:10];
+    [self waitForExpectations:@[finished] timeout:AffirmPromoTestPageWait];
     XCTAssertEqualObjects([self nativeTitleOf:button], @"Native");
     XCTAssertFalse(button.hidden);
     XCTAssertTrue([[button valueForKey:@"webView"] isHidden]);
@@ -360,7 +367,7 @@
                                         fallbackReason:AffirmPromoRenderReasonHTMLEmpty];
     [self configureNative:button font:[UIFont systemFontOfSize:15]];
     [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"" html:@"<script>x()</script>" flag:@"true"]];
-    [self waitForExpectations:@[finished] timeout:10];
+    [self waitForExpectations:@[finished] timeout:AffirmPromoTestPageWait];
     XCTAssertTrue(button.hidden);
 }
 
@@ -425,14 +432,14 @@
     XCTestExpectation *explicitReady = [self expectRenderOf:button finishingIn:@"T2" reason:nil];
     [self configureExplicitHTML:button];
     [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<span>Explicit</span>" flag:nil]];
-    [self waitForExpectations:@[explicitReady] timeout:10];
+    [self waitForExpectations:@[explicitReady] timeout:AffirmPromoTestPageWait];
     XCTAssertEqual([button valueForKey:@"webView"], webView);
     XCTAssertTrue(webView.opaque);
 
     XCTestExpectation *migratedReady = [self expectRenderOf:button finishingIn:@"T2" reason:nil];
     [self configureNative:button font:[UIFont systemFontOfSize:15]];
     [self completePromoRequestAtIndex:1 json:[self promoJSONWithAla:@"Native" html:@"<span>Migrated</span>" flag:@"true"]];
-    [self waitForExpectations:@[migratedReady] timeout:10];
+    [self waitForExpectations:@[migratedReady] timeout:AffirmPromoTestPageWait];
     XCTAssertEqual([button valueForKey:@"webView"], webView);
     XCTAssertFalse(webView.opaque);
     XCTAssertEqualObjects(webView.backgroundColor, [UIColor clearColor]);
@@ -443,7 +450,7 @@
         return [note.userInfo[@"outcome"] isEqualToString:@"ready"];
     }];
     [button configureWithHtmlString:@"<span>Direct</span>" amount:[self amount] remoteFontURL:nil remoteCssURL:nil];
-    [self waitForExpectations:@[directReady] timeout:10];
+    [self waitForExpectations:@[directReady] timeout:AffirmPromoTestPageWait];
     XCTAssertEqual([button valueForKey:@"webView"], webView);
     XCTAssertTrue(webView.opaque);
     XCTAssertEqualObjects(webView.backgroundColor, [button valueForKey:@"defaultWebViewBackgroundColor"]);
@@ -456,7 +463,7 @@
     XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T2" reason:nil];
     [self configureNative:button font:[UIFont systemFontOfSize:15]];
     [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<span>HTML</span>" flag:@"true"]];
-    [self waitForExpectations:@[finished] timeout:10];
+    [self waitForExpectations:@[finished] timeout:AffirmPromoTestPageWait];
     [button layoutIfNeeded];
 
     CGPoint center = CGPointMake(CGRectGetMidX(button.bounds), CGRectGetMidY(button.bounds));
@@ -530,7 +537,7 @@
     XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T2" reason:nil];
     [self configureExplicitHTML:button];
     [self completePromoRequestAtIndex:0 json:@"{\"promo\": {\"ala\": \"Native\", \"html_ala\": \"<span>HTML</span>\"}}"];
-    [self waitForExpectations:@[finished] timeout:10];
+    [self waitForExpectations:@[finished] timeout:AffirmPromoTestPageWait];
     XCTAssertFalse(button.hidden);
     XCTAssertFalse([[button valueForKey:@"webView"] isHidden]);
 }
@@ -541,7 +548,7 @@
     XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T5" reason:AffirmPromoRenderReasonHTMLEmpty];
     [self configureExplicitHTML:button];
     [self completePromoRequestAtIndex:0 json:@"{\"promo\": {\"ala\": \"Native\", \"html_ala\": \"<script>x()</script>\"}}"];
-    [self waitForExpectations:@[finished] timeout:10];
+    [self waitForExpectations:@[finished] timeout:AffirmPromoTestPageWait];
     XCTAssertTrue(button.hidden);
     XCTAssertNil([self nativeTitleOf:button]);
 }
@@ -677,7 +684,7 @@
     XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T2" reason:nil];
     [self configureExplicitHTML:button];
     [self completePromoRequestAtIndex:0 json:@"{\"promo\": {\"html_ala\": \"<span>HTML</span>\"}}"];
-    [self waitForExpectations:@[finished] timeout:10];
+    [self waitForExpectations:@[finished] timeout:AffirmPromoTestPageWait];
     XCTAssertFalse(button.hidden);
 
     XCTestExpectation *renderReport = [self expectationForNotification:AffirmPromoRenderDidFinishNotification
@@ -892,7 +899,7 @@
                       remoteFontURL:nil
                        remoteCssURL:nil];
     XCTAssertTrue(button.hidden);
-    [self waitForExpectations:@[finished] timeout:10];
+    [self waitForExpectations:@[finished] timeout:AffirmPromoTestPageWait];
     XCTAssertFalse(button.hidden);
 
     WKWebView *webView = [button valueForKey:@"webView"];
@@ -926,7 +933,7 @@
                              amount:[NSDecimalNumber decimalNumberWithString:@"50"]
                       remoteFontURL:nil
                        remoteCssURL:nil];
-    [self waitForExpectations:@[finished] timeout:10];
+    [self waitForExpectations:@[finished] timeout:AffirmPromoTestPageWait];
     XCTAssertTrue(button.hidden);
 }
 
@@ -943,7 +950,7 @@
                              amount:[NSDecimalNumber decimalNumberWithString:@"50"]
                       remoteFontURL:nil
                        remoteCssURL:[NSURL URLWithString:@"http://evil.test/a.css"]];
-    [self waitForExpectations:@[finished] timeout:2];
+    [self waitForExpectations:@[finished] timeout:AffirmPromoTestPageWait];
     XCTAssertTrue(button.hidden);
     WKWebView *webView = [button valueForKey:@"webView"];
     XCTAssertTrue(webView.hidden);
@@ -963,7 +970,7 @@
                              amount:[NSDecimalNumber decimalNumberWithString:@"50"]
                       remoteFontURL:nil
                        remoteCssURL:nil];
-    [self waitForExpectations:@[finished] timeout:10];
+    [self waitForExpectations:@[finished] timeout:AffirmPromoTestPageWait];
 
     XCTestExpectation *reloaded = [self expectationForNotification:AffirmPromoHTMLRenderDidFinishNotification
                                                             object:button
@@ -994,7 +1001,7 @@
                                  amount:[NSDecimalNumber decimalNumberWithString:@"50"]
                           remoteFontURL:nil
                            remoteCssURL:nil];
-        [self waitForExpectations:@[finished] timeout:10];
+        [self waitForExpectations:@[finished] timeout:AffirmPromoTestPageWait];
         [[NSNotificationCenter defaultCenter] removeObserver:observer];
         [button removeFromSuperview];
     }
@@ -1017,7 +1024,7 @@
     NSString *staleRenderID = [button valueForKey:@"htmlRenderID"];
     [button configureWithHtmlString:@"<span>second</span>" amount:amount remoteFontURL:nil remoteCssURL:nil];
     XCTAssertNotEqualObjects([button valueForKey:@"htmlRenderID"], staleRenderID);
-    [self waitForExpectations:@[finished] timeout:10];
+    [self waitForExpectations:@[finished] timeout:AffirmPromoTestPageWait];
 
     XCTestExpectation *staleOutcome = [self expectationForNotification:AffirmPromoHTMLRenderDidFinishNotification
                                                                 object:button
@@ -1041,6 +1048,7 @@
 
 - (void)testNativeConfigurationCancelsInFlightHTMLRender
 {
+    AffirmPromoHTMLTimeoutSeconds = 0.5;
     AffirmPromotionalButton *button = [self promoButton];
     XCTestExpectation *htmlOutcome = [self expectationForNotification:AffirmPromoHTMLRenderDidFinishNotification
                                                                object:button
@@ -1103,7 +1111,7 @@
 {
     XCTestExpectation *ready = [self expectPageReadyOf:button];
     [button configureWithHtmlString:html amount:[self amount] remoteFontURL:nil remoteCssURL:css];
-    [self waitForExpectations:@[ready] timeout:10];
+    [self waitForExpectations:@[ready] timeout:AffirmPromoTestPageWait];
 }
 
 - (void)testRealPromoResponsesKeepEveryElementAfterSanitizing
@@ -1143,7 +1151,7 @@
     [self configureNative:button];
     NSData *json = [NSJSONSerialization dataWithJSONObject:[self promoFixtures][@"installment_badge_logo_flag_on"] options:0 error:nil];
     [self completePromoRequestAtIndex:0 json:[[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding]];
-    [self waitForExpectations:@[finished] timeout:10];
+    [self waitForExpectations:@[finished] timeout:AffirmPromoTestPageWait];
     XCTAssertEqualObjects([self evaluate:@"getComputedStyle(document.body).marginTop" in:button], @"0px");
     NSString *root = [self evaluate:@"document.getElementById('affirm-promo-root').innerHTML" in:button];
     XCTAssertTrue([root containsString:@"__apr_badge_indigo"]);
@@ -1163,7 +1171,7 @@
                                         decisionReason:AffirmPromoDecisionReasonFlagTrue fallbackReason:nil];
     [self configureNative:button];
     [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<span>HTML</span>" flag:@"true"]];
-    [self waitForExpectations:@[migrated] timeout:10];
+    [self waitForExpectations:@[migrated] timeout:AffirmPromoTestPageWait];
 
     [self showHTML:@"<span>HTML</span>" in:button remoteCssURL:nil];
     XCTAssertEqualObjects([self evaluate:@"getComputedStyle(document.body).marginTop" in:button], @"8px");
@@ -1246,7 +1254,7 @@
     [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native"
                                                                html:@"<span>ok</span><img src='https://127.0.0.1:1/x.png'>"
                                                                flag:@"true"]];
-    [self waitForExpectations:@[finished] timeout:10];
+    [self waitForExpectations:@[finished] timeout:AffirmPromoTestPageWait];
     XCTAssertEqualObjects([self nativeTitleOf:button], @"Native");
     XCTAssertTrue([[button valueForKey:@"webView"] isHidden]);
 }
@@ -1294,7 +1302,7 @@
                                         fallbackReason:AffirmPromoRenderReasonHTMLEmpty];
     [self configureNativeWithoutTextColor:button];
     [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<script>x()</script>" flag:@"true"]];
-    [self waitForExpectations:@[finished] timeout:10];
+    [self waitForExpectations:@[finished] timeout:AffirmPromoTestPageWait];
     XCTAssertTrue(button.hidden);
     XCTAssertTrue([[button valueForKey:@"webView"] isHidden]);
 }
@@ -1324,7 +1332,7 @@
     NSData *data = [NSJSONSerialization dataWithJSONObject:json options:0 error:nil];
     [self completePromoRequestAtIndex:self.promoHandlers.count - 1
                                  json:[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]];
-    [self waitForExpectations:@[finished] timeout:10];
+    [self waitForExpectations:@[finished] timeout:AffirmPromoTestPageWait];
 }
 
 - (NSDictionary *)rootStyleOf:(AffirmPromotionalButton *)button
@@ -1526,7 +1534,7 @@
     XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T2"
                                         decisionReason:AffirmPromoDecisionReasonFlagTrue fallbackReason:nil];
     [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<span>HTML</span>" flag:@"true"]];
-    [self waitForExpectations:@[finished] timeout:10];
+    [self waitForExpectations:@[finished] timeout:AffirmPromoTestPageWait];
 
     XCTAssertTrue([button accessibilityActivate]);
     UINavigationController *modal = (UINavigationController *)host.presentedViewController;
