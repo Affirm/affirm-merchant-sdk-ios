@@ -32,7 +32,9 @@ after(async () => {
     await browser.close();
 });
 
-function fillTemplate({ html, remoteCss = '', remoteFont = '', extraCss = '', timeoutMs = 5000 }) {
+const FIXTURES = JSON.parse(fs.readFileSync(path.join(__dirname, 'Fixtures/promo-responses.json'), 'utf8'));
+
+function fillTemplate({ html, remoteCss = '', remoteFont = '', extraCss = '', timeoutMs = 5000, nativeCSS = '' }) {
     const payload = {
         renderId: 'test-render',
         html,
@@ -43,6 +45,7 @@ function fillTemplate({ html, remoteCss = '', remoteFont = '', extraCss = '', ti
         locale: 'en_US',
         countryCode: 'USA',
         bundledCSS: BADGE_CSS + extraCss,
+        nativeCSS,
         timeoutMs,
     };
     const json = JSON.stringify(payload).replace(/</g, '\\u003c').replace(/>/g, '\\u003e');
@@ -51,11 +54,12 @@ function fillTemplate({ html, remoteCss = '', remoteFont = '', extraCss = '', ti
 
 async function render({
     html, remoteCss = '', remoteFont = '', extraCss = '', sanitizer = SANITIZER,
-    resources = {}, hang = [], width = 360, waitMs = 3000, timeoutMs = 5000,
+    resources = {}, hang = [], width = 360, waitMs = 3000, timeoutMs = 5000, nativeCSS = '',
+    beforeLoad = null,
 }) {
     const page = await browser.newPage();
     await page.setViewportSize({ width, height: 640 });
-    const filled = fillTemplate({ html, remoteCss, remoteFont, extraCss, timeoutMs });
+    const filled = fillTemplate({ html, remoteCss, remoteFont, extraCss, timeoutMs, nativeCSS });
     await page.route('**/*', (route) => {
         const url = route.request().url();
         if (url === PAGE_URL) {
@@ -92,6 +96,9 @@ async function render({
     if (sanitizer) {
         await page.addInitScript({ content: sanitizer });
     }
+    if (beforeLoad) {
+        await page.addInitScript(beforeLoad);
+    }
     await page.goto(PAGE_URL, { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => window.hostCalls.length > 0, null, { timeout: waitMs });
     const calls = await page.evaluate(() => window.hostCalls);
@@ -125,6 +132,103 @@ test('script breakout, unsafe URLs, handlers and clobbering are removed', async 
     assert.doesNotMatch(rootHtml, /src="x"|data:image/);
     assert.equal(calls[0].event, 'ready');
     assert.equal(sanitized, true);
+    await page.close();
+});
+
+test('real sandbox html_ala keeps every element, class and text after sanitizing', async () => {
+    for (const [name, response] of Object.entries(FIXTURES)) {
+        if (name.startsWith('_')) {
+            continue;
+        }
+        const html = response.promo.html_ala;
+        const { page, calls, rootHtml } = await render({ html });
+        assert.equal(calls[0].event, 'ready', name);
+        const expected = await page.evaluate((source) => {
+            const reference = document.createElement('div');
+            reference.innerHTML = source;
+            return reference.innerHTML;
+        }, html);
+        assert.equal(rootHtml, expected, name);
+        assert.match(rootHtml, /class="affirm-ala-price"/, name);
+        assert.match(rootHtml, /class="affirm-modal-trigger"/, name);
+        if (html.includes('__apr_badge')) {
+            assert.match(rootHtml, /class="__apr_badge __apr_badge_indigo"/, name);
+        }
+        if (html.includes('__affirm-logo')) {
+            assert.match(rootHtml, /class="__affirm-logo __affirm-logo-blue"/, name);
+        }
+        await page.close();
+    }
+});
+
+test('merchant stylesheets load after the inlined badge CSS', async () => {
+    const { page, calls } = await render({
+        html: '<span>ok</span>',
+        remoteCss: 'https://merchant.test/promo.css',
+        remoteFont: 'https://fonts.test/font.css',
+        resources: {
+            'https://merchant.test/promo.css': { type: 'text/css', body: 'span{}' },
+            'https://fonts.test/font.css': { type: 'text/css', body: 'span{}' },
+        },
+    });
+    assert.equal(calls[0].event, 'ready');
+    const order = await page.evaluate(() => Array.from(document.head.children)
+        .filter((el) => el.tagName === 'STYLE' || el.tagName === 'LINK')
+        .map((el) => (el.tagName === 'STYLE' ? 'bundled' : el.href)));
+    assert.deepEqual(order, ['bundled', 'https://merchant.test/promo.css', 'https://fonts.test/font.css']);
+    await page.close();
+});
+
+test('migrated pages have no body margin and explicit pages keep the browser default', async () => {
+    const html = '<span>ok</span><img src="https://cdn.test/logo.png" width="10" height="40">';
+    const resources = { 'https://cdn.test/logo.png': { type: 'image/png', body: PNG_1X1 } };
+    const bodyMargin = (page) => page.evaluate(() => getComputedStyle(document.body).marginTop);
+
+    const migrated = await render({ html, resources, nativeCSS: 'body { margin: 0; }' });
+    assert.equal(await bodyMargin(migrated.page), '0px');
+    const explicit = await render({ html, resources });
+    assert.equal(await bodyMargin(explicit.page), '8px');
+    assert.equal(explicit.calls[0].height - migrated.calls[0].height, 16,
+        'the reported height includes the body margin');
+    await migrated.page.close();
+    await explicit.page.close();
+});
+
+test('a migrated page whose body fills the view still reports content height changes', async () => {
+    const { page, calls } = await render({
+        html: '<span>ok</span>',
+        nativeCSS: 'html, body { height: 100%; } body { margin: 0; display: flex; flex-direction: column;'
+            + ' justify-content: center; align-items: center; } #affirm-promo-root { margin: 0; }',
+    });
+    assert.equal(calls[0].event, 'ready');
+    const before = calls[0].height;
+    await page.$eval('#affirm-promo-root', (root) => { root.style.paddingBottom = '120px'; });
+    await page.waitForFunction(
+        (initial) => window.hostCalls.some((call) => call.event === 'height' && call.height >= initial + 120),
+        before,
+        { timeout: 3000 });
+    await page.close();
+});
+
+test('ready carries the sanitized page text for the accessibility label', async () => {
+    const { page, calls } = await render({
+        html: '<span class="affirm-ala-price">$50</span>/mo\n   with  <b>Affirm</b><script>"hidden"</script>',
+    });
+    assert.equal(calls[0].event, 'ready');
+    assert.equal(calls[0].text, '$50/mo with Affirm');
+    await page.close();
+});
+
+test('an exception in the page script fails at once with script_error', async () => {
+    const started = Date.now();
+    const { page, calls } = await render({
+        html: '<span>ok</span>',
+        beforeLoad: () => {
+            Object.defineProperty(document, 'fonts', { get() { throw new Error('boom'); } });
+        },
+    });
+    assert.equal(failureReason(calls), 'script_error');
+    assert.ok(Date.now() - started < 3000, 'should not wait for the 5s timeout');
     await page.close();
 });
 

@@ -37,143 +37,162 @@
                 }
                 setTimeout(function () { fail('html_timeout'); }, payload.timeoutMs || 5000);
 
-                function isHttps(url) {
-                    return /^https:\/\//i.test(url);
-                }
-                function isAllowedStylesheet(url) {
-                    return isHttps(url) || /^file:\/\//i.test(url);
-                }
-                function contentHeight() {
-                    var root = document.getElementById('affirm-promo-root');
-                    var height = root ? root.getBoundingClientRect().height : 0;
-                    var bodyStyle = window.getComputedStyle(document.body);
-                    height += parseFloat(bodyStyle.marginTop) || 0;
-                    height += parseFloat(bodyStyle.marginBottom) || 0;
-                    return Math.ceil(height);
-                }
-                function whenLoaded(element, isLoaded, reason) {
-                    return new Promise(function (resolve) {
-                        if (isLoaded) {
-                            if (isLoaded(element)) {
-                                resolve();
-                                return;
+                // Errors thrown by affirm.js are not ours to report; only this script's own failures are.
+                try {
+                    function isHttps(url) {
+                        return /^https:\/\//i.test(url);
+                    }
+                    function isAllowedStylesheet(url) {
+                        return isHttps(url) || /^file:\/\//i.test(url);
+                    }
+                    function contentHeight() {
+                        var root = document.getElementById('affirm-promo-root');
+                        var height = root ? root.getBoundingClientRect().height : 0;
+                        var bodyStyle = window.getComputedStyle(document.body);
+                        height += parseFloat(bodyStyle.marginTop) || 0;
+                        height += parseFloat(bodyStyle.marginBottom) || 0;
+                        return Math.ceil(height);
+                    }
+                    function whenLoaded(element, isLoaded, reason) {
+                        return new Promise(function (resolve) {
+                            if (isLoaded) {
+                                if (isLoaded(element)) {
+                                    resolve();
+                                    return;
+                                }
+                                if (element.complete) {
+                                    fail(reason);
+                                    return;
+                                }
                             }
-                            if (element.complete) {
-                                fail(reason);
-                                return;
-                            }
+                            element.addEventListener('load', function () {
+                                if (isLoaded && !isLoaded(element)) {
+                                    fail(reason);
+                                } else {
+                                    resolve();
+                                }
+                            });
+                            element.addEventListener('error', function () { fail(reason); });
+                        });
+                    }
+                    function waitForStylesheet(url) {
+                        if (!url) {
+                            return Promise.resolve();
                         }
-                        element.addEventListener('load', function () {
-                            if (isLoaded && !isLoaded(element)) {
-                                fail(reason);
-                            } else {
-                                resolve();
+                        if (!isAllowedStylesheet(url)) {
+                            fail('resource_failed');
+                            return Promise.resolve();
+                        }
+                        var link = document.createElement('link');
+                        link.rel = 'stylesheet';
+                        var wait = whenLoaded(link, null, 'resource_failed');
+                        link.href = url;
+                        document.head.appendChild(link);
+                        return wait;
+                    }
+
+                    var style = document.createElement('style');
+                    style.textContent = (payload.bundledCSS || '') + '\n' + (payload.nativeCSS || '');
+                    document.head.appendChild(style);
+
+                    var purify = window.DOMPurify;
+                    if (!purify || !purify.isSupported) {
+                        fail('sanitizer_unavailable');
+                        return;
+                    }
+                    purify.addHook('uponSanitizeAttribute', function (node, data) {
+                        if ((data.attrName === 'href' || data.attrName === 'src') && !isHttps(data.attrValue)) {
+                            data.keepAttr = false;
+                        }
+                    });
+                    var root = document.getElementById('affirm-promo-root');
+                    try {
+                        root.innerHTML = purify.sanitize(payload.html || '', {
+                            ALLOWED_TAGS: ['a', 'b', 'strong', 'em', 'i', 'u', 'small', 'sup', 'sub',
+                                'br', 'span', 'p', 'div', 'img', 'svg', 'g', 'path', 'circle', 'rect',
+                                'ellipse', 'line', 'polygon', 'polyline', 'title'],
+                            ALLOWED_ATTR: ['class', 'href', 'src', 'alt', 'title', 'width', 'height',
+                                'viewBox', 'd', 'fill', 'fill-rule', 'clip-rule', 'stroke',
+                                'stroke-width', 'transform', 'x', 'y', 'cx', 'cy', 'r', 'rx', 'ry',
+                                'x1', 'y1', 'x2', 'y2', 'points', 'xmlns'],
+                            ALLOW_ARIA_ATTR: false,
+                            ALLOW_DATA_ATTR: false
+                        });
+                    } catch (e) {
+                        fail('sanitizer_unavailable');
+                        return;
+                    }
+                    var usable = !!(root.textContent.trim() || root.querySelector('img[src], svg'));
+                    post({ event: 'sanitized', usable: usable });
+                    if (!usable) {
+                        fail('html_empty');
+                        return;
+                    }
+
+                    window._affirm_config = {
+                        public_api_key: payload.publicKey || '',
+                        script: payload.jsURL || '',
+                        locale: payload.locale || '',
+                        country_code: payload.countryCode || ''
+                    };
+                    (function(l,g,m,e,a,f,b){var d,c=l[m]||{},h=document.createElement(f),n=document.getElementsByTagName(f)[0],k=function(a,b,c){return function(){a[b]._.push([c,arguments])}};c[e]=k(c,e,"set");d=c[e];c[a]={};c[a]._=[];d._=[];c[a][b]=k(c,a,b);a=0;for(b="set add save post open empty reset on off trigger ready setProduct".split(" ");a<b.length;a++)d[b[a]]=k(c,e,b[a]);a=0;for(b=["get","token","url","items"];a<b.length;a++)d[b[a]]=function(){};h.async=!0;h.src=g[f];n.parentNode.insertBefore(h,n);delete g[f];d(g);l[m]=c})(window,window._affirm_config,"affirm","checkout","ui","script","ready");
+
+                    var waits = [];
+                    waits.push(waitForStylesheet(payload.remoteCssURL || ''));
+                    if (settled) {
+                        return;
+                    }
+                    waits.push(waitForStylesheet(payload.remoteFontURL || ''));
+                    if (settled) {
+                        return;
+                    }
+                    var images = root.querySelectorAll('img');
+                    for (var i = 0; i < images.length; i++) {
+                        if (!images[i].getAttribute('src')) {
+                            continue;
+                        }
+                        waits.push(whenLoaded(images[i],
+                            function (el) { return el.complete && el.naturalWidth > 0; },
+                            'image_failed'));
+                    }
+                    if (document.fonts && document.fonts.ready) {
+                        waits.push(document.fonts.ready);
+                    }
+                    Promise.all(waits).then(function () {
+                        // The WebView stays hidden until ready, and a hidden view may never get an
+                        // animation frame. getBoundingClientRect forces layout, so no frame is needed.
+                        setTimeout(function () {
+                            if (settled) {
+                                return;
+                            }
+                            var height;
+                            try {
+                                height = contentHeight();
+                            } catch (e) {
+                                fail('script_error');
+                                return;
+                            }
+                            settled = true;
+                            post({
+                                event: 'ready',
+                                height: height,
+                                text: (root.textContent || '').replace(/\s+/g, ' ').trim()
+                            });
+                            if (window.ResizeObserver) {
+                                // A migrated body fills the view, so only the root sees content changes.
+                                var observer = new ResizeObserver(function () {
+                                    post({ event: 'height', height: contentHeight() });
+                                });
+                                observer.observe(document.body);
+                                observer.observe(root, { box: 'border-box' });
                             }
                         });
-                        element.addEventListener('error', function () { fail(reason); });
-                    });
-                }
-                function waitForStylesheet(url) {
-                    if (!url) {
-                        return Promise.resolve();
-                    }
-                    if (!isAllowedStylesheet(url)) {
+                    }, function () {
                         fail('resource_failed');
-                        return Promise.resolve();
-                    }
-                    var link = document.createElement('link');
-                    link.rel = 'stylesheet';
-                    var wait = whenLoaded(link, null, 'resource_failed');
-                    link.href = url;
-                    document.head.appendChild(link);
-                    return wait;
-                }
-
-                var style = document.createElement('style');
-                style.textContent = payload.bundledCSS || '';
-                document.head.appendChild(style);
-
-                var purify = window.DOMPurify;
-                if (!purify || !purify.isSupported) {
-                    fail('sanitizer_unavailable');
-                    return;
-                }
-                purify.addHook('uponSanitizeAttribute', function (node, data) {
-                    if ((data.attrName === 'href' || data.attrName === 'src') && !isHttps(data.attrValue)) {
-                        data.keepAttr = false;
-                    }
-                });
-                var root = document.getElementById('affirm-promo-root');
-                try {
-                    root.innerHTML = purify.sanitize(payload.html || '', {
-                        ALLOWED_TAGS: ['a', 'b', 'strong', 'em', 'i', 'u', 'small', 'sup', 'sub',
-                            'br', 'span', 'p', 'div', 'img', 'svg', 'g', 'path', 'circle', 'rect',
-                            'ellipse', 'line', 'polygon', 'polyline', 'title'],
-                        ALLOWED_ATTR: ['class', 'href', 'src', 'alt', 'title', 'width', 'height',
-                            'viewBox', 'd', 'fill', 'fill-rule', 'clip-rule', 'stroke',
-                            'stroke-width', 'transform', 'x', 'y', 'cx', 'cy', 'r', 'rx', 'ry',
-                            'x1', 'y1', 'x2', 'y2', 'points', 'xmlns'],
-                        ALLOW_ARIA_ATTR: false,
-                        ALLOW_DATA_ATTR: false
                     });
                 } catch (e) {
-                    fail('sanitizer_unavailable');
-                    return;
+                    fail('script_error');
                 }
-                var usable = !!(root.textContent.trim() || root.querySelector('img[src], svg'));
-                post({ event: 'sanitized', usable: usable });
-                if (!usable) {
-                    fail('html_empty');
-                    return;
-                }
-
-                window._affirm_config = {
-                    public_api_key: payload.publicKey || '',
-                    script: payload.jsURL || '',
-                    locale: payload.locale || '',
-                    country_code: payload.countryCode || ''
-                };
-                (function(l,g,m,e,a,f,b){var d,c=l[m]||{},h=document.createElement(f),n=document.getElementsByTagName(f)[0],k=function(a,b,c){return function(){a[b]._.push([c,arguments])}};c[e]=k(c,e,"set");d=c[e];c[a]={};c[a]._=[];d._=[];c[a][b]=k(c,a,b);a=0;for(b="set add save post open empty reset on off trigger ready setProduct".split(" ");a<b.length;a++)d[b[a]]=k(c,e,b[a]);a=0;for(b=["get","token","url","items"];a<b.length;a++)d[b[a]]=function(){};h.async=!0;h.src=g[f];n.parentNode.insertBefore(h,n);delete g[f];d(g);l[m]=c})(window,window._affirm_config,"affirm","checkout","ui","script","ready");
-
-                var waits = [];
-                waits.push(waitForStylesheet(payload.remoteCssURL || ''));
-                if (settled) {
-                    return;
-                }
-                waits.push(waitForStylesheet(payload.remoteFontURL || ''));
-                if (settled) {
-                    return;
-                }
-                var images = root.querySelectorAll('img');
-                for (var i = 0; i < images.length; i++) {
-                    if (!images[i].getAttribute('src')) {
-                        continue;
-                    }
-                    waits.push(whenLoaded(images[i],
-                        function (el) { return el.complete && el.naturalWidth > 0; },
-                        'image_failed'));
-                }
-                if (document.fonts && document.fonts.ready) {
-                    waits.push(document.fonts.ready);
-                }
-                Promise.all(waits).then(function () {
-                    // The WebView stays hidden until ready, and a hidden view may never get an
-                    // animation frame. getBoundingClientRect forces layout, so no frame is needed.
-                    setTimeout(function () {
-                        if (settled) {
-                            return;
-                        }
-                        settled = true;
-                        post({ event: 'ready', height: contentHeight() });
-                        if (window.ResizeObserver) {
-                            new ResizeObserver(function () {
-                                post({ event: 'height', height: contentHeight() });
-                            }).observe(document.body);
-                        }
-                    });
-                }, function () {
-                    fail('resource_failed');
-                });
             })();
         </script>
     </body>
