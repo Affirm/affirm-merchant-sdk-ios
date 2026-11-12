@@ -202,6 +202,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
 {
     [self.htmlTimeoutTimer invalidate];
     self.scriptMessageProxy.target = nil;
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:AffirmPromoScriptMessageName];
 }
 
 - (BOOL)accessibilityActivate
@@ -537,6 +538,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
 
 - (void)scheduleHTMLTimeoutForRenderID:(NSString *)renderID
 {
+    [self.htmlTimeoutTimer invalidate];
     __weak typeof(self) weakSelf = self;
     self.htmlTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:AffirmPromoHTMLTimeoutSeconds
                                                              repeats:NO

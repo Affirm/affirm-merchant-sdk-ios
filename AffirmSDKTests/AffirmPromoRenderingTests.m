@@ -10,11 +10,36 @@
 #import "../AffirmSDK/AffirmConfiguration.h"
 #import "../AffirmSDK/AffirmUtils.h"
 
+@class AffirmResponse;
+
+@interface AffirmPromotionalButton (AffirmPromoRenderingTests)
+- (void)configureWithAttributedText:(nullable NSAttributedString *)attributedText
+                           response:(nullable AffirmResponse *)response
+                              error:(nullable NSError *)error;
+@end
+
 @interface AffirmPromoRenderingTests : XCTestCase
 @property (nonatomic, strong) UIWindow *window;
 @end
 
 @implementation AffirmPromoRenderingTests
+
++ (void)setUp
+{
+    [super setUp];
+    // The first WebView in the process pays for launching WebKit's helper processes. On CI that
+    // alone can exceed the 5s render budget, so pay it once here instead of in the first test.
+    WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
+    __block BOOL done = NO;
+    [webView loadHTMLString:@"<p>warm</p>" baseURL:nil];
+    [webView evaluateJavaScript:@"document.readyState" completionHandler:^(id result, NSError *error) {
+        done = YES;
+    }];
+    NSDate *deadline = [NSDate dateWithTimeIntervalSinceNow:30];
+    while (!done && [deadline timeIntervalSinceNow] > 0) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    }
+}
 
 - (void)setUp
 {
@@ -173,7 +198,10 @@
     NSString *html = @"<span>ok</span>";
     XCTestExpectation *finished = [self expectationForNotification:AffirmPromoHTMLRenderDidFinishNotification
                                                             object:button
-                                                           handler:nil];
+                                                           handler:^BOOL(NSNotification *note) {
+        XCTAssertEqualObjects(note.userInfo[@"outcome"], @"ready", @"first render failed: %@", note.userInfo[@"reason"]);
+        return YES;
+    }];
     [button configureWithHtmlString:html
                              amount:[NSDecimalNumber decimalNumberWithString:@"50"]
                       remoteFontURL:nil
@@ -190,6 +218,91 @@
                        remoteCssURL:nil];
     [self waitForExpectations:@[reloaded] timeout:0.5];
     XCTAssertFalse(button.hidden);
+}
+
+- (void)testWebViewDoesNotRetainButton
+{
+    __weak AffirmPromotionalButton *weakButton = nil;
+    @autoreleasepool {
+        AffirmPromotionalButton *button = [self promoButton];
+        weakButton = button;
+        XCTestExpectation *finished = [self expectationWithDescription:@"ready"];
+        id observer = [[NSNotificationCenter defaultCenter] addObserverForName:AffirmPromoHTMLRenderDidFinishNotification
+                                                                        object:nil
+                                                                         queue:nil
+                                                                    usingBlock:^(NSNotification *note) {
+            [finished fulfill];
+        }];
+        [button configureWithHtmlString:@"<span>ok</span>"
+                                 amount:[NSDecimalNumber decimalNumberWithString:@"50"]
+                          remoteFontURL:nil
+                           remoteCssURL:nil];
+        [self waitForExpectations:@[finished] timeout:10];
+        [[NSNotificationCenter defaultCenter] removeObserver:observer];
+        [button removeFromSuperview];
+    }
+    XCTAssertNil(weakButton);
+}
+
+- (void)testStaleRenderMessagesAreIgnored
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    NSDecimalNumber *amount = [NSDecimalNumber decimalNumberWithString:@"50"];
+    __block NSUInteger outcomes = 0;
+    XCTestExpectation *finished = [self expectationForNotification:AffirmPromoHTMLRenderDidFinishNotification
+                                                            object:button
+                                                           handler:^BOOL(NSNotification *note) {
+        outcomes += 1;
+        XCTAssertEqualObjects(note.userInfo[@"outcome"], @"ready");
+        return YES;
+    }];
+    [button configureWithHtmlString:@"<span>first</span>" amount:amount remoteFontURL:nil remoteCssURL:nil];
+    NSString *staleRenderID = [button valueForKey:@"htmlRenderID"];
+    [button configureWithHtmlString:@"<span>second</span>" amount:amount remoteFontURL:nil remoteCssURL:nil];
+    XCTAssertNotEqualObjects([button valueForKey:@"htmlRenderID"], staleRenderID);
+    [self waitForExpectations:@[finished] timeout:10];
+
+    XCTestExpectation *staleOutcome = [self expectationForNotification:AffirmPromoHTMLRenderDidFinishNotification
+                                                                object:button
+                                                               handler:nil];
+    staleOutcome.inverted = YES;
+    WKWebView *webView = [button valueForKey:@"webView"];
+    NSString *script = [NSString stringWithFormat:
+                        @"window.webkit.messageHandlers.affirmPromo.postMessage({event: 'failure', reason: 'html_empty', renderId: '%@'});"
+                        @"document.getElementById('affirm-promo-root').textContent", staleRenderID];
+    XCTestExpectation *evaluated = [self expectationWithDescription:@"root text"];
+    [webView evaluateJavaScript:script completionHandler:^(id result, NSError *error) {
+        XCTAssertNil(error);
+        XCTAssertEqualObjects(result, @"second");
+        [evaluated fulfill];
+    }];
+    [self waitForExpectations:@[evaluated, staleOutcome] timeout:1];
+    XCTAssertEqual(outcomes, 1u);
+    XCTAssertFalse(button.hidden);
+    XCTAssertFalse(webView.hidden);
+}
+
+- (void)testNativeConfigurationCancelsInFlightHTMLRender
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *htmlOutcome = [self expectationForNotification:AffirmPromoHTMLRenderDidFinishNotification
+                                                               object:button
+                                                              handler:nil];
+    htmlOutcome.inverted = YES;
+    [button configureWithHtmlString:@"<span>html</span>"
+                             amount:[NSDecimalNumber decimalNumberWithString:@"50"]
+                      remoteFontURL:nil
+                       remoteCssURL:nil];
+    NSAttributedString *text = [[NSAttributedString alloc] initWithString:@"native"];
+    [button configureWithAttributedText:text response:nil error:nil];
+    [self waitForExpectations:@[htmlOutcome] timeout:AffirmPromoHTMLTimeoutSeconds + 1];
+
+    WKWebView *webView = [button valueForKey:@"webView"];
+    XCTAssertTrue(webView.hidden);
+    XCTAssertFalse(button.hidden);
+    XCTAssertNil([button valueForKey:@"htmlRenderID"]);
+    UIButton *nativeButton = [button valueForKey:@"button"];
+    XCTAssertEqualObjects([nativeButton attributedTitleForState:UIControlStateNormal].string, @"native");
 }
 
 @end
