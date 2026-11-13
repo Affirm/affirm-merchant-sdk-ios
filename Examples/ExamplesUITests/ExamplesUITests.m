@@ -127,7 +127,10 @@
 {
     [self.app.buttons[@"Promos in a table view"] tap];
 
-    [self waitForStatus:@"Shown as HTML (T2)"];
+    // This test covers reuse, not HTML success (testRenderMigrationDemo does). Accessibility
+    // snapshots create a cell, and start a web view, for every row, so on a slow CI simulator the
+    // HTML can time out; any finished render (HTML or the native fallback) is enough here.
+    [self waitForStatus:@"Shown as "];
     [self attachScreenshotNamed:@"table-1-first-screen"];
 
     XCUIElement *table = self.app.tables.firstMatch;
@@ -138,7 +141,7 @@
     [self waitForStatus:@"reused"];
     NSPredicate *reused = [NSPredicate predicateWithFormat:@"label MATCHES %@", @"(?s).*Reused: [1-9].*"];
     XCTAssertTrue([[[self.app.staticTexts matchingPredicate:reused] firstMatch] waitForExistenceWithTimeout:5]);
-    [self waitForStatus:@"Shown as HTML (T2)"];
+    [self waitForStatus:@"Shown as "];
     [self attachScreenshotNamed:@"table-2-after-scrolling"];
 
     [self.app.buttons[@"Native"] tap];
