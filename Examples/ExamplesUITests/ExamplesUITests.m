@@ -22,6 +22,8 @@
 {
     self.continueAfterFailure = NO;
     self.app = [[XCUIApplication alloc] init];
+    // CI simulators can take longer than the 5 s HTML budget just to start a promo web view.
+    self.app.launchArguments = @[@"-AffirmPromoHTMLTimeoutSeconds", @"30"];
     [self.app launch];
 }
 
@@ -65,7 +67,8 @@
 {
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"label CONTAINS %@", text];
     XCUIElement *status = [[self.app.staticTexts matchingPredicate:predicate] firstMatch];
-    if (![status waitForExistenceWithTimeout:20]) {
+    // Longer than the 30 s HTML budget, so a slow render ends before the wait does.
+    if (![status waitForExistenceWithTimeout:45]) {
         [self attachScreenshotNamed:[@"missing " stringByAppendingString:text]];
         XCTFail(@"No status containing \"%@\" in:\n%@", text, self.app.debugDescription);
     }
@@ -123,8 +126,6 @@
 - (void)testPromoTableDemo
 {
     [self.app.buttons[@"Promos in a table view"] tap];
-    // Accessibility snapshots taken while many web views are still loading stall them past the 5 s HTML budget.
-    [NSThread sleepForTimeInterval:12];
 
     [self waitForStatus:@"Shown as HTML (T2)"];
     [self attachScreenshotNamed:@"table-1-first-screen"];
