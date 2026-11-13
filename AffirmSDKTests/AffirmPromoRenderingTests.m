@@ -29,14 +29,35 @@ static const NSTimeInterval AffirmPromoTestPageWait = 30;
 @interface AffirmPromoRenderingTests : XCTestCase
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) NSMutableArray<AffirmRequestHandler> *promoHandlers;
-@property (nonatomic) IMP originalSendIMP;
+@property (nonatomic, strong) NSMutableArray<AffirmLogRequest *> *trackedRequests;
+@property (nonatomic) BOOL trackerThrows;
 @end
+
+// Promo views can outlive their test and emit tracker events when they deallocate, so requests
+// stay intercepted for the whole class and are routed to whichever test is running.
+static __weak AffirmPromoRenderingTests *AffirmPromoCurrentTest;
+static IMP AffirmPromoOriginalSendIMP;
 
 @implementation AffirmPromoRenderingTests
 
 + (void)setUp
 {
     [super setUp];
+    // Promo requests are held so each test decides when, and with what, they complete.
+    // Tracker requests are recorded instead of sent; anything else is dropped.
+    Method send = class_getClassMethod([AffirmClient class], @selector(send:handler:));
+    AffirmPromoOriginalSendIMP = method_setImplementation(send, imp_implementationWithBlock(^(id client, AffirmRequest *request, AffirmRequestHandler handler) {
+        AffirmPromoRenderingTests *test = AffirmPromoCurrentTest;
+        if ([request isKindOfClass:[AffirmPromoRequest class]] && handler) {
+            [test.promoHandlers addObject:[handler copy]];
+        } else if ([request isKindOfClass:[AffirmLogRequest class]]) {
+            if (test.trackerThrows) {
+                @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"tracker down" userInfo:nil];
+            }
+            [test.trackedRequests addObject:(AffirmLogRequest *)request];
+        }
+    }));
+
     // The first WebView in the process pays for launching WebKit's helper processes. On CI that
     // alone can exceed the 5s render budget, so pay it once here instead of in the first test.
     WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
@@ -51,28 +72,26 @@ static const NSTimeInterval AffirmPromoTestPageWait = 30;
     }
 }
 
++ (void)tearDown
+{
+    Method send = class_getClassMethod([AffirmClient class], @selector(send:handler:));
+    method_setImplementation(send, AffirmPromoOriginalSendIMP);
+    [super tearDown];
+}
+
 - (void)setUp
 {
     [super setUp];
     AffirmPromoHTMLTimeoutSeconds = AffirmPromoTestHTMLBudget;
     [[AffirmConfiguration sharedInstance] configureWithPublicKey:@"PKNCHBIVYOT8JSOZ" environment:AffirmEnvironmentSandbox];
-
-    // Promo requests are held so each test decides when, and with what, they complete.
-    // Every other request (tracking) is dropped.
-    NSMutableArray<AffirmRequestHandler> *handlers = [NSMutableArray array];
-    self.promoHandlers = handlers;
-    Method send = class_getClassMethod([AffirmClient class], @selector(send:handler:));
-    self.originalSendIMP = method_setImplementation(send, imp_implementationWithBlock(^(id client, AffirmRequest *request, AffirmRequestHandler handler) {
-        if ([request isKindOfClass:[AffirmPromoRequest class]] && handler) {
-            [handlers addObject:[handler copy]];
-        }
-    }));
+    self.promoHandlers = [NSMutableArray array];
+    self.trackedRequests = [NSMutableArray array];
+    AffirmPromoCurrentTest = self;
 }
 
 - (void)tearDown
 {
-    Method send = class_getClassMethod([AffirmClient class], @selector(send:handler:));
-    method_setImplementation(send, self.originalSendIMP);
+    AffirmPromoCurrentTest = nil;
     self.promoHandlers = nil;
     AffirmPromoHTMLTimeoutSeconds = 5;
     [AffirmConfiguration sharedInstance].useLegacyNativeRendering = NO;
@@ -1542,6 +1561,309 @@ static const NSTimeInterval AffirmPromoTestPageWait = 30;
     [overlay sendActionsForControlEvents:UIControlEventTouchUpInside];
     XCTAssertEqual(host.presentedViewController, modal, @"a second activation must not replace the modal");
     [host dismissViewControllerAnimated:NO completion:nil];
+}
+
+#pragma mark - Telemetry
+
+- (AffirmPromoRenderOperation *)finishRenderOf:(AffirmPromotionalButton *)button by:(void (^)(void))action
+{
+    __block AffirmPromoRenderOperation *finished = nil;
+    XCTestExpectation *expectation = [self expectationForNotification:AffirmPromoRenderDidFinishNotification
+                                                               object:button
+                                                              handler:^BOOL(NSNotification *note) {
+        finished = note.userInfo[AffirmPromoRenderOperationKey];
+        return YES;
+    }];
+    action();
+    [self waitForExpectations:@[expectation] timeout:AffirmPromoTestPageWait];
+    return finished;
+}
+
+/// The tracker parameters of every event the render emitted, in order.
+- (NSArray<NSDictionary *> *)eventsOfRender:(AffirmPromoRenderOperation *)operation
+{
+    NSMutableArray *events = [NSMutableArray array];
+    for (AffirmLogRequest *request in self.trackedRequests) {
+        NSDictionary *parameters = request.parameters;
+        if ([parameters[@"render_id"] isEqual:operation.renderID]) {
+            [events addObject:parameters];
+        }
+    }
+    return events;
+}
+
+/// Exactly one decision event followed by exactly one result event, both carrying the render's
+/// start-time identity.
+- (NSArray<NSDictionary *> *)modeAndResultEventsOf:(AffirmPromoRenderOperation *)operation
+{
+    NSArray<NSDictionary *> *events = [self eventsOfRender:operation];
+    XCTAssertEqual(events.count, 2u, @"%@", events);
+    if (events.count != 2) {
+        return @[@{}, @{}];
+    }
+    XCTAssertEqualObjects(events[0][@"event_name"], AffirmPromoRenderModeEventName);
+    XCTAssertEqualObjects(events[1][@"event_name"], AffirmPromoRenderResultEventName);
+    for (NSDictionary *event in events) {
+        XCTAssertEqualObjects(event[@"request_attempt_id"], operation.requestAttemptID);
+        XCTAssertEqualObjects(event[@"platform"], @"ios");
+        XCTAssertEqualObjects(event[@"release"], [AffirmConfiguration affirmSDKVersion]);
+        XCTAssertEqualObjects(event[@"selected_mode"], events[0][@"selected_mode"]);
+    }
+    return events;
+}
+
+- (void)assertBoolean:(id)value named:(NSString *)name
+{
+    XCTAssertTrue([value isKindOfClass:[NSNumber class]] && CFGetTypeID((__bridge CFTypeRef)value) == CFBooleanGetTypeID(),
+                  @"%@ should be a JSON boolean, got %@", name, value);
+}
+
+- (void)testNativeRenderReportsTheDecisionThenTheResult
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    AffirmPromoRenderOperation *operation = [self finishRenderOf:button by:^{
+        [self configureNative:button];
+        [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Pay {affirm_logo} monthly" html:@"<span>HTML</span>" flag:@"false"]];
+    }];
+    XCTAssertEqualObjects(operation.terminalState, @"T1");
+    NSArray<NSDictionary *> *events = [self modeAndResultEventsOf:operation];
+    NSDictionary *mode = events[0], *result = events[1];
+
+    XCTAssertEqualObjects(mode[@"merchant_key"], @"PKNCHBIVYOT8JSOZ");
+    XCTAssertEqualObjects(mode[@"environment"], @"sandbox");
+    XCTAssertEqualObjects(mode[@"requested_mode"], @"native");
+    XCTAssertEqualObjects(mode[@"selected_mode"], @"native");
+    XCTAssertEqualObjects(mode[@"flag_value"], @NO);
+    XCTAssertEqualObjects(mode[@"flag_status"], @"false");
+    XCTAssertEqualObjects(mode[@"opt_out"], @NO);
+    XCTAssertEqualObjects(mode[@"decision_reason"], AffirmPromoDecisionReasonFlagFalse);
+    [self assertBoolean:mode[@"flag_value"] named:@"flag_value"];
+    [self assertBoolean:mode[@"opt_out"] named:@"opt_out"];
+
+    XCTAssertEqualObjects(result[@"actual_renderer"], @"native");
+    XCTAssertEqualObjects(result[@"outcome"], @"success");
+    XCTAssertEqualObjects(result[@"reason"], [NSNull null]);
+    XCTAssertEqualObjects(result[@"fallback_reason"], [NSNull null]);
+    XCTAssertEqualObjects(result[@"fallback_succeeded"], @NO);
+    XCTAssertEqualObjects(result[@"fetch_outcome"], @"usable");
+    XCTAssertEqualObjects(result[@"native_content_usable"], @YES);
+    XCTAssertEqualObjects(result[@"html_content_present"], @YES);
+    XCTAssertEqualObjects(result[@"html_content_usable"], [NSNull null]);
+    XCTAssertEqualObjects(result[@"server_request_id_status"], @"unverified");
+    for (NSString *flag in @[@"fallback_succeeded", @"native_content_usable", @"html_content_present"]) {
+        [self assertBoolean:result[flag] named:flag];
+    }
+    NSInteger fetch = [result[@"fetch_duration_ms"] integerValue];
+    NSInteger render = [result[@"render_duration_ms"] integerValue];
+    NSInteger total = [result[@"total_duration_ms"] integerValue];
+    XCTAssertGreaterThanOrEqual(fetch, 0);
+    XCTAssertGreaterThanOrEqual(render, 0);
+    XCTAssertGreaterThanOrEqual(total, MAX(fetch, render));
+    XCTAssertLessThanOrEqual(total - fetch - render, 1, @"rounding only");
+}
+
+- (void)testEventsCarryNoPromoContentOrURLs
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    AffirmPromoRenderOperation *operation = [self finishRenderOf:button by:^{
+        [self configureNative:button];
+        [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Secret monthly copy" html:@"<a href='https://x.test/p'>Secret</a>" flag:@"false"]];
+    }];
+    NSArray<NSDictionary *> *events = [self eventsOfRender:operation];
+    XCTAssertEqual(events.count, 2u);
+    NSData *data = [NSJSONSerialization dataWithJSONObject:events options:0 error:nil];
+    NSString *json = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    XCTAssertNotNil(json, @"events must be valid JSON");
+    for (NSString *forbidden in @[@"Secret", @"monthly", @"<a", @"https:", @"x.test"]) {
+        XCTAssertFalse([json containsString:forbidden], @"%@ leaked into %@", forbidden, json);
+    }
+}
+
+- (void)testMigratedHTMLSuccessReportsHTML
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    AffirmPromoRenderOperation *operation = [self finishRenderOf:button by:^{
+        [self configureNative:button];
+        [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<span>HTML</span>" flag:@"true"]];
+    }];
+    XCTAssertEqualObjects(operation.terminalState, @"T2");
+    NSArray<NSDictionary *> *events = [self modeAndResultEventsOf:operation];
+    XCTAssertEqualObjects(events[0][@"selected_mode"], @"html");
+    XCTAssertEqualObjects(events[0][@"flag_value"], @YES);
+    XCTAssertEqualObjects(events[0][@"flag_status"], @"true");
+    XCTAssertEqualObjects(events[0][@"decision_reason"], AffirmPromoDecisionReasonFlagTrue);
+    XCTAssertEqualObjects(events[1][@"actual_renderer"], @"html");
+    XCTAssertEqualObjects(events[1][@"outcome"], @"success");
+    XCTAssertEqualObjects(events[1][@"fallback_succeeded"], @NO);
+    XCTAssertEqualObjects(events[1][@"html_content_usable"], @YES);
+}
+
+- (void)testFallbackIsNeverCountedAsHTMLSuccess
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    AffirmPromoRenderOperation *operation = [self finishRenderOf:button by:^{
+        [self configureNative:button];
+        [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:@"<script>x()</script>" flag:@"true"]];
+    }];
+    XCTAssertEqualObjects(operation.terminalState, @"T3");
+    NSArray<NSDictionary *> *events = [self modeAndResultEventsOf:operation];
+    XCTAssertEqualObjects(events[1][@"selected_mode"], @"html");
+    XCTAssertEqualObjects(events[1][@"actual_renderer"], @"native");
+    XCTAssertEqualObjects(events[1][@"outcome"], @"success");
+    XCTAssertEqualObjects(events[1][@"reason"], [NSNull null]);
+    XCTAssertEqualObjects(events[1][@"fallback_reason"], AffirmPromoRenderReasonHTMLEmpty);
+    XCTAssertEqualObjects(events[1][@"fallback_succeeded"], @YES);
+    XCTAssertEqualObjects(events[1][@"html_content_present"], @YES);
+    XCTAssertEqualObjects(events[1][@"html_content_usable"], @NO);
+}
+
+- (void)testFailedFetchReportsADecisionOfNoneBeforeTheResult
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    AffirmPromoRenderOperation *operation = [self finishRenderOf:button by:^{
+        [self configureNative:button];
+        self.promoHandlers[0](nil, [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorNotConnectedToInternet userInfo:nil]);
+    }];
+    XCTAssertEqualObjects(operation.terminalState, @"T4");
+    NSArray<NSDictionary *> *events = [self modeAndResultEventsOf:operation];
+    XCTAssertEqualObjects(events[0][@"selected_mode"], @"none");
+    XCTAssertEqualObjects(events[0][@"flag_status"], @"not_received");
+    XCTAssertEqualObjects(events[0][@"flag_value"], @NO);
+    XCTAssertEqualObjects(events[0][@"decision_reason"], AffirmPromoRenderReasonFetchError);
+    XCTAssertEqualObjects(events[1][@"outcome"], @"failure");
+    XCTAssertEqualObjects(events[1][@"reason"], AffirmPromoRenderReasonFetchError);
+    XCTAssertEqualObjects(events[1][@"fetch_outcome"], @"error");
+    XCTAssertEqualObjects(events[1][@"native_content_usable"], @NO);
+    XCTAssertEqualObjects(events[1][@"html_content_present"], @NO);
+    XCTAssertEqualObjects(events[1][@"render_duration_ms"], @0);
+}
+
+- (void)testSupersededRenderReportsOnceAndLateRepliesStaySilent
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    [self configureNative:button];
+    AffirmPromoRenderOperation *first = [self finishRenderOf:button by:^{
+        [self configureNative:button];
+    }];
+    XCTAssertEqualObjects(first.terminalState, @"T9");
+    NSArray<NSDictionary *> *events = [self modeAndResultEventsOf:first];
+    XCTAssertEqualObjects(events[0][@"selected_mode"], @"none");
+    XCTAssertEqualObjects(events[0][@"flag_status"], @"not_received");
+    XCTAssertEqualObjects(events[0][@"decision_reason"], AffirmPromoRenderReasonSuperseded);
+    XCTAssertEqualObjects(events[1][@"outcome"], @"cancelled");
+    XCTAssertEqualObjects(events[1][@"reason"], AffirmPromoRenderReasonSuperseded);
+    XCTAssertEqualObjects(events[1][@"fetch_outcome"], @"cancelled");
+    XCTAssertEqualObjects(events[1][@"render_duration_ms"], @0);
+    XCTAssertNotEqualObjects(events[0][@"request_attempt_id"], events[0][@"render_id"]);
+
+    [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Old" html:nil flag:@"false"]];
+    XCTAssertEqual([self eventsOfRender:first].count, 2u, @"a late reply must not emit again");
+}
+
+- (void)testDeallocatedViewReportsHostDestroyed
+{
+    __block AffirmPromoRenderOperation *operation = nil;
+    XCTestExpectation *destroyed = [self expectationForNotification:AffirmPromoRenderDidFinishNotification
+                                                             object:nil
+                                                            handler:^BOOL(NSNotification *note) {
+        operation = note.userInfo[AffirmPromoRenderOperationKey];
+        return note.object == nil;
+    }];
+    @autoreleasepool {
+        AffirmPromotionalButton *button = [[AffirmPromotionalButton alloc] initWithPromoID:nil
+                                                                                  showCTA:YES
+                                                                 presentingViewController:(id)[UIViewController new]
+                                                                                    frame:CGRectMake(0, 0, 320, 44)];
+        [self configureNative:button];
+    }
+    [self waitForExpectations:@[destroyed] timeout:1];
+    NSArray<NSDictionary *> *events = [self modeAndResultEventsOf:operation];
+    XCTAssertEqualObjects(events[0][@"decision_reason"], AffirmPromoRenderReasonHostDestroyed);
+    XCTAssertEqualObjects(events[1][@"outcome"], @"cancelled");
+    XCTAssertEqualObjects(events[1][@"reason"], AffirmPromoRenderReasonHostDestroyed);
+}
+
+- (void)testConfigureWithHtmlStringEmitsNoRenderEvents
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    [self showHTML:@"<span>ok</span>" in:button remoteCssURL:nil];
+    for (AffirmLogRequest *request in self.trackedRequests) {
+        XCTAssertFalse([request.eventName hasPrefix:@"Promo_render"], @"%@", request.eventName);
+    }
+}
+
+- (void)testEventsKeepTheKeyAndEnvironmentFromRenderStart
+{
+    AffirmPromotionalButton *button = [self promoButton];
+    AffirmPromoRenderOperation *operation = [self finishRenderOf:button by:^{
+        [self configureNative:button];
+        [[AffirmConfiguration sharedInstance] configureWithPublicKey:@"LATERKEY" environment:AffirmEnvironmentProduction];
+        [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:nil flag:@"false"]];
+    }];
+    NSArray<NSDictionary *> *events = [self modeAndResultEventsOf:operation];
+    for (NSDictionary *event in events) {
+        XCTAssertEqualObjects(event[@"merchant_key"], @"PKNCHBIVYOT8JSOZ");
+        XCTAssertEqualObjects(event[@"environment"], @"sandbox");
+    }
+}
+
+- (void)testTrackerKeepsEnvironmentAndReleaseTheEventCarries
+{
+    [[AffirmConfiguration sharedInstance] configureWithPublicKey:@"PKNCHBIVYOT8JSOZ" environment:AffirmEnvironmentProduction];
+    NSDictionary *carried = [[AffirmLogRequest alloc] initWithEventName:@"e"
+                                                        eventParameters:@{@"environment": @"sandbox", @"release": @"1.0"}
+                                                               logCount:3].parameters;
+    XCTAssertEqualObjects(carried[@"environment"], @"sandbox");
+    XCTAssertEqualObjects(carried[@"release"], @"1.0");
+    XCTAssertEqualObjects(carried[@"event_name"], @"e");
+    XCTAssertEqualObjects(carried[@"local_log_counter"], @3);
+
+    NSDictionary *filled = [[AffirmLogRequest alloc] initWithEventName:@"e" eventParameters:@{} logCount:0].parameters;
+    XCTAssertEqualObjects(filled[@"environment"], @"production");
+    XCTAssertEqualObjects(filled[@"release"], [AffirmConfiguration affirmSDKVersion]);
+}
+
+- (void)testTrackingFailureDoesNotAffectRendering
+{
+    self.trackerThrows = YES;
+    AffirmPromotionalButton *button = [self promoButton];
+    XCTestExpectation *finished = [self expectRenderOf:button finishingIn:@"T1" reason:nil];
+    [self configureNative:button];
+    [self completePromoRequestAtIndex:0 json:[self promoJSONWithAla:@"Native" html:nil flag:@"false"]];
+    [self waitForExpectations:@[finished] timeout:1];
+    XCTAssertEqualObjects([self nativeTitleOf:button], @"Native");
+    XCTAssertFalse(button.hidden);
+}
+
+- (void)testResultEventReportsEachTerminalState
+{
+    AffirmPromoRenderMode none = AffirmPromoRenderModeNone, native = AffirmPromoRenderModeNative, html = AffirmPromoRenderModeHTML;
+    NSDictionary *(^result)(AffirmPromoRenderMode, AffirmPromoRenderMode, AffirmPromoRenderOutcome, AffirmPromoRenderMode, NSString *) =
+    ^NSDictionary *(AffirmPromoRenderMode requested, AffirmPromoRenderMode selected, AffirmPromoRenderOutcome outcome, AffirmPromoRenderMode actual, NSString *reason) {
+        AffirmPromoRenderOperation *operation = [[AffirmPromoRenderOperation alloc] initWithRequestedMode:requested];
+        [operation selectMode:selected];
+        [operation finishWithOutcome:outcome actualRenderer:actual reason:reason];
+        return [self eventsOfRender:operation].lastObject;
+    };
+    NSArray *expected = @[
+        @[@"T1", result(native, native, AffirmPromoRenderOutcomeSuccess, native, nil), @"native", @"native", @"success"],
+        @[@"T2", result(html, html, AffirmPromoRenderOutcomeSuccess, html, nil), @"html", @"html", @"success"],
+        @[@"T3", result(native, html, AffirmPromoRenderOutcomeSuccess, native, nil), @"html", @"native", @"success"],
+        @[@"T4", result(native, none, AffirmPromoRenderOutcomeFailure, none, AffirmPromoRenderReasonFetchError), @"none", @"none", @"failure"],
+        @[@"T5", result(html, html, AffirmPromoRenderOutcomeFailure, none, AffirmPromoRenderReasonHTMLTimeout), @"html", @"none", @"failure"],
+        @[@"T6", result(native, html, AffirmPromoRenderOutcomeFailure, none, AffirmPromoRenderReasonHTMLTimeout), @"html", @"none", @"failure"],
+        @[@"T7", result(html, html, AffirmPromoRenderOutcomeEmptyContent, none, AffirmPromoRenderReasonMissingHTML), @"html", @"none", @"empty_content"],
+        @[@"T8", result(native, native, AffirmPromoRenderOutcomeFailure, none, AffirmPromoRenderReasonNativeError), @"native", @"none", @"failure"],
+        @[@"T9", result(html, none, AffirmPromoRenderOutcomeCancelled, none, AffirmPromoRenderReasonSuperseded), @"none", @"none", @"cancelled"],
+    ];
+    for (NSArray *row in expected) {
+        NSDictionary *event = row[1];
+        XCTAssertEqualObjects(event[@"event_name"], AffirmPromoRenderResultEventName, @"%@", row[0]);
+        XCTAssertEqualObjects(event[@"selected_mode"], row[2], @"%@", row[0]);
+        XCTAssertEqualObjects(event[@"actual_renderer"], row[3], @"%@", row[0]);
+        XCTAssertEqualObjects(event[@"outcome"], row[4], @"%@", row[0]);
+        XCTAssertEqualObjects(event[@"fallback_succeeded"], @([row[0] isEqualToString:@"T3"]), @"%@", row[0]);
+    }
 }
 
 @end

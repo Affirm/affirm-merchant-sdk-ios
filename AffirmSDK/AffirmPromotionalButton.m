@@ -371,6 +371,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
             return;
         }
         if (![response isKindOfClass:[AffirmPromoResponse class]]) {
+            [operation recordResponse:nil];
             [strongSelf configureWithAttributedText:nil response:response error:error];
             [strongSelf finishOperation:operation
                             withOutcome:AffirmPromoRenderOutcomeFailure
@@ -379,6 +380,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
             return;
         }
         AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
+        [operation recordResponse:promoResponse];
         strongSelf.showPrequal = promoResponse.showPrequal;
         strongSelf.accessibilityLabel = AffirmPromoAccessibilityLabel(promoResponse.ala);
         [operation decideWithFlagStatus:promoResponse.renderFlagStatus];
@@ -459,6 +461,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
             return;
         }
         if (![response isKindOfClass:[AffirmPromoResponse class]]) {
+            [operation recordResponse:nil];
             [strongSelf configureWithAttributedText:nil response:response error:error];
             [strongSelf finishOperation:operation
                             withOutcome:AffirmPromoRenderOutcomeFailure
@@ -467,6 +470,7 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
             return;
         }
         AffirmPromoResponse *promoResponse = (AffirmPromoResponse *)response;
+        [operation recordResponse:promoResponse];
         NSString *template = promoResponse.ala.length > 0 ? promoResponse.ala : AFFIRM_DEFAULT_ALA_TEMPLATE;
         strongSelf.showPrequal = promoResponse.showPrequal;
         NSAttributedString *(^nativeText)(void) = ^NSAttributedString *{
@@ -612,6 +616,8 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
         if (self.accessibilityLabel.length == 0) {
             self.accessibilityLabel = self.htmlText;
         }
+        // The page on screen is this same HTML, already sanitized to non-empty content.
+        operation.htmlContentUsable = @YES;
         operation.htmlRenderID = self.htmlRenderID;
         [self finishOperation:operation
                   withOutcome:AffirmPromoRenderOutcomeSuccess
@@ -910,6 +916,11 @@ decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
                                                             object:self
                                                           userInfo:@{@"outcome": @"ready"}];
         [self htmlRenderID:renderID didFinishWithFailureReason:nil];
+    } else if ([event isEqualToString:@"sanitized"]) {
+        AffirmPromoRenderOperation *operation = self.currentOperation;
+        if ([operation.htmlRenderID isEqualToString:renderID] && !operation.finished) {
+            operation.htmlContentUsable = @([body[@"usable"] boolValue]);
+        }
     } else if ([event isEqualToString:@"height"]) {
         if (self.htmlReady) {
             [self applyContentHeight:[body[@"height"] doubleValue]];
