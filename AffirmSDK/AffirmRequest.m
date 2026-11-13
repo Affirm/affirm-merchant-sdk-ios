@@ -43,13 +43,19 @@
     [parameters addEntriesFromDictionary:@{
                                            @"app_id": @"iOS SDK",
                                            @"device_type": [UIDevice currentDevice].model,
-                                           @"release": [AffirmConfiguration affirmSDKVersion],
+                                           @"release": [AffirmConfiguration affirmSDKVersion] ?: @"",
                                            @"app_name": [AffirmConfiguration sharedInstance].merchantName ?: @"",
                                            @"environment": [AffirmConfiguration sharedInstance].environmentDescription,
                                            @"ts": @([NSDate date].timeIntervalSince1970 * 1000),
                                            @"event_name": self.eventName,
                                            @"local_log_counter": @(self.logCount)
                                            }];
+    // An event that captured these when it started keeps them, even if the globals changed since.
+    for (NSString *key in @[@"environment", @"release"]) {
+        if (self.eventParameters[key] != nil) {
+            parameters[key] = self.eventParameters[key];
+        }
+    }
     return parameters;
 }
 

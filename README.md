@@ -175,6 +175,30 @@ font-weight: normal;
 ```
 **[Note: if no promotional message returned, the button will be hidden automatically]**
 
+### HTML rendering for the native API
+
+Affirm can switch `configureWithAmount:…` (`configure(amount:…)` in Swift) from native text to HTML, so the promo can show the same styled badges as on the web. Affirm turns this on from its side, in the promo response; no code change is needed. When it is on:
+
+- The promo is shown in the button's web view, with your font, size and text color carried over, centered in the button like the native text.
+- If the HTML fails or is not ready within 5 seconds, the button shows the native text from the same response instead. It does not make a second request.
+- Tapping and VoiceOver work as before. VoiceOver reads the promo as one button, labelled with the promo text.
+
+The button keeps native text, even when Affirm turns HTML on, if:
+
+- **The font has no HTML mapping.** Only the system, serif and monospaced system fonts map, each in regular, bold, italic and bold italic, for example `[UIFont systemFontOfSize:15]`, `[UIFont italicSystemFontOfSize:15]` or `[UIFont monospacedSystemFontOfSize:15 weight:UIFontWeightRegular]`. Other weights, the rounded design, named fonts such as Helvetica, and your app's own fonts stay native. To show a custom font in HTML, use `configureByHtmlStylingWithAmount:…` with your own font or CSS; that path has no native fallback.
+- **You opt out:**
+  ```
+  [AffirmConfiguration sharedInstance].useLegacyNativeRendering = YES;
+  ```
+  It is read each time a promo is configured, so a change applies from the next `configure…` call. It does not affect `configureByHtmlStylingWithAmount:…` or `configureWithHtmlString:…`, which always use HTML.
+
+What to expect whenever a promo is shown as HTML, including `configureByHtmlStylingWithAmount:…` and `configureWithHtmlString:…`:
+
+- **Promo HTML is sanitized.** Scripts, event handlers, inline `style`, ARIA attributes, `id`, `name`, `data-*` attributes and non-https links and images are removed. Style the promo through classes in your stylesheet.
+- **Stylesheets and fonts are restricted.** `remoteCssURL` and `remoteFontURL` must be https URLs or files inside your app bundle, and your stylesheets, fonts and images must load within 5 seconds. With `configureByHtmlStylingWithAmount:…` and `configureWithHtmlString:…`, a failure hides the button instead of showing native text.
+- **Layout can differ slightly.** Line wrapping and spacing can differ a little from native text.
+- **There is a cost.** A web view uses more memory and takes longer to start than the native button, most noticeably for the first promo after launch.
+
 Tapping on the Promotional button automatically opens a modal in an `AffirmPrequalModalViewController` with more information, including (if you have it configured) a button that prompts the user to prequalify for Affirm financing.
 
 To display the AffirmPromoModal outside of tapping on the AffirmPromotionalButton, you may initialize and display an instance of the promo modal viewController as follows:
@@ -225,6 +249,11 @@ Example
 =======
 
 A demo app that integrates Affirm is included in the repo. You may clone our [GitHub repository](https://github.com/Affirm/affirm-merchant-sdk-ios) into a new XCode project folder and run the Examples project.
+
+Both the Objective-C (`Examples`) and Swift (`ExamplesSwift`) apps have two screens for the HTML rendering of the native API, opened from buttons on the main screen. Sandbox does not send Affirm's HTML switch yet, so both screens can rewrite the promo response in the app to turn it on (`PromoFlagSimulator`, for the example apps only):
+
+- **Native → HTML render demo** shows the native API and `configureByHtmlStylingWithAmount:…` side by side. You can change the response (as is, HTML on, unsafe markup, HTML that fails), the font and the text color, and turn on `useLegacyNativeRendering`. Each promo shows how it was rendered and why.
+- **Promos in a table view** shows a promo with a different amount in each of 100 rows, and counts how often cells are created, reused and configured again while you scroll.
 
 Upgrade
 ==============

@@ -22,4 +22,14 @@ jobs:
       run: xcodebuild build-for-testing -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "platform=iOS Simulator,name=iPhone 18 Pro,OS=27.0"
       
     - name: Test
-      run: xcodebuild -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "platform=iOS Simulator,name=iPhone 18 Pro,OS=27.0" test
+      # xcodebuild passes TEST_RUNNER_-prefixed variables to the tests without the prefix.
+      env:
+        TEST_RUNNER_CI: "true"
+      run: xcodebuild -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "platform=iOS Simulator,name=iPhone 18 Pro,OS=27.0" -resultBundlePath UITests.xcresult test
+
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: UITests.xcresult
+        path: UITests.xcresult

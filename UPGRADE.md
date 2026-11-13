@@ -21,6 +21,20 @@ pod 'AffirmSDK', '~> 5.0.41'
 Otherwise, just use `pod update AffirmSDK` in terminal to update AffirmSDK.
 
 
+## Unreleased: what changes for promotional messaging
+
+No API is removed or renamed, and existing code compiles unchanged. Check the following before you ship:
+
+- **The minimum iOS version is now 15.0** in CocoaPods, Swift Package Manager and the Xcode project.
+- **`configureWithAmount:…` can render as HTML.** When Affirm turns this on for the promo, the native API shows the promo HTML in the button's web view with your font, size and text color, and falls back to the native text if the HTML fails or takes longer than 5 seconds. Fonts other than the system, serif and monospaced system fonts (regular, bold, italic, bold italic) always stay native. See [HTML rendering for the native API](README.md#html-rendering-for-the-native-api).
+- **To keep native text**, opt out before configuring promos:
+  ```
+  [AffirmConfiguration sharedInstance].useLegacyNativeRendering = YES;
+  ```
+- **Promo HTML is sanitized** in every HTML mode, including `configureByHtmlStylingWithAmount:…` and `configureWithHtmlString:…`. Inline `style`, ARIA attributes, `id`, `name`, `data-*`, scripts, event handlers and non-https links and images are removed, so move any styling you rely on into your stylesheet's classes.
+- **`remoteCssURL` and `remoteFontURL` must be https or files in your app bundle.** The stylesheets, fonts and promo images must also load within 5 seconds. Otherwise the HTML promo fails and the button is hidden, because explicit HTML never falls back to native text.
+- **VoiceOver reads a promo as one button.** If your UI tests find promo text inside the web view, find the button by its accessibility label instead.
+
 ## Make code changes against the new SDK API
 
 - `AffirmConfiguration` can be setup with simplified method. Current implementation is as follows:

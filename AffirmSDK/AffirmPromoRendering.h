@@ -84,6 +84,10 @@ FOUNDATION_EXPORT NSString *const AffirmPromoDecisionReasonFlagMissing;
 FOUNDATION_EXPORT NSString *const AffirmPromoDecisionReasonFlagNull;
 FOUNDATION_EXPORT NSString *const AffirmPromoDecisionReasonFlagMalformed;
 
+/// Tracker events a managed render emits: the renderer decision, then the terminal state.
+FOUNDATION_EXPORT NSString *const AffirmPromoRenderModeEventName;
+FOUNDATION_EXPORT NSString *const AffirmPromoRenderResultEventName;
+
 /// One of the twelve fonts that have an HTML mapping: the system, serif and monospaced designs,
 /// each in regular, bold, italic and bold-italic.
 @interface AffirmPromoFontStyle : NSObject
@@ -135,10 +139,17 @@ FOUNDATION_EXPORT NSString *AffirmPromoNativeStyleCSS(AffirmPromoFontStyle *_Nul
 @end
 
 /// State for one managed render, from a configure… call to exactly one terminal state (T1–T9).
-/// Main thread only.
+/// It is the only thing that emits the render's tracker events: `Promo_render_mode` when the
+/// renderer is chosen, and `Promo_render_result` when it finishes, preceded by a decision event
+/// with `selected_mode` none if it finished before a choice. Main thread only.
 @interface AffirmPromoRenderOperation : NSObject
 
 @property (nonatomic, copy, readonly) NSString *renderID;
+/// One per promos request. Local; it correlates SDK events, not backend requests.
+@property (nonatomic, copy, readonly) NSString *requestAttemptID;
+/// The public key and environment when the render started, sent on its events.
+@property (nonatomic, copy, readonly) NSString *merchantKey;
+@property (nonatomic, copy, readonly) NSString *environment;
 @property (nonatomic, strong, readonly) AffirmPromoRenderPolicy *policy;
 @property (nonatomic, readonly) AffirmPromoRenderMode requestedMode;
 @property (nonatomic, readonly) AffirmPromoRenderMode selectedMode;
@@ -150,6 +161,8 @@ FOUNDATION_EXPORT NSString *AffirmPromoNativeStyleCSS(AffirmPromoFontStyle *_Nul
 @property (nonatomic, copy, nullable) NSAttributedString *(^nativeFallback)(void);
 /// Why a migrated HTML render fell back (or tried to) to native.
 @property (nonatomic, copy, nullable) NSString *fallbackReason;
+/// Whether anything was left after the page sanitized the HTML; nil until sanitizing ran.
+@property (nonatomic, strong, nullable) NSNumber *htmlContentUsable;
 
 @property (nonatomic, readonly, getter=isFinished) BOOL finished;
 @property (nonatomic, readonly) AffirmPromoRenderOutcome outcome;
@@ -161,11 +174,14 @@ FOUNDATION_EXPORT NSString *AffirmPromoNativeStyleCSS(AffirmPromoFontStyle *_Nul
 - (instancetype)initWithRequestedMode:(AffirmPromoRenderMode)requestedMode;
 - (instancetype)init NS_UNAVAILABLE;
 
+/// Records the promos response, or a failed fetch when nil. Only the first call counts.
+- (void)recordResponse:(nullable AffirmPromoResponse *)response;
+
 /// The renderer is chosen once. Returns NO, and changes nothing, if it was already chosen or the render finished.
 - (BOOL)selectMode:(AffirmPromoRenderMode)mode;
 
-/// Applies the policy to the response's flag once and records the reason. Later calls return the
-/// first choice. AffirmPromoRenderModeNone if the render already finished.
+/// Applies the policy to the response's flag once, records the reason and emits the decision
+/// event. Later calls return the first choice. AffirmPromoRenderModeNone if the render already finished.
 - (AffirmPromoRenderMode)decideWithFlagStatus:(AffirmPromoRenderFlagStatus)flagStatus;
 
 /// Returns NO, and changes nothing, if the render already finished.
