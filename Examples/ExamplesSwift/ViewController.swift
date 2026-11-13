@@ -28,6 +28,19 @@ class ViewController: UIViewController {
         promotionalButton = AffirmPromotionalButton(promoID: nil, showCTA: true, pageType: .product, presentingViewController: self, frame: CGRect(x: 0, y: 0, width: 315, height: 34))
         stackView.insertArrangedSubview(promotionalButton, at: 0)
 
+        // Above "Buy with Affirm", which follows the CAAS row.
+        let demoIndex = stackView.arrangedSubviews.firstIndex { $0 === caasTextfield.superview }.map { $0 + 1 } ?? 1
+
+        let renderDemoButton = UIButton(type: .system)
+        renderDemoButton.setTitle("Native → HTML render demo", for: .normal)
+        renderDemoButton.addTarget(self, action: #selector(showRenderMigrationDemo), for: .touchUpInside)
+        stackView.insertArrangedSubview(renderDemoButton, at: demoIndex)
+
+        let tableDemoButton = UIButton(type: .system)
+        tableDemoButton.setTitle("Promos in a table view", for: .normal)
+        tableDemoButton.addTarget(self, action: #selector(showPromoTableDemo), for: .touchUpInside)
+        stackView.insertArrangedSubview(tableDemoButton, at: demoIndex + 1)
+
         // Configure Textfields
         publicKeyTextfield.text = AffirmConfiguration.shared.publicKey
         configureTextField()
@@ -58,6 +71,16 @@ class ViewController: UIViewController {
 
     @objc func keyboardWillBeHidden(notification: Notification) {
         self.scrollView.contentInset = .zero
+    }
+
+    @objc func showRenderMigrationDemo() {
+        let amount = NSDecimalNumber(string: amountTextField.text)
+        let viewController = RenderMigrationViewController(amount: amount == .notANumber ? NSDecimalNumber(string: "500") : amount)
+        present(UINavigationController(rootViewController: viewController), animated: true)
+    }
+
+    @objc func showPromoTableDemo() {
+        present(UINavigationController(rootViewController: PromoTableViewController()), animated: true)
     }
 
     @IBAction func checkout(sender: Any) {

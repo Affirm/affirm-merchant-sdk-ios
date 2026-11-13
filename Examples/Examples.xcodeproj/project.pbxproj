@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0532758FB487E321A6F1B0BD /* PromoTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F536C81EEF46B100314D43A8 /* PromoTableViewController.m */; };
 		081439AE222E45D600C7068D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 081439AD222E45D600C7068D /* AppDelegate.m */; };
 		081439B1222E45D600C7068D /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 081439B0222E45D600C7068D /* ViewController.m */; };
 		081439B4222E45D600C7068D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 081439B2222E45D600C7068D /* Main.storyboard */; };
@@ -31,7 +32,12 @@
 		089205112265C20300E8FD86 /* XCUIElementQuery+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 089205102265C20300E8FD86 /* XCUIElementQuery+Utils.m */; };
 		08A1B2C2222E45D600C7068D /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A1B2C1222E45D600C7068D /* SceneDelegate.m */; };
 		08A1B2C4222E45D600C7068D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A1B2C3222E45D600C7068D /* SceneDelegate.swift */; };
+		147BC66E9317C43C504F5012 /* RenderMigrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0983BAE6733ED83DA7961580 /* RenderMigrationViewController.swift */; };
+		29F9548912B7BADCC2485549 /* PromoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9588E85A9E42E6BAA6E6713C /* PromoTableViewController.swift */; };
 		46281B108FE699EF409CF545 /* Pods_Examples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE33D4310D7CEBE4F3547984 /* Pods_Examples.framework */; };
+		5486FDC770E96A56F67DF51C /* RenderMigrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 150400106210245F1D9797AF /* RenderMigrationViewController.m */; };
+		846D81EE1BA9E0582FF86C62 /* PromoFlagSimulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 448B32F979F45A877F516432 /* PromoFlagSimulator.m */; };
+		CEB1E4D04CE013ED4CBFDBE2 /* PromoFlagSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECB413B6092266C7488CA61A /* PromoFlagSimulator.swift */; };
 		DE047A2AB2D4F4C96B7951B4 /* Pods_ExamplesSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 490636410DEE2CAF8A198501 /* Pods_ExamplesSwift.framework */; };
 /* End PBXBuildFile section */
 
@@ -79,11 +85,20 @@
 		08A1B2C0222E45D600C7068D /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
 		08A1B2C1222E45D600C7068D /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
 		08A1B2C3222E45D600C7068D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		0983BAE6733ED83DA7961580 /* RenderMigrationViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RenderMigrationViewController.swift; sourceTree = "<group>"; };
+		150400106210245F1D9797AF /* RenderMigrationViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RenderMigrationViewController.m; sourceTree = "<group>"; };
 		2674BED8D62AA6DE25D06046 /* Pods-ExamplesSwift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExamplesSwift.debug.xcconfig"; path = "Target Support Files/Pods-ExamplesSwift/Pods-ExamplesSwift.debug.xcconfig"; sourceTree = "<group>"; };
 		42077A2F0647A33E6684C886 /* Pods-Examples.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Examples.debug.xcconfig"; path = "Target Support Files/Pods-Examples/Pods-Examples.debug.xcconfig"; sourceTree = "<group>"; };
+		448B32F979F45A877F516432 /* PromoFlagSimulator.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = PromoFlagSimulator.m; sourceTree = "<group>"; };
 		490636410DEE2CAF8A198501 /* Pods_ExamplesSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExamplesSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A8531EF19B2C44BCB7A1355 /* Pods-Examples.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Examples.release.xcconfig"; path = "Target Support Files/Pods-Examples/Pods-Examples.release.xcconfig"; sourceTree = "<group>"; };
+		760876F8195C54A916CA1C08 /* PromoTableViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = PromoTableViewController.h; sourceTree = "<group>"; };
+		9588E85A9E42E6BAA6E6713C /* PromoTableViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PromoTableViewController.swift; sourceTree = "<group>"; };
+		96937068C4FA2E2D0CE4F8C7 /* PromoFlagSimulator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = PromoFlagSimulator.h; sourceTree = "<group>"; };
 		C23A24A0998C7065A2BADCCF /* Pods-ExamplesSwift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExamplesSwift.release.xcconfig"; path = "Target Support Files/Pods-ExamplesSwift/Pods-ExamplesSwift.release.xcconfig"; sourceTree = "<group>"; };
+		CCE9D55BE5678B0E62E5CF2B /* RenderMigrationViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = RenderMigrationViewController.h; sourceTree = "<group>"; };
+		ECB413B6092266C7488CA61A /* PromoFlagSimulator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PromoFlagSimulator.swift; sourceTree = "<group>"; };
+		F536C81EEF46B100314D43A8 /* PromoTableViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = PromoTableViewController.m; sourceTree = "<group>"; };
 		FE33D4310D7CEBE4F3547984 /* Pods_Examples.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Examples.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -154,6 +169,12 @@
 				081439BB222E45D800C7068D /* main.m */,
 				08385F40225AFE580022FFA8 /* Button.h */,
 				08385F41225AFE580022FFA8 /* Button.m */,
+				96937068C4FA2E2D0CE4F8C7 /* PromoFlagSimulator.h */,
+				448B32F979F45A877F516432 /* PromoFlagSimulator.m */,
+				CCE9D55BE5678B0E62E5CF2B /* RenderMigrationViewController.h */,
+				150400106210245F1D9797AF /* RenderMigrationViewController.m */,
+				760876F8195C54A916CA1C08 /* PromoTableViewController.h */,
+				F536C81EEF46B100314D43A8 /* PromoTableViewController.m */,
 			);
 			path = Examples;
 			sourceTree = "<group>";
@@ -191,6 +212,9 @@
 				0854F6992251EB9A008807A6 /* Assets.xcassets */,
 				0854F69B2251EB9A008807A6 /* LaunchScreen.storyboard */,
 				0854F69E2251EB9A008807A6 /* Info.plist */,
+				ECB413B6092266C7488CA61A /* PromoFlagSimulator.swift */,
+				0983BAE6733ED83DA7961580 /* RenderMigrationViewController.swift */,
+				9588E85A9E42E6BAA6E6713C /* PromoTableViewController.swift */,
 			);
 			path = ExamplesSwift;
 			sourceTree = "<group>";
@@ -445,6 +469,9 @@
 				081439AE222E45D600C7068D /* AppDelegate.m in Sources */,
 				08A1B2C2222E45D600C7068D /* SceneDelegate.m in Sources */,
 				08385F42225AFE580022FFA8 /* Button.m in Sources */,
+				846D81EE1BA9E0582FF86C62 /* PromoFlagSimulator.m in Sources */,
+				5486FDC770E96A56F67DF51C /* RenderMigrationViewController.m in Sources */,
+				0532758FB487E321A6F1B0BD /* PromoTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -465,6 +492,9 @@
 				0854F6952251EB99008807A6 /* ViewController.swift in Sources */,
 				0854F6932251EB99008807A6 /* AppDelegate.swift in Sources */,
 				08A1B2C4222E45D600C7068D /* SceneDelegate.swift in Sources */,
+				CEB1E4D04CE013ED4CBFDBE2 /* PromoFlagSimulator.swift in Sources */,
+				147BC66E9317C43C504F5012 /* RenderMigrationViewController.swift in Sources */,
+				29F9548912B7BADCC2485549 /* PromoTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,6 +8,8 @@
 
 #import "ViewController.h"
 #import <AffirmSDK/AffirmSDK.h>
+#import "RenderMigrationViewController.h"
+#import "PromoTableViewController.h"
 
 @interface ViewController () <UITextFieldDelegate, AffirmPrequalDelegate, AffirmCheckoutDelegate>
 
@@ -39,6 +41,20 @@
                                                      presentingViewController:self
                                                                         frame:CGRectMake(0, 0, 315, 40)];
     [self.stackView insertArrangedSubview:self.promotionalButton atIndex:0];
+
+    // Above "Buy with Affirm", which follows the CAAS row.
+    NSUInteger caasRowIndex = [self.stackView.arrangedSubviews indexOfObject:self.caasTextfield.superview];
+    NSUInteger demoIndex = caasRowIndex == NSNotFound ? 1 : caasRowIndex + 1;
+
+    UIButton *renderDemoButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [renderDemoButton setTitle:@"Native → HTML render demo" forState:UIControlStateNormal];
+    [renderDemoButton addTarget:self action:@selector(showRenderMigrationDemo:) forControlEvents:UIControlEventTouchUpInside];
+    [self.stackView insertArrangedSubview:renderDemoButton atIndex:demoIndex];
+
+    UIButton *tableDemoButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [tableDemoButton setTitle:@"Promos in a table view" forState:UIControlStateNormal];
+    [tableDemoButton addTarget:self action:@selector(showPromoTableDemo:) forControlEvents:UIControlEventTouchUpInside];
+    [self.stackView insertArrangedSubview:tableDemoButton atIndex:demoIndex + 1];
     
     // Using AffirmDataHandler for second button (See more in configurPromotionalMessage)
     self.promoButton.titleLabel.numberOfLines = 0;
@@ -75,6 +91,23 @@
 }
 
 #pragma mark - Actions
+
+- (void)showRenderMigrationDemo:(id)sender
+{
+    NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
+    if ([dollarPrice isEqualToNumber:[NSDecimalNumber notANumber]]) {
+        dollarPrice = [NSDecimalNumber decimalNumberWithString:@"500"];
+    }
+    RenderMigrationViewController *viewController = [[RenderMigrationViewController alloc] initWithAmount:dollarPrice];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:viewController];
+    [self presentViewController:nav animated:YES completion:nil];
+}
+
+- (void)showPromoTableDemo:(id)sender
+{
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:[PromoTableViewController new]];
+    [self presentViewController:nav animated:YES completion:nil];
+}
 
 - (IBAction)showPromoModal:(id)sender
 {
