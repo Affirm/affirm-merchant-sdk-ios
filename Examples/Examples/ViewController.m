@@ -380,13 +380,16 @@
     NSURL *fontURL = [NSURL URLWithString:@"https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap"];
     NSURL *cssURL = [[NSBundle mainBundle] URLForResource:@"css_promo_sample" withExtension:@"css"];
     
+    // Configure promotionalButton with native styling
+    [self.promotionalButton configureWithAmount:dollarPrice items:@[item] affirmLogoType:AffirmLogoTypeName affirmColor:AffirmColorTypeBlueBlack font:[UIFont boldSystemFontOfSize:15] textColor:[UIColor darkTextColor]];
+    
     // Configure promotionalButton with html styling automatically
-    [self.promotionalButton configureByHtmlStylingWithAmount:dollarPrice
-                                                       items:@[item]
-                                              affirmLogoType:AffirmLogoTypeName
-                                                 affirmColor:AffirmColorTypeBlueBlack
-                                               remoteFontURL:fontURL
-                                                remoteCssURL:cssURL];
+//    [self.promotionalButton configureByHtmlStylingWithAmount:dollarPrice
+//                                                       items:@[item]
+//                                              affirmLogoType:AffirmLogoTypeName
+//                                                 affirmColor:AffirmColorTypeBlueBlack
+//                                               remoteFontURL:fontURL
+//                                                remoteCssURL:cssURL];
     
     [AffirmDataHandler getPromoMessageWithPromoID:nil
                                            amount:dollarPrice
@@ -404,13 +407,13 @@
                                 completionHandler:^(NSAttributedString *attributedString, NSString *html, NSString *accessibilityLabel, UIViewController *viewController, NSError *error) {
         
         // Configure promotionalButton with html string manually
-        if (html) {
-            [self.promotionalButton configureWithHtmlString:html
-                                                     amount:dollarPrice
-                                              remoteFontURL:fontURL
-                                               remoteCssURL:cssURL];
-            self.promotionalButton.accessibilityLabel = accessibilityLabel;
-        }
+//        if (html) {
+//            [self.promotionalButton configureWithHtmlString:html
+//                                                     amount:dollarPrice
+//                                              remoteFontURL:fontURL
+//                                               remoteCssURL:cssURL];
+//            self.promotionalButton.accessibilityLabel = accessibilityLabel;
+//        }
         
         // Configure native button using attributed string
         [self.promoButton setAttributedTitle:attributedString forState:UIControlStateNormal];
@@ -447,7 +450,10 @@
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     if (textField == self.publicKeyTextfield) {
-        [[AffirmConfiguration sharedInstance] configureWithPublicKey:textField.text environment:AffirmEnvironmentSandbox];
+        AffirmConfiguration *configuration = [AffirmConfiguration sharedInstance];
+        [configuration configureWithPublicKey:textField.text
+                                  environment:configuration.environment
+                                 merchantName:configuration.merchantName];
     } else if (textField == self.promoIDTextField) {
         self.promotionalButton.promoID = textField.text;
     }

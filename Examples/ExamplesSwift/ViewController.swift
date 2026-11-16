@@ -206,7 +206,8 @@ extension ViewController: UITextFieldDelegate {
         }
 
         if textField == self.publicKeyTextfield {
-            AffirmConfiguration.shared.configure(publicKey: text, environment: .sandbox)
+            let configuration = AffirmConfiguration.shared
+            configuration.configure(publicKey: text, environment: configuration.environment, merchantName: configuration.merchantName)
         } else if textField == self.promoIDTextField {
             self.promotionalButton.promoID = text
         }
