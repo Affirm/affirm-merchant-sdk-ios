@@ -11,35 +11,19 @@ import AffirmSDK
 
 class ViewController: UIViewController {
 
-    @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var stackView: UIStackView!
-    @IBOutlet weak var amountTextField: UITextField!
-    @IBOutlet weak var promoIDTextField: UITextField!
-    @IBOutlet weak var publicKeyTextfield: UITextField!
-    @IBOutlet weak var caasTextfield: UITextField!
-    @IBOutlet weak var resultLabel: UILabel!
+    private let scrollView = UIScrollView()
+    private let stackView = UIStackView()
+    private var amountTextField: UITextField!
+    private var promoIDTextField: UITextField!
+    private var publicKeyTextfield: UITextField!
+    private var caasTextfield: UITextField!
+    private let resultLabel = UILabel()
 
     var promotionalButton: AffirmPromotionalButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Using AffirmPromotionalButton for first button (See more in configurPromotionalMessage)
-        promotionalButton = AffirmPromotionalButton(promoID: nil, showCTA: true, pageType: .product, presentingViewController: self, frame: CGRect(x: 0, y: 0, width: 315, height: 34))
-        stackView.insertArrangedSubview(promotionalButton, at: 0)
-
-        // Above "Buy with Affirm", which follows the CAAS row.
-        let demoIndex = stackView.arrangedSubviews.firstIndex { $0 === caasTextfield.superview }.map { $0 + 1 } ?? 1
-
-        let renderDemoButton = UIButton(type: .system)
-        renderDemoButton.setTitle("Native → HTML render demo", for: .normal)
-        renderDemoButton.addTarget(self, action: #selector(showRenderMigrationDemo), for: .touchUpInside)
-        stackView.insertArrangedSubview(renderDemoButton, at: demoIndex)
-
-        let tableDemoButton = UIButton(type: .system)
-        tableDemoButton.setTitle("Promos in a table view", for: .normal)
-        tableDemoButton.addTarget(self, action: #selector(showPromoTableDemo), for: .touchUpInside)
-        stackView.insertArrangedSubview(tableDemoButton, at: demoIndex + 1)
+        buildLayout()
 
         // Configure Textfields
         publicKeyTextfield.text = AffirmConfiguration.shared.publicKey
@@ -48,6 +32,99 @@ class ViewController: UIViewController {
         async {
             await getPromoMessage()
         }
+    }
+
+    // MARK: - Layout
+
+    private func buildLayout() {
+        view.backgroundColor = .white
+
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scrollView)
+
+        let contentView = UIView()
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.backgroundColor = .white
+        scrollView.addSubview(contentView)
+
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 15
+        contentView.addSubview(stackView)
+
+        let safeArea = view.safeAreaLayoutGuide
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 100),
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -30),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
+        ])
+
+        // Using AffirmPromotionalButton for first button (See more in configurPromotionalMessage)
+        promotionalButton = AffirmPromotionalButton(promoID: nil, showCTA: true, pageType: .product, presentingViewController: self, frame: CGRect(x: 0, y: 0, width: 315, height: 34))
+        stackView.addArrangedSubview(promotionalButton)
+
+        let publicKeyLabel: UILabel
+        (publicKeyLabel, publicKeyTextfield) = addTextFieldRow(title: "PublicKey:   ", accessibilityLabel: "public API key input")
+        // The other rows line their text fields up with this one, so this title gives way first.
+        publicKeyLabel.setContentCompressionResistancePriority(UILayoutPriority(749), for: .horizontal)
+        (_, amountTextField) = addTextFieldRow(title: "Amount:   ", accessibilityLabel: "price input")
+        amountTextField.text = "4000"
+        amountTextField.keyboardType = .decimalPad
+        (_, promoIDTextField) = addTextFieldRow(title: "PromoID:  ", accessibilityLabel: "promo ID input")
+        (_, caasTextfield) = addTextFieldRow(title: "CAAS:", accessibilityLabel: nil)
+        NSLayoutConstraint.activate([amountTextField, promoIDTextField, caasTextfield].map {
+            $0.leadingAnchor.constraint(equalTo: publicKeyTextfield.leadingAnchor)
+        })
+
+        addButton(title: "Native → HTML render demo", action: #selector(showRenderMigrationDemo))
+        addButton(title: "Promos in a table view", action: #selector(showPromoTableDemo))
+        addButton(title: "Buy with Affirm", action: #selector(checkout(sender:)))
+        addButton(title: "Failed Checkout", action: #selector(showFailedCheckout(sender:)))
+        addButton(title: "VCN Checkout", action: #selector(vcnCheckout(sender:)))
+        addButton(title: "Track Order Confirmation", action: #selector(trackOrderConfirmation(sender:)))
+        addButton(title: "Clear Cookies", action: #selector(clearCookies(sender:)))
+
+        resultLabel.text = "Checkout result: "
+        resultLabel.font = .systemFont(ofSize: 17)
+        resultLabel.numberOfLines = 0
+        stackView.addArrangedSubview(resultLabel)
+    }
+
+    private func addTextFieldRow(title: String, accessibilityLabel: String?) -> (UILabel, UITextField) {
+        let label = UILabel()
+        label.text = title
+        label.font = .systemFont(ofSize: 17)
+        label.setContentHuggingPriority(UILayoutPriority(251), for: .horizontal)
+        label.setContentHuggingPriority(UILayoutPriority(251), for: .vertical)
+
+        let textField = UITextField()
+        textField.borderStyle = .roundedRect
+        textField.font = .systemFont(ofSize: 16)
+        textField.minimumFontSize = 17
+        textField.clearButtonMode = .whileEditing
+        textField.returnKeyType = .done
+        textField.accessibilityLabel = accessibilityLabel
+        textField.delegate = self
+
+        stackView.addArrangedSubview(UIStackView(arrangedSubviews: [label, textField]))
+        return (label, textField)
+    }
+
+    private func addButton(title: String, action: Selector) {
+        let button = UIButton(type: .system)
+        button.setTitle(title, for: .normal)
+        button.addTarget(self, action: action, for: .touchUpInside)
+        stackView.addArrangedSubview(button)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -83,7 +160,7 @@ class ViewController: UIViewController {
         present(UINavigationController(rootViewController: PromoTableViewController()), animated: true)
     }
 
-    @IBAction func checkout(sender: Any) {
+    @objc func checkout(sender: Any) {
         let dollarPrice = NSDecimalNumber(string: self.amountTextField.text)
         let item = AffirmItem(name: "Affirm Test Item", sku: "test_item", unitPrice: dollarPrice, quantity: 1, url: URL(string: "http://sandbox.affirm.com/item")!)
         let shipping = AffirmShippingDetail.shippingDetail(name: "Chester Cheetah", line1: "633 Folsom Street", line2: "", city: "San Francisco", state: "CA", zipCode: "94107", countryCode: "USA")
@@ -104,7 +181,7 @@ class ViewController: UIViewController {
         present(controller, animated: true, completion: nil)
     }
 
-    @IBAction func showFailedCheckout(sender: Any) {
+    @objc func showFailedCheckout(sender: Any) {
         let dollarPrice = NSDecimalNumber(string: self.amountTextField.text)
         let item = AffirmItem(name: "Affirm Test Item", sku: "test_item", unitPrice: dollarPrice, quantity: 1, url: URL(string: "http://sandbox.affirm.com/item")!)
         let shipping = AffirmShippingDetail(name: "Test Tester", email: "testtester@test.com", phoneNumber: "1111111111", line1: "633 Folsom Street", line2: "", city: "San Francisco", state: "CA", zipCode: "94107", countryCode: "USA")
@@ -121,7 +198,7 @@ class ViewController: UIViewController {
         present(controller, animated: true, completion: nil)
     }
 
-    @IBAction func vcnCheckout(sender: Any) {
+    @objc func vcnCheckout(sender: Any) {
         let dollarPrice = NSDecimalNumber(string: self.amountTextField.text)
         let item = AffirmItem(name: "Affirm Test Item", sku: "test_item", unitPrice: dollarPrice, quantity: 1, url: URL(string: "http://sandbox.affirm.com/item")!)
         let shipping = AffirmShippingDetail(name: "Chester Cheetah", email: nil, phoneNumber: nil, line1: "633 Folsom Street", line2: "", city: "San Francisco", state: "CA", zipCode: "94107", countryCode: "USA")
@@ -138,7 +215,7 @@ class ViewController: UIViewController {
         present(controller, animated: true, completion: nil)
     }
 
-    @IBAction func trackOrderConfirmation(sender: UIButton) {
+    @objc func trackOrderConfirmation(sender: UIButton) {
         sender.titleLabel?.layer.backgroundColor = sender.tintColor.cgColor
         UIView.animate(withDuration: 0.2) {
             sender.titleLabel?.layer.backgroundColor = UIColor.clear.cgColor
@@ -154,7 +231,7 @@ class ViewController: UIViewController {
         present(alertController, animated: true, completion: nil)
     }
 
-    @IBAction func clearCookies(sender: UIButton) {
+    @objc func clearCookies(sender: UIButton) {
         AffirmConfiguration.deleteAffirmCookies()
         configurPromotionalMessage()
 

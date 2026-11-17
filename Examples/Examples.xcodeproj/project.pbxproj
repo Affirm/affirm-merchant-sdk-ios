@@ -24,7 +24,6 @@
 		08385F42225AFE580022FFA8 /* Button.m in Sources */ = {isa = PBXBuildFile; fileRef = 08385F41225AFE580022FFA8 /* Button.m */; };
 		0854F6932251EB99008807A6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0854F6922251EB99008807A6 /* AppDelegate.swift */; };
 		0854F6952251EB99008807A6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0854F6942251EB99008807A6 /* ViewController.swift */; };
-		0854F6982251EB99008807A6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0854F6962251EB99008807A6 /* Main.storyboard */; };
 		0854F69A2251EB9A008807A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0854F6992251EB9A008807A6 /* Assets.xcassets */; };
 		0854F69D2251EB9A008807A6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0854F69B2251EB9A008807A6 /* LaunchScreen.storyboard */; };
 		0892050E2265B64200E8FD86 /* XCTestCase+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0892050D2265B64200E8FD86 /* XCTestCase+Utils.m */; };
@@ -72,7 +71,6 @@
 		0854F6902251EB99008807A6 /* ExamplesSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExamplesSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0854F6922251EB99008807A6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0854F6942251EB99008807A6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		0854F6972251EB99008807A6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0854F6992251EB9A008807A6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0854F69C2251EB9A008807A6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0854F69E2251EB9A008807A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -205,7 +203,6 @@
 				0854F6922251EB99008807A6 /* AppDelegate.swift */,
 				08A1B2C3222E45D600C7068D /* SceneDelegate.swift */,
 				0854F6942251EB99008807A6 /* ViewController.swift */,
-				0854F6962251EB99008807A6 /* Main.storyboard */,
 				0854F6992251EB9A008807A6 /* Assets.xcassets */,
 				0854F69B2251EB9A008807A6 /* LaunchScreen.storyboard */,
 				0854F69E2251EB9A008807A6 /* Info.plist */,
@@ -368,7 +365,6 @@
 				0815CCF822F2817500ABB7CB /* OpenSansCondensed-Bold.ttf in Resources */,
 				0854F69A2251EB9A008807A6 /* Assets.xcassets in Resources */,
 				0815CCF422F2817500ABB7CB /* OpenSansCondensed-Light.ttf in Resources */,
-				0854F6982251EB99008807A6 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,9 +379,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ExamplesSwift/Pods-ExamplesSwift-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ExamplesSwift/Pods-ExamplesSwift-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -400,9 +400,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Examples/Pods-Examples-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Examples/Pods-Examples-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -511,14 +515,6 @@
 				081439B8222E45D800C7068D /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		0854F6962251EB99008807A6 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0854F6972251EB99008807A6 /* Base */,
-			);
-			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 		0854F69B2251EB9A008807A6 /* LaunchScreen.storyboard */ = {
