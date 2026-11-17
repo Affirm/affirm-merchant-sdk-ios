@@ -77,7 +77,11 @@ static NSString *const PromoFlagSimulatorHandledKey = @"PromoFlagSimulatorHandle
     NSMutableDictionary *config = [promo[@"config"] isKindOfClass:[NSDictionary class]]
         ? [promo[@"config"] mutableCopy]
         : [NSMutableDictionary dictionary];
-    config[@"ios_sdk_migrate_native_to_html_render"] = @YES;
+    if (simulation == PromoFlagSimulationFlagMissing) {
+        [config removeObjectForKey:@"ios_sdk_migrate_native_to_html_render"];
+    } else {
+        config[@"ios_sdk_migrate_native_to_html_render"] = simulation == PromoFlagSimulationFlagOff ? @NO : @YES;
+    }
     promo[@"config"] = config;
 
     NSString *html = [promo[@"html_ala"] isKindOfClass:[NSString class]] ? promo[@"html_ala"] : @"";

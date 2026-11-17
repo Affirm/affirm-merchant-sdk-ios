@@ -86,6 +86,7 @@
 - (void)testRenderMigrationDemo
 {
     [self.app.buttons[@"Native → HTML render demo"] tap];
+    [self.app.buttons[@"Mock"] tap];
 
     // Flag on: the native API call is shown as HTML; explicit HTML is HTML either way.
     [self waitForStatus:@"Decision: flag_true"];
@@ -98,7 +99,7 @@
     [self waitForStatus:@"Decision: flag_true"];
     [self attachScreenshotNamed:@"2-serif-italic-indigo"];
 
-    [self.app.buttons[@"Avenir"] tap];
+    [self.app.buttons[@"Avenir (stays native)"] tap];
     [self waitForStatus:@"Decision: unsupported_font"];
     [self attachScreenshotNamed:@"3-unsupported-font"];
     [self.app.buttons[@"System"] tap];
@@ -118,9 +119,18 @@
     [self attachScreenshotNamed:@"6-opt-out"];
     [self.app.switches.firstMatch tap];
 
-    [self.app.buttons[@"As is"] tap];
+    [self.app.buttons[@"Flag off"] tap];
+    [self waitForStatus:@"Decision: flag_false"];
+    [self attachScreenshotNamed:@"7-flag-off"];
+
+    [self.app.buttons[@"Missing"] tap];
     [self waitForStatus:@"Decision: flag_missing"];
-    [self attachScreenshotNamed:@"7-server-as-is"];
+    [self attachScreenshotNamed:@"8-flag-missing"];
+
+    // The real flag depends on the merchant, so any flag decision will do.
+    [self.app.buttons[@"Real API"] tap];
+    [self waitForStatus:@"Decision: flag_"];
+    [self attachScreenshotNamed:@"9-real-api"];
 }
 
 - (void)testPromoTableDemo

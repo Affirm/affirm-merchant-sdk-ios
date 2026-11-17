@@ -28,7 +28,8 @@ final class RenderMigrationViewController: UIViewController {
 
     private let amount: NSDecimalNumber
     private let stackView = UIStackView()
-    private var responseControl: UISegmentedControl!
+    private var sourceControl: UISegmentedControl!
+    private var mockControl: UISegmentedControl!
     private let optOutSwitch = UISwitch()
     private var fontControl: UISegmentedControl!
     private var colorControl: UISegmentedControl!
@@ -68,7 +69,7 @@ final class RenderMigrationViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if isBeingDismissed || navigationController?.isBeingDismissed == true {
-            // Leave the rest of the example app talking to the real sandbox.
+            // Leave the rest of the example app talking to the real API.
             PromoFlagSimulator.simulation = .off
             AffirmConfiguration.shared.useLegacyNativeRendering = false
         }
@@ -101,9 +102,10 @@ final class RenderMigrationViewController: UIViewController {
             stackView.trailingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.trailingAnchor, constant: -20),
         ])
 
-        addHeader("Simulated server response",
-                  note: "The sandbox does not send ios_sdk_migrate_native_to_html_render yet, so this demo adds it to the promo response.")
-        responseControl = addSegments(["As is", "Flag on", "Unsafe", "HTML fails"], selected: 1)
+        addHeader("Server response",
+                  note: "Real API uses the promo response as the server sends it, including its ios_sdk_migrate_native_to_html_render value. Mock rewrites the response to try each case.")
+        sourceControl = addSegments(["Real API", "Mock"], selected: 0)
+        mockControl = addSegments(["Flag on", "Flag off", "Missing", "Unsafe", "HTML fails"], selected: 0)
 
         let optOutRow = UIStackView(arrangedSubviews: [label("useLegacyNativeRendering (opt out)", style: .body), optOutSwitch])
         optOutRow.spacing = 8
@@ -112,7 +114,8 @@ final class RenderMigrationViewController: UIViewController {
 
         addHeader("Native style",
                   note: "Only the system, serif and monospaced designs (regular, bold, italic, bold italic) map to HTML. Other fonts stay native.")
-        fontControl = addSegments(["System", "Bold", "Serif italic", "Mono", "Avenir"], selected: 0)
+        fontControl = addSegments(["System", "Serif italic", "Avenir (stays native)"], selected: 0)
+        fontControl.apportionsSegmentWidthsByContent = true
         colorControl = addSegments(["Gray", "Indigo", "Label"], selected: 0)
 
         addHeader("configure(amount:affirmLogoType:affirmColor:font:textColor:)",
@@ -187,13 +190,9 @@ final class RenderMigrationViewController: UIViewController {
     private var selectedFont: UIFont {
         switch fontControl.selectedSegmentIndex {
         case 1:
-            return .boldSystemFont(ofSize: 15)
-        case 2:
             let serif = UIFont.systemFont(ofSize: 16).fontDescriptor.withDesign(.serif)?.withSymbolicTraits(.traitItalic)
             return serif.map { UIFont(descriptor: $0, size: 16) } ?? .italicSystemFont(ofSize: 16)
-        case 3:
-            return .monospacedSystemFont(ofSize: 14, weight: .regular)
-        case 4:
+        case 2:
             return UIFont(name: "Avenir-Medium", size: 15) ?? .systemFont(ofSize: 15)
         default:
             return .systemFont(ofSize: 15)
@@ -209,7 +208,10 @@ final class RenderMigrationViewController: UIViewController {
     }
 
     @objc private func reload() {
-        PromoFlagSimulator.simulation = PromoFlagSimulator.Simulation(rawValue: responseControl.selectedSegmentIndex) ?? .off
+        let mock = sourceControl.selectedSegmentIndex == 1
+        mockControl.isHidden = !mock
+        // Mock segments follow `.off` in declaration order.
+        PromoFlagSimulator.simulation = mock ? PromoFlagSimulator.Simulation(rawValue: mockControl.selectedSegmentIndex + 1) ?? .off : .off
         AffirmConfiguration.shared.useLegacyNativeRendering = optOutSwitch.isOn
         nativeAPIStatus.text = "Loading…"
         explicitHTMLStatus.text = "Loading…"

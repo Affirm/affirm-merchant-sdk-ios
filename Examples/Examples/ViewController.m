@@ -375,15 +375,13 @@
                                       unitPrice:dollarPrice
                                        quantity:1
                                             URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
-    
-    
-    NSURL *fontURL = [NSURL URLWithString:@"https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap"];
-    NSURL *cssURL = [[NSBundle mainBundle] URLForResource:@"css_promo_sample" withExtension:@"css"];
-    
+
     // Configure promotionalButton with native styling
     [self.promotionalButton configureWithAmount:dollarPrice items:@[item] affirmLogoType:AffirmLogoTypeName affirmColor:AffirmColorTypeBlueBlack font:[UIFont boldSystemFontOfSize:15] textColor:[UIColor darkTextColor]];
     
-    // Configure promotionalButton with html styling automatically
+    // Configure promotionalButton with html styling
+//    NSURL *fontURL = [NSURL URLWithString:@"https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap"];
+//    NSURL *cssURL = [[NSBundle mainBundle] URLForResource:@"css_promo_sample" withExtension:@"css"];
 //    [self.promotionalButton configureByHtmlStylingWithAmount:dollarPrice
 //                                                       items:@[item]
 //                                              affirmLogoType:AffirmLogoTypeName

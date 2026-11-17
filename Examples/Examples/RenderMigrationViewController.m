@@ -16,7 +16,8 @@ static NSNotificationName const RenderDidFinishNotification = @"AffirmPromoRende
 
 @property (nonatomic, strong) NSDecimalNumber *amount;
 @property (nonatomic, strong) UIStackView *stackView;
-@property (nonatomic, strong) UISegmentedControl *responseControl;
+@property (nonatomic, strong) UISegmentedControl *sourceControl;
+@property (nonatomic, strong) UISegmentedControl *mockControl;
 @property (nonatomic, strong) UISwitch *optOutSwitch;
 @property (nonatomic, strong) UISegmentedControl *fontControl;
 @property (nonatomic, strong) UISegmentedControl *colorControl;
@@ -62,7 +63,7 @@ static NSNotificationName const RenderDidFinishNotification = @"AffirmPromoRende
 {
     [super viewWillDisappear:animated];
     if (self.isBeingDismissed || self.navigationController.isBeingDismissed) {
-        // Leave the rest of the example app talking to the real sandbox.
+        // Leave the rest of the example app talking to the real API.
         PromoFlagSimulator.simulation = PromoFlagSimulationOff;
         [AffirmConfiguration sharedInstance].useLegacyNativeRendering = NO;
     }
@@ -102,9 +103,10 @@ static NSNotificationName const RenderDidFinishNotification = @"AffirmPromoRende
         [stackView.trailingAnchor constraintEqualToAnchor:frame.trailingAnchor constant:-20],
     ]];
 
-    [self addHeader:@"Simulated server response"
-               note:@"The sandbox does not send ios_sdk_migrate_native_to_html_render yet, so this demo adds it to the promo response."];
-    self.responseControl = [self addSegments:@[@"As is", @"Flag on", @"Unsafe", @"HTML fails"] selected:1];
+    [self addHeader:@"Server response"
+               note:@"Real API uses the promo response as the server sends it, including its ios_sdk_migrate_native_to_html_render value. Mock rewrites the response to try each case."];
+    self.sourceControl = [self addSegments:@[@"Real API", @"Mock"] selected:0];
+    self.mockControl = [self addSegments:@[@"Flag on", @"Flag off", @"Missing", @"Unsafe", @"HTML fails"] selected:0];
 
     UIStackView *optOutRow = [UIStackView new];
     optOutRow.spacing = 8;
@@ -117,7 +119,8 @@ static NSNotificationName const RenderDidFinishNotification = @"AffirmPromoRende
 
     [self addHeader:@"Native style"
                note:@"Only the system, serif and monospaced designs (regular, bold, italic, bold italic) map to HTML. Other fonts stay native."];
-    self.fontControl = [self addSegments:@[@"System", @"Bold", @"Serif italic", @"Mono", @"Avenir"] selected:0];
+    self.fontControl = [self addSegments:@[@"System", @"Serif italic", @"Avenir (stays native)"] selected:0];
+    self.fontControl.apportionsSegmentWidthsByContent = YES;
     self.colorControl = [self addSegments:@[@"Gray", @"Indigo", @"Label"] selected:0];
 
     [self addHeader:@"configureWithAmount:…font:textColor:"
@@ -199,15 +202,11 @@ static NSNotificationName const RenderDidFinishNotification = @"AffirmPromoRende
 - (UIFont *)selectedFont
 {
     switch (self.fontControl.selectedSegmentIndex) {
-        case 1:
-            return [UIFont boldSystemFontOfSize:15];
-        case 2: {
+        case 1: {
             UIFontDescriptor *serif = [[UIFont systemFontOfSize:16].fontDescriptor fontDescriptorWithDesign:UIFontDescriptorSystemDesignSerif];
             return [UIFont fontWithDescriptor:[serif fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitItalic] size:16];
         }
-        case 3:
-            return [UIFont monospacedSystemFontOfSize:14 weight:UIFontWeightRegular];
-        case 4:
+        case 2:
             return [UIFont fontWithName:@"Avenir-Medium" size:15] ?: [UIFont systemFontOfSize:15];
         default:
             return [UIFont systemFontOfSize:15];
@@ -228,7 +227,10 @@ static NSNotificationName const RenderDidFinishNotification = @"AffirmPromoRende
 
 - (void)reload
 {
-    PromoFlagSimulator.simulation = (PromoFlagSimulation)self.responseControl.selectedSegmentIndex;
+    BOOL mock = self.sourceControl.selectedSegmentIndex == 1;
+    self.mockControl.hidden = !mock;
+    // Mock segments follow PromoFlagSimulationOff in declaration order.
+    PromoFlagSimulator.simulation = mock ? (PromoFlagSimulation)(self.mockControl.selectedSegmentIndex + 1) : PromoFlagSimulationOff;
     [AffirmConfiguration sharedInstance].useLegacyNativeRendering = self.optOutSwitch.isOn;
     self.nativeAPIStatus.text = @"Loading…";
     self.explicitHTMLStatus.text = @"Loading…";

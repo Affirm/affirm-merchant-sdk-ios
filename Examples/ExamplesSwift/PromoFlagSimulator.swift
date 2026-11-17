@@ -7,15 +7,20 @@
 
 import Foundation
 
-/// Demo only. The sandbox does not send the render migration flag yet, so this rewrites promo
-/// responses on their way into the SDK. Merchant apps never need anything like this.
+/// Demo only. Rewrites promo responses on their way into the SDK, so every flag value and
+/// failure can be tried whatever the server sends for this merchant. Merchant apps never need
+/// anything like this.
 final class PromoFlagSimulator: URLProtocol {
 
     enum Simulation: Int {
         /// Promo responses are passed through untouched.
         case off
-        /// Adds `ios_sdk_migrate_native_to_html_render: true` to the promo config.
+        /// Sets `ios_sdk_migrate_native_to_html_render: true` in the promo config.
         case flagOn
+        /// Sets `ios_sdk_migrate_native_to_html_render: false` in the promo config.
+        case flagOff
+        /// Removes `ios_sdk_migrate_native_to_html_render` from the promo config.
+        case flagMissing
         /// Flag on, and unsafe markup is added to `html_ala` to show what the SDK strips.
         case unsafeMarkup
         /// Flag on, and `html_ala` is replaced with content that is empty after sanitizing.
@@ -74,7 +79,11 @@ final class PromoFlagSimulator: URLProtocol {
             return data
         }
         var config = promo["config"] as? [String: Any] ?? [:]
-        config["ios_sdk_migrate_native_to_html_render"] = true
+        if simulation == .flagMissing {
+            config.removeValue(forKey: "ios_sdk_migrate_native_to_html_render")
+        } else {
+            config["ios_sdk_migrate_native_to_html_render"] = simulation != .flagOff
+        }
         promo["config"] = config
 
         let html = promo["html_ala"] as? String ?? ""
@@ -86,7 +95,7 @@ final class PromoFlagSimulator: URLProtocol {
                 + html
         case .brokenHTML:
             promo["html_ala"] = "<script>alert('nothing left after sanitizing')</script>"
-        case .off, .flagOn:
+        case .off, .flagOn, .flagOff, .flagMissing:
             break
         }
         json["promo"] = promo
