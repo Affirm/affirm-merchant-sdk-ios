@@ -10,17 +10,18 @@
 #import <AffirmSDK/AffirmSDK.h>
 #import "RenderMigrationViewController.h"
 #import "PromoTableViewController.h"
+#import "Button.h"
 
 @interface ViewController () <UITextFieldDelegate, AffirmPrequalDelegate, AffirmCheckoutDelegate>
 
-@property (nonatomic, weak) IBOutlet UIScrollView *scrollView;
-@property (nonatomic, weak) IBOutlet UIButton *promoButton;
-@property (nonatomic, weak) IBOutlet UIStackView *stackView;
-@property (nonatomic, weak) IBOutlet UITextField *amountTextField;
-@property (nonatomic, weak) IBOutlet UITextField *promoIDTextField;
-@property (nonatomic, weak) IBOutlet UITextField *publicKeyTextfield;
-@property (nonatomic, weak) IBOutlet UITextField *caasTextfield;
-@property (nonatomic, weak) IBOutlet UILabel *resultLabel;
+@property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, strong) UIButton *promoButton;
+@property (nonatomic, strong) UIStackView *stackView;
+@property (nonatomic, strong) UITextField *amountTextField;
+@property (nonatomic, strong) UITextField *promoIDTextField;
+@property (nonatomic, strong) UITextField *publicKeyTextfield;
+@property (nonatomic, strong) UITextField *caasTextfield;
+@property (nonatomic, strong) UILabel *resultLabel;
 
 @property (nonatomic, strong) AffirmPromotionalButton *promotionalButton;
 @property (nonatomic, strong) UIViewController *promoViewController;
@@ -34,34 +35,132 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self buildLayout];
     
+    // Configure Textfields
+    self.publicKeyTextfield.text = [AffirmConfiguration sharedInstance].publicKey;
+    [self configureTextField];
+}
+
+#pragma mark - Layout
+
+- (void)buildLayout
+{
+    self.view.backgroundColor = [UIColor whiteColor];
+
+    UIScrollView *scrollView = [UIScrollView new];
+    scrollView.translatesAutoresizingMaskIntoConstraints = NO;
+    scrollView.showsHorizontalScrollIndicator = NO;
+    scrollView.showsVerticalScrollIndicator = NO;
+    [self.view addSubview:scrollView];
+    self.scrollView = scrollView;
+
+    UIView *contentView = [UIView new];
+    contentView.translatesAutoresizingMaskIntoConstraints = NO;
+    contentView.backgroundColor = [UIColor whiteColor];
+    [scrollView addSubview:contentView];
+
+    UIStackView *stackView = [UIStackView new];
+    stackView.translatesAutoresizingMaskIntoConstraints = NO;
+    stackView.axis = UILayoutConstraintAxisVertical;
+    stackView.spacing = 15;
+    [contentView addSubview:stackView];
+    self.stackView = stackView;
+
+    UILayoutGuide *safeArea = self.view.safeAreaLayoutGuide;
+    [NSLayoutConstraint activateConstraints:@[
+        [scrollView.topAnchor constraintEqualToAnchor:safeArea.topAnchor],
+        [scrollView.bottomAnchor constraintEqualToAnchor:safeArea.bottomAnchor],
+        [scrollView.leadingAnchor constraintEqualToAnchor:safeArea.leadingAnchor],
+        [scrollView.trailingAnchor constraintEqualToAnchor:safeArea.trailingAnchor],
+        [contentView.topAnchor constraintEqualToAnchor:scrollView.topAnchor],
+        [contentView.bottomAnchor constraintEqualToAnchor:scrollView.bottomAnchor],
+        [contentView.leadingAnchor constraintEqualToAnchor:scrollView.leadingAnchor],
+        [contentView.trailingAnchor constraintEqualToAnchor:scrollView.trailingAnchor],
+        [contentView.widthAnchor constraintEqualToAnchor:scrollView.widthAnchor],
+        [stackView.topAnchor constraintEqualToAnchor:contentView.topAnchor constant:100],
+        [stackView.bottomAnchor constraintEqualToAnchor:contentView.bottomAnchor constant:-30],
+        [stackView.leadingAnchor constraintEqualToAnchor:contentView.leadingAnchor constant:30],
+        [stackView.trailingAnchor constraintEqualToAnchor:contentView.trailingAnchor constant:-30],
+    ]];
+
     // Using AffirmPromotionalButton for first button (See more in configurPromotionalMessage)
     self.promotionalButton = [[AffirmPromotionalButton alloc] initWithShowCTA:YES
                                                                      pageType:AffirmPageTypeProduct
                                                      presentingViewController:self
                                                                         frame:CGRectMake(0, 0, 315, 40)];
-    [self.stackView insertArrangedSubview:self.promotionalButton atIndex:0];
+    [stackView addArrangedSubview:self.promotionalButton];
 
-    // Above "Buy with Affirm", which follows the CAAS row.
-    NSUInteger caasRowIndex = [self.stackView.arrangedSubviews indexOfObject:self.caasTextfield.superview];
-    NSUInteger demoIndex = caasRowIndex == NSNotFound ? 1 : caasRowIndex + 1;
-
-    UIButton *renderDemoButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [renderDemoButton setTitle:@"Native → HTML render demo" forState:UIControlStateNormal];
-    [renderDemoButton addTarget:self action:@selector(showRenderMigrationDemo:) forControlEvents:UIControlEventTouchUpInside];
-    [self.stackView insertArrangedSubview:renderDemoButton atIndex:demoIndex];
-
-    UIButton *tableDemoButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [tableDemoButton setTitle:@"Promos in a table view" forState:UIControlStateNormal];
-    [tableDemoButton addTarget:self action:@selector(showPromoTableDemo:) forControlEvents:UIControlEventTouchUpInside];
-    [self.stackView insertArrangedSubview:tableDemoButton atIndex:demoIndex + 1];
-    
     // Using AffirmDataHandler for second button (See more in configurPromotionalMessage)
+    self.promoButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.promoButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     self.promoButton.titleLabel.numberOfLines = 0;
-    
-    // Configure Textfields
-    self.publicKeyTextfield.text = [AffirmConfiguration sharedInstance].publicKey;
-    [self configureTextField];
+    [self.promoButton addTarget:self action:@selector(showPromoModal:) forControlEvents:UIControlEventTouchUpInside];
+    [stackView addArrangedSubview:self.promoButton];
+
+    self.publicKeyTextfield = [self addTextFieldRowWithTitle:@"PublicKey:   " accessibilityLabel:@"public API key input"];
+    // The other rows line their text fields up with this one, so this title gives way first.
+    UILabel *publicKeyLabel = ((UIStackView *)self.publicKeyTextfield.superview).arrangedSubviews.firstObject;
+    [publicKeyLabel setContentCompressionResistancePriority:749 forAxis:UILayoutConstraintAxisHorizontal];
+    self.amountTextField = [self addTextFieldRowWithTitle:@"Amount:" accessibilityLabel:@"price input"];
+    self.amountTextField.text = @"4000";
+    self.amountTextField.keyboardType = UIKeyboardTypeDecimalPad;
+    self.promoIDTextField = [self addTextFieldRowWithTitle:@"PromoID:" accessibilityLabel:@"promo ID input"];
+    self.caasTextfield = [self addTextFieldRowWithTitle:@"CAAS:" accessibilityLabel:nil];
+    [NSLayoutConstraint activateConstraints:@[
+        [self.amountTextField.leadingAnchor constraintEqualToAnchor:self.publicKeyTextfield.leadingAnchor],
+        [self.promoIDTextField.leadingAnchor constraintEqualToAnchor:self.publicKeyTextfield.leadingAnchor],
+        [self.caasTextfield.leadingAnchor constraintEqualToAnchor:self.publicKeyTextfield.leadingAnchor],
+    ]];
+
+    [self addButtonWithTitle:@"Native → HTML render demo" action:@selector(showRenderMigrationDemo:) tintsWhenPressed:NO];
+    [self addButtonWithTitle:@"Promos in a table view" action:@selector(showPromoTableDemo:) tintsWhenPressed:NO];
+    [self addButtonWithTitle:@"Buy with Affirm" action:@selector(checkout:) tintsWhenPressed:YES];
+    [self addButtonWithTitle:@"Failed Checkout" action:@selector(showFailedCheckout:) tintsWhenPressed:YES];
+    UIButton *vcnButton = [self addButtonWithTitle:@"VCN Checkout" action:@selector(vcnCheckout:) tintsWhenPressed:YES];
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showVCNEligibility:)];
+    longPress.minimumPressDuration = 0.5;
+    longPress.allowableMovement = 10;
+    [vcnButton addGestureRecognizer:longPress];
+    [self addButtonWithTitle:@"Show Product Modal" action:@selector(showProductModal:) tintsWhenPressed:NO];
+    [self addButtonWithTitle:@"Track Order Confirmation" action:@selector(trackOrderConfirmation:) tintsWhenPressed:YES];
+    [self addButtonWithTitle:@"Clear Cookies" action:@selector(clearCookies:) tintsWhenPressed:NO];
+
+    self.resultLabel = [UILabel new];
+    self.resultLabel.text = @"Checkout result: ";
+    self.resultLabel.font = [UIFont systemFontOfSize:17];
+    self.resultLabel.numberOfLines = 0;
+    [stackView addArrangedSubview:self.resultLabel];
+}
+
+- (UITextField *)addTextFieldRowWithTitle:(NSString *)title accessibilityLabel:(NSString *)accessibilityLabel
+{
+    UILabel *label = [UILabel new];
+    label.text = title;
+    label.font = [UIFont systemFontOfSize:17];
+    [label setContentHuggingPriority:251 forAxis:UILayoutConstraintAxisHorizontal];
+    [label setContentHuggingPriority:251 forAxis:UILayoutConstraintAxisVertical];
+
+    UITextField *textField = [UITextField new];
+    textField.borderStyle = UITextBorderStyleRoundedRect;
+    textField.font = [UIFont systemFontOfSize:16];
+    textField.minimumFontSize = 17;
+    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    textField.returnKeyType = UIReturnKeyDone;
+    textField.accessibilityLabel = accessibilityLabel;
+    textField.delegate = self;
+
+    [self.stackView addArrangedSubview:[[UIStackView alloc] initWithArrangedSubviews:@[label, textField]]];
+    return textField;
+}
+
+- (UIButton *)addButtonWithTitle:(NSString *)title action:(SEL)action tintsWhenPressed:(BOOL)tintsWhenPressed
+{
+    UIButton *button = [(tintsWhenPressed ? [Button class] : [UIButton class]) buttonWithType:UIButtonTypeSystem];
+    [button setTitle:title forState:UIControlStateNormal];
+    [button addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
+    [self.stackView addArrangedSubview:button];
+    return button;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -109,14 +208,14 @@
     [self presentViewController:nav animated:YES completion:nil];
 }
 
-- (IBAction)showPromoModal:(id)sender
+- (void)showPromoModal:(id)sender
 {
     if (self.promoViewController) {
         [self presentViewController:self.promoViewController animated:YES completion:nil];
     }
 }
 
-- (IBAction)showProductModal:(id)sender
+- (void)showProductModal:(id)sender
 {
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
     AffirmPromoModalViewController *viewController = [[AffirmPromoModalViewController alloc] initWithPromoId:self.promoIDTextField.text
@@ -129,7 +228,7 @@
                      completion:nil];
 }
 
-- (IBAction)checkout:(id)sender
+- (void)checkout:(id)sender
 {
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
     AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item"
@@ -178,7 +277,7 @@
     [self presentViewController:nav animated:YES completion:nil];
 }
 
-- (IBAction)showFailedCheckout:(id)sender
+- (void)showFailedCheckout:(id)sender
 {
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
     AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item"
@@ -213,7 +312,7 @@
     [self presentViewController:nav animated:YES completion:nil];
 }
 
-- (IBAction)vcnCheckout:(UIButton *)sender
+- (void)vcnCheckout:(UIButton *)sender
 {
     AffirmCheckout *checkout = [self generateVCNCheckout];
     AffirmCheckoutViewController *checkoutViewController = [[AffirmCheckoutViewController alloc] initWithDelegate:self checkout:checkout useVCN:YES getReasonCodes:YES cardAuthWindow:10];
@@ -262,7 +361,7 @@
     return checkout;
 }
 
-- (IBAction)showVCNEligibility:(UIGestureRecognizer *)recognizer
+- (void)showVCNEligibility:(UIGestureRecognizer *)recognizer
 {
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         if ([AffirmConfiguration sharedInstance].isCreditCardExists) {
@@ -309,7 +408,7 @@
     [self presentViewController:nav animated:YES completion:nil];
 }
 
-- (IBAction)trackOrderConfirmation:(id)sender
+- (void)trackOrderConfirmation:(id)sender
 {
     AffirmOrder *order = [[AffirmOrder alloc] initWithStoreName:@"Affirm Store"
                                                      checkoutId:nil
@@ -353,7 +452,7 @@
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-- (IBAction)clearCookies:(id)sender
+- (void)clearCookies:(id)sender
 {
     [AffirmConfiguration deleteAffirmCookies];
     [self configurPromotionalMessage];
