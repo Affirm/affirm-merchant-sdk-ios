@@ -6,6 +6,7 @@ All notable changes to the SDK will be documented in this file.
 - `configureWithAmount:…` can render the promo as HTML when Affirm turns it on, with the native font, size and color, and falls back to native text if the HTML fails or is not ready within 5 seconds
 - Add `AffirmConfiguration.useLegacyNativeRendering` to keep native text
 - Sanitize promo HTML in every HTML mode with a bundled DOMPurify 3.4.16; only https or app-bundle stylesheets and fonts load
+- HTML promos wait for the fonts their stylesheets load before showing, and a font that is not loaded within 5 seconds fails the render
 - Keep taps opening the promo modal, not prequalification, when the promo config carries only the render switch
 - Ignore late promo responses after a promo is configured again
 - VoiceOver reads a promo as one button, activated only once the promo is shown
