@@ -53,3 +53,12 @@
 .__apr_badge.__badge_no_icon::before {
   display: none;
 }
+
+/* affirm.js adds its own badge styles, which draw the icon as a cross-origin mask image. The
+   promo page is a file:// page, where that mask doesn't load and hides the icon, so the icon
+   keeps the background image above. */
+#affirm-promo-root .__apr_badge::before {
+  -webkit-mask-image: none;
+  mask-image: none;
+  background-color: transparent;
+}

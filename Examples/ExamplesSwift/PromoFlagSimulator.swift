@@ -12,6 +12,11 @@ import Foundation
 /// anything like this.
 final class PromoFlagSimulator: URLProtocol {
 
+    /// Posted on the main queue for each promo response handed to the SDK, after any rewrite.
+    /// `userInfo[responseKey]` is the response as pretty-printed JSON.
+    static let didDeliverResponse = Notification.Name("PromoFlagSimulatorDidDeliverResponse")
+    static let responseKey = "response"
+
     enum Simulation: Int {
         /// Promo responses are passed through untouched.
         case off
@@ -34,10 +39,15 @@ final class PromoFlagSimulator: URLProtocol {
         didSet { _ = registration }
     }
 
+    /// Also intercepts promo requests while `simulation` is off, to post them unchanged.
+    static var reportsResponses = false {
+        didSet { _ = registration }
+    }
+
     private var dataTask: URLSessionDataTask?
 
     override class func canInit(with request: URLRequest) -> Bool {
-        simulation != .off
+        (simulation != .off || reportsResponses)
             && request.url?.path.contains("/api/promos/v2/") == true
             && URLProtocol.property(forKey: handledKey, in: request) == nil
     }
@@ -61,10 +71,12 @@ final class PromoFlagSimulator: URLProtocol {
             if let response {
                 self.client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
             }
-            if let data {
-                self.client?.urlProtocol(self, didLoad: Self.rewrite(data, simulation: simulation))
+            let delivered = data.map { simulation == .off ? $0 : Self.rewrite($0, simulation: simulation) }
+            if let delivered {
+                self.client?.urlProtocol(self, didLoad: delivered)
             }
             self.client?.urlProtocolDidFinishLoading(self)
+            Self.post(delivered)
         }
         dataTask?.resume()
     }
@@ -100,5 +112,20 @@ final class PromoFlagSimulator: URLProtocol {
         }
         json["promo"] = promo
         return (try? JSONSerialization.data(withJSONObject: json)) ?? data
+    }
+
+    private static func post(_ data: Data?) {
+        var text = ""
+        if let data {
+            if let json = try? JSONSerialization.jsonObject(with: data),
+               let pretty = try? JSONSerialization.data(withJSONObject: json, options: [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]) {
+                text = String(decoding: pretty, as: UTF8.self)
+            } else {
+                text = String(decoding: data, as: UTF8.self)
+            }
+        }
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: didDeliverResponse, object: nil, userInfo: [responseKey: text])
+        }
     }
 }

@@ -22,9 +22,8 @@ static NSNotificationName const RenderDidFinishNotification = @"AffirmPromoRende
 @property (nonatomic, strong) UISegmentedControl *fontControl;
 @property (nonatomic, strong) UISegmentedControl *colorControl;
 @property (nonatomic, strong) AffirmPromotionalButton *nativeAPIButton;
-@property (nonatomic, strong) AffirmPromotionalButton *explicitHTMLButton;
 @property (nonatomic, strong) UILabel *nativeAPIStatus;
-@property (nonatomic, strong) UILabel *explicitHTMLStatus;
+@property (nonatomic, strong) UILabel *responseLabel;
 
 @end
 
@@ -56,6 +55,11 @@ static NSNotificationName const RenderDidFinishNotification = @"AffirmPromoRende
                                              selector:@selector(renderDidFinish:)
                                                  name:RenderDidFinishNotification
                                                object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didDeliverResponse:)
+                                                 name:PromoFlagSimulatorDidDeliverResponseNotification
+                                               object:nil];
+    PromoFlagSimulator.reportsResponses = YES;
     [self reload];
 }
 
@@ -65,6 +69,7 @@ static NSNotificationName const RenderDidFinishNotification = @"AffirmPromoRende
     if (self.isBeingDismissed || self.navigationController.isBeingDismissed) {
         // Leave the rest of the example app talking to the real API.
         PromoFlagSimulator.simulation = PromoFlagSimulationOff;
+        PromoFlagSimulator.reportsResponses = NO;
         [AffirmConfiguration sharedInstance].useLegacyNativeRendering = NO;
     }
 }
@@ -119,7 +124,7 @@ static NSNotificationName const RenderDidFinishNotification = @"AffirmPromoRende
 
     [self addHeader:@"Native style"
                note:@"Only the system, serif and monospaced designs (regular, bold, italic, bold italic) map to HTML. Other fonts stay native."];
-    self.fontControl = [self addSegments:@[@"System", @"Serif italic", @"Avenir (stays native)"] selected:0];
+    self.fontControl = [self addSegments:@[@"System", @"Serif italic", @"Marker Felt (stays native)"] selected:0];
     self.fontControl.apportionsSegmentWidthsByContent = YES;
     self.colorControl = [self addSegments:@[@"Gray", @"Indigo", @"Label"] selected:0];
 
@@ -128,10 +133,14 @@ static NSNotificationName const RenderDidFinishNotification = @"AffirmPromoRende
     self.nativeAPIButton = [self newPromoButton];
     self.nativeAPIStatus = [self addCardWithButton:self.nativeAPIButton];
 
-    [self addHeader:@"configureByHtmlStylingWithAmount:…"
-               note:@"Explicit HTML. Always HTML, with browser default text and margins on an opaque background. Hidden, not replaced, if the HTML fails."];
-    self.explicitHTMLButton = [self newPromoButton];
-    self.explicitHTMLStatus = [self addCardWithButton:self.explicitHTMLButton];
+    [self addHeader:@"API response"
+               note:@"The promo response the SDK received for the button above, after any mock changes."];
+    self.responseLabel = [UILabel new];
+    self.responseLabel.font = [UIFont monospacedSystemFontOfSize:11 weight:UIFontWeightRegular];
+    self.responseLabel.textColor = [UIColor secondaryLabelColor];
+    self.responseLabel.numberOfLines = 0;
+    self.responseLabel.accessibilityIdentifier = @"api-response";
+    [self.stackView addArrangedSubview:self.responseLabel];
 }
 
 - (void)addHeader:(NSString *)title note:(NSString *)note
@@ -207,7 +216,7 @@ static NSNotificationName const RenderDidFinishNotification = @"AffirmPromoRende
             return [UIFont fontWithDescriptor:[serif fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitItalic] size:16];
         }
         case 2:
-            return [UIFont fontWithName:@"Avenir-Medium" size:15] ?: [UIFont systemFontOfSize:15];
+            return [UIFont fontWithName:@"MarkerFelt-Thin" size:15] ?: [UIFont systemFontOfSize:15];
         default:
             return [UIFont systemFontOfSize:15];
     }
@@ -233,23 +242,23 @@ static NSNotificationName const RenderDidFinishNotification = @"AffirmPromoRende
     PromoFlagSimulator.simulation = mock ? (PromoFlagSimulation)(self.mockControl.selectedSegmentIndex + 1) : PromoFlagSimulationOff;
     [AffirmConfiguration sharedInstance].useLegacyNativeRendering = self.optOutSwitch.isOn;
     self.nativeAPIStatus.text = @"Loading…";
-    self.explicitHTMLStatus.text = @"Loading…";
+    self.responseLabel.text = @"Loading…";
 
     [self.nativeAPIButton configureWithAmount:self.amount
                                affirmLogoType:AffirmLogoTypeName
                                   affirmColor:AffirmColorTypeBlue
                                          font:[self selectedFont]
                                     textColor:[self selectedColor]];
-    [self.explicitHTMLButton configureByHtmlStylingWithAmount:self.amount
-                                               affirmLogoType:AffirmLogoTypeName
-                                                  affirmColor:AffirmColorTypeBlue];
+}
+
+- (void)didDeliverResponse:(NSNotification *)notification
+{
+    self.responseLabel.text = notification.userInfo[PromoFlagSimulatorResponseKey];
 }
 
 - (void)renderDidFinish:(NSNotification *)notification
 {
-    UILabel *status = notification.object == self.nativeAPIButton ? self.nativeAPIStatus
-        : notification.object == self.explicitHTMLButton ? self.explicitHTMLStatus
-        : nil;
+    UILabel *status = notification.object == self.nativeAPIButton ? self.nativeAPIStatus : nil;
     NSObject *operation = notification.userInfo[@"operation"];
     NSString *state = [operation valueForKey:@"terminalState"];
     // T9: a newer configure call replaced this render; its own result follows.

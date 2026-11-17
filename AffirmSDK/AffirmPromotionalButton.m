@@ -675,6 +675,10 @@ static NSString * FormatAffirmDataTypeString(AffirmLogoType type)
     } else if (remoteFontURL.isFileURL) {
         baseURL = remoteFontURL.URLByDeletingLastPathComponent;
     }
+    if (baseURL == nil) {
+        // affirm.js fails to start on an about:blank page, and it is what turns __affirm-logo into the logo.
+        baseURL = [NSBundle resourceBundle].bundleURL;
+    }
     self.htmlBaseURL = baseURL;
     self.htmlNavigation = [self.webView loadHTMLString:page baseURL:baseURL];
     [self scheduleHTMLTimeoutForRenderID:renderID];

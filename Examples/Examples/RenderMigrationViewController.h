@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /// Shows the native-to-HTML promo render migration: the same native configure call rendered as
-/// native text or as HTML, next to an explicit HTML call.
+/// native text or as HTML, with the promo response it was rendered from.
 @interface RenderMigrationViewController : UIViewController
 
 - (instancetype)initWithAmount:(NSDecimalNumber *)amount NS_DESIGNATED_INITIALIZER;

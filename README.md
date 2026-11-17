@@ -252,7 +252,7 @@ A demo app that integrates Affirm is included in the repo. You may clone our [Gi
 
 Both the Objective-C (`Examples`) and Swift (`ExamplesSwift`) apps have two screens for the HTML rendering of the native API, opened from buttons on the main screen. Both screens can rewrite the promo response in the app, to try Affirm's HTML switch whatever the server sends for your merchant (`PromoFlagSimulator`, for the example apps only):
 
-- **Native → HTML render demo** shows the native API and `configureByHtmlStylingWithAmount:…` side by side. You can use the real API response or a mocked one (HTML on, HTML off, switch missing, unsafe markup, HTML that fails), change the font and the text color, and turn on `useLegacyNativeRendering`. Each promo shows how it was rendered and why.
+- **Native → HTML render demo** shows a promo from the native API, how it was rendered and why, and the promo response it was rendered from. You can use the real API response or a mocked one (HTML on, HTML off, switch missing, unsafe markup, HTML that fails), change the font and the text color, and turn on `useLegacyNativeRendering`.
 - **Promos in a table view** shows a promo with a different amount in each of 100 rows, and counts how often cells are created, reused and configured again while you scroll.
 
 Upgrade

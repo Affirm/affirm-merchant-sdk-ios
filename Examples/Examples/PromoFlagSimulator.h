@@ -27,9 +27,16 @@ typedef NS_ENUM(NSInteger, PromoFlagSimulation) {
 /// Demo only. Rewrites promo responses on their way into the SDK, so every flag value and
 /// failure can be tried whatever the server sends for this merchant. Merchant apps never need
 /// anything like this.
+/// Posted on the main queue for each promo response handed to the SDK, after any rewrite.
+/// `userInfo[PromoFlagSimulatorResponseKey]` is the response as pretty-printed JSON.
+extern NSNotificationName const PromoFlagSimulatorDidDeliverResponseNotification;
+extern NSString *const PromoFlagSimulatorResponseKey;
+
 @interface PromoFlagSimulator : NSURLProtocol
 
 @property (class, nonatomic) PromoFlagSimulation simulation;
+/// Also intercepts promo requests while `simulation` is off, to post them unchanged.
+@property (class, nonatomic) BOOL reportsResponses;
 
 @end
 

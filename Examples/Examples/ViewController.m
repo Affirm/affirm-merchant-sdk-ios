@@ -78,7 +78,7 @@
         [contentView.leadingAnchor constraintEqualToAnchor:scrollView.leadingAnchor],
         [contentView.trailingAnchor constraintEqualToAnchor:scrollView.trailingAnchor],
         [contentView.widthAnchor constraintEqualToAnchor:scrollView.widthAnchor],
-        [stackView.topAnchor constraintEqualToAnchor:contentView.topAnchor constant:100],
+        [stackView.topAnchor constraintEqualToAnchor:contentView.topAnchor constant:30],
         [stackView.bottomAnchor constraintEqualToAnchor:contentView.bottomAnchor constant:-30],
         [stackView.leadingAnchor constraintEqualToAnchor:contentView.leadingAnchor constant:30],
         [stackView.trailingAnchor constraintEqualToAnchor:contentView.trailingAnchor constant:-30],
@@ -103,7 +103,7 @@
     UILabel *publicKeyLabel = ((UIStackView *)self.publicKeyTextfield.superview).arrangedSubviews.firstObject;
     [publicKeyLabel setContentCompressionResistancePriority:749 forAxis:UILayoutConstraintAxisHorizontal];
     self.amountTextField = [self addTextFieldRowWithTitle:@"Amount:" accessibilityLabel:@"price input"];
-    self.amountTextField.text = @"4000";
+    self.amountTextField.text = @"500";
     self.amountTextField.keyboardType = UIKeyboardTypeDecimalPad;
     self.promoIDTextField = [self addTextFieldRowWithTitle:@"PromoID:" accessibilityLabel:@"promo ID input"];
     self.caasTextfield = [self addTextFieldRowWithTitle:@"CAAS:" accessibilityLabel:nil];
@@ -476,7 +476,7 @@
                                             URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
 
     // Configure promotionalButton with native styling
-    [self.promotionalButton configureWithAmount:dollarPrice items:@[item] affirmLogoType:AffirmLogoTypeName affirmColor:AffirmColorTypeBlueBlack font:[UIFont boldSystemFontOfSize:15] textColor:[UIColor darkTextColor]];
+    [self.promotionalButton configureWithAmount:dollarPrice items:@[item] affirmLogoType:AffirmLogoTypeName affirmColor:AffirmColorTypeBlueBlack font:[UIFont systemFontOfSize:15] textColor:[UIColor grayColor]];
     
     // Configure promotionalButton with html styling
 //    NSURL *fontURL = [NSURL URLWithString:@"https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap"];

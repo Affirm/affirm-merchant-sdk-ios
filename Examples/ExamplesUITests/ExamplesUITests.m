@@ -94,10 +94,10 @@
     [self.app.buttons[@"Native → HTML render demo"] tap];
     [self.app.buttons[@"Mock"] tap];
 
-    // Flag on: the native API call is shown as HTML; explicit HTML is HTML either way.
+    // Flag on: the native API call is shown as HTML, and the response shown has the flag set.
     [self waitForStatus:@"Decision: flag_true"];
     [self waitForStatus:@"Shown as: HTML (T2)"];
-    [self waitForStatus:@"Decision: explicit_html"];
+    [self waitForStatus:@"\"ios_sdk_migrate_native_to_html_render\" : true"];
     [self attachScreenshotNamed:@"1-flag-on"];
 
     [self.app.buttons[@"Serif italic"] tap];
@@ -105,7 +105,7 @@
     [self waitForStatus:@"Decision: flag_true"];
     [self attachScreenshotNamed:@"2-serif-italic-indigo"];
 
-    [self.app.buttons[@"Avenir (stays native)"] tap];
+    [self.app.buttons[@"Marker Felt (stays native)"] tap];
     [self waitForStatus:@"Decision: unsupported_font"];
     [self attachScreenshotNamed:@"3-unsupported-font"];
     [self.app.buttons[@"System"] tap];
@@ -116,7 +116,6 @@
 
     [self.app.buttons[@"HTML fails"] tap];
     [self waitForStatus:@"native text, after the HTML failed (T3)"];
-    [self waitForStatus:@"hidden, HTML failed (T5)"];
     [self attachScreenshotNamed:@"5-html-fails"];
 
     [self.app.buttons[@"Flag on"] tap];
@@ -127,6 +126,7 @@
 
     [self.app.buttons[@"Flag off"] tap];
     [self waitForStatus:@"Decision: flag_false"];
+    [self waitForStatus:@"\"ios_sdk_migrate_native_to_html_render\" : false"];
     [self attachScreenshotNamed:@"7-flag-off"];
 
     [self.app.buttons[@"Missing"] tap];
@@ -162,10 +162,6 @@
     XCTAssertTrue([[[self.app.staticTexts matchingPredicate:reused] firstMatch] waitForExistenceWithTimeout:5]);
     [self waitForStatus:@"Shown as "];
     [self attachScreenshotNamed:@"table-2-after-scrolling"];
-
-    [self.app.buttons[@"Native"] tap];
-    [self waitForStatus:@"Shown as native text (T1)"];
-    [self attachScreenshotNamed:@"table-3-native"];
 }
 
 - (void)testVCNCheckout

@@ -9,7 +9,7 @@ import UIKit
 import AffirmSDK
 
 /// Shows the native-to-HTML promo render migration: the same native configure call rendered as
-/// native text or as HTML, next to an explicit HTML call.
+/// native text or as HTML, with the promo response it was rendered from.
 final class RenderMigrationViewController: UIViewController {
 
     // Internal SDK diagnostics, read here only to explain what the demo shows. Not a supported API.
@@ -34,10 +34,9 @@ final class RenderMigrationViewController: UIViewController {
     private var fontControl: UISegmentedControl!
     private var colorControl: UISegmentedControl!
     private var nativeAPIButton: AffirmPromotionalButton!
-    private var explicitHTMLButton: AffirmPromotionalButton!
     private var nativeAPIStatus: UILabel!
-    private var explicitHTMLStatus: UILabel!
-    private var observer: NSObjectProtocol?
+    private let responseLabel = UILabel()
+    private var observers: [NSObjectProtocol] = []
 
     init(amount: NSDecimalNumber) {
         self.amount = amount
@@ -50,9 +49,7 @@ final class RenderMigrationViewController: UIViewController {
     }
 
     deinit {
-        if let observer {
-            NotificationCenter.default.removeObserver(observer)
-        }
+        observers.forEach(NotificationCenter.default.removeObserver)
     }
 
     override func viewDidLoad() {
@@ -60,9 +57,15 @@ final class RenderMigrationViewController: UIViewController {
         view.backgroundColor = .systemBackground
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(close))
         buildLayout()
-        observer = NotificationCenter.default.addObserver(forName: Self.renderDidFinish, object: nil, queue: .main) { [weak self] note in
-            self?.renderDidFinish(note)
-        }
+        observers = [
+            NotificationCenter.default.addObserver(forName: Self.renderDidFinish, object: nil, queue: .main) { [weak self] note in
+                self?.renderDidFinish(note)
+            },
+            NotificationCenter.default.addObserver(forName: PromoFlagSimulator.didDeliverResponse, object: nil, queue: .main) { [weak self] note in
+                self?.responseLabel.text = note.userInfo?[PromoFlagSimulator.responseKey] as? String
+            },
+        ]
+        PromoFlagSimulator.reportsResponses = true
         reload()
     }
 
@@ -71,6 +74,7 @@ final class RenderMigrationViewController: UIViewController {
         if isBeingDismissed || navigationController?.isBeingDismissed == true {
             // Leave the rest of the example app talking to the real API.
             PromoFlagSimulator.simulation = .off
+            PromoFlagSimulator.reportsResponses = false
             AffirmConfiguration.shared.useLegacyNativeRendering = false
         }
     }
@@ -114,7 +118,7 @@ final class RenderMigrationViewController: UIViewController {
 
         addHeader("Native style",
                   note: "Only the system, serif and monospaced designs (regular, bold, italic, bold italic) map to HTML. Other fonts stay native.")
-        fontControl = addSegments(["System", "Serif italic", "Avenir (stays native)"], selected: 0)
+        fontControl = addSegments(["System", "Serif italic", "Marker Felt (stays native)"], selected: 0)
         fontControl.apportionsSegmentWidthsByContent = true
         colorControl = addSegments(["Gray", "Indigo", "Label"], selected: 0)
 
@@ -123,10 +127,13 @@ final class RenderMigrationViewController: UIViewController {
         nativeAPIButton = newPromoButton()
         nativeAPIStatus = addCard(with: nativeAPIButton)
 
-        addHeader("configureByHtmlStyling(amount:affirmLogoType:affirmColor:)",
-                  note: "Explicit HTML. Always HTML, with browser default text and margins on an opaque background. Hidden, not replaced, if the HTML fails.")
-        explicitHTMLButton = newPromoButton()
-        explicitHTMLStatus = addCard(with: explicitHTMLButton)
+        addHeader("API response",
+                  note: "The promo response the SDK received for the button above, after any mock changes.")
+        responseLabel.font = .monospacedSystemFont(ofSize: 11, weight: .regular)
+        responseLabel.textColor = .secondaryLabel
+        responseLabel.numberOfLines = 0
+        responseLabel.accessibilityIdentifier = "api-response"
+        stackView.addArrangedSubview(responseLabel)
     }
 
     private func addHeader(_ title: String, note: String) {
@@ -193,7 +200,7 @@ final class RenderMigrationViewController: UIViewController {
             let serif = UIFont.systemFont(ofSize: 16).fontDescriptor.withDesign(.serif)?.withSymbolicTraits(.traitItalic)
             return serif.map { UIFont(descriptor: $0, size: 16) } ?? .italicSystemFont(ofSize: 16)
         case 2:
-            return UIFont(name: "Avenir-Medium", size: 15) ?? .systemFont(ofSize: 15)
+            return UIFont(name: "MarkerFelt-Thin", size: 15) ?? .systemFont(ofSize: 15)
         default:
             return .systemFont(ofSize: 15)
         }
@@ -214,16 +221,16 @@ final class RenderMigrationViewController: UIViewController {
         PromoFlagSimulator.simulation = mock ? PromoFlagSimulator.Simulation(rawValue: mockControl.selectedSegmentIndex + 1) ?? .off : .off
         AffirmConfiguration.shared.useLegacyNativeRendering = optOutSwitch.isOn
         nativeAPIStatus.text = "Loading…"
-        explicitHTMLStatus.text = "Loading…"
+        responseLabel.text = "Loading…"
 
         nativeAPIButton.configure(amount: amount, affirmLogoType: .name, affirmColor: .blue,
                                   font: selectedFont, textColor: selectedColor)
-        explicitHTMLButton.configureByHtmlStyling(amount: amount, affirmLogoType: .name, affirmColor: .blue)
     }
 
     private func renderDidFinish(_ note: Notification) {
         guard let button = note.object as? AffirmPromotionalButton,
-              let status = button === nativeAPIButton ? nativeAPIStatus : button === explicitHTMLButton ? explicitHTMLStatus : nil,
+              button === nativeAPIButton,
+              let status = nativeAPIStatus,
               let operation = note.userInfo?["operation"] as? NSObject,
               let state = operation.value(forKey: "terminalState") as? String,
               // T9: a newer configure call replaced this render; its own result follows.

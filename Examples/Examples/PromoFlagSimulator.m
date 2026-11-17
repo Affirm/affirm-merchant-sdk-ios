@@ -7,7 +7,11 @@
 
 #import "PromoFlagSimulator.h"
 
+NSNotificationName const PromoFlagSimulatorDidDeliverResponseNotification = @"PromoFlagSimulatorDidDeliverResponse";
+NSString *const PromoFlagSimulatorResponseKey = @"response";
+
 static PromoFlagSimulation PromoFlagSimulatorCurrent = PromoFlagSimulationOff;
+static BOOL PromoFlagSimulatorReportsResponses = NO;
 static NSString *const PromoFlagSimulatorHandledKey = @"PromoFlagSimulatorHandled";
 
 @interface PromoFlagSimulator ()
@@ -25,16 +29,32 @@ static NSString *const PromoFlagSimulatorHandledKey = @"PromoFlagSimulatorHandle
 
 + (void)setSimulation:(PromoFlagSimulation)simulation
 {
+    [self registerOnce];
+    PromoFlagSimulatorCurrent = simulation;
+}
+
++ (BOOL)reportsResponses
+{
+    return PromoFlagSimulatorReportsResponses;
+}
+
++ (void)setReportsResponses:(BOOL)reportsResponses
+{
+    [self registerOnce];
+    PromoFlagSimulatorReportsResponses = reportsResponses;
+}
+
++ (void)registerOnce
+{
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [NSURLProtocol registerClass:self];
     });
-    PromoFlagSimulatorCurrent = simulation;
 }
 
 + (BOOL)canInitWithRequest:(NSURLRequest *)request
 {
-    return PromoFlagSimulatorCurrent != PromoFlagSimulationOff
+    return (PromoFlagSimulatorCurrent != PromoFlagSimulationOff || PromoFlagSimulatorReportsResponses)
         && [request.URL.path containsString:@"/api/promos/v2/"]
         && [NSURLProtocol propertyForKey:PromoFlagSimulatorHandledKey inRequest:request] == nil;
 }
@@ -55,9 +75,11 @@ static NSString *const PromoFlagSimulatorHandledKey = @"PromoFlagSimulatorHandle
             [self.client URLProtocol:self didFailWithError:error];
             return;
         }
+        NSData *delivered = simulation == PromoFlagSimulationOff ? data : [PromoFlagSimulator rewrite:data simulation:simulation];
         [self.client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
-        [self.client URLProtocol:self didLoadData:[PromoFlagSimulator rewrite:data simulation:simulation]];
+        [self.client URLProtocol:self didLoadData:delivered];
         [self.client URLProtocolDidFinishLoading:self];
+        [PromoFlagSimulator postResponse:delivered];
     }];
     [self.task resume];
 }
@@ -93,8 +115,22 @@ static NSString *const PromoFlagSimulatorHandledKey = @"PromoFlagSimulatorHandle
     } else if (simulation == PromoFlagSimulationBrokenHTML) {
         promo[@"html_ala"] = @"<script>alert('nothing left after sanitizing')</script>";
     }
-    NSLog(@"%@", json);
     return [NSJSONSerialization dataWithJSONObject:json options:0 error:nil] ?: data;
+}
+
++ (void)postResponse:(NSData *)data
+{
+    id json = data ? [NSJSONSerialization JSONObjectWithData:data options:0 error:nil] : nil;
+    NSData *pretty = json ? [NSJSONSerialization dataWithJSONObject:json
+                                                            options:NSJSONWritingPrettyPrinted | NSJSONWritingSortedKeys | NSJSONWritingWithoutEscapingSlashes
+                                                              error:nil] : nil;
+    NSString *text = pretty ? [[NSString alloc] initWithData:pretty encoding:NSUTF8StringEncoding]
+        : (data ? [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] : nil);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:PromoFlagSimulatorDidDeliverResponseNotification
+                                                            object:nil
+                                                          userInfo:@{PromoFlagSimulatorResponseKey: text ?: @""}];
+    });
 }
 
 @end
