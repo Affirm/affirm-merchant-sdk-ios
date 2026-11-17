@@ -83,6 +83,12 @@
     [self addAttachment:attachment];
 }
 
+- (void)testTrackOrderConfirmation
+{
+    [self.app.buttons[@"Track Order Confirmation"] tap];
+    XCTAssertTrue([self.app.alerts.staticTexts[@"Track successfully"] waitForExistenceWithTimeout:10]);
+}
+
 - (void)testRenderMigrationDemo
 {
     [self.app.buttons[@"Native → HTML render demo"] tap];

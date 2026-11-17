@@ -10,6 +10,7 @@ All notable changes to the SDK will be documented in this file.
 - Ignore late promo responses after a promo is configured again
 - VoiceOver reads a promo as one button, activated only once the promo is shown
 - Report each promo render's renderer decision and result to Affirm's tracker, without promo text or consumer data
+- Fix a crash in `AffirmOrderTrackerViewController trackOrder:products:` in apps on the scene lifecycle, whose app delegate has no `window`
 
 ## Version 5.0.41 (Jul 16, 2026)
 - Add badge CSS to webview mode
