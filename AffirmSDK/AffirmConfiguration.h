@@ -70,6 +70,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL isCreditCardExists;
 
 /**
+ useLegacyNativeRendering Keeps the native promo API (configureWithAmount:…) on native text even
+ when Affirm enables HTML rendering for it. Defaults to NO. Explicit HTML styling is not affected.
+ Read when a promo starts configuring, so a change applies from the next configure call.
+ */
+@property (nonatomic) BOOL useLegacyNativeRendering;
+
+/**
  pool A WKProcessPool object represents a pool of web content processes.
  */
 @property (nonatomic, strong, readonly) WKProcessPool *pool;

@@ -1,0 +1,79 @@
+{
+  "_source": "sandbox.affirm.com /api/promos/v2/Y8CQXFF044903JC0 (Examples sandbox key), fetched 2026-11-11. Do not edit by hand; refetch to update.",
+  "installment_badge_logo": {
+    "promo": {
+      "ala": "0% APR or as low as $139/mo with {affirm_logo}. See if you qualify",
+      "html_ala": "<span class='__apr_badge __apr_badge_indigo'>0% APR </span>or as low as <span class='affirm-ala-price'>$139</span>/mo with <span class='__affirm-logo __affirm-logo-blue'>Affirm</span>. <a class='affirm-modal-trigger'>See if you qualify</a>",
+      "config": {
+        "promo_prequal_enabled": true,
+        "promo_style": "adaptive",
+        "merchant_ari": "CJYT23WWGXGYXQJ0",
+        "loan_type": "installment",
+        "user_ari": "",
+        "toast_enabled": false,
+        "enabled_integrations": []
+      }
+    }
+  },
+  "split_pay_logo": {
+    "promo": {
+      "ala": "4 interest-free payments of $13 with {affirm_logo}. See if you qualify",
+      "html_ala": "4 interest-free payments of <span class='affirm-ala-price'>$13</span> with <span class='__affirm-logo __affirm-logo-blue'>Affirm</span>. <a class='affirm-modal-trigger'>See if you qualify</a>",
+      "config": {
+        "promo_prequal_enabled": true,
+        "promo_style": "adaptive",
+        "merchant_ari": "CJYT23WWGXGYXQJ0",
+        "loan_type": "split_pay",
+        "user_ari": "",
+        "toast_enabled": false,
+        "enabled_integrations": []
+      }
+    }
+  },
+  "installment_badge_text_logo": {
+    "promo": {
+      "ala": "0% APR or as low as $139/mo with {affirm_logo}. See if you qualify",
+      "html_ala": "<span class='__apr_badge __apr_badge_indigo'>0% APR </span>or as low as <span class='affirm-ala-price'>$139</span>/mo with Affirm. <a class='affirm-modal-trigger'>See if you qualify</a>",
+      "config": {
+        "promo_prequal_enabled": true,
+        "promo_style": "adaptive",
+        "merchant_ari": "CJYT23WWGXGYXQJ0",
+        "loan_type": "installment",
+        "user_ari": "",
+        "toast_enabled": false,
+        "enabled_integrations": []
+      }
+    }
+  },
+  "installment_badge_symbol_logo": {
+    "promo": {
+      "ala": "0% APR or as low as $139/mo with {affirm_logo}. See if you qualify",
+      "html_ala": "<span class='__apr_badge __apr_badge_indigo'>0% APR </span>or as low as <span class='affirm-ala-price'>$139</span>/mo with <span class='__affirm-logo __affirm-logo-blue'>affirm</span>. <a class='affirm-modal-trigger'>See if you qualify</a>",
+      "config": {
+        "promo_prequal_enabled": true,
+        "promo_style": "adaptive",
+        "merchant_ari": "CJYT23WWGXGYXQJ0",
+        "loan_type": "installment",
+        "user_ari": "",
+        "toast_enabled": false,
+        "enabled_integrations": []
+      }
+    }
+  },
+  "installment_badge_logo_flag_on": {
+    "promo": {
+      "ala": "0% APR or as low as $139/mo with {affirm_logo}. See if you qualify",
+      "html_ala": "<span class='__apr_badge __apr_badge_indigo'>0% APR </span>or as low as <span class='affirm-ala-price'>$139</span>/mo with <span class='__affirm-logo __affirm-logo-blue'>Affirm</span>. <a class='affirm-modal-trigger'>See if you qualify</a>",
+      "config": {
+        "promo_prequal_enabled": true,
+        "promo_style": "adaptive",
+        "merchant_ari": "CJYT23WWGXGYXQJ0",
+        "loan_type": "installment",
+        "user_ari": "",
+        "toast_enabled": false,
+        "enabled_integrations": [],
+        "ios_sdk_migrate_native_to_html_render": true
+      }
+    }
+  }
+}

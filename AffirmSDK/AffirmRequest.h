@@ -74,11 +74,25 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+FOUNDATION_EXPORT NSString *const AffirmPromoRenderFlagKey;
+
+/// How `promo.config.ios_sdk_migrate_native_to_html_render` arrived in the promo response.
+typedef NS_ENUM(NSInteger, AffirmPromoRenderFlagStatus) {
+    AffirmPromoRenderFlagStatusMissing,
+    AffirmPromoRenderFlagStatusTrue,
+    AffirmPromoRenderFlagStatusFalse,
+    AffirmPromoRenderFlagStatusNull,
+    AffirmPromoRenderFlagStatusMalformed
+};
+
 @interface AffirmPromoResponse : AffirmResponse
 
 @property (nonatomic, copy, readonly) NSString *htmlAla;
 @property (nonatomic, copy, readonly) NSString *ala;
 @property (nonatomic, readonly) BOOL showPrequal;
+@property (nonatomic, readonly) AffirmPromoRenderFlagStatus renderFlagStatus;
+/// YES only when the flag is the JSON boolean `true`.
+@property (nonatomic, readonly) BOOL renderFlagEnabled;
 
 @end
 
