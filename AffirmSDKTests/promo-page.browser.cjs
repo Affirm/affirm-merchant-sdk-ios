@@ -21,6 +21,7 @@ const PAGE_URL = 'https://promo.test/';
 const PNG_1X1 = Buffer.from(
     'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
     'base64');
+const FONT_TTF = fs.readFileSync('/System/Library/Fonts/Supplemental/Arial.ttf');
 
 let browser;
 
@@ -54,14 +55,17 @@ function fillTemplate({ html, remoteCss = '', remoteFont = '', extraCss = '', ti
 
 async function render({
     html, remoteCss = '', remoteFont = '', extraCss = '', sanitizer = SANITIZER,
-    resources = {}, hang = [], width = 360, waitMs = 3000, timeoutMs = 5000, nativeCSS = '',
+    resources = {}, hang = [], delay = {}, width = 360, waitMs = 3000, timeoutMs = 5000, nativeCSS = '',
     beforeLoad = null,
 }) {
     const page = await browser.newPage();
     await page.setViewportSize({ width, height: 640 });
     const filled = fillTemplate({ html, remoteCss, remoteFont, extraCss, timeoutMs, nativeCSS });
-    await page.route('**/*', (route) => {
+    await page.route('**/*', async (route) => {
         const url = route.request().url();
+        if (delay[url]) {
+            await new Promise((resolve) => setTimeout(resolve, delay[url]));
+        }
         if (url === PAGE_URL) {
             return route.fulfill({ contentType: 'text/html', body: filled });
         }
@@ -334,6 +338,41 @@ test('required resources that never settle fail with html_timeout', { timeout: 1
         waitMs: 7000,
     });
     assert.equal(failureReason(calls), 'html_timeout');
+    await page.close();
+});
+
+function slowFontRender(fontDelayMs, waitMs) {
+    return render({
+        html: '<span>ok</span>',
+        remoteFont: 'https://fonts.test/font.css',
+        resources: {
+            'https://fonts.test/font.css': {
+                type: 'text/css',
+                body: '@font-face{font-family:Slow;src:url(https://fonts.test/slow.ttf)}'
+                    + '#affirm-promo-root{font-family:Slow}',
+            },
+            'https://fonts.test/slow.ttf': { type: 'font/ttf', body: FONT_TTF },
+        },
+        delay: { 'https://fonts.test/slow.ttf': fontDelayMs },
+        waitMs,
+    });
+}
+
+test('ready waits for a font that starts loading after its stylesheet', async () => {
+    const started = Date.now();
+    const { page, calls } = await slowFontRender(1500, 4000);
+    assert.equal(calls[0].event, 'ready');
+    assert.ok(Date.now() - started >= 1500, 'ready came before the font loaded');
+    const status = await page.evaluate(() => Array.from(document.fonts)
+        .find((font) => font.family === 'Slow').status);
+    assert.equal(status, 'loaded');
+    await page.close();
+});
+
+test('a font that loads after the timeout fails with html_timeout', { timeout: 10000 }, async () => {
+    const { page, calls } = await slowFontRender(6500, 7000);
+    assert.equal(failureReason(calls), 'html_timeout');
+    assert.equal(calls.some((call) => call.event === 'ready'), false);
     await page.close();
 });
 

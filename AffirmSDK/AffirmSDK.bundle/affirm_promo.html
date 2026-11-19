@@ -155,10 +155,27 @@
                             function (el) { return el.complete && el.naturalWidth > 0; },
                             'image_failed'));
                     }
-                    if (document.fonts && document.fonts.ready) {
-                        waits.push(document.fonts.ready);
+                    var fonts = document.fonts;
+                    // A stylesheet's fonts start loading only when laid-out text uses them, so they
+                    // are collected after the stylesheets load. Fonts affirm.js adds later aren't waited for.
+                    function whenFontsLoaded() {
+                        var loading = [];
+                        if (fonts && fonts.forEach) {
+                            root.getBoundingClientRect();
+                            fonts.forEach(function (font) {
+                                if (font.status === 'loading') {
+                                    loading.push(font.loaded.catch(function () {}));
+                                }
+                            });
+                        }
+                        return Promise.all(loading);
                     }
                     Promise.all(waits).then(function () {
+                        return whenFontsLoaded();
+                    }, function () {
+                        fail('resource_failed');
+                        return new Promise(function () {});
+                    }).then(function () {
                         // The WebView stays hidden until ready, and a hidden view may never get an
                         // animation frame. getBoundingClientRect forces layout, so no frame is needed.
                         setTimeout(function () {
@@ -188,7 +205,7 @@
                             }
                         });
                     }, function () {
-                        fail('resource_failed');
+                        fail('script_error');
                     });
                 } catch (e) {
                     fail('script_error');
