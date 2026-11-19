@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
     name: "AffirmSDK",
     platforms: [
-        .iOS(.v9), .macOS(.v10_15)
+        .iOS(.v15), .macOS(.v10_15)
     ],
     products: [
         .library(name: "AffirmSDK", targets: ["AffirmSDK"]),
