@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-26
+    runs-on: xcode-27
     steps:
     - name: Checkout project
       uses: actions/checkout@v2
@@ -19,7 +19,17 @@ jobs:
       run: cd Examples && pod install --verbose --repo-update && cd ..
       
     - name: Build
-      run: xcodebuild build-for-testing -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5"
+      run: xcodebuild build-for-testing -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "platform=iOS Simulator,name=iPhone 18 Pro,OS=27.0"
       
     - name: Test
-      run: xcodebuild -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5" test
+      # xcodebuild passes TEST_RUNNER_-prefixed variables to the tests without the prefix.
+      env:
+        TEST_RUNNER_CI: "true"
+      run: xcodebuild -workspace Examples/Examples.xcworkspace -scheme ExamplesUITests -destination "platform=iOS Simulator,name=iPhone 18 Pro,OS=27.0" -resultBundlePath UITests.xcresult test
+
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: UITests.xcresult
+        path: UITests.xcresult
