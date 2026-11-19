@@ -182,7 +182,7 @@ static const NSInteger PromoRowCount = 100;
 
 - (void)renderModeChanged:(UISegmentedControl *)control
 {
-    PromoFlagSimulator.simulation = control.selectedSegmentIndex == 1 ? PromoFlagSimulationFlagOn : PromoFlagSimulationOff;
+    PromoFlagSimulator.simulation = control.selectedSegmentIndex == 1 ? PromoFlagSimulationFlagOn : PromoFlagSimulationFlagOff;
     [self.tableView reloadData];
 }
 

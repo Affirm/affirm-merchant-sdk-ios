@@ -160,7 +160,7 @@ final class PromoTableViewController: UIViewController {
     }
 
     @objc private func renderModeChanged(_ control: UISegmentedControl) {
-        PromoFlagSimulator.simulation = control.selectedSegmentIndex == 1 ? .flagOn : .off
+        PromoFlagSimulator.simulation = control.selectedSegmentIndex == 1 ? .flagOn : .flagOff
         tableView.reloadData()
     }
 
