@@ -1,6 +1,18 @@
 # Affirm iOS SDK Changelog
 All notable changes to the SDK will be documented in this file.
 
+## Unreleased
+- Raise the minimum iOS version to 15.0
+- `configureWithAmount:…` can render the promo as HTML when Affirm turns it on, with the native font, size and color, and falls back to native text if the HTML fails or is not ready within 5 seconds
+- Add `AffirmConfiguration.useLegacyNativeRendering` to keep native text
+- Sanitize promo HTML in every HTML mode with a bundled DOMPurify 3.4.16; only https or app-bundle stylesheets and fonts load
+- HTML promos wait for the fonts their stylesheets load before showing, and a font that is not loaded within 5 seconds fails the render
+- Keep taps opening the promo modal, not prequalification, when the promo config carries only the render switch
+- Ignore late promo responses after a promo is configured again
+- VoiceOver reads a promo as one button, activated only once the promo is shown
+- Report each promo render's renderer decision and result to Affirm's tracker, without promo text or consumer data
+- Fix a crash in `AffirmOrderTrackerViewController trackOrder:products:` in apps on the scene lifecycle, whose app delegate has no `window`
+
 ## Version 5.0.41 (Jul 16, 2026)
 - Add badge CSS to webview mode
 

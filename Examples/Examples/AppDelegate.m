@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import <AffirmSDK/AffirmSDK.h>
+#import <AffirmSDK/AffirmPromoRendering.h>
 
 @implementation AppDelegate
 
@@ -21,6 +22,13 @@
                                                         currency:@"USD"
                                                     merchantName:@"Affirm Example"];
     [AffirmConfiguration sharedInstance].cardTip = @"We've added these card details to Rakuten Autofill for quick, easy checkout.";
+
+    // UI tests pass `-AffirmPromoHTMLTimeoutSeconds 30`: CI simulators can take longer than the
+    // SDK's 5 s HTML budget just to start a web view. Internal SDK setting; merchants keep 5 s.
+    double htmlTimeout = [[NSUserDefaults standardUserDefaults] doubleForKey:@"AffirmPromoHTMLTimeoutSeconds"];
+    if (htmlTimeout > 0) {
+        AffirmPromoHTMLTimeoutSeconds = htmlTimeout;
+    }
     return YES;
 }
 

@@ -43,9 +43,26 @@
     [self loadView:trackerViewController.view];
 }
 
++ (UIWindow *)hostWindow
+{
+    // Apps on the scene lifecycle keep their window on the scene delegate, and the app delegate
+    // usually doesn't implement the optional -window.
+    for (UIScene *scene in [UIApplication sharedApplication].connectedScenes) {
+        if ([scene isKindOfClass:[UIWindowScene class]] && scene.activationState == UISceneActivationStateForegroundActive) {
+            UIWindowScene *windowScene = (UIWindowScene *)scene;
+            UIWindow *window = windowScene.keyWindow ?: windowScene.windows.firstObject;
+            if (window) {
+                return window;
+            }
+        }
+    }
+    id<UIApplicationDelegate> delegate = [UIApplication sharedApplication].delegate;
+    return [delegate respondsToSelector:@selector(window)] ? delegate.window : nil;
+}
+
 + (void)loadView:(UIView *)view
 {
-    UIWindow *window = [UIApplication sharedApplication].delegate.window;
+    UIWindow *window = [self hostWindow];
     view.frame = window.bounds;
     view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [window insertSubview:view atIndex:0];

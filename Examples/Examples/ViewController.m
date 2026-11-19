@@ -8,17 +8,20 @@
 
 #import "ViewController.h"
 #import <AffirmSDK/AffirmSDK.h>
+#import "RenderMigrationViewController.h"
+#import "PromoTableViewController.h"
+#import "Button.h"
 
 @interface ViewController () <UITextFieldDelegate, AffirmPrequalDelegate, AffirmCheckoutDelegate>
 
-@property (nonatomic, weak) IBOutlet UIScrollView *scrollView;
-@property (nonatomic, weak) IBOutlet UIButton *promoButton;
-@property (nonatomic, weak) IBOutlet UIStackView *stackView;
-@property (nonatomic, weak) IBOutlet UITextField *amountTextField;
-@property (nonatomic, weak) IBOutlet UITextField *promoIDTextField;
-@property (nonatomic, weak) IBOutlet UITextField *publicKeyTextfield;
-@property (nonatomic, weak) IBOutlet UITextField *caasTextfield;
-@property (nonatomic, weak) IBOutlet UILabel *resultLabel;
+@property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, strong) UIButton *promoButton;
+@property (nonatomic, strong) UIStackView *stackView;
+@property (nonatomic, strong) UITextField *amountTextField;
+@property (nonatomic, strong) UITextField *promoIDTextField;
+@property (nonatomic, strong) UITextField *publicKeyTextfield;
+@property (nonatomic, strong) UITextField *caasTextfield;
+@property (nonatomic, strong) UILabel *resultLabel;
 
 @property (nonatomic, strong) AffirmPromotionalButton *promotionalButton;
 @property (nonatomic, strong) UIViewController *promoViewController;
@@ -32,20 +35,132 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self buildLayout];
     
+    // Configure Textfields
+    self.publicKeyTextfield.text = [AffirmConfiguration sharedInstance].publicKey;
+    [self configureTextField];
+}
+
+#pragma mark - Layout
+
+- (void)buildLayout
+{
+    self.view.backgroundColor = [UIColor whiteColor];
+
+    UIScrollView *scrollView = [UIScrollView new];
+    scrollView.translatesAutoresizingMaskIntoConstraints = NO;
+    scrollView.showsHorizontalScrollIndicator = NO;
+    scrollView.showsVerticalScrollIndicator = NO;
+    [self.view addSubview:scrollView];
+    self.scrollView = scrollView;
+
+    UIView *contentView = [UIView new];
+    contentView.translatesAutoresizingMaskIntoConstraints = NO;
+    contentView.backgroundColor = [UIColor whiteColor];
+    [scrollView addSubview:contentView];
+
+    UIStackView *stackView = [UIStackView new];
+    stackView.translatesAutoresizingMaskIntoConstraints = NO;
+    stackView.axis = UILayoutConstraintAxisVertical;
+    stackView.spacing = 15;
+    [contentView addSubview:stackView];
+    self.stackView = stackView;
+
+    UILayoutGuide *safeArea = self.view.safeAreaLayoutGuide;
+    [NSLayoutConstraint activateConstraints:@[
+        [scrollView.topAnchor constraintEqualToAnchor:safeArea.topAnchor],
+        [scrollView.bottomAnchor constraintEqualToAnchor:safeArea.bottomAnchor],
+        [scrollView.leadingAnchor constraintEqualToAnchor:safeArea.leadingAnchor],
+        [scrollView.trailingAnchor constraintEqualToAnchor:safeArea.trailingAnchor],
+        [contentView.topAnchor constraintEqualToAnchor:scrollView.topAnchor],
+        [contentView.bottomAnchor constraintEqualToAnchor:scrollView.bottomAnchor],
+        [contentView.leadingAnchor constraintEqualToAnchor:scrollView.leadingAnchor],
+        [contentView.trailingAnchor constraintEqualToAnchor:scrollView.trailingAnchor],
+        [contentView.widthAnchor constraintEqualToAnchor:scrollView.widthAnchor],
+        [stackView.topAnchor constraintEqualToAnchor:contentView.topAnchor constant:30],
+        [stackView.bottomAnchor constraintEqualToAnchor:contentView.bottomAnchor constant:-30],
+        [stackView.leadingAnchor constraintEqualToAnchor:contentView.leadingAnchor constant:30],
+        [stackView.trailingAnchor constraintEqualToAnchor:contentView.trailingAnchor constant:-30],
+    ]];
+
     // Using AffirmPromotionalButton for first button (See more in configurPromotionalMessage)
     self.promotionalButton = [[AffirmPromotionalButton alloc] initWithShowCTA:YES
                                                                      pageType:AffirmPageTypeProduct
                                                      presentingViewController:self
                                                                         frame:CGRectMake(0, 0, 315, 40)];
-    [self.stackView insertArrangedSubview:self.promotionalButton atIndex:0];
-    
+    [stackView addArrangedSubview:self.promotionalButton];
+
     // Using AffirmDataHandler for second button (See more in configurPromotionalMessage)
+    self.promoButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.promoButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     self.promoButton.titleLabel.numberOfLines = 0;
-    
-    // Configure Textfields
-    self.publicKeyTextfield.text = [AffirmConfiguration sharedInstance].publicKey;
-    [self configureTextField];
+    [self.promoButton addTarget:self action:@selector(showPromoModal:) forControlEvents:UIControlEventTouchUpInside];
+    [stackView addArrangedSubview:self.promoButton];
+
+    self.publicKeyTextfield = [self addTextFieldRowWithTitle:@"PublicKey:   " accessibilityLabel:@"public API key input"];
+    // The other rows line their text fields up with this one, so this title gives way first.
+    UILabel *publicKeyLabel = ((UIStackView *)self.publicKeyTextfield.superview).arrangedSubviews.firstObject;
+    [publicKeyLabel setContentCompressionResistancePriority:749 forAxis:UILayoutConstraintAxisHorizontal];
+    self.amountTextField = [self addTextFieldRowWithTitle:@"Amount:" accessibilityLabel:@"price input"];
+    self.amountTextField.text = @"500";
+    self.amountTextField.keyboardType = UIKeyboardTypeDecimalPad;
+    self.promoIDTextField = [self addTextFieldRowWithTitle:@"PromoID:" accessibilityLabel:@"promo ID input"];
+    self.caasTextfield = [self addTextFieldRowWithTitle:@"CAAS:" accessibilityLabel:nil];
+    [NSLayoutConstraint activateConstraints:@[
+        [self.amountTextField.leadingAnchor constraintEqualToAnchor:self.publicKeyTextfield.leadingAnchor],
+        [self.promoIDTextField.leadingAnchor constraintEqualToAnchor:self.publicKeyTextfield.leadingAnchor],
+        [self.caasTextfield.leadingAnchor constraintEqualToAnchor:self.publicKeyTextfield.leadingAnchor],
+    ]];
+
+    [self addButtonWithTitle:@"Native → HTML render demo" action:@selector(showRenderMigrationDemo:) tintsWhenPressed:NO];
+    [self addButtonWithTitle:@"Promos in a table view" action:@selector(showPromoTableDemo:) tintsWhenPressed:NO];
+    [self addButtonWithTitle:@"Buy with Affirm" action:@selector(checkout:) tintsWhenPressed:YES];
+    [self addButtonWithTitle:@"Failed Checkout" action:@selector(showFailedCheckout:) tintsWhenPressed:YES];
+    UIButton *vcnButton = [self addButtonWithTitle:@"VCN Checkout" action:@selector(vcnCheckout:) tintsWhenPressed:YES];
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showVCNEligibility:)];
+    longPress.minimumPressDuration = 0.5;
+    longPress.allowableMovement = 10;
+    [vcnButton addGestureRecognizer:longPress];
+    [self addButtonWithTitle:@"Show Product Modal" action:@selector(showProductModal:) tintsWhenPressed:NO];
+    [self addButtonWithTitle:@"Track Order Confirmation" action:@selector(trackOrderConfirmation:) tintsWhenPressed:YES];
+    [self addButtonWithTitle:@"Clear Cookies" action:@selector(clearCookies:) tintsWhenPressed:NO];
+
+    self.resultLabel = [UILabel new];
+    self.resultLabel.text = @"Checkout result: ";
+    self.resultLabel.font = [UIFont systemFontOfSize:17];
+    self.resultLabel.numberOfLines = 0;
+    [stackView addArrangedSubview:self.resultLabel];
+}
+
+- (UITextField *)addTextFieldRowWithTitle:(NSString *)title accessibilityLabel:(NSString *)accessibilityLabel
+{
+    UILabel *label = [UILabel new];
+    label.text = title;
+    label.font = [UIFont systemFontOfSize:17];
+    [label setContentHuggingPriority:251 forAxis:UILayoutConstraintAxisHorizontal];
+    [label setContentHuggingPriority:251 forAxis:UILayoutConstraintAxisVertical];
+
+    UITextField *textField = [UITextField new];
+    textField.borderStyle = UITextBorderStyleRoundedRect;
+    textField.font = [UIFont systemFontOfSize:16];
+    textField.minimumFontSize = 17;
+    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    textField.returnKeyType = UIReturnKeyDone;
+    textField.accessibilityLabel = accessibilityLabel;
+    textField.delegate = self;
+
+    [self.stackView addArrangedSubview:[[UIStackView alloc] initWithArrangedSubviews:@[label, textField]]];
+    return textField;
+}
+
+- (UIButton *)addButtonWithTitle:(NSString *)title action:(SEL)action tintsWhenPressed:(BOOL)tintsWhenPressed
+{
+    UIButton *button = [(tintsWhenPressed ? [Button class] : [UIButton class]) buttonWithType:UIButtonTypeSystem];
+    [button setTitle:title forState:UIControlStateNormal];
+    [button addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
+    [self.stackView addArrangedSubview:button];
+    return button;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -76,14 +191,31 @@
 
 #pragma mark - Actions
 
-- (IBAction)showPromoModal:(id)sender
+- (void)showRenderMigrationDemo:(id)sender
+{
+    NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
+    if ([dollarPrice isEqualToNumber:[NSDecimalNumber notANumber]]) {
+        dollarPrice = [NSDecimalNumber decimalNumberWithString:@"500"];
+    }
+    RenderMigrationViewController *viewController = [[RenderMigrationViewController alloc] initWithAmount:dollarPrice];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:viewController];
+    [self presentViewController:nav animated:YES completion:nil];
+}
+
+- (void)showPromoTableDemo:(id)sender
+{
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:[PromoTableViewController new]];
+    [self presentViewController:nav animated:YES completion:nil];
+}
+
+- (void)showPromoModal:(id)sender
 {
     if (self.promoViewController) {
         [self presentViewController:self.promoViewController animated:YES completion:nil];
     }
 }
 
-- (IBAction)showProductModal:(id)sender
+- (void)showProductModal:(id)sender
 {
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
     AffirmPromoModalViewController *viewController = [[AffirmPromoModalViewController alloc] initWithPromoId:self.promoIDTextField.text
@@ -96,7 +228,7 @@
                      completion:nil];
 }
 
-- (IBAction)checkout:(id)sender
+- (void)checkout:(id)sender
 {
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
     AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item"
@@ -145,7 +277,7 @@
     [self presentViewController:nav animated:YES completion:nil];
 }
 
-- (IBAction)showFailedCheckout:(id)sender
+- (void)showFailedCheckout:(id)sender
 {
     NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
     AffirmItem *item = [AffirmItem itemWithName:@"Affirm Test Item"
@@ -180,7 +312,7 @@
     [self presentViewController:nav animated:YES completion:nil];
 }
 
-- (IBAction)vcnCheckout:(UIButton *)sender
+- (void)vcnCheckout:(UIButton *)sender
 {
     AffirmCheckout *checkout = [self generateVCNCheckout];
     AffirmCheckoutViewController *checkoutViewController = [[AffirmCheckoutViewController alloc] initWithDelegate:self checkout:checkout useVCN:YES getReasonCodes:YES cardAuthWindow:10];
@@ -229,7 +361,7 @@
     return checkout;
 }
 
-- (IBAction)showVCNEligibility:(UIGestureRecognizer *)recognizer
+- (void)showVCNEligibility:(UIGestureRecognizer *)recognizer
 {
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         if ([AffirmConfiguration sharedInstance].isCreditCardExists) {
@@ -276,7 +408,7 @@
     [self presentViewController:nav animated:YES completion:nil];
 }
 
-- (IBAction)trackOrderConfirmation:(id)sender
+- (void)trackOrderConfirmation:(id)sender
 {
     AffirmOrder *order = [[AffirmOrder alloc] initWithStoreName:@"Affirm Store"
                                                      checkoutId:nil
@@ -320,7 +452,7 @@
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-- (IBAction)clearCookies:(id)sender
+- (void)clearCookies:(id)sender
 {
     [AffirmConfiguration deleteAffirmCookies];
     [self configurPromotionalMessage];
@@ -342,18 +474,19 @@
                                       unitPrice:dollarPrice
                                        quantity:1
                                             URL:[NSURL URLWithString:@"http://sandbox.affirm.com/item"]];
+
+    // Configure promotionalButton with native styling
+    [self.promotionalButton configureWithAmount:dollarPrice items:@[item] affirmLogoType:AffirmLogoTypeName affirmColor:AffirmColorTypeBlueBlack font:[UIFont systemFontOfSize:15] textColor:[UIColor grayColor]];
     
-    
-    NSURL *fontURL = [NSURL URLWithString:@"https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap"];
-    NSURL *cssURL = [[NSBundle mainBundle] URLForResource:@"css_promo_sample" withExtension:@"css"];
-    
-    // Configure promotionalButton with html styling automatically
-    [self.promotionalButton configureByHtmlStylingWithAmount:dollarPrice
-                                                       items:@[item]
-                                              affirmLogoType:AffirmLogoTypeName
-                                                 affirmColor:AffirmColorTypeBlueBlack
-                                               remoteFontURL:fontURL
-                                                remoteCssURL:cssURL];
+    // Configure promotionalButton with html styling
+//    NSURL *fontURL = [NSURL URLWithString:@"https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap"];
+//    NSURL *cssURL = [[NSBundle mainBundle] URLForResource:@"css_promo_sample" withExtension:@"css"];
+//    [self.promotionalButton configureByHtmlStylingWithAmount:dollarPrice
+//                                                       items:@[item]
+//                                              affirmLogoType:AffirmLogoTypeName
+//                                                 affirmColor:AffirmColorTypeBlueBlack
+//                                               remoteFontURL:fontURL
+//                                                remoteCssURL:cssURL];
     
     [AffirmDataHandler getPromoMessageWithPromoID:nil
                                            amount:dollarPrice
@@ -371,13 +504,13 @@
                                 completionHandler:^(NSAttributedString *attributedString, NSString *html, NSString *accessibilityLabel, UIViewController *viewController, NSError *error) {
         
         // Configure promotionalButton with html string manually
-        if (html) {
-            [self.promotionalButton configureWithHtmlString:html
-                                                     amount:dollarPrice
-                                              remoteFontURL:fontURL
-                                               remoteCssURL:cssURL];
-            self.promotionalButton.accessibilityLabel = accessibilityLabel;
-        }
+//        if (html) {
+//            [self.promotionalButton configureWithHtmlString:html
+//                                                     amount:dollarPrice
+//                                              remoteFontURL:fontURL
+//                                               remoteCssURL:cssURL];
+//            self.promotionalButton.accessibilityLabel = accessibilityLabel;
+//        }
         
         // Configure native button using attributed string
         [self.promoButton setAttributedTitle:attributedString forState:UIControlStateNormal];
@@ -414,7 +547,10 @@
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     if (textField == self.publicKeyTextfield) {
-        [[AffirmConfiguration sharedInstance] configureWithPublicKey:textField.text environment:AffirmEnvironmentSandbox];
+        AffirmConfiguration *configuration = [AffirmConfiguration sharedInstance];
+        [configuration configureWithPublicKey:textField.text
+                                  environment:configuration.environment
+                                 merchantName:configuration.merchantName];
     } else if (textField == self.promoIDTextField) {
         self.promotionalButton.promoID = textField.text;
     }
