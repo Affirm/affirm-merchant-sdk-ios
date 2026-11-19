@@ -60,6 +60,9 @@
 		7965AB2C22362FD00063198F /* AffirmBaseWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7965AB2A22362FD00063198F /* AffirmBaseWebViewController.m */; };
 		7965AB3322364E520063198F /* AffirmPromotionalButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 7965AB3122364E520063198F /* AffirmPromotionalButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7965AB3422364E520063198F /* AffirmPromotionalButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7965AB3222364E520063198F /* AffirmPromotionalButton.m */; };
+		F17A0A032C90000100A11F01 /* AffirmPromoRendering.h in Headers */ = {isa = PBXBuildFile; fileRef = F17A0A012C90000100A11F01 /* AffirmPromoRendering.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		F17A0A042C90000100A11F01 /* AffirmPromoRendering.m in Sources */ = {isa = PBXBuildFile; fileRef = F17A0A022C90000100A11F01 /* AffirmPromoRendering.m */; };
+		F17A0A062C90000100A11F01 /* AffirmPromoRenderingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F17A0A052C90000100A11F01 /* AffirmPromoRenderingTests.m */; };
 		7965AB36223656680063198F /* AffirmSDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7965AB35223656680063198F /* AffirmSDK.bundle */; };
 		79B1ABEE222FC929009EE7FA /* AffirmShippingDetail.h in Headers */ = {isa = PBXBuildFile; fileRef = 79B1ABEC222FC929009EE7FA /* AffirmShippingDetail.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DA33DCF2223A2FD7009D73CA /* AffirmDiscount.h in Headers */ = {isa = PBXBuildFile; fileRef = DA33DCF0223A2FD7009D73CA /* AffirmDiscount.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -150,6 +153,9 @@
 		7965AB2A22362FD00063198F /* AffirmBaseWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmBaseWebViewController.m; sourceTree = "<group>"; };
 		7965AB3122364E520063198F /* AffirmPromotionalButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmPromotionalButton.h; sourceTree = "<group>"; };
 		7965AB3222364E520063198F /* AffirmPromotionalButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmPromotionalButton.m; sourceTree = "<group>"; };
+		F17A0A012C90000100A11F01 /* AffirmPromoRendering.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmPromoRendering.h; sourceTree = "<group>"; };
+		F17A0A022C90000100A11F01 /* AffirmPromoRendering.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmPromoRendering.m; sourceTree = "<group>"; };
+		F17A0A052C90000100A11F01 /* AffirmPromoRenderingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmPromoRenderingTests.m; sourceTree = "<group>"; };
 		7965AB35223656680063198F /* AffirmSDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AffirmSDK.bundle; sourceTree = "<group>"; };
 		79B1ABEC222FC929009EE7FA /* AffirmShippingDetail.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmShippingDetail.h; sourceTree = "<group>"; };
 		79B1ABED222FC929009EE7FA /* AffirmShippingDetail.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmShippingDetail.m; sourceTree = "<group>"; };
@@ -234,6 +240,8 @@
 				08FA592B222D1176007E5E4E /* AffirmUtils.m */,
 				7965AB3122364E520063198F /* AffirmPromotionalButton.h */,
 				7965AB3222364E520063198F /* AffirmPromotionalButton.m */,
+				F17A0A012C90000100A11F01 /* AffirmPromoRendering.h */,
+				F17A0A022C90000100A11F01 /* AffirmPromoRendering.m */,
 				7965AB2922362FD00063198F /* AffirmBaseWebViewController.h */,
 				7965AB2A22362FD00063198F /* AffirmBaseWebViewController.m */,
 				79088B4B2238D20D0059D691 /* AffirmPrequalModalViewController.h */,
@@ -284,6 +292,7 @@
 			isa = PBXGroup;
 			children = (
 				08FA591E222D08E5007E5E4E /* AffirmSDKTests.m */,
+				F17A0A052C90000100A11F01 /* AffirmPromoRenderingTests.m */,
 				7944D9BD224212AE0040525E /* AffirmConfigurationTests.m */,
 				DAE186B222437D380088B34D /* AffirmCheckoutTest.m */,
 				08FA5920222D08E5007E5E4E /* Info.plist */,
@@ -303,6 +312,7 @@
 				DA33DCF7223A30ED009D73CA /* AffirmItem.h in Headers */,
 				08EA7147233DE10200BC36CE /* AffirmBillingDetail.h in Headers */,
 				7965AB3322364E520063198F /* AffirmPromotionalButton.h in Headers */,
+				F17A0A032C90000100A11F01 /* AffirmPromoRendering.h in Headers */,
 				DA33DCF2223A2FD7009D73CA /* AffirmDiscount.h in Headers */,
 				7965AB2B22362FD00063198F /* AffirmBaseWebViewController.h in Headers */,
 				79B1ABEE222FC929009EE7FA /* AffirmShippingDetail.h in Headers */,
@@ -463,6 +473,7 @@
 				DA776293223F33EC00FB2DB3 /* AffirmCheckoutViewController.m in Sources */,
 				DA7762A3223F975400FB2DB3 /* AffirmCreditCard.m in Sources */,
 				7965AB3422364E520063198F /* AffirmPromotionalButton.m in Sources */,
+				F17A0A042C90000100A11F01 /* AffirmPromoRendering.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -474,6 +485,7 @@
 				08FA592E222D1176007E5E4E /* AffirmUtils.m in Sources */,
 				DAE186B322437D380088B34D /* AffirmCheckoutTest.m in Sources */,
 				08FA591F222D08E5007E5E4E /* AffirmSDKTests.m in Sources */,
+				F17A0A062C90000100A11F01 /* AffirmPromoRenderingTests.m in Sources */,
 				DA33DCF9223A30ED009D73CA /* AffirmItem.m in Sources */,
 				7944D9BE224212AE0040525E /* AffirmConfigurationTests.m in Sources */,
 				DA77629F223F959F00FB2DB3 /* AffirmPopupViewController.m in Sources */,
