@@ -89,6 +89,7 @@
 		F17A0B012C90000100A11F01 /* AffirmPrepareAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = F17A0B032C90000100A11F01 /* AffirmPrepareAuth.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F17A0B022C90000100A11F01 /* AffirmPrepareAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = F17A0B042C90000100A11F01 /* AffirmPrepareAuth.m */; };
 		F17A0B052C90000100A11F01 /* AffirmPrepareAuthTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F17A0B062C90000100A11F01 /* AffirmPrepareAuthTests.m */; };
+		F17A0B072C90000100A11F01 /* AffirmCheckoutSessionCodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F17A0B082C90000100A11F01 /* AffirmCheckoutSessionCodeTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -180,6 +181,7 @@
 		F17A0B032C90000100A11F01 /* AffirmPrepareAuth.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmPrepareAuth.h; sourceTree = "<group>"; };
 		F17A0B042C90000100A11F01 /* AffirmPrepareAuth.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmPrepareAuth.m; sourceTree = "<group>"; };
 		F17A0B062C90000100A11F01 /* AffirmPrepareAuthTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmPrepareAuthTests.m; sourceTree = "<group>"; };
+		F17A0B082C90000100A11F01 /* AffirmCheckoutSessionCodeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmCheckoutSessionCodeTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -304,6 +306,7 @@
 				7944D9BD224212AE0040525E /* AffirmConfigurationTests.m */,
 				DAE186B222437D380088B34D /* AffirmCheckoutTest.m */,
 				F17A0B062C90000100A11F01 /* AffirmPrepareAuthTests.m */,
+				F17A0B082C90000100A11F01 /* AffirmCheckoutSessionCodeTests.m */,
 				08FA5920222D08E5007E5E4E /* Info.plist */,
 			);
 			path = AffirmSDKTests;
@@ -496,6 +499,7 @@
 				08FA592E222D1176007E5E4E /* AffirmUtils.m in Sources */,
 				DAE186B322437D380088B34D /* AffirmCheckoutTest.m in Sources */,
 				F17A0B052C90000100A11F01 /* AffirmPrepareAuthTests.m in Sources */,
+				F17A0B072C90000100A11F01 /* AffirmCheckoutSessionCodeTests.m in Sources */,
 				08FA591F222D08E5007E5E4E /* AffirmSDKTests.m in Sources */,
 				F17A0A062C90000100A11F01 /* AffirmPromoRenderingTests.m in Sources */,
 				DA33DCF9223A30ED009D73CA /* AffirmItem.m in Sources */,
