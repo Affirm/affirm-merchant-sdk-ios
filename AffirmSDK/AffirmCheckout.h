@@ -90,6 +90,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSString *caas;
 
 /**
+ Your stable, unique identifier for the customer, such as your customer database ID, used by Connected Accounts to link the customer's Affirm account to their account with you. It must never change for a given customer. Set it on every checkout for a customer who can link or has linked their account. See https://docs.affirm.com/developers/docs/set-up-connected-accounts
+ */
+@property (nonatomic, copy, nullable) NSString *accountLinkingId;
+
+/**
  Initializer. See properties for more details.
 
  @param items List of purchased items.
