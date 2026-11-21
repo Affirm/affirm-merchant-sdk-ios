@@ -86,6 +86,8 @@
 		DA7762A3223F975400FB2DB3 /* AffirmCreditCard.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7762A1223F975400FB2DB3 /* AffirmCreditCard.m */; };
 		DA7762A4223F975400FB2DB3 /* AffirmCreditCard.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7762A1223F975400FB2DB3 /* AffirmCreditCard.m */; };
 		DAE186B322437D380088B34D /* AffirmCheckoutTest.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE186B222437D380088B34D /* AffirmCheckoutTest.m */; };
+		F17A0B012C90000100A11F01 /* AffirmPrepareAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = F17A0B032C90000100A11F01 /* AffirmPrepareAuth.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F17A0B022C90000100A11F01 /* AffirmPrepareAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = F17A0B042C90000100A11F01 /* AffirmPrepareAuth.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -174,6 +176,8 @@
 		DA7762A0223F975400FB2DB3 /* AffirmCreditCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmCreditCard.h; sourceTree = "<group>"; };
 		DA7762A1223F975400FB2DB3 /* AffirmCreditCard.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmCreditCard.m; sourceTree = "<group>"; };
 		DAE186B222437D380088B34D /* AffirmCheckoutTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmCheckoutTest.m; sourceTree = "<group>"; };
+		F17A0B032C90000100A11F01 /* AffirmPrepareAuth.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmPrepareAuth.h; sourceTree = "<group>"; };
+		F17A0B042C90000100A11F01 /* AffirmPrepareAuth.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmPrepareAuth.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -284,6 +288,8 @@
 				08C6E8ED251E14E000FFBE8F /* AffirmHowToViewController.m */,
 				08C6E8EE251E14E000FFBE8F /* AffirmHowToViewController.xib */,
 				57F8CD7C2BABCF7500CD9D9E /* PrivacyInfo.xcprivacy */,
+				F17A0B032C90000100A11F01 /* AffirmPrepareAuth.h */,
+				F17A0B042C90000100A11F01 /* AffirmPrepareAuth.m */,
 			);
 			path = AffirmSDK;
 			sourceTree = "<group>";
@@ -340,6 +346,7 @@
 				08C4306C223B7C640009E045 /* AffirmRequest.h in Headers */,
 				08AF89FC251B20230011DE0A /* AffirmCardValidator.h in Headers */,
 				08613153251874510043DFEC /* AffirmEligibilityViewController.h in Headers */,
+				F17A0B012C90000100A11F01 /* AffirmPrepareAuth.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -474,6 +481,7 @@
 				DA7762A3223F975400FB2DB3 /* AffirmCreditCard.m in Sources */,
 				7965AB3422364E520063198F /* AffirmPromotionalButton.m in Sources */,
 				F17A0A042C90000100A11F01 /* AffirmPromoRendering.m in Sources */,
+				F17A0B022C90000100A11F01 /* AffirmPrepareAuth.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

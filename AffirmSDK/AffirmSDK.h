@@ -34,6 +34,7 @@ FOUNDATION_EXPORT const unsigned char AffirmSDKVersionString[];
 #import "AffirmPrequalDelegate.h"
 #import "AffirmBaseWebViewController.h"
 #import "AffirmCheckoutViewController.h"
+#import "AffirmPrepareAuth.h"
 #import "AffirmOrderTrackerViewController.h"
 #import "AffirmDataHandler.h"
 #import "AffirmPromoModalViewController.h"
