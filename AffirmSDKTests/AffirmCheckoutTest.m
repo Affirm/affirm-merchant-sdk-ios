@@ -56,6 +56,44 @@
     XCTAssertEqualObjects([_discount toJSONDictionary], discount);
 }
 
+- (void)testAccountLinkingIdIsSentWhenSet
+{
+    [[AffirmConfiguration sharedInstance] configureWithPublicKey:@"Y8CQXFF044903JC0"
+                                                     environment:AffirmEnvironmentSandbox
+                                                    merchantName:@"Affirm Example"];
+    self.checkout.accountLinkingId = @"customer_12345";
+
+    XCTAssertEqualObjects([self.checkout toJSONDictionary][@"account_linking_id"], @"customer_12345");
+    AffirmCheckoutRequest *request = [[AffirmCheckoutRequest alloc] initWithPublicKey:[AffirmConfiguration sharedInstance].publicKey
+                                                                             checkout:self.checkout
+                                                                               useVCN:NO cardAuthWindow:0];
+    XCTAssertEqualObjects(request.parameters[@"checkout"][@"account_linking_id"], @"customer_12345");
+}
+
+- (void)testAccountLinkingIdIsOmittedWhenNotSet
+{
+    [[AffirmConfiguration sharedInstance] configureWithPublicKey:@"Y8CQXFF044903JC0"
+                                                     environment:AffirmEnvironmentSandbox
+                                                    merchantName:@"Affirm Example"];
+    NSDictionary *withoutId = [self.checkout toJSONDictionary];
+    XCTAssertNil(withoutId[@"account_linking_id"]);
+
+    self.checkout.accountLinkingId = @"customer_12345";
+    NSMutableDictionary *withId = [[self.checkout toJSONDictionary] mutableCopy];
+    [withId removeObjectForKey:@"account_linking_id"];
+    XCTAssertEqualObjects(withId, withoutId, @"the ID should not change any other field");
+}
+
+- (void)testCopyKeepsAccountLinkingId
+{
+    self.checkout.accountLinkingId = @"customer_12345";
+    AffirmCheckout *copy = [self.checkout copy];
+    XCTAssertEqualObjects(copy.accountLinkingId, @"customer_12345");
+
+    self.checkout.accountLinkingId = nil;
+    XCTAssertNil([self.checkout.copy accountLinkingId]);
+}
+
 - (void)testCheckoutSuccessCase
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"checkout response error format"];

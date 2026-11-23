@@ -305,6 +305,10 @@
         [dict setObject:self.orderId forKey:@"order_id"];
     }
     
+    if (self.accountLinkingId != nil) {
+        [dict setObject:self.accountLinkingId forKey:@"account_linking_id"];
+    }
+    
     return dict;
 }
 
@@ -327,6 +331,9 @@
     copy.sendShippingAddress = self.sendShippingAddress;
     if (self.caas) {
         copy.caas = self.caas;
+    }
+    if (self.accountLinkingId) {
+        copy.accountLinkingId = self.accountLinkingId;
     }
     return copy;
 }
