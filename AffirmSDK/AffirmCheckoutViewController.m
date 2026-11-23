@@ -21,6 +21,13 @@
 #import "AffirmLogger.h"
 #import "AffirmConstants.h"
 #import "AffirmUtils.h"
+#import "AffirmPrepareAuth.h"
+
+@interface AffirmPrepareAuth ()
+
++ (nullable NSString *)consumeStoredCodeVerifier;
+
+@end
 
 @interface AffirmConfiguration ()
 
@@ -184,8 +191,26 @@ NS_SWIFT_NAME(init(delegate:checkout:creditCard:getReasonCodes:)) NS_DESIGNATED_
     }];
 }
 
++ (NSURL *)redirectURL:(NSURL *)redirectURL addingSessionCode:(nullable NSString *)sessionCode
+{
+    if (sessionCode == nil) {
+        return redirectURL;
+    }
+    NSString *codeVerifier = [AffirmPrepareAuth consumeStoredCodeVerifier];
+    if (codeVerifier == nil) {
+        return redirectURL;
+    }
+    NSURLComponents *components = [NSURLComponents componentsWithURL:redirectURL resolvingAgainstBaseURL:YES];
+    components.queryItems = [(components.queryItems ?: @[]) arrayByAddingObjectsFromArray:@[
+        [NSURLQueryItem queryItemWithName:@"session_code" value:sessionCode],
+        [NSURLQueryItem queryItemWithName:@"code_verifier" value:codeVerifier],
+    ]];
+    return components.URL ?: redirectURL;
+}
+
 - (void)loadRedirectURL:(NSURL *)redirectURL
 {
+    redirectURL = [AffirmCheckoutViewController redirectURL:redirectURL addingSessionCode:self.sessionCode];
     if (_useVCN) {
         NSBundle *sdkBundle = [NSBundle resourceBundle];
         NSString *filePath = [sdkBundle pathForResource:@"vcn_checkout" ofType:@"html"];

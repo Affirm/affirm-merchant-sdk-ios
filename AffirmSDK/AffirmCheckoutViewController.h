@@ -46,6 +46,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, readonly) NSInteger cardAuthWindow;
 
+/**
+ The Connected Accounts session code from your server, for an accelerated checkout. Set it before presenting
+ the view controller. The checkout adds it, with the code verifier kept from the latest
+ +[AffirmPrepareAuth prepareAuthWithCompletion:] call, to the checkout URL. Without a session code or a
+ code verifier, the checkout proceeds as a standard checkout.
+ */
+@property (nonatomic, copy, nullable) NSString *sessionCode;
+
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 - (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
