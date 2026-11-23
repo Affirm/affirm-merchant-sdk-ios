@@ -1,0 +1,1 @@
+../../AffirmSDK/AffirmPrepareAuth.h

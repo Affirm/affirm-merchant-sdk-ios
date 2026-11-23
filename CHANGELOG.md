@@ -3,6 +3,7 @@ All notable changes to the SDK will be documented in this file.
 
 ## Unreleased
 - Add `AffirmCheckout.accountLinkingId` to send `account_linking_id` for Connected Accounts
+- Add `AffirmPrepareAuth` to make the PKCE code challenge for a Connected Accounts accelerated checkout
 - Raise the minimum iOS version to 15.0
 - `configureWithAmount:…` can render the promo as HTML when Affirm turns it on, with the native font, size and color, and falls back to native text if the HTML fails or is not ready within 5 seconds
 - Add `AffirmConfiguration.useLegacyNativeRendering` to keep native text
