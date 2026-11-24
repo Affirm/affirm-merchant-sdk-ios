@@ -15,6 +15,7 @@ All notable changes to the SDK will be documented in this file.
 - Add Express Checkout: `AffirmCheckout.isExpressCheckout`, `shippingAndTotalsCallbackURL` and `expressCheckoutWithItems:orderId:shippingAndTotalsCallbackURL:metadata:error:`, which returns an error when a required field is missing. An Express Checkout is created with `/api/checkout-bff/v1/create-checkout`, without the shipping address, shipping, tax or total, and does not support VCN
 - Read the error code and message of checkout-bff errors
 - Fix `AffirmCheckoutViewController.checkoutARI`, and the `checkout_ari` of checkout events, which were the redirect URL's last path component, `checkout`, instead of the checkout ID
+- Add `AffirmCheckoutButton`, a pre-styled Affirm checkout button with small, medium and large sizes, dark and light themes, sharp, pill and rounded shapes, and "Buy now with", "Checkout with" and logo-only texts. It does not start checkout; clicks are tracked as `Checkout button clicked`
 
 ## Version 5.0.41 (Jul 16, 2026)
 - Add badge CSS to webview mode
