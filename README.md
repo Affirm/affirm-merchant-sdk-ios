@@ -115,6 +115,56 @@ Once the checkout has been successfully confirmed by the user, the AffirmCheckou
 
 Note - For VCN Checkout, all actions should be done using your existing payment gateway and debit card processor using the virtual card number returned after a successful checkout.
 
+### Express Checkout
+
+Express Checkout lets the customer pick a shipping address in Affirm. Affirm then gets the shipping, tax and total from your Shipping & Totals endpoint, so the checkout does not send a shipping address, shipping amount, tax amount or total. Your merchant account must have Express Checkout enabled.
+
+An Express Checkout requires an order ID, the URL of your Shipping & Totals endpoint, at least one item and the subtotal of the items, in cents, in `metadata[@"subtotal"]`. When a field is missing or empty, `expressCheckoutWithItems:…error:` returns `nil` and an `AffirmSDKErrorMissingExpressCheckoutFields` error that lists the missing fields; in Swift, the call throws. Express Checkout does not support VCN.
+
+```
+NSError *error;
+AffirmCheckout *checkout = [AffirmCheckout expressCheckoutWithItems:@[item]
+                                                            orderId:@"JKLMO4321"
+                                       shippingAndTotalsCallbackURL:@"https://merchant.com/shipping-and-totals"
+                                                           metadata:@{@"subtotal": @"50000"}
+                                                              error:&error];
+if (!checkout) {
+    // Show or log error.localizedDescription
+    return;
+}
+
+AffirmCheckoutViewController *checkoutViewController = [[AffirmCheckoutViewController alloc] initWithDelegate:self checkout:checkout useVCN:NO getReasonCodes:NO];
+UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:checkoutViewController];
+[self presentViewController:nav animated:YES completion:nil];
+```
+
+The checkout ends with a checkout token, the same as a regular checkout.
+
+## Checkout Button
+
+`AffirmCheckoutButton` is a pre-styled "Buy now with Affirm" button. It does not start a checkout: add a target for `UIControlEventTouchUpInside` and start the checkout yourself. Affirm tracks each click.
+
+```
+AffirmCheckoutButton *button = [[AffirmCheckoutButton alloc] initWithPageType:AffirmPageTypeProduct
+                                                                         size:AffirmCheckoutButtonSizeMedium
+                                                                        theme:AffirmCheckoutButtonThemeDark
+                                                                        shape:AffirmCheckoutButtonShapePill
+                                                                   buttonText:AffirmCheckoutButtonTextTypeBuyNow
+                                                                    fullWidth:NO
+                                                                        frame:CGRectZero];
+[button addTarget:self action:@selector(startCheckout:) forControlEvents:UIControlEventTouchUpInside];
+```
+
+| Property | Values | Default |
+| --- | --- | --- |
+| `size` | `Small` (44pt), `Medium` (48pt), `Large` (64pt) | `Medium` |
+| `theme` | `Dark`, `Light` | `Dark` |
+| `shape` | `Sharp`, `Pill`, `Rounded` | `Pill` |
+| `buttonText` | `BuyNow` ("Buy now with Affirm"), `Checkout` ("Checkout with Affirm"), `LogoOnly` | `BuyNow` |
+| `fullWidth` | `YES` stretches the button to the width you give it | `NO` |
+
+The button sizes itself with Auto Layout, and every property can also be set in Interface Builder. The light theme has no border, so place it on a background that contrasts with white.
+
 ## Promotional Messaging
 
 Affirm promotional messaging components—monthly payment messaging and educational modals—show customers how they can use Affirm to finance their purchases. Promos consist of promotional messaging, which appears directly in your app, and a modal, which  offers users an ability to prequalify.
