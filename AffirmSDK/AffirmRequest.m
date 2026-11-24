@@ -181,6 +181,9 @@
 
 - (NSString *)path
 {
+    if (self.checkout.isExpressCheckout) {
+        return @"/api/checkout-bff/v1/create-checkout";
+    }
     return @"/api/v2/checkout/";
 }
 
@@ -210,10 +213,18 @@
     if (self.cardAuthWindow > 0) {
         merchant[@"card_auth_window"] = @(self.cardAuthWindow);
     }
+    if (self.checkout.isExpressCheckout && self.checkout.shippingAndTotalsCallbackURL) {
+        merchant[@"merchant_shipping_and_totals_callback_url"] = self.checkout.shippingAndTotalsCallbackURL;
+    }
     [checkout addEntriesFromDictionary:@{
         @"merchant": merchant,
         @"metadata": metaData
     }];
+    // checkout-bff takes the checkout at the top level and requires the country code.
+    if (self.checkout.isExpressCheckout) {
+        checkout[@"country_code"] = [AffirmConfiguration sharedInstance].countryCode;
+        return checkout;
+    }
     return @{@"checkout": checkout};
 }
 

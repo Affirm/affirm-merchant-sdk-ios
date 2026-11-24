@@ -217,6 +217,48 @@
                            totalAmount:totalAmount];
 }
 
++ (AffirmCheckout *)expressCheckoutWithItems:(NSArray <AffirmItem *>*)items
+                                     orderId:(NSString *)orderId
+                shippingAndTotalsCallbackURL:(NSString *)shippingAndTotalsCallbackURL
+                                    metadata:(NSDictionary *)metadata
+{
+    AffirmCheckout *checkout = [[self alloc] initWithItems:items
+                                                  shipping:nil
+                                                 taxAmount:[NSDecimalNumber zero]
+                                            shippingAmount:[NSDecimalNumber zero]
+                                                 discounts:nil
+                                                  metadata:metadata
+                                          financingProgram:nil
+                                                   orderId:orderId];
+    checkout.isExpressCheckout = YES;
+    checkout.shippingAndTotalsCallbackURL = shippingAndTotalsCallbackURL;
+    [checkout validateExpressCheckout];
+    return checkout;
+}
+
+- (void)validateExpressCheckout
+{
+    NSMutableArray<NSString *> *missing = [NSMutableArray array];
+    if (self.orderId.length == 0) {
+        [missing addObject:@"orderId"];
+    }
+    if (self.shippingAndTotalsCallbackURL.length == 0) {
+        [missing addObject:@"shippingAndTotalsCallbackURL"];
+    }
+    if (self.items.count == 0) {
+        [missing addObject:@"items"];
+    }
+    id subtotal = self.metadata[@"subtotal"];
+    BOOL hasSubtotal = [subtotal isKindOfClass:[NSNumber class]]
+        || ([subtotal isKindOfClass:[NSString class]] && [(NSString *)subtotal length] > 0);
+    if (!hasSubtotal) {
+        [missing addObject:@"metadata[\"subtotal\"]"];
+    }
+    if (missing.count > 0) {
+        [[AffirmLogger sharedInstance] logException:[NSString stringWithFormat:@"Express Checkout requires %@", [missing componentsJoinedByString:@", "]]];
+    }
+}
+
 - (NSDecimalNumber *)calculatedTotalAmount
 {
     [AffirmValidationUtils checkNotNil:self.taxAmount name:@"taxAmount"];
@@ -257,32 +299,45 @@
         [items setObject:[item toJSONDictionary] forKey:item.SKU];
     }
     
+    if (self.isExpressCheckout) {
+        [self validateExpressCheckout];
+    }
+    
+    NSMutableDictionary *meta = [@{@"locale": [AffirmConfiguration sharedInstance].locale} mutableCopy];
+    if (self.isExpressCheckout) {
+        meta[@"is_express_checkout"] = @YES;
+    }
+    
     NSMutableDictionary *dict = [@{
-        @"meta": @{@"locale": [AffirmConfiguration sharedInstance].locale},
+        @"meta": meta,
         @"items": items,
-        @"total": [self.totalAmount toIntegerCents],
         @"currency": [AffirmConfiguration sharedInstance].currency,
         @"api_version" :@"v2"
     } mutableCopy];
     
-    if (self.sendShippingAddress) {
-        if (self.shipping) {
-            [dict addEntriesFromDictionary:[self.shipping toJSONDictionary]];
-        } else {
-            [[AffirmLogger sharedInstance] logException:@"Shipping addresses are required when sendShippingAddress is true."];
+    // Express Checkout gets the shipping address, shipping, tax and total inside Affirm.
+    if (!self.isExpressCheckout) {
+        dict[@"total"] = [self.totalAmount toIntegerCents];
+        
+        if (self.sendShippingAddress) {
+            if (self.shipping) {
+                [dict addEntriesFromDictionary:[self.shipping toJSONDictionary]];
+            } else {
+                [[AffirmLogger sharedInstance] logException:@"Shipping addresses are required when sendShippingAddress is true."];
+            }
+        }
+        
+        if (self.shippingAmount != nil) {
+            [dict setValue:self.shippingAmount.toIntegerCents forKey:@"shipping_amount"];
+        }
+        
+        if (self.taxAmount != nil) {
+            [dict setValue:self.taxAmount.toIntegerCents forKey:@"tax_amount"];
         }
     }
     
     if (self.billing) {
         [dict addEntriesFromDictionary:[self.billing toJSONDictionary]];
-    }
-    
-    if (self.shippingAmount != nil) {
-        [dict setValue:self.shippingAmount.toIntegerCents forKey:@"shipping_amount"];
-    }
-    
-    if (self.taxAmount != nil) {
-        [dict setValue:self.taxAmount.toIntegerCents forKey:@"tax_amount"];
     }
     
     if (self.discounts != nil) {
@@ -327,6 +382,10 @@
     copy.sendShippingAddress = self.sendShippingAddress;
     if (self.caas) {
         copy.caas = self.caas;
+    }
+    copy.isExpressCheckout = self.isExpressCheckout;
+    if (self.shippingAndTotalsCallbackURL) {
+        copy.shippingAndTotalsCallbackURL = self.shippingAndTotalsCallbackURL;
     }
     return copy;
 }

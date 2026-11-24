@@ -90,6 +90,9 @@ NS_SWIFT_NAME(init(delegate:checkout:creditCard:getReasonCodes:)) NS_DESIGNATED_
                 getReasonCodes:(BOOL)getReasonCodes
                 cardAuthWindow:(NSInteger)cardAuthWindow
 {
+    if (useVCN && checkout.isExpressCheckout) {
+        [[AffirmLogger sharedInstance] logException:@"Express Checkout does not support VCN checkout"];
+    }
     _delegate = delegate;
     _checkout = [checkout copy];
     _useVCN = useVCN;

@@ -12,6 +12,8 @@ All notable changes to the SDK will be documented in this file.
 - VoiceOver reads a promo as one button, activated only once the promo is shown
 - Report each promo render's renderer decision and result to Affirm's tracker, without promo text or consumer data
 - Fix a crash in `AffirmOrderTrackerViewController trackOrder:products:` in apps on the scene lifecycle, whose app delegate has no `window`
+- Add Express Checkout: `AffirmCheckout.isExpressCheckout`, `shippingAndTotalsCallbackURL` and `expressCheckoutWithItems:orderId:shippingAndTotalsCallbackURL:metadata:`. An Express Checkout is created with `/api/checkout-bff/v1/create-checkout`, without the shipping address, shipping, tax or total, and does not support VCN
+- Read the error code and message of checkout-bff errors
 
 ## Version 5.0.41 (Jul 16, 2026)
 - Add badge CSS to webview mode

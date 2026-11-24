@@ -86,6 +86,7 @@
 		DA7762A3223F975400FB2DB3 /* AffirmCreditCard.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7762A1223F975400FB2DB3 /* AffirmCreditCard.m */; };
 		DA7762A4223F975400FB2DB3 /* AffirmCreditCard.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7762A1223F975400FB2DB3 /* AffirmCreditCard.m */; };
 		DAE186B322437D380088B34D /* AffirmCheckoutTest.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE186B222437D380088B34D /* AffirmCheckoutTest.m */; };
+		C37A4E61D1C885D40E18B853 /* AffirmExpressCheckoutTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DC8279D23F1263E9B99A34C9 /* AffirmExpressCheckoutTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -174,6 +175,7 @@
 		DA7762A0223F975400FB2DB3 /* AffirmCreditCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AffirmCreditCard.h; sourceTree = "<group>"; };
 		DA7762A1223F975400FB2DB3 /* AffirmCreditCard.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmCreditCard.m; sourceTree = "<group>"; };
 		DAE186B222437D380088B34D /* AffirmCheckoutTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmCheckoutTest.m; sourceTree = "<group>"; };
+		DC8279D23F1263E9B99A34C9 /* AffirmExpressCheckoutTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AffirmExpressCheckoutTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -295,6 +297,7 @@
 				F17A0A052C90000100A11F01 /* AffirmPromoRenderingTests.m */,
 				7944D9BD224212AE0040525E /* AffirmConfigurationTests.m */,
 				DAE186B222437D380088B34D /* AffirmCheckoutTest.m */,
+				DC8279D23F1263E9B99A34C9 /* AffirmExpressCheckoutTests.m */,
 				08FA5920222D08E5007E5E4E /* Info.plist */,
 			);
 			path = AffirmSDKTests;
@@ -484,6 +487,7 @@
 				DA33DCF4223A2FD7009D73CA /* AffirmDiscount.m in Sources */,
 				08FA592E222D1176007E5E4E /* AffirmUtils.m in Sources */,
 				DAE186B322437D380088B34D /* AffirmCheckoutTest.m in Sources */,
+				C37A4E61D1C885D40E18B853 /* AffirmExpressCheckoutTests.m in Sources */,
 				08FA591F222D08E5007E5E4E /* AffirmSDKTests.m in Sources */,
 				F17A0A062C90000100A11F01 /* AffirmPromoRenderingTests.m in Sources */,
 				DA33DCF9223A30ED009D73CA /* AffirmItem.m in Sources */,

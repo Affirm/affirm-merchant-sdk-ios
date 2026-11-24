@@ -49,6 +49,13 @@
     if (self[@"message"]) {
         [userInfo addEntriesFromDictionary: @{NSLocalizedDescriptionKey: self[@"message"]}];
     }
+    // checkout-bff errors can carry only a code.
+    id message = self[@"message"];
+    id code = self[@"code"];
+    BOOL hasMessage = [message isKindOfClass:[NSString class]] && [(NSString *)message length] > 0;
+    if (!hasMessage && [code isKindOfClass:[NSString class]] && [(NSString *)code length] > 0) {
+        userInfo[NSLocalizedDescriptionKey] = code;
+    }
     return userInfo;
 }
 
