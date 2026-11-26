@@ -82,7 +82,37 @@ typedef NS_ENUM(NSInteger, AffirmColorType) {
     AffirmColorTypeBlueBlack
 };
 
+typedef NS_ENUM(NSInteger, AffirmCheckoutButtonSize) {
+    AffirmCheckoutButtonSizeSmall,
+    AffirmCheckoutButtonSizeMedium,
+    AffirmCheckoutButtonSizeLarge
+};
+
+typedef NS_ENUM(NSInteger, AffirmCheckoutButtonTheme) {
+    AffirmCheckoutButtonThemeDark,
+    AffirmCheckoutButtonThemeLight
+};
+
+typedef NS_ENUM(NSInteger, AffirmCheckoutButtonShape) {
+    AffirmCheckoutButtonShapeSharp,
+    AffirmCheckoutButtonShapePill,
+    AffirmCheckoutButtonShapeRounded
+};
+
+typedef NS_ENUM(NSInteger, AffirmCheckoutButtonTextType) {
+    AffirmCheckoutButtonTextTypeBuyNow,
+    AffirmCheckoutButtonTextTypeCheckout,
+    AffirmCheckoutButtonTextTypeLogoOnly
+};
+
+/// Checkout button colors, as 0xRRGGBB.
+FOUNDATION_EXPORT const uint32_t AFFIRM_CHECKOUT_BUTTON_DARK_FILL_COLOR;
+FOUNDATION_EXPORT const uint32_t AFFIRM_CHECKOUT_BUTTON_LIGHT_FILL_COLOR;
+FOUNDATION_EXPORT const uint32_t AFFIRM_CHECKOUT_BUTTON_DARK_TEXT_COLOR;
+FOUNDATION_EXPORT const uint32_t AFFIRM_CHECKOUT_BUTTON_LIGHT_TEXT_COLOR;
+
 NSString * FormatAffirmPageTypeString(AffirmPageType type);
 NSString * FormatAffirmColorString(AffirmColorType type);
+NSString * AffirmCheckoutButtonAccessibilityLabel(AffirmCheckoutButtonTextType type);
 
 NS_ASSUME_NONNULL_END

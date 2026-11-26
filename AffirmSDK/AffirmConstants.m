@@ -50,6 +50,12 @@ NSString *const AFFIRM_PREQUAL_REFERRING_URL = @"https://iossdk/";
 NSString *const AFFIRM_CHECKOUT_CONFIRMATION_URL = @"affirm://checkout/confirmed";
 NSString *const AFFIRM_CHECKOUT_CANCELLATION_URL = @"affirm://checkout/cancelled";
 
+// Checkout Button
+const uint32_t AFFIRM_CHECKOUT_BUTTON_DARK_FILL_COLOR = 0x000049;
+const uint32_t AFFIRM_CHECKOUT_BUTTON_LIGHT_FILL_COLOR = 0xFFFFFF;
+const uint32_t AFFIRM_CHECKOUT_BUTTON_DARK_TEXT_COLOR = 0xF7F7F8;
+const uint32_t AFFIRM_CHECKOUT_BUTTON_LIGHT_TEXT_COLOR = 0x0C0C14;
+
 NSString * FormatAffirmPageTypeString(AffirmPageType type)
 {
     switch (type) {
@@ -83,5 +89,17 @@ NSString * FormatAffirmColorString(AffirmColorType type)
             return @"white";
         default:
             return @"blue-black";
+    }
+}
+
+NSString * AffirmCheckoutButtonAccessibilityLabel(AffirmCheckoutButtonTextType type)
+{
+    switch (type) {
+        case AffirmCheckoutButtonTextTypeCheckout:
+            return @"Checkout with Affirm";
+        case AffirmCheckoutButtonTextTypeBuyNow:
+        case AffirmCheckoutButtonTextTypeLogoOnly:
+        default:
+            return @"Buy now with Affirm";
     }
 }
