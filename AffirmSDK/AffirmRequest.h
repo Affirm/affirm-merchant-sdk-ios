@@ -99,6 +99,8 @@ typedef NS_ENUM(NSInteger, AffirmPromoRenderFlagStatus) {
 @interface AffirmCheckoutResponse : AffirmResponse
 
 @property (nonatomic, copy, readonly) NSURL *redirectURL;
+/// The response's `checkout_id`, or the redirect URL's `checkout_ari` when the response has none.
+@property (nonatomic, copy, readonly, nullable) NSString *checkoutId;
 
 - (NSDictionary *)dictionary;
 

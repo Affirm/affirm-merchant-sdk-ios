@@ -64,6 +64,12 @@
     NSString *code = [AffirmJSONValue stringFromValue:[responseObject valueForKey:@"code"] fallback:@""];
     NSString *field = [AffirmJSONValue stringFromValue:[responseObject valueForKey:@"field"] fallback:@""];
     NSString *message = [AffirmJSONValue stringFromValue:[responseObject valueForKey:@"message"] fallback:@""];
+    // checkout-bff nests its error as {"error": {"errorCode": ..., "message": ...}}.
+    id bffError = [responseObject isKindOfClass:[NSDictionary class]] ? responseObject[@"error"] : nil;
+    if ([bffError isKindOfClass:[NSDictionary class]] && bffError[@"errorCode"] != nil) {
+        code = [AffirmJSONValue stringFromValue:bffError[@"errorCode"] fallback:@""];
+        message = [AffirmJSONValue stringFromValue:bffError[@"message"] fallback:message];
+    }
     NSNumber *statusCode = [AffirmJSONValue numberFromValue:[responseObject valueForKey:@"status_code"] fallback:@(-1)];
     NSString *type = [AffirmJSONValue stringFromValue:[responseObject valueForKey:@"type"] fallback:@""];
     
