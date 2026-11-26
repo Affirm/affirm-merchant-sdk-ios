@@ -31,6 +31,42 @@ static NSString *const CallbackURL = @"https://merchant.com/shipping-and-totals"
 
 @end
 
+/// Answers every checkout request with `responseJSON`, and every other request with an empty 200.
+@interface AffirmCheckoutStubURLProtocol : NSURLProtocol
+@property (class, nonatomic, copy, nullable) NSString *responseJSON;
+@end
+
+@implementation AffirmCheckoutStubURLProtocol
+
+static NSString *StubResponseJSON;
+
++ (NSString *)responseJSON { return StubResponseJSON; }
++ (void)setResponseJSON:(NSString *)responseJSON { StubResponseJSON = [responseJSON copy]; }
+
++ (BOOL)canInitWithRequest:(NSURLRequest *)request
+{
+    return [request.URL.host containsString:@"affirm.com"];
+}
+
++ (NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request
+{
+    return request;
+}
+
+- (void)startLoading
+{
+    BOOL isCheckout = [self.request.URL.path containsString:@"checkout"];
+    NSData *body = [(isCheckout ? StubResponseJSON : @"{}") dataUsingEncoding:NSUTF8StringEncoding];
+    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:self.request.URL statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:@{@"Content-Type": @"application/json"}];
+    [self.client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
+    [self.client URLProtocol:self didLoadData:body];
+    [self.client URLProtocolDidFinishLoading:self];
+}
+
+- (void)stopLoading {}
+
+@end
+
 @interface AffirmExpressCheckoutTests : XCTestCase
 
 @property (nonatomic, strong) AffirmItem *item;
@@ -67,7 +103,19 @@ static NSString *const CallbackURL = @"https://merchant.com/shipping-and-totals"
     return [AffirmCheckout expressCheckoutWithItems:@[self.item]
                                             orderId:@"order-123"
                        shippingAndTotalsCallbackURL:CallbackURL
-                                           metadata:@{@"subtotal": @"3000"}];
+                                           metadata:@{@"subtotal": @"3000"}
+                                              error:nil];
+}
+
+/// The error of an Express Checkout that the factory refuses to create.
+- (NSError *)expressErrorWithItems:(NSArray<AffirmItem *> *)items orderId:(NSString *)orderId callbackURL:(NSString *)callbackURL metadata:(NSDictionary *)metadata
+{
+    NSError *error;
+    AffirmCheckout *checkout = [AffirmCheckout expressCheckoutWithItems:items orderId:orderId shippingAndTotalsCallbackURL:callbackURL metadata:metadata error:&error];
+    XCTAssertNil(checkout);
+    XCTAssertEqualObjects(error.domain, AffirmSDKErrorDomain);
+    XCTAssertEqual(error.code, AffirmSDKErrorMissingExpressCheckoutFields);
+    return error;
 }
 
 - (AffirmCheckout *)standardCheckout
@@ -187,10 +235,8 @@ static NSString *const CallbackURL = @"https://merchant.com/shipping-and-totals"
 
 - (void)testExpressRequiresOrderId
 {
-    NSString *reason = [self exceptionReasonForBlock:^{
-        [AffirmCheckout expressCheckoutWithItems:@[self.item] orderId:@"" shippingAndTotalsCallbackURL:CallbackURL metadata:@{@"subtotal": @"3000"}];
-    }];
-    XCTAssertEqualObjects(reason, @"Express Checkout requires orderId");
+    NSError *error = [self expressErrorWithItems:@[self.item] orderId:@"" callbackURL:CallbackURL metadata:@{@"subtotal": @"3000"}];
+    XCTAssertEqualObjects(error.localizedDescription, @"Express Checkout requires orderId");
 
     AffirmCheckout *checkout = [[AffirmCheckout alloc] initWithItems:@[self.item] shipping:nil taxAmount:[NSDecimalNumber zero] shippingAmount:[NSDecimalNumber zero] discounts:nil metadata:@{@"subtotal": @"3000"} financingProgram:nil];
     checkout.isExpressCheckout = YES;
@@ -200,10 +246,8 @@ static NSString *const CallbackURL = @"https://merchant.com/shipping-and-totals"
 
 - (void)testExpressRequiresCallbackURL
 {
-    NSString *reason = [self exceptionReasonForBlock:^{
-        [AffirmCheckout expressCheckoutWithItems:@[self.item] orderId:@"order-123" shippingAndTotalsCallbackURL:@"" metadata:@{@"subtotal": @"3000"}];
-    }];
-    XCTAssertEqualObjects(reason, @"Express Checkout requires shippingAndTotalsCallbackURL");
+    NSError *error = [self expressErrorWithItems:@[self.item] orderId:@"order-123" callbackURL:@"" metadata:@{@"subtotal": @"3000"}];
+    XCTAssertEqualObjects(error.localizedDescription, @"Express Checkout requires shippingAndTotalsCallbackURL");
 
     AffirmCheckout *checkout = [self expressCheckout];
     checkout.shippingAndTotalsCallbackURL = nil;
@@ -212,32 +256,45 @@ static NSString *const CallbackURL = @"https://merchant.com/shipping-and-totals"
 
 - (void)testExpressRequiresItems
 {
-    NSString *reason = [self exceptionReasonForBlock:^{
-        [AffirmCheckout expressCheckoutWithItems:@[] orderId:@"order-123" shippingAndTotalsCallbackURL:CallbackURL metadata:@{@"subtotal": @"3000"}];
-    }];
-    XCTAssertEqualObjects(reason, @"Express Checkout requires items");
+    NSError *error = [self expressErrorWithItems:@[] orderId:@"order-123" callbackURL:CallbackURL metadata:@{@"subtotal": @"3000"}];
+    XCTAssertEqualObjects(error.localizedDescription, @"Express Checkout requires items");
 }
 
 - (void)testExpressRequiresSubtotal
 {
     for (NSDictionary *metadata in @[@{}, @{@"subtotal": @""}, @{@"subtotal": [NSNull null]}, @{@"entity_name": @"internal-sub_brand-name"}]) {
-        NSString *reason = [self exceptionReasonForBlock:^{
-            [AffirmCheckout expressCheckoutWithItems:@[self.item] orderId:@"order-123" shippingAndTotalsCallbackURL:CallbackURL metadata:metadata];
-        }];
-        XCTAssertEqualObjects(reason, @"Express Checkout requires metadata[\"subtotal\"]", @"metadata: %@", metadata);
+        NSError *error = [self expressErrorWithItems:@[self.item] orderId:@"order-123" callbackURL:CallbackURL metadata:metadata];
+        XCTAssertEqualObjects(error.localizedDescription, @"Express Checkout requires metadata[\"subtotal\"]", @"metadata: %@", metadata);
     }
 
-    XCTAssertNil([self exceptionReasonForBlock:^{
-        [AffirmCheckout expressCheckoutWithItems:@[self.item] orderId:@"order-123" shippingAndTotalsCallbackURL:CallbackURL metadata:@{@"subtotal": @3000}];
-    }]);
+    AffirmCheckout *checkout = [[AffirmCheckout alloc] initWithItems:@[self.item] shipping:nil taxAmount:[NSDecimalNumber zero] shippingAmount:[NSDecimalNumber zero] discounts:nil metadata:@{} financingProgram:nil orderId:@"order-123"];
+    checkout.isExpressCheckout = YES;
+    checkout.shippingAndTotalsCallbackURL = CallbackURL;
+    XCTAssertEqualObjects([self exceptionReasonForBlock:^{ [checkout toJSONDictionary]; }], @"Express Checkout requires metadata[\"subtotal\"]");
+}
+
+- (void)testExpressAcceptsANumericSubtotal
+{
+    NSError *error;
+    AffirmCheckout *checkout = [AffirmCheckout expressCheckoutWithItems:@[self.item] orderId:@"order-123" shippingAndTotalsCallbackURL:CallbackURL metadata:@{@"subtotal": @3000} error:&error];
+    XCTAssertNotNil(checkout);
+    XCTAssertNil(error);
+    XCTAssertNil([self exceptionReasonForBlock:^{ [checkout toJSONDictionary]; }]);
 }
 
 - (void)testExpressReportsAllMissingFields
 {
-    NSString *reason = [self exceptionReasonForBlock:^{
-        [AffirmCheckout expressCheckoutWithItems:@[] orderId:@"" shippingAndTotalsCallbackURL:@"" metadata:@{}];
-    }];
-    XCTAssertEqualObjects(reason, @"Express Checkout requires orderId, shippingAndTotalsCallbackURL, items, metadata[\"subtotal\"]");
+    NSError *error = [self expressErrorWithItems:@[] orderId:@"" callbackURL:@"" metadata:@{}];
+    XCTAssertEqualObjects(error.localizedDescription, @"Express Checkout requires orderId, shippingAndTotalsCallbackURL, items, metadata[\"subtotal\"]");
+}
+
+- (void)testExpressFactoryDoesNotRaise
+{
+    XCTAssertNil([self exceptionReasonForBlock:^{
+        NSError *error;
+        XCTAssertNil([AffirmCheckout expressCheckoutWithItems:@[] orderId:@"" shippingAndTotalsCallbackURL:@"" metadata:@{} error:&error]);
+        XCTAssertNil([AffirmCheckout expressCheckoutWithItems:@[] orderId:@"" shippingAndTotalsCallbackURL:@"" metadata:@{} error:NULL]);
+    }]);
 }
 
 - (void)testExpressDoesNotSupportVCN
@@ -332,6 +389,44 @@ static NSString *const CallbackURL = @"https://merchant.com/shipping-and-totals"
 
     XCTAssertTrue([response isKindOfClass:[AffirmCheckoutResponse class]]);
     XCTAssertEqualObjects(((AffirmCheckoutResponse *)response).redirectURL.absoluteString, @"https://sandbox.affirm.com/products/checkout?checkout_ari=TEST");
+    XCTAssertEqualObjects(((AffirmCheckoutResponse *)response).checkoutId, @"TEST");
+}
+
+- (void)testCheckoutResponsePrefersTheCheckoutId
+{
+    NSString *json = @"{\"redirect_url\":\"https://sandbox.affirm.com/products/checkout?public_api_key=KEY&checkout_ari=FROM_URL&locale=en_US\",\"checkout_id\":\"HUHKUJ75BR8P1JVS\",\"merchant_ari\":\"CJYT23WWGXGYXQJ0\"}";
+    AffirmCheckoutResponse *response = (AffirmCheckoutResponse *)[AffirmCheckoutResponse parse:[json dataUsingEncoding:NSUTF8StringEncoding]];
+
+    XCTAssertEqualObjects(response.checkoutId, @"HUHKUJ75BR8P1JVS");
+}
+
+- (void)testCheckoutResponseFallsBackToTheRedirectURL
+{
+    for (NSString *json in @[@"{\"redirect_url\":\"https://sandbox.affirm.com/products/checkout?public_api_key=KEY&checkout_ari=FROM_URL\"}",
+                             @"{\"redirect_url\":\"https://sandbox.affirm.com/products/checkout?public_api_key=KEY&checkout_ari=FROM_URL\",\"checkout_id\":\"\"}",
+                             @"{\"redirect_url\":\"https://sandbox.affirm.com/products/checkout?public_api_key=KEY&checkout_ari=FROM_URL\",\"checkout_id\":null}"]) {
+        AffirmCheckoutResponse *response = (AffirmCheckoutResponse *)[AffirmCheckoutResponse parse:[json dataUsingEncoding:NSUTF8StringEncoding]];
+        XCTAssertEqualObjects(response.checkoutId, @"FROM_URL", @"%@", json);
+    }
+
+    NSString *json = @"{\"redirect_url\":\"https://sandbox.affirm.com/products/checkout?public_api_key=KEY\"}";
+    AffirmCheckoutResponse *response = (AffirmCheckoutResponse *)[AffirmCheckoutResponse parse:[json dataUsingEncoding:NSUTF8StringEncoding]];
+    XCTAssertNil(response.checkoutId);
+}
+
+- (void)testCheckoutViewControllerUsesTheCheckoutId
+{
+    AffirmCheckoutStubURLProtocol.responseJSON = @"{\"redirect_url\":\"https://sandbox.affirm.com/products/checkout?public_api_key=KEY&checkout_ari=HUHKUJ75BR8P1JVS\",\"checkout_id\":\"HUHKUJ75BR8P1JVS\"}";
+    [NSURLProtocol registerClass:[AffirmCheckoutStubURLProtocol class]];
+    AffirmExpressCheckoutTestDelegate *delegate = [AffirmExpressCheckoutTestDelegate new];
+    AffirmCheckoutViewController *controller = [[AffirmCheckoutViewController alloc] initWithDelegate:delegate checkout:[self expressCheckout] useVCN:NO getReasonCodes:NO];
+
+    XCTKVOExpectation *expectation = [[XCTKVOExpectation alloc] initWithKeyPath:@"checkoutARI" object:controller];
+    [controller loadViewIfNeeded];
+    [self waitForExpectations:@[expectation] timeout:5];
+    [NSURLProtocol unregisterClass:[AffirmCheckoutStubURLProtocol class]];
+
+    XCTAssertEqualObjects(controller.checkoutARI, @"HUHKUJ75BR8P1JVS");
 }
 
 - (void)testCheckoutBFFError

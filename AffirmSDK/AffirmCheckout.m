@@ -217,11 +217,24 @@
                            totalAmount:totalAmount];
 }
 
-+ (AffirmCheckout *)expressCheckoutWithItems:(NSArray <AffirmItem *>*)items
-                                     orderId:(NSString *)orderId
-                shippingAndTotalsCallbackURL:(NSString *)shippingAndTotalsCallbackURL
-                                    metadata:(NSDictionary *)metadata
++ (nullable AffirmCheckout *)expressCheckoutWithItems:(NSArray <AffirmItem *>*)items
+                                              orderId:(NSString *)orderId
+                         shippingAndTotalsCallbackURL:(NSString *)shippingAndTotalsCallbackURL
+                                             metadata:(NSDictionary *)metadata
+                                                error:(NSError **)error
 {
+    NSArray<NSString *> *missing = [self missingExpressCheckoutFieldsWithItems:items
+                                                                       orderId:orderId
+                                                  shippingAndTotalsCallbackURL:shippingAndTotalsCallbackURL
+                                                                      metadata:metadata];
+    if (missing.count > 0) {
+        if (error) {
+            *error = [NSError errorWithDomain:AffirmSDKErrorDomain
+                                         code:AffirmSDKErrorMissingExpressCheckoutFields
+                                     userInfo:@{NSLocalizedDescriptionKey: [self missingExpressCheckoutFieldsMessage:missing]}];
+        }
+        return nil;
+    }
     AffirmCheckout *checkout = [[self alloc] initWithItems:items
                                                   shipping:nil
                                                  taxAmount:[NSDecimalNumber zero]
@@ -232,30 +245,46 @@
                                                    orderId:orderId];
     checkout.isExpressCheckout = YES;
     checkout.shippingAndTotalsCallbackURL = shippingAndTotalsCallbackURL;
-    [checkout validateExpressCheckout];
     return checkout;
 }
 
-- (void)validateExpressCheckout
++ (NSArray<NSString *> *)missingExpressCheckoutFieldsWithItems:(nullable NSArray <AffirmItem *>*)items
+                                                       orderId:(nullable NSString *)orderId
+                                  shippingAndTotalsCallbackURL:(nullable NSString *)shippingAndTotalsCallbackURL
+                                                      metadata:(nullable NSDictionary *)metadata
 {
     NSMutableArray<NSString *> *missing = [NSMutableArray array];
-    if (self.orderId.length == 0) {
+    if (orderId.length == 0) {
         [missing addObject:@"orderId"];
     }
-    if (self.shippingAndTotalsCallbackURL.length == 0) {
+    if (shippingAndTotalsCallbackURL.length == 0) {
         [missing addObject:@"shippingAndTotalsCallbackURL"];
     }
-    if (self.items.count == 0) {
+    if (items.count == 0) {
         [missing addObject:@"items"];
     }
-    id subtotal = self.metadata[@"subtotal"];
+    id subtotal = metadata[@"subtotal"];
     BOOL hasSubtotal = [subtotal isKindOfClass:[NSNumber class]]
         || ([subtotal isKindOfClass:[NSString class]] && [(NSString *)subtotal length] > 0);
     if (!hasSubtotal) {
         [missing addObject:@"metadata[\"subtotal\"]"];
     }
+    return missing;
+}
+
++ (NSString *)missingExpressCheckoutFieldsMessage:(NSArray<NSString *> *)missing
+{
+    return [NSString stringWithFormat:@"Express Checkout requires %@", [missing componentsJoinedByString:@", "]];
+}
+
+- (void)validateExpressCheckout
+{
+    NSArray<NSString *> *missing = [AffirmCheckout missingExpressCheckoutFieldsWithItems:self.items
+                                                                                 orderId:self.orderId
+                                                            shippingAndTotalsCallbackURL:self.shippingAndTotalsCallbackURL
+                                                                                metadata:self.metadata];
     if (missing.count > 0) {
-        [[AffirmLogger sharedInstance] logException:[NSString stringWithFormat:@"Express Checkout requires %@", [missing componentsJoinedByString:@", "]]];
+        [[AffirmLogger sharedInstance] logException:[AffirmCheckout missingExpressCheckoutFieldsMessage:missing]];
     }
 }
 

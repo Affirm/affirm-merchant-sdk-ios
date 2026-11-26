@@ -169,7 +169,7 @@ NS_SWIFT_NAME(init(delegate:checkout:creditCard:getReasonCodes:)) NS_DESIGNATED_
             NSURL *redirectURL = checkoutResponse.redirectURL;
             if (redirectURL) {
                 [self loadRedirectURL:redirectURL];
-                self.checkoutARI = [redirectURL lastPathComponent];
+                self.checkoutARI = checkoutResponse.checkoutId ?: [redirectURL lastPathComponent];
                 [[AffirmLogger sharedInstance] trackEvent:@"Checkout ready to present" parameters:@{@"checkout_ari": self.checkoutARI}];
             } else {
                 [[AffirmLogger sharedInstance] trackEvent:@"Checkout redirect missing"];

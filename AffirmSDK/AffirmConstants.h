@@ -20,6 +20,11 @@ FOUNDATION_EXPORT NSString *const AffirmSDKErrorDomain;
 
 #endif
 
+typedef NS_ERROR_ENUM(AffirmSDKErrorDomain, AffirmSDKError) {
+    /// An Express Checkout is missing a required field. The description lists the missing fields.
+    AffirmSDKErrorMissingExpressCheckoutFields = 1000,
+};
+
 FOUNDATION_EXPORT NSString *const AFFIRM_DEFAULT_LOCALE;
 FOUNDATION_EXPORT NSString *const AFFIRM_DEFAULT_COUNTRY_CODE;
 FOUNDATION_EXPORT NSString *const AFFIRM_DEFAULT_CURRENCY;

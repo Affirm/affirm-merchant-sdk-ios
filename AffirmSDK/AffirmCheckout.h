@@ -92,7 +92,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  A flag to create this checkout as an Express Checkout. Default is NO.
 
- In Express Checkout, Affirm collects the shipping address and gets the shipping options, tax and total from your Shipping & Totals endpoint, so the shipping address, shipping amount, tax amount and total are not sent. An Express Checkout requires orderId, at least one item, shippingAndTotalsCallbackURL and metadata[@"subtotal"], the subtotal of the items in cents; without them, creating the checkout request raises an exception. It does not support VCN checkout.
+ In Express Checkout, Affirm collects the shipping address and gets the shipping options, tax and total from your Shipping & Totals endpoint, so the shipping address, shipping amount, tax amount and total are not sent. An Express Checkout requires orderId, at least one item, shippingAndTotalsCallbackURL and metadata[@"subtotal"], the subtotal of the items in cents; without them, creating the checkout request raises an exception. Create it with expressCheckoutWithItems:orderId:shippingAndTotalsCallbackURL:metadata:error: to get an error instead. It does not support VCN checkout.
  */
 @property (nonatomic) BOOL isExpressCheckout;
 
@@ -303,12 +303,14 @@ NS_SWIFT_NAME(checkout(items:shipping:totalAmount:metadata:));
  @param orderId Your internal order id.
  @param shippingAndTotalsCallbackURL Your Shipping & Totals HTTP endpoint.
  @param metadata Additional metadata. Must contain "subtotal", the subtotal of the items in cents as a string, e.g. @"20000".
- @return The newly created checkout. Raises an exception if a required field is missing or empty.
+ @param error Set to an AffirmSDKErrorMissingExpressCheckoutFields error if a required field is missing or empty.
+ @return The newly created checkout, or nil if a required field is missing or empty.
  */
-+ (AffirmCheckout *)expressCheckoutWithItems:(NSArray <AffirmItem *>*)items
-                                     orderId:(NSString *)orderId
-                shippingAndTotalsCallbackURL:(NSString *)shippingAndTotalsCallbackURL
-                                    metadata:(NSDictionary *)metadata
++ (nullable AffirmCheckout *)expressCheckoutWithItems:(NSArray <AffirmItem *>*)items
+                                              orderId:(NSString *)orderId
+                         shippingAndTotalsCallbackURL:(NSString *)shippingAndTotalsCallbackURL
+                                             metadata:(NSDictionary *)metadata
+                                                error:(NSError **)error
 NS_SWIFT_NAME(expressCheckout(items:orderId:shippingAndTotalsCallbackURL:metadata:));
 
 @end

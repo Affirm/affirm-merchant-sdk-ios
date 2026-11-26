@@ -322,10 +322,11 @@ static NSString * AffirmPromoStringValue(id value)
 
 @implementation AffirmCheckoutResponse
 
-- (instancetype)initWithRedirectURL:(NSURL *)redirectURL
+- (instancetype)initWithRedirectURL:(NSURL *)redirectURL checkoutId:(nullable NSString *)checkoutId
 {
     if (self = [super init]) {
         _redirectURL = [redirectURL copy];
+        _checkoutId = [checkoutId copy];
     }
     return self;
 }
@@ -340,7 +341,19 @@ static NSString * AffirmPromoStringValue(id value)
     NSError *error = nil;
     id responseObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
     NSString *redirectUrl = [responseObject valueForKey:@"redirect_url"];
-    return [[AffirmCheckoutResponse alloc] initWithRedirectURL:[NSURL URLWithString:redirectUrl]];
+    NSURL *redirectURL = [NSURL URLWithString:redirectUrl];
+    id checkoutId = [responseObject valueForKey:@"checkout_id"];
+    if (![checkoutId isKindOfClass:[NSString class]] || [(NSString *)checkoutId length] == 0) {
+        checkoutId = nil;
+        NSURLComponents *components = redirectURL ? [NSURLComponents componentsWithURL:redirectURL resolvingAgainstBaseURL:NO] : nil;
+        for (NSURLQueryItem *item in components.queryItems) {
+            if ([item.name isEqualToString:@"checkout_ari"] && item.value.length > 0) {
+                checkoutId = item.value;
+                break;
+            }
+        }
+    }
+    return [[AffirmCheckoutResponse alloc] initWithRedirectURL:redirectURL checkoutId:checkoutId];
 }
 
 @end
