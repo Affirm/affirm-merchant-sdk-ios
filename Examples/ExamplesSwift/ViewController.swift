@@ -90,6 +90,7 @@ class ViewController: UIViewController {
         addButton(title: "Promos in a table view", action: #selector(showPromoTableDemo))
         addButton(title: "Buy with Affirm", action: #selector(checkout(sender:)))
         addButton(title: "Failed Checkout", action: #selector(showFailedCheckout(sender:)))
+        addButton(title: "Express Checkout demo", action: #selector(showExpressCheckoutDemo))
         addButton(title: "VCN Checkout", action: #selector(vcnCheckout(sender:)))
         addButton(title: "Track Order Confirmation", action: #selector(trackOrderConfirmation(sender:)))
         addButton(title: "Clear Cookies", action: #selector(clearCookies(sender:)))
@@ -153,6 +154,12 @@ class ViewController: UIViewController {
     @objc func showRenderMigrationDemo() {
         let amount = NSDecimalNumber(string: amountTextField.text)
         let viewController = RenderMigrationViewController(amount: amount == .notANumber ? NSDecimalNumber(string: "500") : amount)
+        present(UINavigationController(rootViewController: viewController), animated: true)
+    }
+
+    @objc func showExpressCheckoutDemo() {
+        let amount = NSDecimalNumber(string: amountTextField.text)
+        let viewController = ExpressCheckoutViewController(amount: amount == .notANumber ? NSDecimalNumber(string: "500") : amount)
         present(UINavigationController(rootViewController: viewController), animated: true)
     }
 

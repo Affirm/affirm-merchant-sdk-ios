@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import <AffirmSDK/AffirmSDK.h>
 #import "RenderMigrationViewController.h"
+#import "ExpressCheckoutViewController.h"
 #import "PromoTableViewController.h"
 #import "Button.h"
 
@@ -117,6 +118,7 @@
     [self addButtonWithTitle:@"Promos in a table view" action:@selector(showPromoTableDemo:) tintsWhenPressed:NO];
     [self addButtonWithTitle:@"Buy with Affirm" action:@selector(checkout:) tintsWhenPressed:YES];
     [self addButtonWithTitle:@"Failed Checkout" action:@selector(showFailedCheckout:) tintsWhenPressed:YES];
+    [self addButtonWithTitle:@"Express Checkout demo" action:@selector(showExpressCheckoutDemo:) tintsWhenPressed:NO];
     UIButton *vcnButton = [self addButtonWithTitle:@"VCN Checkout" action:@selector(vcnCheckout:) tintsWhenPressed:YES];
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showVCNEligibility:)];
     longPress.minimumPressDuration = 0.5;
@@ -198,6 +200,17 @@
         dollarPrice = [NSDecimalNumber decimalNumberWithString:@"500"];
     }
     RenderMigrationViewController *viewController = [[RenderMigrationViewController alloc] initWithAmount:dollarPrice];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:viewController];
+    [self presentViewController:nav animated:YES completion:nil];
+}
+
+- (void)showExpressCheckoutDemo:(id)sender
+{
+    NSDecimalNumber *dollarPrice = [NSDecimalNumber decimalNumberWithString:self.amountTextField.text];
+    if ([dollarPrice isEqualToNumber:[NSDecimalNumber notANumber]]) {
+        dollarPrice = [NSDecimalNumber decimalNumberWithString:@"500"];
+    }
+    ExpressCheckoutViewController *viewController = [[ExpressCheckoutViewController alloc] initWithAmount:dollarPrice];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:viewController];
     [self presentViewController:nav animated:YES completion:nil];
 }
